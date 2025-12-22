@@ -1,0 +1,66 @@
+import { Routes, Route } from 'react-router-dom'
+import { Layout } from '@/components/layout/Layout'
+import { HomePage } from '@/pages/HomePage'
+import { LoginPage } from '@/pages/LoginPage'
+import { RegisterPage } from '@/pages/RegisterPage'
+import { MainDashboardPage } from '@/pages/MainDashboardPage'
+import { OnboardingPage } from '@/pages/OnboardingPage'
+import { RecipesPage } from '@/pages/RecipesPage'
+import { VisionPage } from '@/pages/VisionPage'
+import { TrackingPage } from '@/pages/TrackingPage'
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
+import { ProfileRequiredRoute } from '@/components/auth/ProfileRequiredRoute'
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route
+          path="onboarding"
+          element={
+            <ProtectedRoute>
+              <OnboardingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="dashboard"
+          element={
+            <ProfileRequiredRoute>
+              <MainDashboardPage />
+            </ProfileRequiredRoute>
+          }
+        />
+        <Route
+          path="recipes"
+          element={
+            <ProfileRequiredRoute>
+              <RecipesPage />
+            </ProfileRequiredRoute>
+          }
+        />
+        <Route
+          path="vision"
+          element={
+            <ProfileRequiredRoute>
+              <VisionPage />
+            </ProfileRequiredRoute>
+          }
+        />
+        <Route
+          path="tracking"
+          element={
+            <ProfileRequiredRoute>
+              <TrackingPage />
+            </ProfileRequiredRoute>
+          }
+        />
+      </Route>
+    </Routes>
+  )
+}
+
+export default App
