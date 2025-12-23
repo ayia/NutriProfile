@@ -115,4 +115,10 @@ export const trackingApi = {
     const response = await api.get('/tracking/summary')
     return response.data
   },
+
+  // Water
+  addWater: async (date: string, amountMl: number): Promise<{ water_ml: number }> => {
+    const response = await api.post(`/vision/daily/${date}/water`, { amount_ml: amountMl })
+    return response.data
+  },
 }

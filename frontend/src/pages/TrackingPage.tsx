@@ -6,11 +6,12 @@ import { ActivityForm } from '@/components/tracking/ActivityForm'
 import { WeightForm } from '@/components/tracking/WeightForm'
 import { GoalForm } from '@/components/tracking/GoalForm'
 import { GoalCard } from '@/components/tracking/GoalCard'
+import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
 import { ACTIVITY_TYPES, INTENSITY_LABELS } from '@/types/tracking'
 
 type Tab = 'overview' | 'activities' | 'weight' | 'goals'
-type Modal = 'activity' | 'weight' | 'goal' | null
+type Modal = 'activity' | 'weight' | 'goal' | 'water' | null
 
 export function TrackingPage() {
   const [activeTab, setActiveTab] = useState<Tab>('overview')
@@ -97,12 +98,16 @@ export function TrackingPage() {
                 </div>
                 <div className="text-xs text-gray-500">min d'activité</div>
               </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
+              <button
+                onClick={() => setActiveModal('water')}
+                className="text-center p-3 bg-gray-50 rounded-lg hover:bg-cyan-50 hover:ring-2 hover:ring-cyan-300 transition-all cursor-pointer w-full"
+              >
                 <div className="text-2xl font-bold text-cyan-600">
                   {summary.today.water_ml}
                 </div>
                 <div className="text-xs text-gray-500">ml d'eau</div>
-              </div>
+                <div className="text-xs text-cyan-500 mt-1">+ Ajouter</div>
+              </button>
             </div>
           </div>
 
@@ -215,10 +220,13 @@ export function TrackingPage() {
           {/* Actions rapides */}
           <div className="flex gap-3">
             <Button onClick={() => setActiveModal('activity')} className="flex-1">
-              + Activité
+              + Activite
             </Button>
             <Button onClick={() => setActiveModal('weight')} variant="outline" className="flex-1">
               + Poids
+            </Button>
+            <Button onClick={() => setActiveModal('water')} variant="outline" className="flex-1 !border-cyan-300 !text-cyan-600 hover:!bg-cyan-50">
+              + Eau
             </Button>
           </div>
         </div>
@@ -391,9 +399,10 @@ export function TrackingPage() {
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <h3 className="text-xl font-semibold mb-4">
-                {activeModal === 'activity' && 'Nouvelle activité'}
-                {activeModal === 'weight' && 'Nouvelle pesée'}
+                {activeModal === 'activity' && 'Nouvelle activite'}
+                {activeModal === 'weight' && 'Nouvelle pesee'}
                 {activeModal === 'goal' && 'Nouvel objectif'}
+                {activeModal === 'water' && 'Ajouter de l\'eau'}
               </h3>
 
               {activeModal === 'activity' && (
@@ -415,6 +424,14 @@ export function TrackingPage() {
                 <GoalForm
                   onSuccess={() => setActiveModal(null)}
                   onCancel={() => setActiveModal(null)}
+                />
+              )}
+
+              {activeModal === 'water' && (
+                <WaterForm
+                  onSuccess={() => setActiveModal(null)}
+                  onCancel={() => setActiveModal(null)}
+                  currentWater={summary?.today.water_ml}
                 />
               )}
             </div>

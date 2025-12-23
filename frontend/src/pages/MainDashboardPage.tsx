@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { dashboardApi } from '@/services/dashboardApi'
@@ -7,10 +8,12 @@ import { LevelProgress } from '@/components/dashboard/LevelProgress'
 import { NotificationBell } from '@/components/dashboard/NotificationBell'
 import { WeeklyChart } from '@/components/dashboard/WeeklyChart'
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton'
+import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
 import { STREAK_LABELS } from '@/types/dashboard'
 
 export function MainDashboardPage() {
+  const [showWaterModal, setShowWaterModal] = useState(false)
   const dashboardQuery = useQuery({
     queryKey: ['dashboard'],
     queryFn: dashboardApi.getDashboard,
@@ -90,13 +93,19 @@ export function MainDashboardPage() {
             unit="g"
             icon="💪"
           />
-          <StatsRing
-            value={data.quick_stats.water_today}
-            max={data.quick_stats.water_target}
-            label="Eau"
-            unit="ml"
-            icon="💧"
-          />
+          <button
+            onClick={() => setShowWaterModal(true)}
+            className="cursor-pointer hover:scale-105 transition-transform focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 rounded-lg"
+          >
+            <StatsRing
+              value={data.quick_stats.water_today}
+              max={data.quick_stats.water_target}
+              label="Eau"
+              unit="ml"
+              icon="💧"
+            />
+            <div className="text-xs text-cyan-500 mt-1">+ Ajouter</div>
+          </button>
           <StatsRing
             value={data.quick_stats.activity_today}
             max={data.quick_stats.activity_target}
@@ -114,7 +123,7 @@ export function MainDashboardPage() {
       <WeeklyChart />
 
       {/* Actions rapides */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <Link
           to="/vision"
           className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow text-center"
@@ -143,6 +152,13 @@ export function MainDashboardPage() {
           <span className="text-3xl">⚖️</span>
           <div className="text-sm font-medium mt-2">Poids</div>
         </Link>
+        <button
+          onClick={() => setShowWaterModal(true)}
+          className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow text-center"
+        >
+          <span className="text-3xl">💧</span>
+          <div className="text-sm font-medium mt-2">+ Eau</div>
+        </button>
       </div>
 
       {/* Streaks et Achievements */}
@@ -262,6 +278,22 @@ export function MainDashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Water Modal */}
+      {showWaterModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <h3 className="text-xl font-semibold mb-4">Ajouter de l'eau</h3>
+              <WaterForm
+                onSuccess={() => setShowWaterModal(false)}
+                onCancel={() => setShowWaterModal(false)}
+                currentWater={data.quick_stats.water_today}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
