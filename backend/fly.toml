@@ -7,6 +7,12 @@ primary_region = "cdg"
 [env]
   PORT = "8080"
   ENVIRONMENT = "production"
+  DATABASE_URL = "sqlite+aiosqlite:///data/nutriprofile.db"
+
+# Volume pour la persistance SQLite
+[mounts]
+  source = "nutriprofile_data"
+  destination = "/data"
 
 [http_service]
   internal_port = 8080

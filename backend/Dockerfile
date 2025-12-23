@@ -28,5 +28,8 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
-# Démarrage avec Gunicorn + Uvicorn workers
-CMD ["gunicorn", "app.main:app", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8080"]
+# Creer le dossier data pour SQLite (sera monte comme volume sur Fly.io)
+RUN mkdir -p /data
+
+# Demarrage: migrations puis serveur
+CMD ["sh", "-c", "python -m alembic upgrade head && gunicorn app.main:app -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8080"]

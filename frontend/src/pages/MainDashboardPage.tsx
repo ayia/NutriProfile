@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
 import { dashboardApi } from '@/services/dashboardApi'
+import { HeroCard } from '@/components/dashboard/HeroCard'
+import { QuickActions } from '@/components/dashboard/QuickActions'
+import { ScannerCard } from '@/components/dashboard/ScannerCard'
 import { CoachCard } from '@/components/dashboard/CoachCard'
-import { StatsRing } from '@/components/dashboard/StatsRing'
-import { LevelProgress } from '@/components/dashboard/LevelProgress'
-import { NotificationBell } from '@/components/dashboard/NotificationBell'
 import { WeeklyChart } from '@/components/dashboard/WeeklyChart'
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton'
 import { WaterForm } from '@/components/tracking/WaterForm'
@@ -17,7 +16,7 @@ export function MainDashboardPage() {
   const dashboardQuery = useQuery({
     queryKey: ['dashboard'],
     queryFn: dashboardApi.getDashboard,
-    refetchInterval: 60000, // Refresh toutes les minutes
+    refetchInterval: 60000,
     retry: 1,
   })
 
@@ -35,7 +34,7 @@ export function MainDashboardPage() {
           {dashboardQuery.error instanceof Error ? dashboardQuery.error.message : 'Erreur inconnue'}
         </p>
         <Button onClick={() => dashboardQuery.refetch()} className="mt-4">
-          Réessayer
+          Reessayer
         </Button>
       </div>
     )
@@ -44,134 +43,51 @@ export function MainDashboardPage() {
   if (!data) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-        <p className="text-gray-500">Aucune donnée disponible</p>
+        <p className="text-gray-500">Aucune donnee disponible</p>
         <Button onClick={() => dashboardQuery.refetch()} className="mt-4">
-          Réessayer
+          Reessayer
         </Button>
       </div>
     )
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Bonjour, {data.user_name} !
-          </h1>
-          <p className="text-gray-600">
-            {data.quick_stats.streak_days > 0
-              ? `🔥 ${data.quick_stats.streak_days} jours de suite !`
-              : 'Commençons une nouvelle journée !'}
-          </p>
-        </div>
-        <NotificationBell
-          notifications={data.notifications}
-          unreadCount={data.unread_notifications}
-        />
+    <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+      {/* Hero Card - Stats principales */}
+      <HeroCard
+        userName={data.user_name}
+        quickStats={data.quick_stats}
+        userStats={data.user_stats}
+        notifications={data.notifications}
+        unreadCount={data.unread_notifications}
+        onWaterClick={() => setShowWaterModal(true)}
+      />
+
+      {/* Actions rapides - scroll horizontal */}
+      <QuickActions onWaterClick={() => setShowWaterModal(true)} />
+
+      {/* Scanner + Coach cote a cote */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <ScannerCard />
+        {data.coach_advice && <CoachCard advice={data.coach_advice} />}
       </div>
-
-      {/* Niveau et XP */}
-      <LevelProgress stats={data.user_stats} />
-
-      {/* Stats du jour */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="font-semibold mb-4">Aujourd'hui</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <StatsRing
-            value={data.quick_stats.calories_today}
-            max={data.quick_stats.calories_target}
-            label="Calories"
-            unit="kcal"
-            icon="🔥"
-          />
-          <StatsRing
-            value={data.quick_stats.protein_today}
-            max={data.quick_stats.protein_target}
-            label="Protéines"
-            unit="g"
-            icon="💪"
-          />
-          <button
-            onClick={() => setShowWaterModal(true)}
-            className="cursor-pointer hover:scale-105 transition-transform focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 rounded-lg"
-          >
-            <StatsRing
-              value={data.quick_stats.water_today}
-              max={data.quick_stats.water_target}
-              label="Eau"
-              unit="ml"
-              icon="💧"
-            />
-            <div className="text-xs text-cyan-500 mt-1">+ Ajouter</div>
-          </button>
-          <StatsRing
-            value={data.quick_stats.activity_today}
-            max={data.quick_stats.activity_target}
-            label="Activité"
-            unit="min"
-            icon="🏃"
-          />
-        </div>
-      </div>
-
-      {/* Coach */}
-      {data.coach_advice && <CoachCard advice={data.coach_advice} />}
 
       {/* Graphique de la semaine */}
       <WeeklyChart />
 
-      {/* Actions rapides */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <Link
-          to="/vision"
-          className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow text-center"
-        >
-          <span className="text-3xl">📸</span>
-          <div className="text-sm font-medium mt-2">Scanner repas</div>
-        </Link>
-        <Link
-          to="/recipes"
-          className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow text-center"
-        >
-          <span className="text-3xl">🍳</span>
-          <div className="text-sm font-medium mt-2">Recettes</div>
-        </Link>
-        <Link
-          to="/tracking"
-          className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow text-center"
-        >
-          <span className="text-3xl">🏃</span>
-          <div className="text-sm font-medium mt-2">Activités</div>
-        </Link>
-        <Link
-          to="/tracking?tab=weight"
-          className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow text-center"
-        >
-          <span className="text-3xl">⚖️</span>
-          <div className="text-sm font-medium mt-2">Poids</div>
-        </Link>
-        <button
-          onClick={() => setShowWaterModal(true)}
-          className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow text-center"
-        >
-          <span className="text-3xl">💧</span>
-          <div className="text-sm font-medium mt-2">+ Eau</div>
-        </button>
-      </div>
-
       {/* Streaks et Achievements */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4">
         {/* Streaks */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <span>🔥</span>
-            <span>Séries en cours</span>
+        <div className="bg-white rounded-2xl shadow-sm p-5">
+          <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-800">
+            <span className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+              🔥
+            </span>
+            <span>Series en cours</span>
           </h3>
           {data.active_streaks.length === 0 ? (
             <p className="text-gray-500 text-sm">
-              Aucune série active. Commence à suivre tes repas !
+              Aucune serie active. Commence a suivre tes repas !
             </p>
           ) : (
             <div className="space-y-3">
@@ -183,14 +99,14 @@ export function MainDashboardPage() {
                 return (
                   <div
                     key={streak.id}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-100"
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{info.icon}</span>
-                      <span className="font-medium">{info.name}</span>
+                      <span className="font-medium text-gray-700">{info.name}</span>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-primary-600">
+                      <div className="font-bold text-orange-600">
                         {streak.current_count} jours
                       </div>
                       <div className="text-xs text-gray-500">
@@ -204,36 +120,40 @@ export function MainDashboardPage() {
           )}
         </div>
 
-        {/* Achievements récents */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <span>🏆</span>
-            <span>Succès récents</span>
+        {/* Achievements recents */}
+        <div className="bg-white rounded-2xl shadow-sm p-5">
+          <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-800">
+            <span className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+              🏆
+            </span>
+            <span>Succes recents</span>
           </h3>
           {data.recent_achievements.length === 0 ? (
             <p className="text-gray-500 text-sm">
-              Aucun succès encore. Continue pour en débloquer !
+              Aucun succes encore. Continue pour en debloquer !
             </p>
           ) : (
             <div className="space-y-3">
               {data.recent_achievements.map((achievement) => (
                 <div
                   key={achievement.id}
-                  className={`flex items-center gap-3 p-3 rounded-lg ${
+                  className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
                     !achievement.seen
-                      ? 'bg-yellow-50 border border-yellow-200'
-                      : 'bg-gray-50'
+                      ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200 shadow-sm'
+                      : 'bg-gray-50 border-gray-100'
                   }`}
                 >
-                  <span className="text-2xl">{achievement.icon}</span>
-                  <div className="flex-1">
-                    <div className="font-medium">{achievement.name}</div>
-                    <div className="text-xs text-gray-500">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                    <span className="text-xl">{achievement.icon}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-gray-800 truncate">{achievement.name}</div>
+                    <div className="text-xs text-gray-500 truncate">
                       {achievement.description}
                     </div>
                   </div>
-                  <div className="text-sm text-primary-600 font-medium">
-                    +{achievement.points} pts
+                  <div className="flex-shrink-0 bg-primary-100 text-primary-700 text-sm font-bold px-2 py-1 rounded-lg">
+                    +{achievement.points}
                   </div>
                 </div>
               ))}
@@ -242,49 +162,47 @@ export function MainDashboardPage() {
         </div>
       </div>
 
-      {/* Stats globales */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="font-semibold mb-4">Ton parcours</h3>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-primary-600">
-              {data.user_stats.total_meals_logged}
+      {/* Stats globales - version compacte */}
+      <div className="bg-white rounded-2xl shadow-sm p-5">
+        <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-800">
+          <span className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            📈
+          </span>
+          <span>Ton parcours</span>
+        </h3>
+        <div className="grid grid-cols-5 gap-3">
+          {[
+            { value: data.user_stats.total_meals_logged, label: 'Repas', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+            { value: data.user_stats.total_activities, label: 'Activites', color: 'text-orange-600', bg: 'bg-orange-50' },
+            { value: data.user_stats.total_recipes_generated, label: 'Recettes', color: 'text-blue-600', bg: 'bg-blue-50' },
+            { value: data.user_stats.total_photos_analyzed, label: 'Photos', color: 'text-purple-600', bg: 'bg-purple-50' },
+            { value: data.user_stats.achievements_count, label: 'Succes', color: 'text-yellow-600', bg: 'bg-yellow-50' },
+          ].map((stat) => (
+            <div key={stat.label} className={`${stat.bg} rounded-xl p-3 text-center`}>
+              <div className={`text-xl font-bold ${stat.color}`}>{stat.value}</div>
+              <div className="text-xs text-gray-600">{stat.label}</div>
             </div>
-            <div className="text-xs text-gray-500">Repas suivis</div>
-          </div>
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-orange-600">
-              {data.user_stats.total_activities}
-            </div>
-            <div className="text-xs text-gray-500">Activités</div>
-          </div>
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">
-              {data.user_stats.total_recipes_generated}
-            </div>
-            <div className="text-xs text-gray-500">Recettes</div>
-          </div>
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">
-              {data.user_stats.total_photos_analyzed}
-            </div>
-            <div className="text-xs text-gray-500">Photos</div>
-          </div>
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">
-              {data.user_stats.achievements_count}
-            </div>
-            <div className="text-xs text-gray-500">Succès</div>
-          </div>
+          ))}
         </div>
       </div>
 
       {/* Water Modal */}
       {showWaterModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
             <div className="p-6">
-              <h3 className="text-xl font-semibold mb-4">Ajouter de l'eau</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-gray-800">Ajouter de l'eau</h3>
+                <button
+                  onClick={() => setShowWaterModal(false)}
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 6 6 18"/>
+                    <path d="m6 6 12 12"/>
+                  </svg>
+                </button>
+              </div>
               <WaterForm
                 onSuccess={() => setShowWaterModal(false)}
                 onCancel={() => setShowWaterModal(false)}
