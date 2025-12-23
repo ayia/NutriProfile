@@ -29,13 +29,18 @@ export function MainDashboardPage() {
   if (dashboardQuery.isError) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-        <p className="text-gray-500">Erreur lors du chargement du dashboard</p>
-        <p className="text-red-500 text-sm mt-2">
-          {dashboardQuery.error instanceof Error ? dashboardQuery.error.message : 'Erreur inconnue'}
-        </p>
-        <Button onClick={() => dashboardQuery.refetch()} className="mt-4">
-          Reessayer
-        </Button>
+        <div className="card-elevated p-8">
+          <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-3xl">❌</span>
+          </div>
+          <p className="body-lg text-neutral-600 mb-2">Erreur lors du chargement du dashboard</p>
+          <p className="text-error-600 text-sm mb-4">
+            {dashboardQuery.error instanceof Error ? dashboardQuery.error.message : 'Erreur inconnue'}
+          </p>
+          <Button onClick={() => dashboardQuery.refetch()}>
+            Réessayer
+          </Button>
+        </div>
       </div>
     )
   }
@@ -43,10 +48,15 @@ export function MainDashboardPage() {
   if (!data) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-        <p className="text-gray-500">Aucune donnee disponible</p>
-        <Button onClick={() => dashboardQuery.refetch()} className="mt-4">
-          Reessayer
-        </Button>
+        <div className="card-elevated p-8">
+          <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-3xl">📊</span>
+          </div>
+          <p className="body-lg text-neutral-600 mb-4">Aucune donnée disponible</p>
+          <Button onClick={() => dashboardQuery.refetch()}>
+            Réessayer
+          </Button>
+        </div>
       </div>
     )
   }
@@ -78,16 +88,16 @@ export function MainDashboardPage() {
       {/* Streaks et Achievements */}
       <div className="grid md:grid-cols-2 gap-4">
         {/* Streaks */}
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-800">
-            <span className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+        <div className="card-elevated p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-8 h-8 bg-accent-100 rounded-lg flex items-center justify-center text-lg">
               🔥
             </span>
-            <span>Series en cours</span>
-          </h3>
+            <h3 className="heading-4">Séries en cours</h3>
+          </div>
           {data.active_streaks.length === 0 ? (
-            <p className="text-gray-500 text-sm">
-              Aucune serie active. Commence a suivre tes repas !
+            <p className="body-md">
+              Aucune série active. Commence à suivre tes repas !
             </p>
           ) : (
             <div className="space-y-3">
@@ -99,17 +109,17 @@ export function MainDashboardPage() {
                 return (
                   <div
                     key={streak.id}
-                    className="flex items-center justify-between p-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-100"
+                    className="flex items-center justify-between p-3 bg-gradient-to-r from-accent-50 to-warning-50 rounded-xl"
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{info.icon}</span>
-                      <span className="font-medium text-gray-700">{info.name}</span>
+                      <span className="font-medium text-neutral-700">{info.name}</span>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-orange-600">
+                      <div className="font-bold text-accent-600">
                         {streak.current_count} jours
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-neutral-500">
                         Record: {streak.best_count}
                       </div>
                     </div>
@@ -121,40 +131,40 @@ export function MainDashboardPage() {
         </div>
 
         {/* Achievements recents */}
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-800">
-            <span className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+        <div className="card-elevated p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-8 h-8 bg-warning-100 rounded-lg flex items-center justify-center text-lg">
               🏆
             </span>
-            <span>Succes recents</span>
-          </h3>
+            <h3 className="heading-4">Succès récents</h3>
+          </div>
           {data.recent_achievements.length === 0 ? (
-            <p className="text-gray-500 text-sm">
-              Aucun succes encore. Continue pour en debloquer !
+            <p className="body-md">
+              Aucun succès encore. Continue pour en débloquer !
             </p>
           ) : (
             <div className="space-y-3">
               {data.recent_achievements.map((achievement) => (
                 <div
                   key={achievement.id}
-                  className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                  className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
                     !achievement.seen
-                      ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200 shadow-sm'
-                      : 'bg-gray-50 border-gray-100'
+                      ? 'bg-gradient-to-r from-warning-50 to-accent-50 shadow-sm'
+                      : 'bg-neutral-50'
                   }`}
                 >
                   <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
                     <span className="text-xl">{achievement.icon}</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-gray-800 truncate">{achievement.name}</div>
-                    <div className="text-xs text-gray-500 truncate">
+                    <div className="font-medium text-neutral-800 truncate">{achievement.name}</div>
+                    <div className="text-xs text-neutral-500 truncate">
                       {achievement.description}
                     </div>
                   </div>
-                  <div className="flex-shrink-0 bg-primary-100 text-primary-700 text-sm font-bold px-2 py-1 rounded-lg">
+                  <span className="badge-primary">
                     +{achievement.points}
-                  </div>
+                  </span>
                 </div>
               ))}
             </div>
@@ -163,24 +173,24 @@ export function MainDashboardPage() {
       </div>
 
       {/* Stats globales - version compacte */}
-      <div className="bg-white rounded-2xl shadow-sm p-5">
-        <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-800">
-          <span className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+      <div className="card-elevated p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="w-8 h-8 bg-secondary-100 rounded-lg flex items-center justify-center text-lg">
             📈
           </span>
-          <span>Ton parcours</span>
-        </h3>
+          <h3 className="heading-4">Ton parcours</h3>
+        </div>
         <div className="grid grid-cols-5 gap-3">
           {[
-            { value: data.user_stats.total_meals_logged, label: 'Repas', color: 'text-emerald-600', bg: 'bg-emerald-50' },
-            { value: data.user_stats.total_activities, label: 'Activites', color: 'text-orange-600', bg: 'bg-orange-50' },
-            { value: data.user_stats.total_recipes_generated, label: 'Recettes', color: 'text-blue-600', bg: 'bg-blue-50' },
-            { value: data.user_stats.total_photos_analyzed, label: 'Photos', color: 'text-purple-600', bg: 'bg-purple-50' },
-            { value: data.user_stats.achievements_count, label: 'Succes', color: 'text-yellow-600', bg: 'bg-yellow-50' },
+            { value: data.user_stats.total_meals_logged, label: 'Repas', color: 'text-primary-600', bg: 'bg-primary-50' },
+            { value: data.user_stats.total_activities, label: 'Activités', color: 'text-accent-600', bg: 'bg-accent-50' },
+            { value: data.user_stats.total_recipes_generated, label: 'Recettes', color: 'text-secondary-600', bg: 'bg-secondary-50' },
+            { value: data.user_stats.total_photos_analyzed, label: 'Photos', color: 'text-primary-600', bg: 'bg-primary-50' },
+            { value: data.user_stats.achievements_count, label: 'Succès', color: 'text-warning-600', bg: 'bg-warning-50' },
           ].map((stat) => (
             <div key={stat.label} className={`${stat.bg} rounded-xl p-3 text-center`}>
               <div className={`text-xl font-bold ${stat.color}`}>{stat.value}</div>
-              <div className="text-xs text-gray-600">{stat.label}</div>
+              <div className="text-xs text-neutral-600">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -188,14 +198,19 @@ export function MainDashboardPage() {
 
       {/* Water Modal */}
       {showWaterModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 bg-neutral-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="card-elevated w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-gray-800">Ajouter de l'eau</h3>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <span className="text-xl">💧</span>
+                  </div>
+                  <h3 className="heading-3">Ajouter de l'eau</h3>
+                </div>
                 <button
                   onClick={() => setShowWaterModal(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 6 6 18"/>

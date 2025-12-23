@@ -8,7 +8,7 @@ from app.database import get_db
 from app.api.deps import get_current_user
 from app.models.user import User
 from app.models.profile import Profile
-from app.models.food_log import DailyNutrition
+from app.models.food_log import FoodLog, DailyNutrition
 from app.models.activity import ActivityLog
 from app.models.gamification import Achievement, Streak, Notification, UserStats, ACHIEVEMENTS, calculate_level
 from app.agents.coach import get_coach_agent, CoachInput, get_time_of_day
@@ -41,7 +41,21 @@ async def get_dashboard(
     # Récupérer ou créer les stats utilisateur
     stats = await get_or_create_user_stats(db, current_user.id)
 
-    # Nutrition du jour
+    # Nutrition du jour - calculée directement depuis food_logs pour être toujours à jour
+    food_logs_query = select(FoodLog).where(and_(
+        FoodLog.user_id == current_user.id,
+        FoodLog.meal_date >= start_of_day,
+        FoodLog.meal_date <= end_of_day,
+    ))
+    food_logs_result = await db.execute(food_logs_query)
+    food_logs = food_logs_result.scalars().all()
+
+    # Calculer les totaux depuis les food_logs
+    calories_from_food = sum(log.total_calories or 0 for log in food_logs)
+    protein_from_food = sum(log.total_protein or 0 for log in food_logs)
+    meals_count = len(food_logs)
+
+    # Récupérer l'eau depuis DailyNutrition (seule donnée qui y est stockée séparément)
     nutrition_query = select(DailyNutrition).where(and_(
         DailyNutrition.user_id == current_user.id,
         DailyNutrition.date >= start_of_day,
@@ -49,15 +63,21 @@ async def get_dashboard(
     ))
     nutrition_result = await db.execute(nutrition_query)
     nutrition = nutrition_result.scalar_one_or_none()
+    water_today = nutrition.water_ml if nutrition else 0
 
-    # Activités du jour
-    activities_query = select(func.sum(ActivityLog.duration_minutes)).where(and_(
+    # Activités du jour - récupérer durée ET calories brûlées
+    activities_query = select(
+        func.sum(ActivityLog.duration_minutes),
+        func.sum(ActivityLog.calories_burned)
+    ).where(and_(
         ActivityLog.user_id == current_user.id,
         ActivityLog.activity_date >= start_of_day,
         ActivityLog.activity_date <= end_of_day,
     ))
     activities_result = await db.execute(activities_query)
-    activity_minutes = activities_result.scalar() or 0
+    activity_row = activities_result.one()
+    activity_minutes = activity_row[0] or 0
+    calories_burned = activity_row[1] or 0
 
     # Streak de logging
     streak_query = select(Streak).where(and_(
@@ -74,26 +94,25 @@ async def get_dashboard(
     target_calories = profile.daily_calories if profile and profile.daily_calories else 2000
     target_protein = profile.protein_g if profile and profile.protein_g else 100
 
-    # Quick stats
-    calories_today = nutrition.total_calories if nutrition else 0
-    protein_today = nutrition.total_protein if nutrition else 0
-    water_today = nutrition.water_ml if nutrition else 0
-    meals_today = nutrition.meals_count if nutrition else 0
+    # Calculer les calories nettes (mangées - brûlées par activité)
+    # Note: On affiche les calories nettes pour un suivi plus précis
+    # Fix 2023-12-23: calories_from_food - calories_burned = net calories
+    calories_net = max(0, calories_from_food - calories_burned)
 
     quick_stats = QuickStats(
-        calories_today=calories_today,
+        calories_today=calories_net,
         calories_target=target_calories,
-        calories_percent=round((calories_today / target_calories) * 100, 1) if target_calories else 0,
-        protein_today=protein_today,
+        calories_percent=round((calories_net / target_calories) * 100, 1) if target_calories else 0,
+        protein_today=protein_from_food,
         protein_target=target_protein,
-        protein_percent=round((protein_today / target_protein) * 100, 1) if target_protein else 0,
+        protein_percent=round((protein_from_food / target_protein) * 100, 1) if target_protein else 0,
         water_today=water_today,
         water_target=2000,
         water_percent=round((water_today / 2000) * 100, 1),
         activity_today=activity_minutes,
         activity_target=30,
         activity_percent=round((activity_minutes / 30) * 100, 1),
-        meals_today=meals_today,
+        meals_today=meals_count,
         streak_days=logging_streak.current_count if logging_streak else 0,
     )
 

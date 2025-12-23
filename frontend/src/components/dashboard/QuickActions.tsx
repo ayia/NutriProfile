@@ -19,43 +19,43 @@ export function QuickActions({ onWaterClick }: QuickActionsProps) {
       icon: '📸',
       label: 'Scanner',
       to: '/vision',
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100',
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-100',
     },
     {
-      icon: '🍳',
+      icon: '🔍',
       label: 'Recettes',
       to: '/recipes',
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100',
+      color: 'text-accent-600',
+      bgColor: 'bg-accent-100',
     },
     {
       icon: '💧',
       label: 'Eau',
       onClick: onWaterClick,
-      color: 'text-cyan-600',
-      bgColor: 'bg-cyan-100',
+      color: 'text-secondary-600',
+      bgColor: 'bg-secondary-100',
     },
     {
       icon: '🏃',
-      label: 'Activites',
+      label: 'Activités',
       to: '/tracking',
-      color: 'text-green-600',
-      bgColor: 'bg-green-100',
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-100',
     },
     {
       icon: '⚖️',
       label: 'Poids',
       to: '/tracking?tab=weight',
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-warning-600',
+      bgColor: 'bg-warning-100',
     },
     {
       icon: '📊',
       label: 'Stats',
       to: '/tracking?tab=history',
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-100',
+      color: 'text-secondary-600',
+      bgColor: 'bg-secondary-100',
     },
   ]
 
@@ -66,11 +66,11 @@ export function QuickActions({ onWaterClick }: QuickActionsProps) {
           const content = (
             <>
               <div
-                className={`w-14 h-14 ${action.bgColor} rounded-2xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform`}
+                className={`w-14 h-14 ${action.bgColor} rounded-2xl flex items-center justify-center mb-2 group-hover:scale-105 transition-transform shadow-sm`}
               >
                 <span className="text-2xl">{action.icon}</span>
               </div>
-              <span className={`text-xs font-medium ${action.color}`}>
+              <span className={`text-xs font-medium text-neutral-700`}>
                 {action.label}
               </span>
             </>
@@ -81,7 +81,7 @@ export function QuickActions({ onWaterClick }: QuickActionsProps) {
               <Link
                 key={action.label}
                 to={action.to}
-                className="group flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all min-w-[80px]"
+                className="group flex flex-col items-center p-3 bg-white rounded-2xl shadow-card hover:shadow-elevated transition-all min-w-[80px]"
               >
                 {content}
               </Link>
@@ -92,7 +92,7 @@ export function QuickActions({ onWaterClick }: QuickActionsProps) {
             <button
               key={action.label}
               onClick={action.onClick}
-              className="group flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all min-w-[80px]"
+              className="group flex flex-col items-center p-3 bg-white rounded-2xl shadow-card hover:shadow-elevated transition-all min-w-[80px]"
             >
               {content}
             </button>

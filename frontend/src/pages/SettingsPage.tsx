@@ -53,16 +53,16 @@ export function SettingsPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* En-tête avec avatar */}
-      <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+      <div className="card-elevated p-6 mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+          <div className="w-20 h-20 gradient-vitality rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-elevated">
             {user?.name?.charAt(0).toUpperCase() || '?'}
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{user?.name}</h1>
-            <p className="text-gray-600">{user?.email}</p>
+            <h1 className="heading-2">{user?.name}</h1>
+            <p className="body-md">{user?.email}</p>
             {profileQuery.data?.goal && (
-              <span className="inline-block mt-2 px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm">
+              <span className="badge-primary mt-2">
                 {GOAL_LABELS[profileQuery.data.goal]}
               </span>
             )}
@@ -76,10 +76,10 @@ export function SettingsPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap transition-all font-medium ${
               activeTab === tab.id
-                ? 'bg-primary-600 text-white shadow-md'
-                : 'bg-white text-gray-600 hover:bg-gray-100'
+                ? 'bg-primary-500 text-white shadow-card'
+                : 'bg-white text-neutral-600 hover:bg-neutral-100'
             }`}
           >
             <span>{tab.icon}</span>
@@ -89,7 +89,7 @@ export function SettingsPage() {
       </div>
 
       {/* Contenu des onglets */}
-      <div className="bg-white rounded-xl shadow-sm">
+      <div className="card-elevated overflow-hidden">
         {activeTab === 'profile' && (
           <ProfileSettings
             profile={profileQuery.data}
@@ -113,29 +113,29 @@ export function SettingsPage() {
 
       {/* Modal de suppression de compte */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 animate-scale-in">
+        <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 animate-fade-in shadow-elevated">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">⚠️</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="heading-3 mb-2">
                 Supprimer votre compte
               </h3>
-              <p className="text-gray-600">
+              <p className="body-md">
                 Cette action est irréversible. Toutes vos données seront supprimées définitivement.
               </p>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tapez <span className="font-bold text-red-600">SUPPRIMER</span> pour confirmer
+              <label className="label mb-2 block">
+                Tapez <span className="font-bold text-error-600">SUPPRIMER</span> pour confirmer
               </label>
               <input
                 type="text"
                 value={deleteConfirmText}
                 onChange={(e) => setDeleteConfirmText(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="input focus:ring-error-500"
                 placeholder="SUPPRIMER"
               />
             </div>
@@ -153,7 +153,7 @@ export function SettingsPage() {
               </Button>
               <Button
                 variant="primary"
-                className="flex-1 !bg-red-600 hover:!bg-red-700"
+                className="flex-1 !bg-error-500 hover:!bg-error-600"
                 onClick={handleDeleteAccount}
                 disabled={deleteConfirmText !== 'SUPPRIMER'}
                 isLoading={deleteProfileMutation.isPending}
@@ -183,10 +183,10 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
   if (isLoading) {
     return (
       <div className="p-6 space-y-6">
-        <SkeletonLoader className="h-8 w-48" />
-        <SkeletonLoader className="h-24" />
-        <SkeletonLoader className="h-24" />
-        <SkeletonLoader className="h-24" />
+        <SkeletonLoader className="h-8 w-48 rounded-xl" />
+        <SkeletonLoader className="h-24 rounded-xl" />
+        <SkeletonLoader className="h-24 rounded-xl" />
+        <SkeletonLoader className="h-24 rounded-xl" />
       </div>
     )
   }
@@ -230,17 +230,17 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
   ]
 
   return (
-    <div className="divide-y divide-gray-100">
+    <div className="divide-y divide-neutral-100">
       {sections.map((section) => (
         <div key={section.id} className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <span className="text-xl">{section.icon}</span>
-              <h3 className="font-semibold text-gray-900">{section.title}</h3>
+              <h3 className="heading-4">{section.title}</h3>
             </div>
             <button
               onClick={() => setEditSection(editSection === section.id ? null : section.id)}
-              className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+              className="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors"
             >
               {editSection === section.id ? 'Annuler' : 'Modifier'}
             </button>
@@ -278,9 +278,9 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
               {section.id === 'goals' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Objectif</label>
+                    <label className="label mb-2 block">Objectif</label>
                     <select
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="input"
                       defaultValue={profile?.goal}
                       {...register('goal')}
                     >
@@ -290,9 +290,9 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Niveau d'activité</label>
+                    <label className="label mb-2 block">Niveau d'activité</label>
                     <select
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="input"
                       defaultValue={profile?.activity_level}
                       {...register('activity_level')}
                     >
@@ -315,9 +315,9 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
               {section.id === 'diet' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Type de régime</label>
+                    <label className="label mb-2 block">Type de régime</label>
                     <select
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="input"
                       defaultValue={profile?.diet_type}
                       {...register('diet_type')}
                     >
@@ -327,14 +327,14 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Allergies</label>
+                    <label className="label mb-2 block">Allergies</label>
                     <div className="flex flex-wrap gap-2">
                       {COMMON_ALLERGIES.map((allergy) => (
-                        <label key={allergy} className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full text-sm cursor-pointer hover:bg-gray-200">
+                        <label key={allergy} className="flex items-center gap-2 px-3 py-1.5 bg-neutral-100 rounded-full text-sm cursor-pointer hover:bg-neutral-200 transition-colors">
                           <input
                             type="checkbox"
                             defaultChecked={profile?.allergies?.includes(allergy)}
-                            className="rounded text-primary-600"
+                            className="rounded text-primary-500"
                           />
                           {allergy}
                         </label>
@@ -354,8 +354,8 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
             <div className="grid gap-4">
               {section.fields.map((field) => (
                 <div key={field.key} className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">{field.label}</span>
-                  <span className="font-medium text-gray-900">
+                  <span className="body-md">{field.label}</span>
+                  <span className="font-medium text-neutral-800">
                     {field.value || '-'} {field.suffix && field.value ? field.suffix : ''}
                   </span>
                 </div>
@@ -366,35 +366,35 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
       ))}
 
       {/* Besoins nutritionnels calculés */}
-      <div className="p-6 bg-gradient-to-r from-green-50 to-blue-50">
+      <div className="p-6 bg-gradient-to-r from-primary-50 to-secondary-50">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">📊</span>
-          <h3 className="font-semibold text-gray-900">Besoins nutritionnels quotidiens</h3>
+          <h3 className="heading-4">Besoins nutritionnels quotidiens</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <NutritionCard
             label="Calories"
             value={profile?.daily_calories}
             unit="kcal"
-            color="bg-orange-100 text-orange-700"
+            color="bg-accent-100 text-accent-700"
           />
           <NutritionCard
             label="Protéines"
             value={profile?.protein_g}
             unit="g"
-            color="bg-blue-100 text-blue-700"
+            color="bg-secondary-100 text-secondary-700"
           />
           <NutritionCard
             label="Glucides"
             value={profile?.carbs_g}
             unit="g"
-            color="bg-yellow-100 text-yellow-700"
+            color="bg-warning-100 text-warning-700"
           />
           <NutritionCard
             label="Lipides"
             value={profile?.fat_g}
             unit="g"
-            color="bg-pink-100 text-pink-700"
+            color="bg-error-100 text-error-700"
           />
         </div>
       </div>
@@ -404,9 +404,9 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
 
 function NutritionCard({ label, value, unit, color }: { label: string; value: number | null | undefined; unit: string; color: string }) {
   return (
-    <div className={`${color} rounded-xl p-4 text-center`}>
+    <div className={`${color} rounded-2xl p-4 text-center`}>
       <div className="text-2xl font-bold">{value || '-'}</div>
-      <div className="text-sm">{unit}</div>
+      <div className="text-sm font-medium">{unit}</div>
       <div className="text-xs mt-1 opacity-75">{label}</div>
     </div>
   )
@@ -422,15 +422,15 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
   const [showPasswordForm, setShowPasswordForm] = useState(false)
 
   return (
-    <div className="divide-y divide-gray-100">
+    <div className="divide-y divide-neutral-100">
       {/* Email */}
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">✉️</span>
-          <h3 className="font-semibold text-gray-900">Adresse email</h3>
+          <h3 className="heading-4">Adresse email</h3>
         </div>
-        <p className="text-gray-600">{user?.email}</p>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="body-md">{user?.email}</p>
+        <p className="body-sm mt-2">
           L'adresse email ne peut pas être modifiée pour des raisons de sécurité.
         </p>
       </div>
@@ -440,11 +440,11 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <span className="text-xl">🔒</span>
-            <h3 className="font-semibold text-gray-900">Mot de passe</h3>
+            <h3 className="heading-4">Mot de passe</h3>
           </div>
           <button
             onClick={() => setShowPasswordForm(!showPasswordForm)}
-            className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+            className="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors"
           >
             {showPasswordForm ? 'Annuler' : 'Modifier'}
           </button>
@@ -477,22 +477,22 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
             </div>
           </form>
         ) : (
-          <p className="text-gray-600">••••••••••••</p>
+          <p className="body-md">••••••••••••</p>
         )}
       </div>
 
       {/* Suppression du compte */}
-      <div className="p-6 bg-red-50">
+      <div className="p-6 bg-error-50">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">⚠️</span>
-          <h3 className="font-semibold text-red-700">Zone de danger</h3>
+          <h3 className="font-semibold text-error-700">Zone de danger</h3>
         </div>
-        <p className="text-gray-600 mb-4">
+        <p className="body-md mb-4">
           La suppression de votre compte est irréversible. Toutes vos données (profil, historique, recettes sauvegardées) seront définitivement supprimées.
         </p>
         <Button
           variant="outline"
-          className="!border-red-500 !text-red-600 hover:!bg-red-100"
+          className="!border-error-500 !text-error-600 hover:!bg-error-100"
           onClick={onDeleteClick}
         >
           Supprimer mon compte
@@ -525,20 +525,20 @@ function NotificationSettings() {
   ]
 
   return (
-    <div className="divide-y divide-gray-100">
+    <div className="divide-y divide-neutral-100">
       {notificationOptions.map((option) => (
         <div key={option.key} className="p-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className="text-2xl">{option.icon}</span>
             <div>
-              <h4 className="font-medium text-gray-900">{option.label}</h4>
-              <p className="text-sm text-gray-500">{option.description}</p>
+              <h4 className="font-medium text-neutral-800">{option.label}</h4>
+              <p className="body-sm">{option.description}</p>
             </div>
           </div>
           <button
             onClick={() => toggleSetting(option.key)}
             className={`relative w-12 h-6 rounded-full transition-colors ${
-              settings[option.key] ? 'bg-primary-600' : 'bg-gray-300'
+              settings[option.key] ? 'bg-primary-500' : 'bg-neutral-300'
             }`}
           >
             <span
@@ -562,13 +562,13 @@ function NotificationSettings() {
 // Composant Paramètres de Confidentialité
 function PrivacySettings() {
   return (
-    <div className="divide-y divide-gray-100">
+    <div className="divide-y divide-neutral-100">
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">📋</span>
-          <h3 className="font-semibold text-gray-900">Vos données</h3>
+          <h3 className="heading-4">Vos données</h3>
         </div>
-        <p className="text-gray-600 mb-4">
+        <p className="body-md mb-4">
           Conformément au RGPD, vous avez le droit d'accéder à vos données personnelles et de les télécharger.
         </p>
         <Button variant="outline">
@@ -579,21 +579,21 @@ function PrivacySettings() {
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">🔐</span>
-          <h3 className="font-semibold text-gray-900">Partage des données</h3>
+          <h3 className="heading-4">Partage des données</h3>
         </div>
         <div className="space-y-4">
           <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-5 h-5 rounded text-primary-600" />
+            <input type="checkbox" className="w-5 h-5 rounded text-primary-500" />
             <div>
-              <p className="font-medium text-gray-900">Amélioration du service</p>
-              <p className="text-sm text-gray-500">Autoriser l'utilisation anonyme de mes données pour améliorer les algorithmes</p>
+              <p className="font-medium text-neutral-800">Amélioration du service</p>
+              <p className="body-sm">Autoriser l'utilisation anonyme de mes données pour améliorer les algorithmes</p>
             </div>
           </label>
           <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-5 h-5 rounded text-primary-600" />
+            <input type="checkbox" className="w-5 h-5 rounded text-primary-500" />
             <div>
-              <p className="font-medium text-gray-900">Statistiques anonymes</p>
-              <p className="text-sm text-gray-500">Partager des statistiques anonymes pour la recherche en nutrition</p>
+              <p className="font-medium text-neutral-800">Statistiques anonymes</p>
+              <p className="body-sm">Partager des statistiques anonymes pour la recherche en nutrition</p>
             </div>
           </label>
         </div>
@@ -602,12 +602,12 @@ function PrivacySettings() {
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">📄</span>
-          <h3 className="font-semibold text-gray-900">Documents légaux</h3>
+          <h3 className="heading-4">Documents légaux</h3>
         </div>
         <div className="space-y-2">
-          <a href="#" className="block text-primary-600 hover:underline">Politique de confidentialité</a>
-          <a href="#" className="block text-primary-600 hover:underline">Conditions d'utilisation</a>
-          <a href="#" className="block text-primary-600 hover:underline">Politique des cookies</a>
+          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">Politique de confidentialité</a>
+          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">Conditions d'utilisation</a>
+          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">Politique des cookies</a>
         </div>
       </div>
     </div>

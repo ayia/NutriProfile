@@ -271,44 +271,59 @@ async def analyze_image(
 
     # Sauvegarder si demandé (par défaut: True)
     if request.save_to_log:
-        food_log = FoodLog(
-            user_id=current_user.id,
-            meal_type=request.meal_type,
-            meal_date=datetime.utcnow(),
-            description=analysis.description,
-            image_analyzed=True,
-            detected_items=[item.to_dict() for item in validated_items],
-            confidence_score=confidence,
-            model_used=model_used,
-            total_calories=total_calories,
-            total_protein=total_protein,
-            total_carbs=total_carbs,
-            total_fat=total_fat,
-        )
-        db.add(food_log)
-        await db.flush()
+        # Protection anti-doublons: vérifier si un repas similaire existe dans les 5 dernières minutes
+        five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
+        duplicate_check = select(FoodLog).where(and_(
+            FoodLog.user_id == current_user.id,
+            FoodLog.meal_type == request.meal_type,
+            FoodLog.total_calories == total_calories,
+            FoodLog.created_at >= five_minutes_ago,
+        ))
+        duplicate_result = await db.execute(duplicate_check)
+        existing_duplicate = duplicate_result.scalar_one_or_none()
 
-        # Créer les items individuels
-        for item in validated_items:
-            food_item = FoodItemModel(
-                food_log_id=food_log.id,
-                name=item.name,
-                quantity=item.quantity,
-                unit=item.unit,
-                calories=item.calories,
-                protein=item.protein,
-                carbs=item.carbs,
-                fat=item.fat,
-                source="ai",
-                confidence=item.confidence,
+        if existing_duplicate:
+            # Retourner l'ID du repas existant sans créer de doublon
+            food_log_id = existing_duplicate.id
+        else:
+            food_log = FoodLog(
+                user_id=current_user.id,
+                meal_type=request.meal_type,
+                meal_date=datetime.utcnow(),
+                description=analysis.description,
+                image_analyzed=True,
+                detected_items=[item.to_dict() for item in validated_items],
+                confidence_score=confidence,
+                model_used=model_used,
+                total_calories=total_calories,
+                total_protein=total_protein,
+                total_carbs=total_carbs,
+                total_fat=total_fat,
             )
-            db.add(food_item)
+            db.add(food_log)
+            await db.flush()
 
-        await db.commit()
-        food_log_id = food_log.id
+            # Créer les items individuels
+            for item in validated_items:
+                food_item = FoodItemModel(
+                    food_log_id=food_log.id,
+                    name=item.name,
+                    quantity=item.quantity,
+                    unit=item.unit,
+                    calories=item.calories,
+                    protein=item.protein,
+                    carbs=item.carbs,
+                    fat=item.fat,
+                    source="ai",
+                    confidence=item.confidence,
+                )
+                db.add(food_item)
 
-        # Mettre à jour le résumé journalier
-        await update_daily_nutrition(db, current_user.id, datetime.utcnow().date())
+            await db.commit()
+            food_log_id = food_log.id
+
+            # Mettre à jour le résumé journalier
+            await update_daily_nutrition(db, current_user.id, datetime.utcnow().date())
 
     # Construire la réponse du rapport de santé
     health_report_response = HealthReportResponse(

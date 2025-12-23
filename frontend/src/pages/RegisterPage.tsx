@@ -57,20 +57,20 @@ export function RegisterPage() {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="bg-white rounded-xl shadow-sm p-8">
+      <div className="card-elevated p-8">
         {/* En-tête amélioré */}
         <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-gradient-to-br from-primary-400 to-green-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="w-16 h-16 gradient-vitality rounded-full flex items-center justify-center mx-auto mb-4 shadow-elevated">
             <span className="text-3xl">🎉</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Créer un compte</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="heading-2">Créer un compte</h1>
+          <p className="body-md mt-1">
             Rejoignez NutriProfile gratuitement
           </p>
         </div>
 
         {registerError && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm flex items-center gap-2">
+          <div className="mb-4 p-3 bg-error-50 border border-error-200 text-error-600 rounded-xl text-sm flex items-center gap-2">
             <span>⚠️</span>
             <span>Une erreur est survenue. Veuillez réessayer.</span>
           </div>
@@ -94,7 +94,7 @@ export function RegisterPage() {
               })}
             />
             {touchedFields.name && !errors.name && (
-              <span className="absolute right-3 top-9 text-green-500">✓</span>
+              <span className="absolute right-3 top-9 text-success-500">✓</span>
             )}
           </div>
 
@@ -115,7 +115,7 @@ export function RegisterPage() {
               })}
             />
             {touchedFields.email && !errors.email && (
-              <span className="absolute right-3 top-9 text-green-500">✓</span>
+              <span className="absolute right-3 top-9 text-success-500">✓</span>
             )}
           </div>
 
@@ -139,7 +139,7 @@ export function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-9 text-neutral-500 hover:text-neutral-700 transition-colors"
               >
                 {showPassword ? '🙈' : '👁️'}
               </button>
@@ -149,7 +149,7 @@ export function RegisterPage() {
             {password && (
               <div className="mt-2">
                 <div className="flex items-center gap-2 mb-1">
-                  <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="flex-1 h-1.5 bg-neutral-200 rounded-full overflow-hidden">
                     <div
                       className={`h-full ${passwordStrength.color} transition-all duration-300`}
                       style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
@@ -166,7 +166,7 @@ export function RegisterPage() {
                     <div
                       key={req.label}
                       className={`flex items-center gap-1 text-xs ${
-                        req.test ? 'text-green-600' : 'text-gray-400'
+                        req.test ? 'text-success-600' : 'text-neutral-400'
                       }`}
                     >
                       <span>{req.test ? '✓' : '○'}</span>
@@ -195,17 +195,17 @@ export function RegisterPage() {
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+              className="absolute right-3 top-9 text-neutral-500 hover:text-neutral-700 transition-colors"
             >
               {showConfirmPassword ? '🙈' : '👁️'}
             </button>
             {touchedFields.confirmPassword && !errors.confirmPassword && watch('confirmPassword') && (
-              <span className="absolute right-10 top-9 text-green-500">✓</span>
+              <span className="absolute right-10 top-9 text-success-500">✓</span>
             )}
           </div>
 
           {/* Conditions */}
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-neutral-500">
             En créant un compte, vous acceptez nos{' '}
             <a href="#" className="text-primary-600 hover:underline">
               Conditions d'utilisation
@@ -230,10 +230,10 @@ export function RegisterPage() {
         {/* Séparateur */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
+            <div className="w-full border-t border-neutral-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-4 text-gray-500">ou</span>
+            <span className="bg-white px-4 text-neutral-500">ou</span>
           </div>
         </div>
 
@@ -241,7 +241,7 @@ export function RegisterPage() {
         <div className="space-y-3">
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-neutral-300 rounded-xl hover:bg-neutral-50 transition-colors"
             disabled
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -262,13 +262,13 @@ export function RegisterPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            <span className="text-gray-500">Bientôt disponible</span>
+            <span className="text-neutral-500">Bientôt disponible</span>
           </button>
         </div>
 
-        <p className="mt-6 text-center text-gray-600">
+        <p className="mt-6 text-center body-md">
           Déjà un compte ?{' '}
-          <Link to="/login" className="text-primary-600 hover:underline font-medium">
+          <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
             Se connecter
           </Link>
         </p>

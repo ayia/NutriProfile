@@ -44,8 +44,7 @@ yarn-error.log*
 
 # Database
 *.db
-*.sqlite3
-nutriprofile.db
+okmaintenat en term de designnutriprofile.db
 
 # Logs
 logs/
