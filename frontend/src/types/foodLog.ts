@@ -51,6 +51,26 @@ export interface ImageAnalyzeRequest {
   save_to_log: boolean
 }
 
+export interface HealthReport {
+  overall_score: number
+  verdict: 'excellent' | 'good' | 'moderate' | 'poor'
+  verdict_message: string
+  calorie_analysis: {
+    status: 'under' | 'optimal' | 'over'
+    message: string
+    remaining: number
+  }
+  macro_analysis: {
+    protein_status: string
+    carbs_status: string
+    fat_status: string
+    recommendations: string[]
+  }
+  health_warnings: string[]
+  positive_points: string[]
+  suggestions: string[]
+}
+
 export interface ImageAnalyzeResponse {
   success: boolean
   description: string
@@ -63,6 +83,7 @@ export interface ImageAnalyzeResponse {
   confidence: number
   model_used: string
   food_log_id: number | null
+  health_report?: HealthReport
 }
 
 export interface DailyNutrition {

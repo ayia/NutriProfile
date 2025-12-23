@@ -24,14 +24,20 @@ export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormPro
       queryClient.invalidateQueries({ queryKey: ['weight'] })
       onSuccess?.()
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Weight creation error:', error)
+      console.error('Error response:', error?.response?.data)
+      console.error('Error status:', error?.response?.status)
+      if (error?.response?.status === 401) {
+        console.error('Token expiré ou invalide - veuillez vous reconnecter')
+      }
     },
   })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('WeightForm: Submitting data:', formData)
+    console.log('WeightForm handleSubmit called', formData)
+    console.log('Mutation state:', { isPending: createMutation.isPending, isError: createMutation.isError })
     createMutation.mutate(formData)
   }
 
@@ -128,7 +134,9 @@ export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormPro
 
       {createMutation.error && (
         <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-          Erreur lors de l'enregistrement
+          {(createMutation.error as any)?.response?.status === 401
+            ? 'Session expirée - veuillez vous reconnecter'
+            : 'Erreur lors de l\'enregistrement'}
         </div>
       )}
     </form>

@@ -36,7 +36,6 @@ export function TrackingPage() {
   const weightsQuery = useQuery({
     queryKey: ['weight'],
     queryFn: () => trackingApi.getWeightLogs(),
-    enabled: activeTab === 'weight',
   })
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
@@ -408,6 +407,7 @@ export function TrackingPage() {
                 <WeightForm
                   onSuccess={() => setActiveModal(null)}
                   onCancel={() => setActiveModal(null)}
+                  currentWeight={weightsQuery.data?.[0]?.weight_kg}
                 />
               )}
 

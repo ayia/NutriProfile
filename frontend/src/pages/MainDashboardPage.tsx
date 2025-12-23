@@ -5,6 +5,8 @@ import { CoachCard } from '@/components/dashboard/CoachCard'
 import { StatsRing } from '@/components/dashboard/StatsRing'
 import { LevelProgress } from '@/components/dashboard/LevelProgress'
 import { NotificationBell } from '@/components/dashboard/NotificationBell'
+import { WeeklyChart } from '@/components/dashboard/WeeklyChart'
+import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton'
 import { Button } from '@/components/ui/Button'
 import { STREAK_LABELS } from '@/types/dashboard'
 
@@ -18,19 +20,7 @@ export function MainDashboardPage() {
   const data = dashboardQuery.data
 
   if (dashboardQuery.isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="animate-pulse space-y-6">
-          <div className="h-32 bg-gray-200 rounded-xl" />
-          <div className="grid grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded-xl" />
-            ))}
-          </div>
-          <div className="h-64 bg-gray-200 rounded-xl" />
-        </div>
-      </div>
-    )
+    return <DashboardSkeleton />
   }
 
   if (!data) {
@@ -104,6 +94,9 @@ export function MainDashboardPage() {
 
       {/* Coach */}
       {data.coach_advice && <CoachCard advice={data.coach_advice} />}
+
+      {/* Graphique de la semaine */}
+      <WeeklyChart />
 
       {/* Actions rapides */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

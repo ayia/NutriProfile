@@ -34,7 +34,6 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('GoalForm: Submitting data:', formData)
     createMutation.mutate(formData)
   }
 

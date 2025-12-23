@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { recipeApi } from '@/services/recipeApi'
@@ -8,10 +8,28 @@ import { RecipeCard } from './RecipeCard'
 import type { RecipeGenerateRequest, RecipeGenerateResponse } from '@/types/recipe'
 import { MEAL_TYPE_LABELS, MEAL_TYPE_ICONS } from '@/types/recipe'
 
-export function RecipeGenerator() {
+interface RecipeGeneratorProps {
+  initialTags?: string[]
+  onTagsCleared?: () => void
+}
+
+export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGeneratorProps) {
   const [ingredients, setIngredients] = useState<string[]>([])
   const [newIngredient, setNewIngredient] = useState('')
   const [generatedRecipe, setGeneratedRecipe] = useState<RecipeGenerateResponse | null>(null)
+  const [activeTags, setActiveTags] = useState<string[]>([])
+
+  // Apply initial tags when they change
+  useEffect(() => {
+    if (initialTags.length > 0) {
+      setActiveTags(initialTags)
+    }
+  }, [initialTags])
+
+  const clearTags = () => {
+    setActiveTags([])
+    onTagsCleared?.()
+  }
 
   const { register, handleSubmit, watch } = useForm<Omit<RecipeGenerateRequest, 'ingredients'>>({
     defaultValues: {
@@ -52,6 +70,30 @@ export function RecipeGenerator() {
     <div className="space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-xl shadow-sm p-6 space-y-6">
         <h2 className="text-xl font-semibold">Générer une recette</h2>
+
+        {/* Active tags from quick suggestions */}
+        {activeTags.length > 0 && (
+          <div className="flex items-center gap-2 p-3 bg-primary-50 border border-primary-200 rounded-lg">
+            <span className="text-sm text-primary-700">Filtres actifs:</span>
+            <div className="flex flex-wrap gap-1">
+              {activeTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2 py-0.5 bg-primary-100 text-primary-700 rounded-full text-xs"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={clearTags}
+              className="ml-auto text-primary-600 hover:text-primary-800 text-sm"
+            >
+              Effacer
+            </button>
+          </div>
+        )}
 
         {/* Type de repas */}
         <div>

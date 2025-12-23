@@ -107,8 +107,23 @@ class DetectedItem(BaseModel):
     confidence: float
 
 
+class HealthReportResponse(BaseModel):
+    """Rapport de santé personnalisé."""
+    health_score: int = Field(..., ge=0, le=100, description="Score santé global du repas (0-100)")
+    goal_compatibility: int = Field(..., ge=0, le=100, description="Compatibilité avec les objectifs (0-100)")
+    verdict: str = Field(..., description="excellent, good, neutral, poor, bad")
+    verdict_color: str = Field(default="gray", description="Couleur pour UI: green, emerald, yellow, orange, red")
+    summary: str = Field(..., description="Résumé en une phrase")
+    positive_points: list[str] = Field(default_factory=list)
+    negative_points: list[str] = Field(default_factory=list)
+    recommendations: list[str] = Field(default_factory=list)
+    macro_analysis: dict = Field(default_factory=dict)
+    weekly_impact: dict = Field(default_factory=dict, description="Impact sur la progression hebdomadaire")
+    meal_timing_feedback: str | None = Field(default=None, description="Feedback basé sur l'heure du repas")
+
+
 class ImageAnalyzeResponse(BaseModel):
-    """Réponse d'analyse d'image."""
+    """Réponse d'analyse d'image avec rapport de santé personnalisé."""
     success: bool
     description: str
     meal_type: str | None = None
@@ -120,6 +135,7 @@ class ImageAnalyzeResponse(BaseModel):
     confidence: float
     model_used: str
     food_log_id: int | None = None
+    health_report: HealthReportResponse | None = None
 
 
 # Daily Nutrition Schemas

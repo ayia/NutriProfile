@@ -13,21 +13,28 @@ export const api = axios.create({
 // Intercepteur pour ajouter le token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
-  console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`, { hasToken: !!token })
+  console.log('API Request:', config.method?.toUpperCase(), config.url, config.data)
+  console.log('Token present:', !!token, token ? token.substring(0, 30) + '...' : 'null')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config
 })
 
-// Intercepteur pour gérer les erreurs
+// Intercepteur pour gérer les erreurs (redirection vers login si 401)
 api.interceptors.response.use(
   (response) => {
-    console.log(`[API] Response ${response.status}:`, response.config.url)
+    console.log('API Response OK:', response.config.url, response.status)
     return response
   },
   (error) => {
-    console.error('[API] Error:', error.response?.status, error.response?.data, error.config?.url)
+    console.error('API Error:', error.config?.url, error.response?.status, error.message)
+    console.error('Error details:', error.response?.data)
+    if (error.response?.status === 401) {
+      console.error('401 Unauthorized - redirecting to login')
+      localStorage.removeItem('token')
+      window.location.href = '/login'
+    }
     return Promise.reject(error)
   }
 )

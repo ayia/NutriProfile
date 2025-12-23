@@ -7,6 +7,158 @@ from app.llm.models import ModelCapability
 from app.models.profile import DietType, Goal
 
 
+class MealHistoryAnalysis:
+    """Analyse de l'historique alimentaire pour personnalisation."""
+
+    def __init__(
+        self,
+        # Aliments mangés récemment (7 derniers jours)
+        recent_foods: list[str] | None = None,
+        # Fréquence des aliments (aliment -> nombre de fois)
+        food_frequency: dict[str, int] | None = None,
+        # Aliments par type de repas
+        breakfast_foods: list[str] | None = None,
+        lunch_foods: list[str] | None = None,
+        dinner_foods: list[str] | None = None,
+        # Score de variété (0-100)
+        variety_score: float = 50.0,
+        # Nombre de repas logués dans les 7 derniers jours
+        meals_logged_week: int = 0,
+        # Protéines principales récentes
+        recent_proteins: list[str] | None = None,
+        # Accompagnements fréquents
+        frequent_sides: list[str] | None = None,
+    ):
+        self.recent_foods = recent_foods or []
+        self.food_frequency = food_frequency or {}
+        self.breakfast_foods = breakfast_foods or []
+        self.lunch_foods = lunch_foods or []
+        self.dinner_foods = dinner_foods or []
+        self.variety_score = variety_score
+        self.meals_logged_week = meals_logged_week
+        self.recent_proteins = recent_proteins or []
+        self.frequent_sides = frequent_sides or []
+
+    def get_foods_to_avoid(self, max_recent: int = 3) -> list[str]:
+        """Retourne les aliments mangés trop souvent récemment (à éviter)."""
+        if not self.food_frequency:
+            return []
+        # Aliments mangés plus de 3 fois dans la semaine
+        return [food for food, count in self.food_frequency.items() if count >= max_recent]
+
+    def get_suggested_proteins(self, meal_type: str) -> list[str]:
+        """Suggère des protéines non consommées récemment."""
+        all_proteins = ["poulet", "boeuf", "porc", "agneau", "poisson", "saumon",
+                       "thon", "crevettes", "tofu", "tempeh", "oeufs", "lentilles",
+                       "pois chiches", "haricots"]
+        # Exclure celles mangées récemment
+        return [p for p in all_proteins if p.lower() not in [r.lower() for r in self.recent_proteins]]
+
+    def get_variety_recommendation(self) -> str:
+        """Recommandation basée sur le score de variété."""
+        if self.variety_score >= 80:
+            return "Excellente variété alimentaire! Continuez ainsi."
+        elif self.variety_score >= 60:
+            return "Bonne variété. Essayez d'explorer de nouveaux aliments."
+        elif self.variety_score >= 40:
+            return "Variété moyenne. Diversifiez vos sources de protéines et légumes."
+        else:
+            return "Variété faible. Important d'introduire plus d'aliments différents."
+
+
+class UserContext:
+    """Contexte utilisateur pour la personnalisation des recettes."""
+
+    def __init__(
+        self,
+        # Profil de base
+        age: int | None = None,
+        gender: str | None = None,
+        weight_kg: float | None = None,
+        height_cm: float | None = None,
+        target_weight_kg: float | None = None,
+        # Métabolisme calculé
+        bmr: float | None = None,
+        tdee: float | None = None,
+        daily_calories: int | None = None,
+        protein_g: int | None = None,
+        carbs_g: int | None = None,
+        fat_g: int | None = None,
+        # Tracking du jour
+        calories_consumed_today: int = 0,
+        calories_burned_today: int = 0,
+        protein_consumed_today: int = 0,
+        activity_minutes_today: int = 0,
+        # Tendances (dernière semaine)
+        weight_trend: float | None = None,  # Positif = prise de poids, négatif = perte
+        avg_calories_week: float | None = None,
+        activity_level_actual: str | None = None,  # basé sur les activités réelles
+        # NOUVEAU: Historique alimentaire
+        meal_history: MealHistoryAnalysis | None = None,
+        # Heure actuelle pour recommandations temporelles
+        current_hour: int | None = None,
+    ):
+        self.age = age
+        self.gender = gender
+        self.weight_kg = weight_kg
+        self.height_cm = height_cm
+        self.target_weight_kg = target_weight_kg
+        self.bmr = bmr
+        self.tdee = tdee
+        self.daily_calories = daily_calories
+        self.protein_g = protein_g
+        self.carbs_g = carbs_g
+        self.fat_g = fat_g
+        self.calories_consumed_today = calories_consumed_today
+        self.calories_burned_today = calories_burned_today
+        self.protein_consumed_today = protein_consumed_today
+        self.activity_minutes_today = activity_minutes_today
+        self.weight_trend = weight_trend
+        self.avg_calories_week = avg_calories_week
+        self.activity_level_actual = activity_level_actual
+        self.meal_history = meal_history
+        self.current_hour = current_hour
+
+    def get_remaining_calories(self) -> int:
+        """Calcule les calories restantes pour la journée."""
+        if self.daily_calories:
+            # Ajuster selon l'activité du jour (calories brûlées par l'exercice)
+            adjusted_target = self.daily_calories + self.calories_burned_today
+            return max(0, adjusted_target - self.calories_consumed_today)
+        return 500  # Défaut pour un repas
+
+    def get_remaining_protein(self) -> int:
+        """Calcule les protéines restantes pour la journée."""
+        if self.protein_g:
+            return max(0, self.protein_g - self.protein_consumed_today)
+        return 25  # Défaut
+
+    def get_calorie_adjustment(self) -> str:
+        """Recommandation basée sur la tendance de poids."""
+        if self.weight_trend is None or self.target_weight_kg is None or self.weight_kg is None:
+            return "normal"
+
+        needs_to_lose = self.weight_kg > self.target_weight_kg
+        needs_to_gain = self.weight_kg < self.target_weight_kg
+
+        if needs_to_lose:
+            if self.weight_trend > 0:
+                return "reduce_calories"  # Prend du poids alors qu'il devrait perdre
+            elif self.weight_trend < -0.5:
+                return "normal"  # Perd bien
+            else:
+                return "slight_reduction"
+        elif needs_to_gain:
+            if self.weight_trend < 0:
+                return "increase_calories"  # Perd du poids alors qu'il devrait prendre
+            elif self.weight_trend > 0.5:
+                return "normal"  # Prend bien
+            else:
+                return "slight_increase"
+
+        return "normal"
+
+
 class RecipeInput:
     """Données d'entrée pour l'agent de recettes."""
 
@@ -21,6 +173,8 @@ class RecipeInput:
         servings: int = 2,
         goal: Goal = Goal.MAINTAIN,
         target_calories: int | None = None,
+        # Nouveau: contexte utilisateur complet
+        user_context: UserContext | None = None,
     ):
         self.ingredients = ingredients or []
         self.meal_type = meal_type
@@ -31,6 +185,7 @@ class RecipeInput:
         self.servings = servings
         self.goal = goal
         self.target_calories = target_calories
+        self.user_context = user_context
 
 
 class Recipe:
@@ -156,7 +311,7 @@ class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
             return await self.fallback(input_data)
 
     def build_prompt(self, input_data: RecipeInput) -> str:
-        """Construit le prompt pour générer une recette."""
+        """Construit le prompt pour générer une recette personnalisée."""
         diet_instructions = {
             DietType.VEGAN: "La recette doit être 100% végétalienne (pas de produits animaux).",
             DietType.VEGETARIAN: "La recette doit être végétarienne (pas de viande ni poisson).",
@@ -168,10 +323,10 @@ class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
         }
 
         goal_instructions = {
-            Goal.LOSE_WEIGHT: "Privilégie les recettes légères et riches en protéines.",
-            Goal.GAIN_MUSCLE: "Privilégie les recettes riches en protéines (30g+ par portion).",
-            Goal.MAINTAIN: "Équilibre les macronutriments.",
-            Goal.IMPROVE_HEALTH: "Privilégie les aliments nutritifs et peu transformés.",
+            Goal.LOSE_WEIGHT: "Privilégie les recettes légères, riches en protéines et fibres, faibles en calories.",
+            Goal.GAIN_MUSCLE: "Privilégie les recettes riches en protéines (30g+ par portion) et glucides complexes.",
+            Goal.MAINTAIN: "Équilibre les macronutriments pour maintenir le poids.",
+            Goal.IMPROVE_HEALTH: "Privilégie les aliments nutritifs, peu transformés, riches en vitamines et minéraux.",
         }
 
         ingredients_text = ", ".join(input_data.ingredients) if input_data.ingredients else "au choix"
@@ -184,26 +339,164 @@ class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
         diet_text = f"{diet_type.value} - {diet_instructions.get(diet_type, '')}"
         goal_text = goal_instructions.get(goal, "Équilibre les macronutriments.")
 
-        return f"""Tu es un chef cuisinier expert en nutrition. Génère une recette pour un {input_data.meal_type}.
+        # Construire le contexte utilisateur si disponible
+        user_context_text = ""
+        target_calories = input_data.target_calories
+        target_protein = None
 
-CONTRAINTES:
+        if input_data.user_context:
+            ctx = input_data.user_context
+
+            # Calculer les calories cibles intelligemment
+            remaining_calories = ctx.get_remaining_calories()
+            remaining_protein = ctx.get_remaining_protein()
+            calorie_adjustment = ctx.get_calorie_adjustment()
+
+            # Ajuster les calories selon le type de repas et ce qui reste
+            meal_calorie_ratio = {
+                "breakfast": 0.25,
+                "lunch": 0.35,
+                "dinner": 0.30,
+                "snack": 0.10,
+            }
+            ratio = meal_calorie_ratio.get(input_data.meal_type, 0.30)
+
+            if ctx.daily_calories and not target_calories:
+                # Calories idéales pour ce repas basées sur le budget restant
+                ideal_for_meal = int(ctx.daily_calories * ratio)
+                # Prendre le minimum entre l'idéal et ce qui reste
+                target_calories = min(ideal_for_meal, remaining_calories) if remaining_calories > 0 else ideal_for_meal
+
+            target_protein = int(remaining_protein * ratio) if remaining_protein else None
+
+            # Construire le contexte détaillé
+            context_parts = []
+
+            if ctx.weight_kg:
+                weight_info = f"Poids actuel: {ctx.weight_kg} kg"
+                if ctx.target_weight_kg:
+                    diff = ctx.weight_kg - ctx.target_weight_kg
+                    if diff > 0:
+                        weight_info += f" (objectif: perdre {diff:.1f} kg)"
+                    elif diff < 0:
+                        weight_info += f" (objectif: prendre {abs(diff):.1f} kg)"
+                context_parts.append(weight_info)
+
+            if ctx.weight_trend is not None:
+                trend = "stable"
+                if ctx.weight_trend > 0.2:
+                    trend = f"en hausse (+{ctx.weight_trend:.1f} kg cette semaine)"
+                elif ctx.weight_trend < -0.2:
+                    trend = f"en baisse ({ctx.weight_trend:.1f} kg cette semaine)"
+                context_parts.append(f"Tendance poids: {trend}")
+
+            if ctx.calories_consumed_today > 0 or ctx.calories_burned_today > 0:
+                today_info = f"Aujourd'hui: {ctx.calories_consumed_today} kcal consommées"
+                if ctx.calories_burned_today > 0:
+                    today_info += f", {ctx.calories_burned_today} kcal brûlées (activité: {ctx.activity_minutes_today} min)"
+                context_parts.append(today_info)
+
+            if remaining_calories > 0:
+                context_parts.append(f"Budget calorique restant: {remaining_calories} kcal")
+
+            if ctx.protein_consumed_today > 0 and ctx.protein_g:
+                context_parts.append(f"Protéines: {ctx.protein_consumed_today}g / {ctx.protein_g}g objectif")
+
+            # Recommandation d'ajustement
+            adjustment_text = {
+                "reduce_calories": "IMPORTANT: L'utilisateur prend du poids mais veut en perdre. Propose une recette LÉGÈRE.",
+                "slight_reduction": "Privilégie une recette modérément calorique pour favoriser la perte de poids.",
+                "increase_calories": "IMPORTANT: L'utilisateur perd du poids mais veut en prendre. Propose une recette CALORIQUE.",
+                "slight_increase": "Privilégie une recette assez calorique pour favoriser la prise de poids.",
+                "normal": "",
+            }
+            if calorie_adjustment != "normal":
+                context_parts.append(adjustment_text.get(calorie_adjustment, ""))
+
+            # NOUVEAU: Analyse de l'historique alimentaire
+            if ctx.meal_history:
+                mh = ctx.meal_history
+                history_parts = []
+
+                # Aliments à éviter (mangés trop souvent)
+                foods_to_avoid = mh.get_foods_to_avoid()
+                if foods_to_avoid:
+                    history_parts.append(f"ÉVITER (mangés trop souvent cette semaine): {', '.join(foods_to_avoid)}")
+
+                # Score de variété
+                if mh.variety_score < 60:
+                    history_parts.append(f"Score variété: {mh.variety_score:.0f}/100 - {mh.get_variety_recommendation()}")
+
+                # Protéines suggérées
+                suggested_proteins = mh.get_suggested_proteins(input_data.meal_type)
+                if suggested_proteins and len(suggested_proteins) > 0:
+                    history_parts.append(f"Protéines suggérées (non consommées récemment): {', '.join(suggested_proteins[:5])}")
+
+                # Repas logués cette semaine
+                if mh.meals_logged_week > 0:
+                    history_parts.append(f"Repas logués (7j): {mh.meals_logged_week}")
+
+                if history_parts:
+                    context_parts.append("\nHISTORIQUE ALIMENTAIRE:")
+                    context_parts.extend(history_parts)
+
+            # NOUVEAU: Recommandations basées sur l'heure
+            if ctx.current_hour is not None:
+                time_recommendations = []
+                hour = ctx.current_hour
+
+                if 6 <= hour < 10:
+                    time_recommendations.append("Matin: Privilégier les glucides complexes pour l'énergie")
+                elif 11 <= hour < 14:
+                    time_recommendations.append("Midi: Repas équilibré, protéines + légumes")
+                elif 14 <= hour < 17:
+                    time_recommendations.append("Après-midi: Snack léger si nécessaire")
+                elif 18 <= hour < 21:
+                    time_recommendations.append("Soir: Repas léger, éviter les glucides simples")
+                elif hour >= 21 or hour < 6:
+                    time_recommendations.append("Tard: Éviter les repas lourds, privilégier protéines légères")
+
+                if time_recommendations:
+                    context_parts.extend(time_recommendations)
+
+            if context_parts:
+                user_context_text = "\n\nCONTEXTE UTILISATEUR (personnalisation importante):\n" + "\n".join(f"- {p}" for p in context_parts)
+
+        # Construire les cibles nutritionnelles
+        nutrition_targets = ""
+        if target_calories:
+            nutrition_targets = f"\n- Calories cibles par portion: {target_calories} kcal (±10%)"
+        if target_protein:
+            nutrition_targets += f"\n- Protéines cibles: {target_protein}g minimum"
+
+        return f"""Tu es un chef cuisinier expert en nutrition personnalisée. Génère une recette pour un {input_data.meal_type}.
+{user_context_text}
+
+CONTRAINTES ALIMENTAIRES:
 - Régime: {diet_text}
-- Objectif: {goal_text}
+- Objectif nutritionnel: {goal_text}
 - Allergies à éviter: {allergies_text}
 - Aliments exclus: {excluded_text}
+
+CONTRAINTES PRATIQUES:
 - Temps de préparation max: {input_data.max_prep_time} minutes
-- Nombre de portions: {input_data.servings}
-{f"- Calories cibles par portion: {input_data.target_calories} kcal" if input_data.target_calories else ""}
+- Nombre de portions: {input_data.servings}{nutrition_targets}
 
 INGRÉDIENTS DISPONIBLES: {ingredients_text}
+
+INSTRUCTIONS IMPORTANTES:
+1. Adapte la recette au contexte utilisateur ci-dessus
+2. Respecte strictement les contraintes caloriques si spécifiées
+3. Privilégie des ingrédients frais et peu transformés
+4. Assure un bon équilibre protéines/glucides/lipides selon l'objectif
 
 Réponds en JSON avec ce format exact:
 {{
     "title": "Nom de la recette",
-    "description": "Description courte et appétissante",
+    "description": "Description courte expliquant pourquoi cette recette est adaptée au profil",
     "ingredients": [
-        {{"name": "ingrédient 1", "quantity": "quantité"}},
-        {{"name": "ingrédient 2", "quantity": "quantité"}}
+        {{"name": "ingrédient 1", "quantity": "quantité précise"}},
+        {{"name": "ingrédient 2", "quantity": "quantité précise"}}
     ],
     "instructions": [
         "Étape 1: ...",
@@ -214,16 +507,17 @@ Réponds en JSON avec ce format exact:
     "cook_time": 20,
     "servings": {input_data.servings},
     "nutrition": {{
-        "calories": 450,
-        "protein": 30,
+        "calories": {target_calories or 450},
+        "protein": {target_protein or 25},
         "carbs": 40,
         "fat": 15,
         "fiber": 8
     }},
-    "tags": ["rapide", "healthy", "protéiné"]
+    "tags": ["rapide", "healthy", "protéiné"],
+    "personalization_note": "Explication de comment cette recette est adaptée au profil utilisateur"
 }}
 
-Sois créatif mais réaliste. La recette doit être facile à suivre."""
+Sois créatif mais réaliste. La recette doit être facile à suivre et PARFAITEMENT adaptée au contexte de l'utilisateur."""
 
     def parse_response(self, raw_response: str, input_data: RecipeInput) -> Recipe:
         """Parse la réponse LLM en objet Recipe."""

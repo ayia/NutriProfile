@@ -16,8 +16,15 @@ import type {
 export const trackingApi = {
   // Activities
   createActivity: async (data: ActivityLogCreate): Promise<ActivityLog> => {
-    const response = await api.post('/tracking/activities', data)
-    return response.data
+    console.log('trackingApi.createActivity called with:', data)
+    try {
+      const response = await api.post('/tracking/activities', data)
+      console.log('trackingApi.createActivity success:', response.data)
+      return response.data
+    } catch (error) {
+      console.error('trackingApi.createActivity error:', error)
+      throw error
+    }
   },
 
   getActivities: async (
@@ -47,8 +54,15 @@ export const trackingApi = {
 
   // Weight
   createWeightLog: async (data: WeightLogCreate): Promise<WeightLog> => {
-    const response = await api.post('/tracking/weight', data)
-    return response.data
+    console.log('trackingApi.createWeightLog called with:', data)
+    try {
+      const response = await api.post('/tracking/weight', data)
+      console.log('trackingApi.createWeightLog success:', response.data)
+      return response.data
+    } catch (error) {
+      console.error('trackingApi.createWeightLog error:', error)
+      throw error
+    }
   },
 
   getWeightLogs: async (limit = 30): Promise<WeightLog[]> => {

@@ -26,14 +26,21 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
       queryClient.invalidateQueries({ queryKey: ['activities'] })
       onSuccess?.()
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Activity creation error:', error)
+      console.error('Error response:', error?.response?.data)
+      console.error('Error status:', error?.response?.status)
+      if (error?.response?.status === 401) {
+        console.error('Token expiré ou invalide - veuillez vous reconnecter')
+      }
     },
   })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('ActivityForm: Submitting data:', formData)
+    console.log('ActivityForm handleSubmit called', formData)
+    console.log('Mutation state:', { isPending: createMutation.isPending, isError: createMutation.isError })
+    createMutation.reset() // Reset previous error state
     createMutation.mutate(formData)
   }
 
@@ -167,7 +174,9 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
 
       {createMutation.error && (
         <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-          Erreur lors de l'ajout de l'activité
+          {(createMutation.error as any)?.response?.status === 401
+            ? 'Session expirée - veuillez vous reconnecter'
+            : 'Erreur lors de l\'ajout de l\'activité'}
         </div>
       )}
     </form>
