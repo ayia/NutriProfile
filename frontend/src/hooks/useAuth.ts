@@ -1,34 +1,41 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { authApi, userApi } from '@/services/api'
+import { authApi, userApi, tokenStorage } from '@/services/api'
 import { profileApi } from '@/services/profileApi'
 import { useAuthStore } from '@/store/authStore'
 import type { LoginCredentials, RegisterData } from '@/types'
 
 export function useAuth() {
   const navigate = useNavigate()
-  const { setAuth, setProfileStatus, logout: storeLogout, isAuthenticated, token } = useAuthStore()
+  const queryClient = useQueryClient()
+  const { setAuth, setProfileStatus, logout: storeLogout, isAuthenticated, checkAuthState } = useAuthStore()
+
+  // Vérifier l'état d'authentification au chargement
+  const hasValidTokens = checkAuthState()
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['user'],
     queryFn: userApi.getMe,
-    enabled: !!token,
+    enabled: hasValidTokens,
     retry: false,
+    staleTime: 5 * 60 * 1000, // Cache 5 minutes
   })
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
       const tokenData = await authApi.login(credentials)
-      // Stocker le token AVANT d'appeler getMe pour que l'intercepteur l'utilise
-      localStorage.setItem('token', tokenData.access_token)
+      // Stocker les tokens de manière sécurisée
+      tokenStorage.setTokens(tokenData)
       const userData = await userApi.getMe()
       // Vérifier si l'utilisateur a un profil
       const profileSummary = await profileApi.getSummary()
       return { tokenData, userData, hasProfile: profileSummary.has_profile }
     },
-    onSuccess: ({ tokenData, userData, hasProfile }) => {
-      setAuth(userData, tokenData.access_token)
+    onSuccess: ({ userData, hasProfile }) => {
+      setAuth(userData)
       setProfileStatus(hasProfile)
+      // Invalider les queries pour forcer le rechargement des données
+      queryClient.invalidateQueries()
       // Rediriger vers onboarding si pas de profil, sinon dashboard
       if (hasProfile) {
         navigate('/dashboard')
@@ -43,25 +50,33 @@ export function useAuth() {
       await authApi.register(data)
       // Auto-login après inscription
       const tokenData = await authApi.login({ email: data.email, password: data.password })
-      localStorage.setItem('token', tokenData.access_token)
+      tokenStorage.setTokens(tokenData)
       const userData = await userApi.getMe()
       return { tokenData, userData }
     },
-    onSuccess: ({ tokenData, userData }) => {
-      setAuth(userData, tokenData.access_token)
+    onSuccess: ({ userData }) => {
+      setAuth(userData)
       setProfileStatus(false) // Nouveau user = pas de profil
+      queryClient.invalidateQueries()
       navigate('/onboarding')
     },
   })
 
-  const logout = () => {
-    storeLogout()
-    navigate('/login')
+  const logout = async () => {
+    try {
+      await authApi.logout()
+    } catch {
+      // Ignorer les erreurs de logout côté serveur
+    } finally {
+      storeLogout()
+      queryClient.clear()
+      navigate('/login')
+    }
   }
 
   return {
     user,
-    isAuthenticated,
+    isAuthenticated: isAuthenticated && hasValidTokens,
     isLoading,
     login: loginMutation.mutate,
     loginError: loginMutation.error,

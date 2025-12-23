@@ -1,45 +1,67 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { User } from '@/types'
+import { tokenStorage } from '@/services/api'
 
 interface AuthState {
   user: User | null
-  token: string | null
   isAuthenticated: boolean
   hasProfile: boolean | null
   isCheckingProfile: boolean
-  setAuth: (user: User, token: string) => void
+  setAuth: (user: User) => void
   setProfileStatus: (hasProfile: boolean) => void
   setCheckingProfile: (isChecking: boolean) => void
   logout: () => void
+  checkAuthState: () => boolean
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
-      token: null,
       isAuthenticated: false,
       hasProfile: null,
       isCheckingProfile: false,
-      setAuth: (user, token) => {
-        localStorage.setItem('token', token)
-        set({ user, token, isAuthenticated: true })
+
+      setAuth: (user) => {
+        set({ user, isAuthenticated: true })
       },
+
       setProfileStatus: (hasProfile) => {
         set({ hasProfile })
       },
+
       setCheckingProfile: (isChecking) => {
         set({ isCheckingProfile: isChecking })
       },
+
       logout: () => {
-        localStorage.removeItem('token')
-        set({ user: null, token: null, isAuthenticated: false, hasProfile: null })
+        tokenStorage.clearTokens()
+        set({ user: null, isAuthenticated: false, hasProfile: null })
+      },
+
+      // Vérifie si l'utilisateur est authentifié (token valide)
+      checkAuthState: () => {
+        const token = tokenStorage.getAccessToken()
+        const refreshToken = tokenStorage.getRefreshToken()
+
+        if (!token && !refreshToken) {
+          if (get().isAuthenticated) {
+            set({ user: null, isAuthenticated: false, hasProfile: null })
+          }
+          return false
+        }
+
+        return true
       },
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ token: state.token, hasProfile: state.hasProfile }),
+      partialize: (state) => ({
+        hasProfile: state.hasProfile,
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
     }
   )
 )

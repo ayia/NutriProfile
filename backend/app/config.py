@@ -23,7 +23,9 @@ class Settings(BaseSettings):
 
     # Security
     SECRET_KEY: str = "your-secret-key-change-in-production"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_SECRET_KEY: str = "your-refresh-secret-key-change-in-production"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15  # Token d'accès court (15 min)
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7  # Refresh token (7 jours)
     ALGORITHM: str = "HS256"
 
     # Hugging Face

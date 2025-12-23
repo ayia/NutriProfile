@@ -9,12 +9,13 @@ interface ProfileRequiredRouteProps {
 }
 
 export function ProfileRequiredRoute({ children }: ProfileRequiredRouteProps) {
-  const { isAuthenticated, token, hasProfile, setProfileStatus, setCheckingProfile } = useAuthStore()
+  const { isAuthenticated, hasProfile, setProfileStatus, setCheckingProfile, checkAuthState } = useAuthStore()
+  const hasValidTokens = checkAuthState()
 
   const { data: profileSummary, isLoading, isError } = useQuery({
     queryKey: ['profile-summary'],
     queryFn: profileApi.getSummary,
-    enabled: !!token && hasProfile === null,
+    enabled: hasValidTokens && hasProfile === null,
     retry: false,
   })
 
@@ -30,7 +31,7 @@ export function ProfileRequiredRoute({ children }: ProfileRequiredRouteProps) {
     }
   }, [profileSummary, isError, setProfileStatus])
 
-  if (!isAuthenticated && !token) {
+  if (!isAuthenticated && !hasValidTokens) {
     return <Navigate to="/login" replace />
   }
 

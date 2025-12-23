@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -12,7 +12,7 @@ from app.config import get_settings
 from app.database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
-from app.schemas.auth import Token, TokenData
+from app.schemas.auth import Token, TokenData, RefreshTokenRequest
 
 router = APIRouter()
 settings = get_settings()
@@ -32,11 +32,40 @@ def get_password_hash(password: str) -> str:
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
-    """Crée un token JWT."""
+    """Crée un token d'accès JWT."""
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
-    to_encode.update({"exp": expire})
+    expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=15))
+    to_encode.update({
+        "exp": expire,
+        "type": "access",
+        "iat": datetime.now(timezone.utc),
+    })
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
+def create_refresh_token(data: dict, expires_delta: timedelta | None = None) -> str:
+    """Crée un token de rafraîchissement JWT."""
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + (expires_delta or timedelta(days=7))
+    to_encode.update({
+        "exp": expire,
+        "type": "refresh",
+        "iat": datetime.now(timezone.utc),
+    })
+    return jwt.encode(to_encode, settings.REFRESH_SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
+def verify_refresh_token(token: str) -> TokenData | None:
+    """Vérifie et décode un refresh token."""
+    try:
+        payload = jwt.decode(token, settings.REFRESH_SECRET_KEY, algorithms=[settings.ALGORITHM])
+        email: str = payload.get("sub")
+        token_type: str = payload.get("type")
+        if email is None or token_type != "refresh":
+            return None
+        return TokenData(email=email, token_type=token_type)
+    except JWTError:
+        return None
 
 
 async def get_current_user(
@@ -52,7 +81,8 @@ async def get_current_user(
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         email: str = payload.get("sub")
-        if email is None:
+        token_type: str = payload.get("type", "access")
+        if email is None or token_type != "access":
             raise credentials_exception
         token_data = TokenData(email=email)
     except JWTError:
@@ -63,6 +93,24 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
+
+def create_tokens(email: str) -> Token:
+    """Crée une paire access/refresh tokens."""
+    access_token = create_access_token(
+        data={"sub": email},
+        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+    )
+    refresh_token = create_refresh_token(
+        data={"sub": email},
+        expires_delta=timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
+    )
+    return Token(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        token_type="bearer",
+        expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+    )
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
@@ -97,7 +145,7 @@ async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: AsyncSession = Depends(get_db),
 ) -> Token:
-    """Authentifier et obtenir un token JWT."""
+    """Authentifier et obtenir les tokens JWT."""
     result = await db.execute(select(User).where(User.email == form_data.username))
     user = result.scalar_one_or_none()
 
@@ -108,9 +156,42 @@ async def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token = create_access_token(
-        data={"sub": user.email},
-        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
-    )
+    return create_tokens(user.email)
 
-    return Token(access_token=access_token, token_type="bearer")
+
+@router.post("/refresh", response_model=Token)
+async def refresh_token(
+    request: RefreshTokenRequest,
+    db: AsyncSession = Depends(get_db),
+) -> Token:
+    """Rafraîchir le token d'accès avec un refresh token valide."""
+    token_data = verify_refresh_token(request.refresh_token)
+
+    if token_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token invalide ou expiré",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Vérifier que l'utilisateur existe toujours
+    result = await db.execute(select(User).where(User.email == token_data.email))
+    user = result.scalar_one_or_none()
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Utilisateur non trouvé",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Créer de nouveaux tokens
+    return create_tokens(user.email)
+
+
+@router.post("/logout")
+async def logout():
+    """Déconnexion - invalide les tokens côté client."""
+    # Note: Pour une invalidation côté serveur, il faudrait utiliser Redis
+    # pour stocker une liste de tokens révoqués (token blacklist)
+    return {"message": "Déconnexion réussie"}
