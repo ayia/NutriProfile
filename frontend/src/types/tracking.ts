@@ -152,3 +152,19 @@ export const GOAL_TYPES: Record<string, { name: string; icon: string; unit: stri
   activity: { name: 'Activité', icon: '🏃', unit: 'min' },
   water: { name: 'Eau', icon: '💧', unit: 'ml' },
 }
+
+export interface WeeklyChartDay {
+  day: string
+  shortDay: string
+  date: string
+  calories: number
+  target: number
+  protein: number
+  carbs: number
+  fat: number
+}
+
+export interface WeeklyChartData {
+  days: WeeklyChartDay[]
+  calorie_target: number
+}

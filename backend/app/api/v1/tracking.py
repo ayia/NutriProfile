@@ -23,6 +23,8 @@ from app.schemas.activity import (
     ProgressData,
     ActivityTypeSummary,
     TrackingSummary,
+    WeeklyChartDay,
+    WeeklyChartData,
 )
 
 router = APIRouter()
@@ -487,6 +489,59 @@ async def get_progress_data(
         weight=weight_data,
         activity_minutes=activity_minutes,
     )
+
+
+@router.get("/stats/weekly-chart", response_model=WeeklyChartData)
+async def get_weekly_chart_data(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Récupère les données pour le graphique hebdomadaire."""
+    from app.models.profile import Profile
+
+    # Noms des jours en français
+    DAY_NAMES = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+    DAY_SHORT = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di']
+
+    today = date.today()
+    start_of_week = today - timedelta(days=today.weekday())
+
+    # Récupérer l'objectif calorique de l'utilisateur
+    profile_query = select(Profile).where(Profile.user_id == current_user.id)
+    profile_result = await db.execute(profile_query)
+    profile = profile_result.scalar_one_or_none()
+    calorie_target = profile.daily_calories if profile and profile.daily_calories else 2000
+
+    # Récupérer les données de nutrition pour la semaine
+    start = datetime.combine(start_of_week, datetime.min.time())
+    end = datetime.combine(start_of_week + timedelta(days=6), datetime.max.time())
+
+    nutrition_query = select(DailyNutrition).where(and_(
+        DailyNutrition.user_id == current_user.id,
+        DailyNutrition.date >= start,
+        DailyNutrition.date <= end,
+    ))
+    nutrition_result = await db.execute(nutrition_query)
+    nutritions = {n.date.date(): n for n in nutrition_result.scalars().all()}
+
+    # Construire les données pour chaque jour
+    days = []
+    for i in range(7):
+        current_date = start_of_week + timedelta(days=i)
+        nutrition = nutritions.get(current_date)
+
+        days.append(WeeklyChartDay(
+            day=DAY_NAMES[i],
+            shortDay=DAY_SHORT[i],
+            date=current_date.isoformat(),
+            calories=int(nutrition.total_calories) if nutrition else 0,
+            target=calorie_target,
+            protein=int(nutrition.total_protein) if nutrition else 0,
+            carbs=int(nutrition.total_carbs) if nutrition else 0,
+            fat=int(nutrition.total_fat) if nutrition else 0,
+        ))
+
+    return WeeklyChartData(days=days, calorie_target=calorie_target)
 
 
 @router.get("/stats/activities-breakdown", response_model=list[ActivityTypeSummary])

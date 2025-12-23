@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useRef } from 'react'
 import type { ProgressData } from '@/types/tracking'
 
 interface ProgressChartProps {
@@ -6,14 +6,62 @@ interface ProgressChartProps {
   metric: 'calories' | 'protein' | 'weight' | 'activity_minutes'
   color?: string
   height?: number
+  showTrend?: boolean
+}
+
+interface TooltipData {
+  x: number
+  y: number
+  value: number
+  date: string
+  index: number
+}
+
+const METRIC_CONFIG = {
+  calories: {
+    label: 'Calories',
+    unit: 'kcal',
+    icon: '🔥',
+    gradient: ['#10B981', '#059669'],
+    bgGradient: 'from-emerald-500/10 to-emerald-500/5',
+  },
+  protein: {
+    label: 'Protéines',
+    unit: 'g',
+    icon: '🥩',
+    gradient: ['#06B6D4', '#0891B2'],
+    bgGradient: 'from-cyan-500/10 to-cyan-500/5',
+  },
+  weight: {
+    label: 'Poids',
+    unit: 'kg',
+    icon: '⚖️',
+    gradient: ['#8B5CF6', '#7C3AED'],
+    bgGradient: 'from-violet-500/10 to-violet-500/5',
+  },
+  activity_minutes: {
+    label: 'Activité',
+    unit: 'min',
+    icon: '🏃',
+    gradient: ['#F97316', '#EA580C'],
+    bgGradient: 'from-orange-500/10 to-orange-500/5',
+  },
 }
 
 export function ProgressChart({
   data,
   metric,
-  color = '#10B981',
-  height = 200,
+  color,
+  height = 220,
+  showTrend = true,
 }: ProgressChartProps) {
+  const [hoveredPoint, setHoveredPoint] = useState<TooltipData | null>(null)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const config = METRIC_CONFIG[metric]
+  const primaryColor = color || config.gradient[0]
+
   const chartData = useMemo(() => {
     const values = data[metric] as (number | null)[]
     const filteredValues = values.filter((v): v is number => v !== null && v > 0)
@@ -22,151 +70,368 @@ export function ProgressChart({
 
     const max = Math.max(...filteredValues)
     const min = Math.min(...filteredValues)
-    const range = max - min || 1
+    const range = max - min || max * 0.1 || 1
+    const avg = filteredValues.reduce((a, b) => a + b, 0) / filteredValues.length
+
+    // Calcul de la tendance
+    let trend = 0
+    if (filteredValues.length >= 2) {
+      const recentHalf = filteredValues.slice(-Math.ceil(filteredValues.length / 2))
+      const olderHalf = filteredValues.slice(0, Math.ceil(filteredValues.length / 2))
+      const recentAvg = recentHalf.reduce((a, b) => a + b, 0) / recentHalf.length
+      const olderAvg = olderHalf.reduce((a, b) => a + b, 0) / olderHalf.length
+      trend = ((recentAvg - olderAvg) / olderAvg) * 100
+    }
 
     return {
       values,
-      max,
-      min,
-      range,
+      max: max + range * 0.1, // Add padding
+      min: Math.max(0, min - range * 0.1),
+      range: range * 1.2,
+      avg,
+      trend,
+      latest: filteredValues[filteredValues.length - 1],
+      first: filteredValues[0],
     }
   }, [data, metric])
 
   if (!chartData) {
     return (
       <div
-        className="flex items-center justify-center bg-gray-50 rounded-lg"
+        className="flex flex-col items-center justify-center bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-2xl"
         style={{ height }}
       >
-        <p className="text-gray-500 text-sm">Pas de données</p>
+        <div className="w-12 h-12 bg-neutral-200 rounded-xl flex items-center justify-center mb-3">
+          <span className="text-2xl opacity-50">{config.icon}</span>
+        </div>
+        <p className="text-neutral-500 text-sm font-medium">Pas de données</p>
+        <p className="text-neutral-400 text-xs mt-1">Commence à tracker pour voir ta progression</p>
       </div>
     )
   }
 
-  const padding = 40
+  const padding = { top: 20, right: 20, bottom: 40, left: 50 }
   const chartWidth = 100
-  const chartHeight = height - padding * 2
+  const chartHeight = height - padding.top - padding.bottom
 
   const getY = (value: number | null) => {
     if (value === null) return null
-    return chartHeight - ((value - chartData.min) / chartData.range) * chartHeight + padding
+    return chartHeight - ((value - chartData.min) / chartData.range) * chartHeight + padding.top
   }
 
-  const points = chartData.values
-    .map((value, index) => {
-      const x = (index / (chartData.values.length - 1)) * chartWidth
-      const y = getY(value)
-      return y !== null ? `${x},${y}` : null
-    })
-    .filter((p): p is string => p !== null)
+  const getX = (index: number) => {
+    return padding.left + (index / (chartData.values.length - 1)) * (chartWidth - padding.left - padding.right)
+  }
 
-  const pathD = points.length > 1 ? `M ${points.join(' L ')}` : ''
+  // Générer le path SVG pour une courbe lisse (Bezier)
+  const generateSmoothPath = () => {
+    const points = chartData.values
+      .map((value, index) => {
+        const y = getY(value)
+        if (y === null) return null
+        return { x: getX(index), y }
+      })
+      .filter((p): p is { x: number; y: number } => p !== null)
 
-  // Créer le chemin pour l'aire sous la courbe
-  const areaPoints = chartData.values
-    .map((value, index) => {
-      const x = (index / (chartData.values.length - 1)) * chartWidth
-      const y = getY(value)
-      return y !== null ? { x, y } : null
-    })
-    .filter((p): p is { x: number; y: number } => p !== null)
+    if (points.length < 2) return ''
 
-  const areaD =
-    areaPoints.length > 1
-      ? `M ${areaPoints[0].x},${chartHeight + padding} L ${areaPoints
-          .map((p) => `${p.x},${p.y}`)
-          .join(' L ')} L ${areaPoints[areaPoints.length - 1].x},${chartHeight + padding} Z`
-      : ''
+    let path = `M ${points[0].x},${points[0].y}`
+
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1]
+      const curr = points[i]
+      const cpx = (prev.x + curr.x) / 2
+      path += ` C ${cpx},${prev.y} ${cpx},${curr.y} ${curr.x},${curr.y}`
+    }
+
+    return path
+  }
+
+  // Générer le path pour l'aire sous la courbe
+  const generateAreaPath = () => {
+    const points = chartData.values
+      .map((value, index) => {
+        const y = getY(value)
+        if (y === null) return null
+        return { x: getX(index), y }
+      })
+      .filter((p): p is { x: number; y: number } => p !== null)
+
+    if (points.length < 2) return ''
+
+    const firstPoint = points[0]
+    const lastPoint = points[points.length - 1]
+
+    let path = `M ${firstPoint.x},${chartHeight + padding.top}`
+    path += ` L ${firstPoint.x},${firstPoint.y}`
+
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1]
+      const curr = points[i]
+      const cpx = (prev.x + curr.x) / 2
+      path += ` C ${cpx},${prev.y} ${cpx},${curr.y} ${curr.x},${curr.y}`
+    }
+
+    path += ` L ${lastPoint.x},${chartHeight + padding.top} Z`
+
+    return path
+  }
+
+  const pathD = generateSmoothPath()
+  const areaD = generateAreaPath()
 
   const labels = useMemo(() => {
-    const step = Math.ceil(data.dates.length / 7)
+    const step = Math.ceil(data.dates.length / 6)
     return data.dates
-      .filter((_, i) => i % step === 0)
-      .map((date) => {
+      .filter((_, i) => i % step === 0 || i === data.dates.length - 1)
+      .map((date, index) => {
         const d = new Date(date)
-        return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+        return {
+          label: d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }),
+          index: index * step,
+        }
       })
   }, [data.dates])
 
-  const getMetricLabel = () => {
-    switch (metric) {
-      case 'calories':
-        return 'kcal'
-      case 'protein':
-        return 'g prot'
-      case 'weight':
-        return 'kg'
-      case 'activity_minutes':
-        return 'min'
-      default:
-        return ''
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!containerRef.current) return
+
+    const rect = containerRef.current.getBoundingClientRect()
+    const svgWidth = rect.width
+    const relativeX = e.clientX - rect.left
+    const percentX = relativeX / svgWidth
+
+    const dataIndex = Math.round(percentX * (chartData.values.length - 1))
+    const clampedIndex = Math.max(0, Math.min(chartData.values.length - 1, dataIndex))
+
+    const value = chartData.values[clampedIndex]
+    if (value === null || value === 0) {
+      setHoveredPoint(null)
+      setActiveIndex(null)
+      return
     }
+
+    const y = getY(value)
+    if (y === null) {
+      setHoveredPoint(null)
+      setActiveIndex(null)
+      return
+    }
+
+    setActiveIndex(clampedIndex)
+    setHoveredPoint({
+      x: getX(clampedIndex),
+      y,
+      value,
+      date: data.dates[clampedIndex],
+      index: clampedIndex,
+    })
   }
 
+  const formatValue = (value: number) => {
+    if (metric === 'weight') return value.toFixed(1)
+    return Math.round(value).toLocaleString()
+  }
+
+  const yAxisLabels = [chartData.max, chartData.max * 0.75, chartData.max * 0.5, chartData.max * 0.25, chartData.min]
+
   return (
-    <div className="relative" style={{ height }}>
+    <div className="relative" style={{ height }} ref={containerRef}>
+      {/* Stats en haut */}
+      <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-2 z-10">
+        <div className="flex items-center gap-2">
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: `${primaryColor}20` }}
+          >
+            <span className="text-lg">{config.icon}</span>
+          </div>
+          <div>
+            <span className="text-lg font-bold text-neutral-800">
+              {formatValue(chartData.latest)} {config.unit}
+            </span>
+            {showTrend && chartData.trend !== 0 && (
+              <span
+                className={`ml-2 text-xs font-medium px-1.5 py-0.5 rounded-full ${
+                  chartData.trend > 0
+                    ? metric === 'weight'
+                      ? 'bg-rose-100 text-rose-600'
+                      : 'bg-emerald-100 text-emerald-600'
+                    : metric === 'weight'
+                      ? 'bg-emerald-100 text-emerald-600'
+                      : 'bg-rose-100 text-rose-600'
+                }`}
+              >
+                {chartData.trend > 0 ? '+' : ''}
+                {chartData.trend.toFixed(1)}%
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="text-xs text-neutral-400">
+          Moy: {formatValue(chartData.avg)} {config.unit}
+        </div>
+      </div>
+
+      {/* SVG Chart */}
       <svg
         viewBox={`0 0 ${chartWidth} ${height}`}
         className="w-full h-full"
         preserveAspectRatio="none"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => {
+          setHoveredPoint(null)
+          setActiveIndex(null)
+        }}
       >
+        <defs>
+          {/* Gradient pour l'aire */}
+          <linearGradient id={`areaGradient-${metric}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={primaryColor} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={primaryColor} stopOpacity="0.02" />
+          </linearGradient>
+          {/* Gradient pour la ligne */}
+          <linearGradient id={`lineGradient-${metric}`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor={config.gradient[0]} />
+            <stop offset="100%" stopColor={config.gradient[1]} />
+          </linearGradient>
+          {/* Filtre pour l'ombre */}
+          <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1" floodOpacity="0.3" />
+          </filter>
+        </defs>
+
         {/* Grille horizontale */}
-        {[0, 0.25, 0.5, 0.75, 1].map((ratio) => (
-          <line
-            key={ratio}
-            x1="0"
-            y1={padding + chartHeight * (1 - ratio)}
-            x2={chartWidth}
-            y2={padding + chartHeight * (1 - ratio)}
-            stroke="#E5E7EB"
-            strokeWidth="0.5"
-          />
-        ))}
+        {yAxisLabels.map((value, i) => {
+          const y = padding.top + (i / (yAxisLabels.length - 1)) * chartHeight
+          return (
+            <g key={i}>
+              <line
+                x1={padding.left}
+                y1={y}
+                x2={chartWidth - padding.right}
+                y2={y}
+                stroke="#E5E7EB"
+                strokeWidth="0.3"
+                strokeDasharray="2,2"
+              />
+              <text
+                x={padding.left - 3}
+                y={y}
+                textAnchor="end"
+                dominantBaseline="middle"
+                className="text-[3px] fill-neutral-400"
+              >
+                {Math.round(value)}
+              </text>
+            </g>
+          )
+        })}
 
         {/* Aire sous la courbe */}
-        <path d={areaD} fill={color} fillOpacity="0.1" />
+        <path d={areaD} fill={`url(#areaGradient-${metric})`} />
 
         {/* Ligne principale */}
         <path
           d={pathD}
           fill="none"
-          stroke={color}
-          strokeWidth="2"
+          stroke={`url(#lineGradient-${metric})`}
+          strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
+          filter="url(#dropShadow)"
         />
 
-        {/* Points */}
+        {/* Points interactifs */}
         {chartData.values.map((value, index) => {
           const y = getY(value)
           if (y === null) return null
-          const x = (index / (chartData.values.length - 1)) * chartWidth
+          const x = getX(index)
+          const isActive = activeIndex === index
+
           return (
-            <circle
-              key={index}
-              cx={x}
-              cy={y}
-              r="1.5"
-              fill={color}
-            />
+            <g key={index}>
+              {/* Point de base */}
+              <circle
+                cx={x}
+                cy={y}
+                r={isActive ? '2.5' : '1.2'}
+                fill={isActive ? primaryColor : 'white'}
+                stroke={primaryColor}
+                strokeWidth={isActive ? '1' : '0.8'}
+                className="transition-all duration-150"
+              />
+              {/* Halo sur point actif */}
+              {isActive && (
+                <circle
+                  cx={x}
+                  cy={y}
+                  r="4"
+                  fill={primaryColor}
+                  fillOpacity="0.2"
+                  className="animate-pulse"
+                />
+              )}
+            </g>
           )
         })}
+
+        {/* Ligne verticale pour le tooltip */}
+        {hoveredPoint && (
+          <line
+            x1={hoveredPoint.x}
+            y1={padding.top}
+            x2={hoveredPoint.x}
+            y2={chartHeight + padding.top}
+            stroke={primaryColor}
+            strokeWidth="0.5"
+            strokeDasharray="2,2"
+            opacity="0.5"
+          />
+        )}
       </svg>
 
-      {/* Valeurs min/max */}
-      <div className="absolute top-0 right-0 text-xs text-gray-500">
-        {Math.round(chartData.max)} {getMetricLabel()}
-      </div>
-      <div className="absolute bottom-8 right-0 text-xs text-gray-500">
-        {Math.round(chartData.min)} {getMetricLabel()}
-      </div>
-
       {/* Labels dates */}
-      <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-gray-400 px-1">
-        {labels.map((label, i) => (
-          <span key={i}>{label}</span>
+      <div className="absolute bottom-0 left-12 right-5 flex justify-between text-[10px] text-neutral-400">
+        {labels.map((item, i) => (
+          <span key={i} className={activeIndex === item.index ? 'text-neutral-700 font-medium' : ''}>
+            {item.label}
+          </span>
         ))}
       </div>
+
+      {/* Tooltip flottant */}
+      {hoveredPoint && (
+        <div
+          className="absolute pointer-events-none z-20 transform -translate-x-1/2 -translate-y-full"
+          style={{
+            left: `${(hoveredPoint.x / chartWidth) * 100}%`,
+            top: `${((hoveredPoint.y - 10) / height) * 100}%`,
+          }}
+        >
+          <div className="bg-neutral-900 text-white px-3 py-2 rounded-xl shadow-lg text-sm">
+            <div className="font-semibold">
+              {formatValue(hoveredPoint.value)} {config.unit}
+            </div>
+            <div className="text-neutral-400 text-xs">
+              {new Date(hoveredPoint.date).toLocaleDateString('fr-FR', {
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short',
+              })}
+            </div>
+            {/* Triangle */}
+            <div
+              className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-0 h-0"
+              style={{
+                borderLeft: '6px solid transparent',
+                borderRight: '6px solid transparent',
+                borderTop: '6px solid #171717',
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

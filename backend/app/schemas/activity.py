@@ -170,3 +170,21 @@ class TrackingSummary(BaseModel):
     recent_activities: list[ActivityLogResponse]
     recent_weights: list[WeightLogResponse]
     activity_breakdown: list[ActivityTypeSummary]
+
+
+class WeeklyChartDay(BaseModel):
+    """Données d'un jour pour le graphique hebdomadaire."""
+    day: str  # Nom complet du jour (Lundi, Mardi, etc.)
+    shortDay: str  # Abréviation (Lu, Ma, etc.)
+    date: str  # Date ISO
+    calories: int = 0
+    target: int = 2000
+    protein: int = 0
+    carbs: int = 0
+    fat: int = 0
+
+
+class WeeklyChartData(BaseModel):
+    """Données pour le graphique hebdomadaire."""
+    days: list[WeeklyChartDay]
+    calorie_target: int = 2000

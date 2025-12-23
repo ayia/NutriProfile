@@ -11,6 +11,7 @@ import type {
   ProgressData,
   ActivityTypeSummary,
   TrackingSummary,
+  WeeklyChartData,
 } from '@/types/tracking'
 
 export const trackingApi = {
@@ -113,6 +114,11 @@ export const trackingApi = {
 
   getSummary: async (): Promise<TrackingSummary> => {
     const response = await api.get('/tracking/summary')
+    return response.data
+  },
+
+  getWeeklyChartData: async (): Promise<WeeklyChartData> => {
+    const response = await api.get('/tracking/stats/weekly-chart')
     return response.data
   },
 
