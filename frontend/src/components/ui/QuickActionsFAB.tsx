@@ -19,6 +19,23 @@ export function QuickActionsFAB() {
   const location = useLocation()
   const { isAuthenticated } = useAuth()
 
+  // Fermer le menu quand on clique ailleurs - DOIT être avant tout return conditionnel
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (fabRef.current && !fabRef.current.contains(e.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
   // Ne pas afficher sur certaines pages
   const hiddenPaths = ['/', '/login', '/register', '/onboarding']
   if (hiddenPaths.includes(location.pathname) || !isAuthenticated) {
@@ -55,23 +72,6 @@ export function QuickActionsFAB() {
       color: 'bg-orange-500',
     },
   ]
-
-  // Fermer le menu quand on clique ailleurs
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (fabRef.current && !fabRef.current.contains(e.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
 
   const handleToggle = () => {
     setIsAnimating(true)

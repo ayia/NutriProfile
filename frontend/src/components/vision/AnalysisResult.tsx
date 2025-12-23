@@ -265,26 +265,28 @@ export function AnalysisResult({ result, onClose }: AnalysisResultProps) {
             {expandedSection === 'health' && (
               <div className="px-4 pb-4 space-y-4">
                 {/* Analyse calories */}
-                <div className={`p-3 rounded-lg ${
-                  healthReport.calorie_analysis.status === 'optimal' ? 'bg-green-50' :
-                  healthReport.calorie_analysis.status === 'under' ? 'bg-blue-50' : 'bg-orange-50'
-                }`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span>{healthReport.calorie_analysis.status === 'optimal' ? '✅' : healthReport.calorie_analysis.status === 'under' ? 'ℹ️' : '⚠️'}</span>
-                    <span className="font-medium text-sm">{healthReport.calorie_analysis.message}</span>
+                {healthReport.calorie_analysis && (
+                  <div className={`p-3 rounded-lg ${
+                    healthReport.calorie_analysis.status === 'optimal' ? 'bg-green-50' :
+                    healthReport.calorie_analysis.status === 'under' ? 'bg-blue-50' : 'bg-orange-50'
+                  }`}>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span>{healthReport.calorie_analysis.status === 'optimal' ? '✅' : healthReport.calorie_analysis.status === 'under' ? 'ℹ️' : '⚠️'}</span>
+                      <span className="font-medium text-sm">{healthReport.calorie_analysis.message}</span>
+                    </div>
+                    {healthReport.calorie_analysis.remaining !== 0 && (
+                      <p className="text-xs text-gray-600 ml-6">
+                        {healthReport.calorie_analysis.remaining > 0
+                          ? `Il vous reste ${healthReport.calorie_analysis.remaining} kcal pour aujourd'hui`
+                          : `Vous avez dépassé de ${Math.abs(healthReport.calorie_analysis.remaining)} kcal`
+                        }
+                      </p>
+                    )}
                   </div>
-                  {healthReport.calorie_analysis.remaining !== 0 && (
-                    <p className="text-xs text-gray-600 ml-6">
-                      {healthReport.calorie_analysis.remaining > 0
-                        ? `Il vous reste ${healthReport.calorie_analysis.remaining} kcal pour aujourd'hui`
-                        : `Vous avez dépassé de ${Math.abs(healthReport.calorie_analysis.remaining)} kcal`
-                      }
-                    </p>
-                  )}
-                </div>
+                )}
 
                 {/* Points positifs */}
-                {healthReport.positive_points.length > 0 && (
+                {healthReport.positive_points && healthReport.positive_points.length > 0 && (
                   <div className="bg-green-50 p-3 rounded-lg">
                     <h5 className="font-medium text-green-800 text-sm mb-2 flex items-center gap-2">
                       <span>✨</span> Points positifs
@@ -301,7 +303,7 @@ export function AnalysisResult({ result, onClose }: AnalysisResultProps) {
                 )}
 
                 {/* Avertissements santé */}
-                {healthReport.health_warnings.length > 0 && (
+                {healthReport.health_warnings && healthReport.health_warnings.length > 0 && (
                   <div className="bg-red-50 p-3 rounded-lg border border-red-100">
                     <h5 className="font-medium text-red-800 text-sm mb-2 flex items-center gap-2">
                       <span>⚠️</span> Attention
@@ -318,7 +320,7 @@ export function AnalysisResult({ result, onClose }: AnalysisResultProps) {
                 )}
 
                 {/* Suggestions */}
-                {healthReport.suggestions.length > 0 && (
+                {healthReport.suggestions && healthReport.suggestions.length > 0 && (
                   <div className="bg-blue-50 p-3 rounded-lg">
                     <h5 className="font-medium text-blue-800 text-sm mb-2 flex items-center gap-2">
                       <span>💡</span> Suggestions
@@ -335,7 +337,7 @@ export function AnalysisResult({ result, onClose }: AnalysisResultProps) {
                 )}
 
                 {/* Recommandations macros */}
-                {healthReport.macro_analysis.recommendations.length > 0 && (
+                {healthReport.macro_analysis && healthReport.macro_analysis.recommendations && healthReport.macro_analysis.recommendations.length > 0 && (
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <h5 className="font-medium text-gray-800 text-sm mb-2 flex items-center gap-2">
                       <span>📊</span> Équilibre macros

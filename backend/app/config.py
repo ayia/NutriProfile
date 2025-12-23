@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     HUGGINGFACE_TOKEN: str = ""
 
     # CORS
-    CORS_ORIGINS: list[str] = ["http://localhost:5173", "https://nutriprofile.fly.dev"]
+    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:5174", "https://nutriprofile.fly.dev"]
 
     model_config = {
         "env_file": ".env",
