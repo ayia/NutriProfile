@@ -19,7 +19,7 @@ services:
       - key: ENVIRONMENT
         value: "production"
       - key: DATABASE_URL
-        value: "sqlite+aiosqlite:///./data/nutriprofile.db"
+        value: "sqlite+aiosqlite:///./nutriprofile.db"
       - key: SECRET_KEY
         generateValue: true
       - key: REFRESH_SECRET_KEY
@@ -28,7 +28,3 @@ services:
         sync: false  # A configurer manuellement dans le dashboard Render
       - key: CORS_ORIGINS
         value: '["https://nutriprofile.pages.dev"]'
-    disk:
-      name: nutriprofile-data
-      mountPath: /opt/render/project/src/data
-      sizeGB: 1
