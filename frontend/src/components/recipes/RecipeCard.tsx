@@ -11,7 +11,8 @@ interface RecipeCardProps {
   onViewDetails?: () => void
 }
 
-export function RecipeCard({ recipe, initialFavorite = false, onViewDetails }: RecipeCardProps) {
+export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _onViewDetails }: RecipeCardProps) {
+  void _onViewDetails
   const [showDetails, setShowDetails] = useState(false)
   const [isFavorite, setIsFavorite] = useState(initialFavorite)
   const queryClient = useQueryClient()

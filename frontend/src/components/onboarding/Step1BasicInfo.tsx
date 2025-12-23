@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useOnboardingStore } from '@/store/onboardingStore'
-import type { ProfileStep1, Gender } from '@/types/profile'
+import type { ProfileStep1 } from '@/types/profile'
 
 export function Step1BasicInfo() {
   const { step1, setStep1, nextStep } = useOnboardingStore()

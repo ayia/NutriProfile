@@ -14,7 +14,8 @@ export function ForgotPasswordPage() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<ForgotPasswordForm>()
   const email = watch('email')
 
-  const onSubmit = async (data: ForgotPasswordForm) => {
+  const onSubmit = async (_data: ForgotPasswordForm) => {
+    void _data
     setIsLoading(true)
     // Simuler l'envoi (à remplacer par l'API réelle)
     await new Promise(resolve => setTimeout(resolve, 1500))

@@ -57,9 +57,10 @@ export const api = axios.create({
 let isRefreshing = false
 let refreshSubscribers: ((token: string) => void)[] = []
 
-const subscribeTokenRefresh = (callback: (token: string) => void) => {
+const _subscribeTokenRefresh = (callback: (token: string) => void) => {
   refreshSubscribers.push(callback)
 }
+void _subscribeTokenRefresh
 
 const onTokenRefreshed = (token: string) => {
   refreshSubscribers.forEach((callback) => callback(token))

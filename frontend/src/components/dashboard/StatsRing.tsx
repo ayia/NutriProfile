@@ -14,11 +14,12 @@ export function StatsRing({
   max,
   size = 100,
   strokeWidth = 8,
-  color = '#10B981',
+  color: _color = '#10B981',
   label,
   unit = '',
   icon,
 }: StatsRingProps) {
+  void _color
   const radius = (size - strokeWidth) / 2
   const circumference = radius * 2 * Math.PI
   const percent = Math.min((value / max) * 100, 100)

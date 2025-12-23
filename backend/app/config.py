@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     HUGGINGFACE_TOKEN: str = ""
 
     # CORS - accepte une chaîne séparée par des virgules ou une liste JSON
-    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176", "http://localhost:5177", "http://localhost:5178", "http://localhost:3000"]
+    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176", "http://localhost:5177", "http://localhost:5178", "http://localhost:3000", "https://nutriprofile.pages.dev", "https://1bfa8b06.nutriprofile.pages.dev"]
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
