@@ -272,7 +272,7 @@ def get_fallback_coach_advice(user_name: str, quick_stats: QuickStats) -> CoachR
         advices.append(CoachAdviceSchema(
             message="Pensez à boire de l'eau régulièrement !",
             category="hydration",
-            priority=1,
+            priority="high",
             action="Boire un verre d'eau",
             emoji="💧"
         ))
@@ -281,7 +281,7 @@ def get_fallback_coach_advice(user_name: str, quick_stats: QuickStats) -> CoachR
         advices.append(CoachAdviceSchema(
             message="Augmentez votre apport en protéines.",
             category="nutrition",
-            priority=2,
+            priority="medium",
             action="Manger des aliments riches en protéines",
             emoji="🥩"
         ))
@@ -290,7 +290,7 @@ def get_fallback_coach_advice(user_name: str, quick_stats: QuickStats) -> CoachR
         advices.append(CoachAdviceSchema(
             message="Un peu d'exercice vous ferait du bien !",
             category="activity",
-            priority=2,
+            priority="medium",
             action="Faire une marche de 15 minutes",
             emoji="🚶"
         ))
@@ -299,7 +299,7 @@ def get_fallback_coach_advice(user_name: str, quick_stats: QuickStats) -> CoachR
         advices.append(CoachAdviceSchema(
             message="Continuez comme ça, vous êtes sur la bonne voie !",
             category="motivation",
-            priority=3,
+            priority="low",
             action=None,
             emoji="⭐"
         ))
