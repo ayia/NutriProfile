@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
+import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate } from '@/types/foodLog'
+import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate, MealType } from '@/types/foodLog'
 
 interface AnalysisResultProps {
   result: ImageAnalyzeResponse
+  imageBase64: string
+  mealType: MealType
   onClose: () => void
 }
 
@@ -41,12 +44,30 @@ const VERDICT_CONFIG = {
   },
 }
 
-export function AnalysisResult({ result, onClose }: AnalysisResultProps) {
+export function AnalysisResult({ result, imageBase64, mealType, onClose }: AnalysisResultProps) {
   const [editingItem, setEditingItem] = useState<number | null>(null)
   const [editForm, setEditForm] = useState<FoodItemUpdate>({})
   const [showSuccess, setShowSuccess] = useState(false)
   const [expandedSection, setExpandedSection] = useState<'items' | 'health' | null>('health')
+  const [isSaved, setIsSaved] = useState(!!result.food_log_id)
   const queryClient = useQueryClient()
+
+  // Mutation pour sauvegarder le repas
+  const saveMutation = useMutation({
+    mutationFn: () => visionApi.saveMeal({
+      image_base64: imageBase64,
+      meal_type: mealType,
+      save_to_log: true,
+    }),
+    onSuccess: (data) => {
+      setIsSaved(true)
+      // Invalider les queries pour rafraîchir les données
+      queryClient.invalidateQueries({ queryKey: ['foodLogs'] })
+      queryClient.invalidateQueries({ queryKey: ['dailyMeals'] })
+      // Mettre à jour le result avec le food_log_id
+      result.food_log_id = data.food_log_id
+    },
+  })
 
   // Animation de succès au chargement
   useEffect(() => {
@@ -530,20 +551,45 @@ export function AnalysisResult({ result, onClose }: AnalysisResultProps) {
             Modifier ce repas
           </Button>
 
-          {/* Bouton principal - Confirmer */}
-          <Button
-            onClick={onClose}
-            className="flex-1 gap-2 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg"
-          >
-            <span>✓</span>
-            Repas enregistré
-          </Button>
+          {/* Bouton principal - Enregistrer ou Fermer */}
+          {!isSaved ? (
+            <Button
+              onClick={() => saveMutation.mutate()}
+              disabled={saveMutation.isPending}
+              className="flex-1 gap-2 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg"
+            >
+              {saveMutation.isPending ? (
+                <>
+                  <span className="animate-spin">⏳</span>
+                  Enregistrement...
+                </>
+              ) : (
+                <>
+                  <span>💾</span>
+                  Enregistrer le repas
+                </>
+              )}
+            </Button>
+          ) : (
+            <Button
+              onClick={onClose}
+              className="flex-1 gap-2 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg"
+            >
+              <span>✓</span>
+              Terminé
+            </Button>
+          )}
         </div>
 
         {/* Indication du log */}
-        {result.food_log_id && (
-          <p className="text-center text-xs text-gray-500 mt-3">
-            ✓ Repas sauvegardé automatiquement • ID: {result.food_log_id}
+        {isSaved && (
+          <p className="text-center text-xs text-green-600 mt-3 font-medium">
+            ✓ Repas enregistré avec succès
+          </p>
+        )}
+        {saveMutation.isError && (
+          <p className="text-center text-xs text-red-600 mt-3">
+            Erreur lors de l'enregistrement. Réessayez.
           </p>
         )}
       </div>

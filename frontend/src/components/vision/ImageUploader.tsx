@@ -5,8 +5,14 @@ import { Button } from '@/components/ui/Button'
 import type { MealType, ImageAnalyzeResponse } from '@/types/foodLog'
 import { MEAL_TYPE_LABELS, MEAL_TYPE_ICONS } from '@/types/foodLog'
 
+export interface AnalysisData {
+  result: ImageAnalyzeResponse
+  imageBase64: string
+  mealType: MealType
+}
+
 interface ImageUploaderProps {
-  onAnalysisComplete: (result: ImageAnalyzeResponse) => void
+  onAnalysisComplete: (data: AnalysisData) => void
 }
 
 // Étapes d'analyse pour le skeleton loader
@@ -22,13 +28,18 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
   const [preview, setPreview] = useState<string | null>(null)
   const [dragActive, setDragActive] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
+  const [lastImageBase64, setLastImageBase64] = useState<string>('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const analyzeMutation = useMutation({
     mutationFn: visionApi.analyzeImage,
     onSuccess: (data) => {
       setCurrentStep(ANALYSIS_STEPS.length) // Marquer comme terminé
-      setTimeout(() => onAnalysisComplete(data), 300) // Petit délai pour l'animation
+      setTimeout(() => onAnalysisComplete({
+        result: data,
+        imageBase64: lastImageBase64,
+        mealType: selectedMealType,
+      }), 300) // Petit délai pour l'animation
     },
     onError: () => {
       setCurrentStep(0)
@@ -73,10 +84,11 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
     // Compresser et analyser
     try {
       const base64 = await compressImage(file)
+      setLastImageBase64(base64)
       analyzeMutation.mutate({
         image_base64: base64,
         meal_type: selectedMealType,
-        save_to_log: true,
+        save_to_log: false,
       })
     } catch (error) {
       console.error('Error compressing image:', error)

@@ -1,17 +1,16 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { visionApi } from '@/services/visionApi'
-import { ImageUploader } from '@/components/vision/ImageUploader'
+import { ImageUploader, type AnalysisData } from '@/components/vision/ImageUploader'
 import { AnalysisResult } from '@/components/vision/AnalysisResult'
 import { FoodLogCard } from '@/components/vision/FoodLogCard'
 import { Button } from '@/components/ui/Button'
-import type { ImageAnalyzeResponse } from '@/types/foodLog'
 
 type Tab = 'scan' | 'today' | 'history'
 
 export function VisionPage() {
   const [activeTab, setActiveTab] = useState<Tab>('scan')
-  const [analysisResult, setAnalysisResult] = useState<ImageAnalyzeResponse | null>(null)
+  const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null)
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = new Date()
     return today.toISOString().split('T')[0]
@@ -35,12 +34,12 @@ export function VisionPage() {
     { id: 'history', label: 'Historique', icon: '📜' },
   ]
 
-  const handleAnalysisComplete = (result: ImageAnalyzeResponse) => {
-    setAnalysisResult(result)
+  const handleAnalysisComplete = (data: AnalysisData) => {
+    setAnalysisData(data)
   }
 
   const resetAnalysis = () => {
-    setAnalysisResult(null)
+    setAnalysisData(null)
   }
 
   // Calcul des progressions pour aujourd'hui
@@ -80,13 +79,18 @@ export function VisionPage() {
       {/* Content */}
       {activeTab === 'scan' && (
         <div className="space-y-6">
-          {!analysisResult ? (
+          {!analysisData ? (
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-semibold mb-4">Analyser un repas</h2>
               <ImageUploader onAnalysisComplete={handleAnalysisComplete} />
             </div>
           ) : (
-            <AnalysisResult result={analysisResult} onClose={resetAnalysis} />
+            <AnalysisResult
+              result={analysisData.result}
+              imageBase64={analysisData.imageBase64}
+              mealType={analysisData.mealType}
+              onClose={resetAnalysis}
+            />
           )}
         </div>
       )}

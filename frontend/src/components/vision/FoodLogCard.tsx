@@ -17,8 +17,13 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
   const deleteMutation = useMutation({
     mutationFn: () => visionApi.deleteLog(log.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['foodLogs'] })
-      queryClient.invalidateQueries({ queryKey: ['dailyMeals'] })
+      // Forcer le refetch immédiat avec refetchType: 'all'
+      queryClient.invalidateQueries({ queryKey: ['foodLogs'], refetchType: 'all' })
+      queryClient.invalidateQueries({ queryKey: ['dailyMeals'], refetchType: 'all' })
+    },
+    onError: (error) => {
+      console.error('Erreur suppression:', error)
+      alert('Erreur lors de la suppression. Veuillez réessayer.')
     },
   })
 

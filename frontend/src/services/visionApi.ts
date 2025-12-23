@@ -17,6 +17,12 @@ export const visionApi = {
     return response.data
   },
 
+  // Sauvegarder un repas analysé (après confirmation utilisateur)
+  saveMeal: async (data: ImageAnalyzeRequest): Promise<ImageAnalyzeResponse> => {
+    const response = await api.post('/vision/analyze', { ...data, save_to_log: true })
+    return response.data
+  },
+
   // Food Logs
   getLogs: async (date?: string, mealType?: string, limit = 20): Promise<FoodLog[]> => {
     const params = new URLSearchParams()
