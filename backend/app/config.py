@@ -15,11 +15,8 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = 8080
 
-    # Database
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/nutriprofile"
-
-    # Redis
-    REDIS_URL: str = "redis://localhost:6379"
+    # Database (SQLite par defaut, configurable via .env)
+    DATABASE_URL: str = "sqlite+aiosqlite:///./data/nutriprofile.db"
 
     # Security
     SECRET_KEY: str = "your-secret-key-change-in-production"
