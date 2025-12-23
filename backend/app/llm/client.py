@@ -159,13 +159,27 @@ class HuggingFaceClient:
             "temperature": temperature,
         }
 
-        async with httpx.AsyncClient(timeout=90.0) as client:
-            for attempt in range(3):
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            for attempt in range(2):  # Reduced retries
                 try:
                     response = await client.post(url, headers=headers, json=payload)
 
+                    # Don't retry on authentication errors
+                    if response.status_code in (401, 403):
+                        logger.error(
+                            "text_chat_auth_error",
+                            model=model_id,
+                            status=response.status_code,
+                            detail="Invalid or missing API token",
+                        )
+                        raise httpx.HTTPStatusError(
+                            "Authentication failed",
+                            request=response.request,
+                            response=response
+                        )
+
                     if response.status_code == 503:
-                        wait_time = 20
+                        wait_time = 5  # Reduced wait time
                         logger.info(
                             "text_model_loading",
                             model=model_id,
@@ -186,15 +200,18 @@ class HuggingFaceClient:
                         status=e.response.status_code,
                         detail=e.response.text[:500],
                     )
-                    if attempt == 2:
+                    # Don't retry on auth errors
+                    if e.response.status_code in (401, 403):
                         raise
-                    await asyncio.sleep(2**attempt)
+                    if attempt == 1:
+                        raise
+                    await asyncio.sleep(1)
 
                 except httpx.RequestError as e:
                     logger.error("text_chat_request_error", model=model_id, error=str(e))
-                    if attempt == 2:
+                    if attempt == 1:
                         raise
-                    await asyncio.sleep(2**attempt)
+                    await asyncio.sleep(1)
 
         return ""
 

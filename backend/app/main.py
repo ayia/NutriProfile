@@ -11,6 +11,8 @@ import structlog
 from app.config import get_settings
 from app.api.v1 import api_router
 
+# Forcer le rechargement des settings à chaque démarrage
+get_settings.cache_clear()
 settings = get_settings()
 
 # Configuration structlog

@@ -15,6 +15,7 @@ export function MainDashboardPage() {
     queryKey: ['dashboard'],
     queryFn: dashboardApi.getDashboard,
     refetchInterval: 60000, // Refresh toutes les minutes
+    retry: 1,
   })
 
   const data = dashboardQuery.data
@@ -23,10 +24,24 @@ export function MainDashboardPage() {
     return <DashboardSkeleton />
   }
 
-  if (!data) {
+  if (dashboardQuery.isError) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 text-center">
         <p className="text-gray-500">Erreur lors du chargement du dashboard</p>
+        <p className="text-red-500 text-sm mt-2">
+          {dashboardQuery.error instanceof Error ? dashboardQuery.error.message : 'Erreur inconnue'}
+        </p>
+        <Button onClick={() => dashboardQuery.refetch()} className="mt-4">
+          Réessayer
+        </Button>
+      </div>
+    )
+  }
+
+  if (!data) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+        <p className="text-gray-500">Aucune donnée disponible</p>
         <Button onClick={() => dashboardQuery.refetch()} className="mt-4">
           Réessayer
         </Button>

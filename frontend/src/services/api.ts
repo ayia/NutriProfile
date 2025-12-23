@@ -85,31 +85,9 @@ const refreshAccessToken = async (): Promise<string | null> => {
   }
 }
 
-// Intercepteur pour ajouter le token et gérer le rafraîchissement
-api.interceptors.request.use(async (config) => {
-  let token = tokenStorage.getAccessToken()
-
-  // Vérifier si le token est expiré et le rafraîchir si nécessaire
-  if (token && tokenStorage.isTokenExpired() && !config.url?.includes('/auth/refresh')) {
-    if (!isRefreshing) {
-      isRefreshing = true
-      const newToken = await refreshAccessToken()
-      isRefreshing = false
-
-      if (newToken) {
-        onTokenRefreshed(newToken)
-        token = newToken
-      } else {
-        window.location.href = '/login'
-        return Promise.reject(new Error('Session expirée'))
-      }
-    } else {
-      // Attendre que le rafraîchissement en cours se termine
-      token = await new Promise<string>((resolve) => {
-        subscribeTokenRefresh(resolve)
-      })
-    }
-  }
+// Intercepteur pour ajouter le token aux requêtes
+api.interceptors.request.use((config) => {
+  const token = tokenStorage.getAccessToken()
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`

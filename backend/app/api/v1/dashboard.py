@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime, date, timedelta
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -96,10 +97,35 @@ async def get_dashboard(
         streak_days=logging_streak.current_count if logging_streak else 0,
     )
 
-    # Conseil du coach
+    # Conseil du coach (avec fallback si l'API IA échoue ou timeout)
     coach_advice = None
     if profile:
-        coach_advice = await get_coach_advice(db, current_user, quick_stats)
+        # Vérifier si le token Hugging Face est configuré
+        from app.config import get_settings
+        settings = get_settings()
+        hf_token = settings.HUGGINGFACE_TOKEN
+
+        # Si le token n'est pas configuré ou est le placeholder, utiliser directement le fallback
+        if not hf_token or hf_token == "" or "your-" in hf_token.lower() or "placeholder" in hf_token.lower():
+            import logging
+            logging.info("Hugging Face token not configured, using fallback coach advice")
+            coach_advice = get_fallback_coach_advice(current_user.name, quick_stats)
+        else:
+            try:
+                # Timeout de 5 secondes pour éviter que le dashboard reste bloqué
+                coach_advice = await asyncio.wait_for(
+                    get_coach_advice(db, current_user, quick_stats),
+                    timeout=5.0
+                )
+            except asyncio.TimeoutError:
+                import logging
+                logging.warning("Coach AI timed out after 5s, using fallback")
+                coach_advice = get_fallback_coach_advice(current_user.name, quick_stats)
+            except Exception as e:
+                # Si le coach IA échoue, on utilise un conseil par défaut
+                import logging
+                logging.warning(f"Coach AI failed, using fallback: {e}")
+                coach_advice = get_fallback_coach_advice(current_user.name, quick_stats)
 
     # Achievements récents
     achievements_query = (
@@ -202,7 +228,89 @@ async def get_coach(
         streak_days=0,
     )
 
-    return await get_coach_advice(db, current_user, quick_stats)
+    try:
+        # Timeout de 5 secondes pour éviter les blocages
+        return await asyncio.wait_for(
+            get_coach_advice(db, current_user, quick_stats),
+            timeout=5.0
+        )
+    except asyncio.TimeoutError:
+        import logging
+        logging.warning("Coach AI timed out after 5s, using fallback")
+        return get_fallback_coach_advice(current_user.name, quick_stats)
+    except Exception as e:
+        import logging
+        logging.warning(f"Coach AI failed, using fallback: {e}")
+        return get_fallback_coach_advice(current_user.name, quick_stats)
+
+
+def get_fallback_coach_advice(user_name: str, quick_stats: QuickStats) -> CoachResponseSchema:
+    """Génère des conseils par défaut quand l'IA n'est pas disponible."""
+    time_of_day = get_time_of_day()
+
+    greetings = {
+        "morning": f"Bonjour {user_name} !",
+        "afternoon": f"Bon après-midi {user_name} !",
+        "evening": f"Bonsoir {user_name} !",
+    }
+
+    # Générer un résumé basé sur les stats
+    calories_percent = quick_stats.calories_percent
+    if calories_percent < 50:
+        summary = "Vous êtes encore loin de votre objectif calorique. N'oubliez pas de bien manger !"
+    elif calories_percent < 80:
+        summary = "Vous êtes sur la bonne voie ! Continuez ainsi."
+    elif calories_percent <= 100:
+        summary = "Excellent ! Vous approchez de votre objectif calorique."
+    else:
+        summary = "Attention, vous avez dépassé votre objectif calorique aujourd'hui."
+
+    # Conseils par défaut
+    advices = []
+
+    if quick_stats.water_today < 1500:
+        advices.append(CoachAdviceSchema(
+            message="Pensez à boire de l'eau régulièrement !",
+            category="hydration",
+            priority=1,
+            action="Boire un verre d'eau",
+            emoji="💧"
+        ))
+
+    if quick_stats.protein_percent < 50:
+        advices.append(CoachAdviceSchema(
+            message="Augmentez votre apport en protéines.",
+            category="nutrition",
+            priority=2,
+            action="Manger des aliments riches en protéines",
+            emoji="🥩"
+        ))
+
+    if quick_stats.activity_today < 15:
+        advices.append(CoachAdviceSchema(
+            message="Un peu d'exercice vous ferait du bien !",
+            category="activity",
+            priority=2,
+            action="Faire une marche de 15 minutes",
+            emoji="🚶"
+        ))
+
+    if not advices:
+        advices.append(CoachAdviceSchema(
+            message="Continuez comme ça, vous êtes sur la bonne voie !",
+            category="motivation",
+            priority=3,
+            action=None,
+            emoji="⭐"
+        ))
+
+    return CoachResponseSchema(
+        greeting=greetings.get(time_of_day, f"Bonjour {user_name} !"),
+        summary=summary,
+        advices=advices,
+        motivation_quote="Chaque petit pas compte vers un mode de vie plus sain.",
+        confidence=0.5,  # Confidence basse car ce n'est pas l'IA
+    )
 
 
 async def get_coach_advice(db: AsyncSession, user: User, quick_stats: QuickStats) -> CoachResponseSchema:

@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     HUGGINGFACE_TOKEN: str = ""
 
     # CORS
-    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:5174", "https://nutriprofile.fly.dev"]
+    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176", "http://localhost:5177", "http://localhost:5178", "http://localhost:3000", "https://nutriprofile.fly.dev"]
 
     model_config = {
         "env_file": ".env",
@@ -45,3 +45,7 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Retourne les settings en cache."""
     return Settings()
+
+
+# Forcer le rechargement des settings au démarrage
+get_settings.cache_clear()
