@@ -14,6 +14,7 @@ primary_region = 'cdg'
   ENVIRONMENT = 'production'
   PORT = '8080'
   DEBUG = 'false'
+  CORS_ORIGINS_RAW = 'https://nutriprofile.pages.dev,https://1bfa8b06.nutriprofile.pages.dev,https://ba2a146d.nutriprofile.pages.dev,http://localhost:5173,http://localhost:5174,http://localhost:3000'
 
 [[mounts]]
   source = 'nutriprofile_data'

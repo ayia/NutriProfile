@@ -1,0 +1,33 @@
+# Fichiers de configuration locale
+.env
+.env.local
+.env.development
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Données locales
+*.db
+data/
+
+# Fly.io
+fly.toml

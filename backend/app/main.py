@@ -69,18 +69,19 @@ app = FastAPI(
     redoc_url="/redoc" if settings.DEBUG else None,
 )
 
-# Middleware de sécurité (ajouté en premier pour être exécuté en dernier)
-app.add_middleware(SecurityHeadersMiddleware)
-
-# CORS - Configuration restrictive
+# CORS - DOIT être ajouté en premier (exécuté en dernier dans la chaîne)
+# pour que les requêtes preflight OPTIONS soient traitées correctement
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_headers=["*"],
     max_age=600,  # Cache preflight pendant 10 minutes
 )
+
+# Middleware de sécurité (ajouté après CORS)
+app.add_middleware(SecurityHeadersMiddleware)
 
 # Routes
 app.include_router(api_router)

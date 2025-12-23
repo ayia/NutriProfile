@@ -8,10 +8,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Dépendances système
+# Dépendances système (inclut libffi-dev pour bcrypt)
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
+    libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Dépendances Python
