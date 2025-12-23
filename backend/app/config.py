@@ -1,5 +1,7 @@
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from functools import lru_cache
+import json
 
 
 class Settings(BaseSettings):
@@ -28,8 +30,27 @@ class Settings(BaseSettings):
     # Hugging Face
     HUGGINGFACE_TOKEN: str = ""
 
-    # CORS
-    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176", "http://localhost:5177", "http://localhost:5178", "http://localhost:3000", "https://nutriprofile.fly.dev"]
+    # CORS - accepte une chaîne séparée par des virgules ou une liste JSON
+    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176", "http://localhost:5177", "http://localhost:5178", "http://localhost:3000"]
+
+    @field_validator("CORS_ORIGINS", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v):
+        if isinstance(v, list):
+            return v
+        if isinstance(v, str):
+            if not v or v.strip() == "":
+                return ["http://localhost:5173"]
+            # Essayer JSON d'abord
+            try:
+                parsed = json.loads(v)
+                if isinstance(parsed, list):
+                    return parsed
+            except json.JSONDecodeError:
+                pass
+            # Sinon, chaîne séparée par des virgules
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v
 
     model_config = {
         "env_file": ".env",

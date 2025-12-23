@@ -1,39 +1,44 @@
-app = "nutriprofile-api"
-primary_region = "cdg"
+# fly.toml app configuration file generated for nutriprofile-api on 2025-12-23T18:37:14Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'nutriprofile-api'
+primary_region = 'cdg'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [env]
-  PORT = "8080"
-  ENVIRONMENT = "production"
-  DATABASE_URL = "sqlite+aiosqlite:///data/nutriprofile.db"
+  DATABASE_URL = 'sqlite+aiosqlite:////data/nutriprofile.db'
+  ENVIRONMENT = 'production'
+  PORT = '8080'
+  DEBUG = 'false'
 
-# Volume pour la persistance SQLite
-[mounts]
-  source = "nutriprofile_data"
-  destination = "/data"
+[[mounts]]
+  source = 'nutriprofile_data'
+  destination = '/data'
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'off'
   auto_start_machines = true
   min_machines_running = 1
 
   [http_service.concurrency]
-    type = "requests"
+    type = 'requests'
     hard_limit = 250
     soft_limit = 200
 
-[[http_service.checks]]
-  grace_period = "10s"
-  interval = "30s"
-  method = "GET"
-  path = "/health"
-  timeout = "5s"
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '10s'
+    grace_period = '60s'
+    method = 'GET'
+    path = '/health'
 
 [[vm]]
-  cpu_kind = "shared"
+  cpu_kind = 'shared'
   cpus = 1
   memory_mb = 512
