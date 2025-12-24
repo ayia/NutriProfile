@@ -44,6 +44,7 @@ class FoodLog(Base):
 
     # Relations
     user = relationship("User", back_populates="food_logs")
+    items = relationship("FoodItem", back_populates="food_log", cascade="all, delete-orphan", passive_deletes=True)
 
     def __repr__(self):
         return f"<FoodLog {self.id} - {self.meal_type} - {self.meal_date}>"
@@ -78,7 +79,7 @@ class FoodItem(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relations
-    food_log = relationship("FoodLog", backref="items")
+    food_log = relationship("FoodLog", back_populates="items")
 
     def __repr__(self):
         return f"<FoodItem {self.name} - {self.quantity}{self.unit}>"
