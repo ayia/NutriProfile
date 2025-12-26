@@ -1,0 +1,142 @@
+{
+  "title": "Crea tu perfil nutricional",
+  "subtitle": "Responde algunas preguntas para recibir recomendaciones personalizadas.",
+  "error": "Ocurrió un error. Por favor intenta de nuevo.",
+  "step1": {
+    "title": "Información básica",
+    "subtitle": "Esta información nos ayuda a calcular tus necesidades calóricas.",
+    "age": "Edad",
+    "agePlaceholder": "25",
+    "gender": "Género",
+    "genderSelect": "Seleccionar",
+    "genders": {
+      "male": "Masculino",
+      "female": "Femenino",
+      "other": "Otro"
+    },
+    "height": "Altura (cm)",
+    "heightPlaceholder": "175",
+    "weight": "Peso (kg)",
+    "weightPlaceholder": "70",
+    "bmiEstimate": "IMC estimado"
+  },
+  "step2": {
+    "title": "Actividad y objetivos",
+    "subtitle": "Cuéntanos tu nivel de actividad y objetivos.",
+    "activityLevel": "Nivel de actividad física",
+    "goal": "Objetivo principal",
+    "targetWeight": "Peso objetivo (kg) - opcional",
+    "targetWeightPlaceholder": "65"
+  },
+  "step3": {
+    "title": "Preferencias alimenticias",
+    "subtitle": "Personaliza tus recomendaciones según tu dieta.",
+    "dietType": "Tipo de dieta",
+    "allergies": "Alergias e intolerancias",
+    "otherAllergy": "Otra alergia...",
+    "add": "Agregar",
+    "excludedFoods": "Alimentos a evitar (opcional)",
+    "excludedFoodsPlaceholder": "Ej.: champiñones, aceitunas (separados por coma)",
+    "favoriteFoods": "Alimentos favoritos (opcional)",
+    "favoriteFoodsPlaceholder": "Ej.: pollo, arroz, brócoli (separados por coma)"
+  },
+  "step4": {
+    "title": "Información de salud",
+    "subtitle": "Esta información es opcional pero ayuda a personalizar tus recomendaciones.",
+    "note": "Nota:",
+    "noteText": "Esta información es confidencial y se almacena de forma segura. Nos permite adaptar las recomendaciones y evitar contraindicaciones.",
+    "medicalConditions": "Condiciones médicas (opcional)",
+    "otherConditions": "Otras condiciones (separadas por coma)",
+    "medications": "Medicamentos actuales (opcional)",
+    "medicationsPlaceholder": "Ej.: metformina, estatinas (separados por coma)",
+    "medicationsNote": "Algunos alimentos pueden interactuar con medicamentos."
+  },
+  "step5": {
+    "title": "Resumen",
+    "subtitle": "Revisa tu información antes de crear tu perfil.",
+    "incompleteData": "Datos incompletos. Por favor vuelve atrás.",
+    "nutritionTitle": "Tus necesidades nutricionales estimadas",
+    "kcalPerDay": "kcal/día",
+    "protein": "Proteína",
+    "carbs": "Carbohidratos",
+    "fat": "Grasa",
+    "basicInfo": "Información básica",
+    "activityGoal": "Actividad y objetivo",
+    "activity": "Actividad",
+    "goal": "Objetivo",
+    "targetWeight": "Peso objetivo",
+    "dietPreferences": "Preferencias alimenticias",
+    "diet": "Dieta",
+    "allergies": "Alergias",
+    "health": "Salud",
+    "conditions": "Condiciones",
+    "noConditions": "Sin condiciones especificadas",
+    "medications": "Medicamentos",
+    "createProfile": "Crear mi perfil"
+  },
+  "conditions": {
+    "diabetes": "Diabetes",
+    "hypertension": "Hipertensión",
+    "cholesterol": "Colesterol",
+    "heartDisease": "Enfermedad cardíaca",
+    "kidneyFailure": "Insuficiencia renal",
+    "digestiveDisorders": "Trastornos digestivos"
+  },
+  "buttons": {
+    "back": "Atrás",
+    "continue": "Continuar",
+    "viewSummary": "Ver resumen"
+  },
+  "errors": {
+    "ageRequired": "Edad requerida",
+    "ageMin": "Mínimo 13 años",
+    "ageMax": "Máximo 120 años",
+    "genderRequired": "Género requerido",
+    "heightRequired": "Altura requerida",
+    "heightMin": "Mínimo 100 cm",
+    "heightMax": "Máximo 250 cm",
+    "weightRequired": "Peso requerido",
+    "weightMin": "Mínimo 30 kg",
+    "weightMax": "Máximo 300 kg",
+    "activityRequired": "Nivel de actividad requerido",
+    "goalRequired": "Objetivo requerido"
+  },
+  "units": {
+    "years": "años",
+    "cm": "cm",
+    "kg": "kg"
+  },
+  "activityLevels": {
+    "sedentary": "Sedentario (poco o ningún ejercicio)",
+    "light": "Ligeramente activo (1-3 días/semana)",
+    "moderate": "Moderadamente activo (3-5 días/semana)",
+    "active": "Muy activo (6-7 días/semana)",
+    "very_active": "Extremadamente activo (atleta)"
+  },
+  "goals": {
+    "lose_weight": "Perder peso",
+    "maintain": "Mantener peso",
+    "gain_muscle": "Ganar músculo",
+    "improve_health": "Mejorar salud"
+  },
+  "diets": {
+    "omnivore": "Omnívoro",
+    "vegetarian": "Vegetariano",
+    "vegan": "Vegano",
+    "pescatarian": "Pescetariano",
+    "keto": "Keto",
+    "paleo": "Paleo",
+    "mediterranean": "Mediterráneo"
+  },
+  "commonAllergies": {
+    "gluten": "Gluten",
+    "lactose": "Lactosa",
+    "peanuts": "Cacahuetes",
+    "treeNuts": "Frutos secos",
+    "eggs": "Huevos",
+    "fish": "Pescado",
+    "shellfish": "Mariscos",
+    "soy": "Soja",
+    "sesame": "Sésamo"
+  }
+}

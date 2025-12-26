@@ -1,0 +1,96 @@
+{
+  "title": "Recetas",
+  "subtitle": "Genera recetas personalizadas adaptadas a tu perfil",
+  "coachActive": "Coach IA",
+  "active": "Activo",
+  "quickSuggestions": "Sugerencias rápidas",
+  "suggestions": {
+    "proteinBreakfast": "Desayuno proteico",
+    "lightLunch": "Almuerzo ligero",
+    "vegetarianDinner": "Cena vegetariana",
+    "healthySnack": "Snack saludable",
+    "mealPrep": "Meal prep",
+    "express": "Express < 15min"
+  },
+  "tabs": {
+    "generate": "Generar",
+    "history": "Historial",
+    "favorites": "Favoritos"
+  },
+  "search": {
+    "placeholder": "Buscar una receta..."
+  },
+  "filters": {
+    "clear": "Limpiar"
+  },
+  "categories": {
+    "breakfast": "Desayuno",
+    "lunch": "Almuerzo",
+    "dinner": "Cena",
+    "snack": "Snack"
+  },
+  "recipe": {
+    "minutes": "min",
+    "servings": "porciones",
+    "calories": "kcal",
+    "ingredients": "Ingredientes",
+    "instructions": "Instrucciones"
+  },
+  "card": {
+    "protein": "prot",
+    "carbs": "carbs",
+    "fat": "grasa",
+    "aiScore": "Puntuación IA",
+    "hide": "Ocultar",
+    "viewRecipe": "Ver receta"
+  },
+  "generate": {
+    "title": "Generar una receta",
+    "generating": "Generando...",
+    "generate": "Generar una receta",
+    "result": "Tu receta"
+  },
+  "generator": {
+    "activeFilters": "Filtros activos",
+    "mealType": "Tipo de comida",
+    "ingredients": "Ingredientes disponibles (opcional)",
+    "ingredientPlaceholder": "Agregar un ingrediente...",
+    "add": "Agregar",
+    "ingredientsHint": "Dejar vacío para una receta aleatoria adaptada a tu perfil",
+    "maxTime": "Tiempo máx (min)",
+    "time15": "15 min",
+    "time30": "30 min",
+    "time45": "45 min",
+    "time60": "1 hora",
+    "time90": "1h30",
+    "servings": "Porciones",
+    "servingsCount": "{{count}} porción",
+    "servingsCount_other": "{{count}} porciones",
+    "confidence": "Confianza"
+  },
+  "history": {
+    "loading": "Cargando...",
+    "loadError": "Error de carga",
+    "errorMessage": "No se pudo cargar el historial de recetas",
+    "retry": "Reintentar",
+    "noResults": "Sin resultados",
+    "noHistory": "Sin historial",
+    "noHistoryMessage": "Genera tu primera receta para comenzar tu colección",
+    "noMatchFor": "Ninguna receta coincide con",
+    "generateRecipe": "Generar una receta"
+  },
+  "favorites": {
+    "loading": "Cargando...",
+    "loadError": "Error de carga",
+    "errorMessage": "No se pudieron cargar tus favoritos",
+    "retry": "Reintentar",
+    "noResults": "Sin resultados",
+    "noFavorites": "Sin favoritos",
+    "noFavoritesMessage": "Agrega recetas a tus favoritos para encontrarlas fácilmente",
+    "noMatchFor": "Ningún favorito coincide con",
+    "discoverRecipes": "Descubrir recetas"
+  },
+  "errors": {
+    "generateFailed": "Error de generación. Por favor intenta de nuevo."
+  }
+}

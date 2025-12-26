@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/hooks/useAuth'
 import type { LoginCredentials } from '@/types'
 
 export function LoginPage() {
+  const { t } = useTranslation('auth')
   const { login, isLoggingIn, loginError } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const { register, handleSubmit, formState: { errors, touchedFields, isValid } } = useForm<LoginCredentials>({
@@ -25,14 +27,14 @@ export function LoginPage() {
           <div className="w-16 h-16 gradient-vitality rounded-full flex items-center justify-center mx-auto mb-4 shadow-elevated">
             <span className="text-3xl">🥗</span>
           </div>
-          <h1 className="heading-2">Bon retour !</h1>
-          <p className="body-md mt-1">Connectez-vous pour continuer</p>
+          <h1 className="heading-2">{t('login.title')}</h1>
+          <p className="body-md mt-1">{t('login.subtitle')}</p>
         </div>
 
         {loginError && (
           <div className="mb-4 p-3 bg-error-50 border border-error-200 text-error-600 rounded-xl text-sm flex items-center gap-2">
             <span>⚠️</span>
-            <span>Email ou mot de passe incorrect</span>
+            <span>{t('login.error')}</span>
           </div>
         )}
 
@@ -41,14 +43,14 @@ export function LoginPage() {
             <Input
               id="email"
               type="email"
-              label="Email"
-              placeholder="vous@exemple.com"
+              label={t('login.email')}
+              placeholder={t('login.emailPlaceholder')}
               error={errors.email?.message}
               {...register('email', {
-                required: 'Email requis',
+                required: t('login.emailRequired'),
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Email invalide',
+                  message: t('login.emailInvalid'),
                 },
               })}
             />
@@ -62,14 +64,14 @@ export function LoginPage() {
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                label="Mot de passe"
+                label={t('login.password')}
                 placeholder="••••••••"
                 error={errors.password?.message}
                 {...register('password', {
-                  required: 'Mot de passe requis',
+                  required: t('login.passwordRequired'),
                   minLength: {
                     value: 8,
-                    message: 'Minimum 8 caractères',
+                    message: t('login.passwordMinLength'),
                   },
                 })}
               />
@@ -86,7 +88,7 @@ export function LoginPage() {
                 to="/forgot-password"
                 className="text-sm text-primary-600 hover:underline"
               >
-                Mot de passe oublié ?
+                {t('login.forgotPassword')}
               </Link>
             </div>
           </div>
@@ -97,7 +99,7 @@ export function LoginPage() {
             isLoading={isLoggingIn}
             disabled={!isValid}
           >
-            Se connecter
+            {t('login.submit')}
           </Button>
         </form>
 
@@ -107,7 +109,7 @@ export function LoginPage() {
             <div className="w-full border-t border-neutral-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-4 text-neutral-500">ou</span>
+            <span className="bg-white px-4 text-neutral-500">{t('login.or')}</span>
           </div>
         </div>
 
@@ -124,14 +126,14 @@ export function LoginPage() {
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            <span className="text-neutral-500">Bientôt disponible</span>
+            <span className="text-neutral-500">{t('login.googleComingSoon')}</span>
           </button>
         </div>
 
         <p className="mt-6 text-center body-md">
-          Pas encore de compte ?{' '}
+          {t('login.noAccount')}{' '}
           <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
-            S'inscrire gratuitement
+            {t('login.signUp')}
           </Link>
         </p>
       </div>

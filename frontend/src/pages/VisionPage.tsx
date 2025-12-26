@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { visionApi } from '@/services/visionApi'
 import { ImageUploader, type AnalysisData } from '@/components/vision/ImageUploader'
 import { AnalysisResult } from '@/components/vision/AnalysisResult'
@@ -9,6 +10,7 @@ import { Button } from '@/components/ui/Button'
 type Tab = 'scan' | 'today' | 'history'
 
 export function VisionPage() {
+  const { t, i18n } = useTranslation('vision')
   const [activeTab, setActiveTab] = useState<Tab>('scan')
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null)
   const [selectedDate, setSelectedDate] = useState(() => {
@@ -29,9 +31,9 @@ export function VisionPage() {
   })
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: 'scan', label: 'Scanner', icon: '📸' },
-    { id: 'today', label: "Aujourd'hui", icon: '📊' },
-    { id: 'history', label: 'Historique', icon: '📜' },
+    { id: 'scan', label: t('tabs.scan'), icon: '📸' },
+    { id: 'today', label: t('tabs.today'), icon: '📊' },
+    { id: 'history', label: t('tabs.history'), icon: '📜' },
   ]
 
   const handleAnalysisComplete = (data: AnalysisData) => {
@@ -55,9 +57,9 @@ export function VisionPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Analyse Vision</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
         <p className="text-gray-600 mt-2">
-          Prenez en photo vos repas pour un suivi nutritionnel automatique
+          {t('subtitle')}
         </p>
       </div>
 
@@ -81,7 +83,7 @@ export function VisionPage() {
         <div className="space-y-6">
           {!analysisData ? (
             <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-semibold mb-4">Analyser un repas</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('scan.title')}</h2>
               <ImageUploader onAnalysisComplete={handleAnalysisComplete} />
             </div>
           ) : (
@@ -109,20 +111,20 @@ export function VisionPage() {
               variant="ghost"
               onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
             >
-              Aujourd'hui
+              {t('today.button')}
             </Button>
           </div>
 
           {/* Résumé journalier */}
           {nutrition && (
             <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="font-semibold mb-4">Résumé nutritionnel</h3>
+              <h3 className="font-semibold mb-4">{t('today.nutritionSummary')}</h3>
 
               <div className="space-y-4">
                 {/* Calories */}
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span>Calories</span>
+                    <span>{t('today.calories')}</span>
                     <span>
                       {nutrition.total_calories} / {nutrition.target_calories || '?'} kcal
                     </span>
@@ -139,7 +141,7 @@ export function VisionPage() {
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-blue-600">Protéines</span>
+                      <span className="text-blue-600">{t('today.protein')}</span>
                       <span>{nutrition.total_protein}g</span>
                     </div>
                     <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -151,7 +153,7 @@ export function VisionPage() {
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-yellow-600">Glucides</span>
+                      <span className="text-yellow-600">{t('today.carbs')}</span>
                       <span>{nutrition.total_carbs}g</span>
                     </div>
                     <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -163,7 +165,7 @@ export function VisionPage() {
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-orange-600">Lipides</span>
+                      <span className="text-orange-600">{t('today.fat')}</span>
                       <span>{nutrition.total_fat}g</span>
                     </div>
                     <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -179,7 +181,7 @@ export function VisionPage() {
                 <div className="flex items-center justify-between pt-4 border-t">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">💧</span>
-                    <span>Eau: {nutrition.water_ml}ml</span>
+                    <span>{t('today.water')}: {nutrition.water_ml}ml</span>
                   </div>
                   <div className="flex gap-1">
                     {[250, 500].map((amount) => (
@@ -203,7 +205,7 @@ export function VisionPage() {
           {/* Repas du jour */}
           <div className="space-y-4">
             <h3 className="font-semibold">
-              Repas ({todayQuery.data?.meals.length || 0})
+              {t('today.meals')} ({todayQuery.data?.meals.length || 0})
             </h3>
 
             {todayQuery.isLoading && (
@@ -215,9 +217,9 @@ export function VisionPage() {
             {todayQuery.data?.meals.length === 0 && (
               <div className="text-center py-8 bg-gray-50 rounded-lg">
                 <span className="text-4xl">🍽️</span>
-                <p className="text-gray-600 mt-4">Aucun repas enregistré</p>
+                <p className="text-gray-600 mt-4">{t('today.noMeals')}</p>
                 <Button className="mt-4" onClick={() => setActiveTab('scan')}>
-                  Scanner un repas
+                  {t('today.scanFirst')}
                 </Button>
               </div>
             )}
@@ -240,12 +242,12 @@ export function VisionPage() {
           {historyQuery.data?.length === 0 && (
             <div className="text-center py-8 bg-gray-50 rounded-lg">
               <span className="text-4xl">📜</span>
-              <p className="text-gray-600 mt-4">Aucun historique</p>
+              <p className="text-gray-600 mt-4">{t('history.noHistory')}</p>
             </div>
           )}
 
           {historyQuery.data?.map((log) => {
-            const date = new Date(log.meal_date).toLocaleDateString('fr-FR', {
+            const date = new Date(log.meal_date).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
               weekday: 'long',
               day: 'numeric',
               month: 'long',

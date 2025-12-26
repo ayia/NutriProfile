@@ -1,0 +1,182 @@
+{
+  "title": "仪表板",
+  "greeting": {
+    "morning": "早上好",
+    "afternoon": "下午好",
+    "evening": "晚上好"
+  },
+  "welcome": "欢迎",
+  "hello": "你好",
+  "streakMessage": "连续{{count}}天！",
+  "newDayMessage": "让我们开始新的一天！",
+  "noProfile": {
+    "title": "欢迎",
+    "subtitle": "创建您的营养档案，根据您的目标和偏好获取个性化建议。",
+    "cta": "创建我的档案"
+  },
+  "todaySummary": "今日摘要",
+  "stats": {
+    "caloriesConsumed": "已摄入卡路里",
+    "caloriesRemaining": "剩余卡路里",
+    "caloriesTarget": "目标卡路里",
+    "kcalPerDay": "千卡/天",
+    "protein": "蛋白质",
+    "carbs": "碳水化合物",
+    "fat": "脂肪",
+    "water": "水",
+    "goal": "目标",
+    "consumed": "已摄入",
+    "remaining": "剩余"
+  },
+  "profileStatus": {
+    "title": "档案状态",
+    "complete": "档案完整",
+    "incomplete": "档案不完整",
+    "editProfile": "编辑我的档案"
+  },
+  "objective": "目标",
+  "streak": {
+    "title": "活跃连续记录",
+    "noStreaks": "没有活跃的连续记录。开始记录您的餐食吧！",
+    "days": "天",
+    "record": "记录"
+  },
+  "achievements": {
+    "title": "最近成就",
+    "noAchievements": "暂无成就。继续努力解锁成就！"
+  },
+  "journey": {
+    "title": "您的旅程",
+    "meals": "餐食",
+    "activities": "活动",
+    "recipes": "食谱",
+    "photos": "照片",
+    "achievements": "成就"
+  },
+  "quickActions": {
+    "title": "快速操作",
+    "scanMeal": "扫描",
+    "addWater": "水",
+    "logWeight": "体重",
+    "logActivity": "活动",
+    "viewRecipes": "食谱",
+    "stats": "统计"
+  },
+  "weeklyProgress": {
+    "title": "每周进展",
+    "calories": "卡路里",
+    "protein": "蛋白质",
+    "average": "平均",
+    "noData": "本周无数据"
+  },
+  "coach": {
+    "title": "教练建议",
+    "loading": "教练正在思考...",
+    "refresh": "新建议"
+  },
+  "upcomingFeatures": {
+    "title": "即将推出的功能",
+    "analyzeMeals": "通过照片分析您的餐食",
+    "generateRecipes": "生成个性化食谱",
+    "trackProgress": "追踪您的进展",
+    "comingSoon": "即将推出"
+  },
+  "error": {
+    "loading": "加载仪表板时出错",
+    "unknown": "未知错误",
+    "retry": "重试",
+    "noData": "无可用数据"
+  },
+  "water": {
+    "title": "添加水",
+    "close": "关闭"
+  },
+  "hero": {
+    "calories": "卡路里",
+    "caloriesOver": "超出{{count}}千卡",
+    "caloriesRemaining": "剩余{{count}}千卡",
+    "reached": "已达成",
+    "meals": "餐食",
+    "progression": "进展",
+    "achievements": "成就",
+    "record": "记录",
+    "today": "今天",
+    "addButton": "+ 添加"
+  },
+  "macros": {
+    "protein": "蛋白质",
+    "water": "水",
+    "activity": "活动"
+  },
+  "streakTypes": {
+    "logging": "记录",
+    "activity": "活动",
+    "water": "饮水",
+    "calories": "卡路里"
+  },
+  "levels": {
+    "1": "初学者",
+    "2": "学徒",
+    "3": "入门者",
+    "4": "常客",
+    "5": "进阶者",
+    "6": "专家",
+    "7": "大师",
+    "8": "冠军",
+    "9": "传奇",
+    "10": "健身之神"
+  },
+  "fab": {
+    "scanMeal": "扫描餐食",
+    "addWater": "添加水",
+    "newWeight": "新体重",
+    "searchRecipe": "搜索食谱"
+  },
+  "weeklyChart": {
+    "title": "本周",
+    "subtitle": "追踪您的每日卡路里",
+    "loadError": "无法加载数据",
+    "noData": "无可用数据",
+    "hoverHint": "将鼠标悬停在某天上查看详情",
+    "target": "目标",
+    "legend": {
+      "reached": "目标达成",
+      "below": "低于目标",
+      "exceeded": "超出目标"
+    },
+    "macros": {
+      "protein": "蛋白质",
+      "carbs": "碳水化合物",
+      "fat": "脂肪"
+    },
+    "stats": {
+      "averagePerDay": "日均",
+      "target": "目标",
+      "weekTotal": "周总计",
+      "vsTarget": "vs 目标"
+    }
+  },
+  "scanner": {
+    "title": "扫描餐食",
+    "subtitle": "拍照自动分析卡路里"
+  },
+  "notifications": {
+    "title": "通知",
+    "markAllRead": "全部标为已读",
+    "empty": "没有通知",
+    "timeAgo": {
+      "now": "刚刚",
+      "minutes": "{{count}}分钟前",
+      "hours": "{{count}}小时前",
+      "days": "{{count}}天前"
+    }
+  },
+  "levelProgress": {
+    "level": "等级 {{level}}",
+    "nextLevel": "下一等级",
+    "achievements": "成就",
+    "meals": "餐食",
+    "activities": "活动",
+    "bestStreak": "最佳连续记录"
+  }
+}

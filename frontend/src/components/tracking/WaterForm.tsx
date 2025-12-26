@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
 
@@ -9,17 +10,18 @@ interface WaterFormProps {
   currentWater?: number
 }
 
-const QUICK_AMOUNTS = [
-  { label: '1 verre', ml: 250, icon: '🥛' },
-  { label: '1 bouteille', ml: 500, icon: '🍶' },
-  { label: '1 grande bouteille', ml: 1000, icon: '🫗' },
-  { label: '1.5L', ml: 1500, icon: '💧' },
-]
-
 export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormProps) {
+  const { t } = useTranslation('tracking')
   const [customAmount, setCustomAmount] = useState('')
   const [error, setError] = useState<string | null>(null)
   const queryClient = useQueryClient()
+
+  const QUICK_AMOUNTS = [
+    { label: t('water.glass'), ml: 250, icon: '🥛' },
+    { label: t('water.bottle'), ml: 500, icon: '🍶' },
+    { label: t('water.largeBottle'), ml: 1000, icon: '🫗' },
+    { label: '1.5L', ml: 1500, icon: '💧' },
+  ]
 
   const today = new Date().toISOString().split('T')[0]
 
@@ -46,11 +48,11 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
 
     const amount = parseInt(customAmount)
     if (isNaN(amount) || amount <= 0) {
-      setError('Veuillez entrer une quantite valide')
+      setError(t('water.errors.invalidAmount'))
       return
     }
     if (amount > 5000) {
-      setError('La quantite maximale est de 5000 ml')
+      setError(t('water.errors.maxAmount'))
       return
     }
 
@@ -62,9 +64,9 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
       {/* Affichage actuel */}
       <div className="text-center p-4 bg-cyan-50 rounded-lg">
         <div className="text-3xl mb-1">💧</div>
-        <div className="text-sm text-gray-600">Aujourd'hui</div>
+        <div className="text-sm text-gray-600">{t('water.today')}</div>
         <div className="text-2xl font-bold text-cyan-600">{currentWater} ml</div>
-        <div className="text-xs text-gray-500">Objectif: 2000 ml</div>
+        <div className="text-xs text-gray-500">{t('water.goal')}: 2000 ml</div>
         <div className="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
             className="h-full bg-cyan-500 transition-all duration-300"
@@ -75,7 +77,7 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
 
       {/* Boutons rapides */}
       <div>
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Ajout rapide</h4>
+        <h4 className="text-sm font-medium text-gray-700 mb-3">{t('water.quickAdd')}</h4>
         <div className="grid grid-cols-2 gap-2">
           {QUICK_AMOUNTS.map((item) => (
             <button
@@ -97,7 +99,7 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
 
       {/* Quantite personnalisee */}
       <form onSubmit={handleCustomSubmit}>
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Quantite personnalisee</h4>
+        <h4 className="text-sm font-medium text-gray-700 mb-3">{t('water.custom')}</h4>
         <div className="flex gap-2">
           <div className="flex-1">
             <input
@@ -112,7 +114,7 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
           </div>
           <span className="flex items-center text-gray-500">ml</span>
           <Button type="submit" disabled={mutation.isPending || !customAmount}>
-            Ajouter
+            {t('water.add')}
           </Button>
         </div>
       </form>
@@ -133,14 +135,14 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
           className="flex-1"
           disabled={mutation.isPending}
         >
-          Fermer
+          {t('common:close')}
         </Button>
       </div>
 
       {/* Loading indicator */}
       {mutation.isPending && (
         <div className="text-center text-sm text-gray-500">
-          Enregistrement...
+          {t('common:loading')}
         </div>
       )}
     </div>

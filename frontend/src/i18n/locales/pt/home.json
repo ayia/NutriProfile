@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "title": "Sua nutrição personalizada",
+    "subtitle": "Analise suas refeições com IA, acompanhe seu progresso e alcance seus objetivos de saúde.",
+    "cta": "Começar grátis",
+    "ctaSecondary": "Saiba mais"
+  },
+  "features": {
+    "title": "Recursos",
+    "analysis": {
+      "title": "Análise de refeições",
+      "description": "Tire uma foto da sua refeição e nossa IA analisa instantaneamente o valor nutricional."
+    },
+    "tracking": {
+      "title": "Acompanhamento nutricional",
+      "description": "Acompanhe suas calorias, macros e progresso com gráficos intuitivos."
+    },
+    "recipes": {
+      "title": "Receitas personalizadas",
+      "description": "Receba sugestões de receitas baseadas em suas preferências e objetivos."
+    },
+    "coach": {
+      "title": "Coach IA",
+      "description": "Receba dicas personalizadas e motivação do nosso coach IA."
+    }
+  },
+  "howItWorks": {
+    "title": "Como funciona",
+    "step1": {
+      "title": "Crie seu perfil",
+      "description": "Responda algumas perguntas para definir seus objetivos e preferências."
+    },
+    "step2": {
+      "title": "Escaneie suas refeições",
+      "description": "Tire fotos das suas refeições para análise instantânea."
+    },
+    "step3": {
+      "title": "Acompanhe seu progresso",
+      "description": "Visualize sua evolução e alcance seus objetivos."
+    }
+  },
+  "testimonials": {
+    "title": "Depoimentos"
+  },
+  "cta": {
+    "title": "Pronto para começar?",
+    "subtitle": "Junte-se a milhares de usuários que melhoraram sua nutrição com o NutriProfile.",
+    "button": "Começar grátis"
+  }
+}

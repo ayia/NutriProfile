@@ -1,0 +1,50 @@
+{
+  "loading": "Cargando...",
+  "error": "Error",
+  "success": "Éxito",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "save": "Guardar",
+  "delete": "Eliminar",
+  "edit": "Editar",
+  "back": "Volver",
+  "next": "Siguiente",
+  "close": "Cerrar",
+  "search": "Buscar",
+  "noResults": "Sin resultados",
+  "retry": "Reintentar",
+  "yes": "Sí",
+  "no": "No",
+  "or": "o",
+  "and": "y",
+  "welcome": "Bienvenido",
+  "logout": "Cerrar sesión",
+  "login": "Iniciar sesión",
+  "register": "Registrarse",
+  "profile": "Perfil",
+  "settings": "Configuración",
+  "home": "Inicio",
+  "dashboard": "Panel",
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "vision": "Visión",
+    "recipes": "Recetas",
+    "tracking": "Seguimiento",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión"
+  },
+  "footer": {
+    "copyright": "© 2024 NutriProfile. Todos los derechos reservados.",
+    "privacy": "Privacidad",
+    "terms": "Términos"
+  },
+  "units": {
+    "g": "g",
+    "kg": "kg",
+    "kcal": "kcal",
+    "ml": "ml",
+    "L": "L",
+    "cm": "cm"
+  }
+}

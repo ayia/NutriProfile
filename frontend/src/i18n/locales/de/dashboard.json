@@ -1,0 +1,182 @@
+{
+  "title": "Dashboard",
+  "greeting": {
+    "morning": "Guten Morgen",
+    "afternoon": "Guten Tag",
+    "evening": "Guten Abend"
+  },
+  "welcome": "Willkommen",
+  "hello": "Hallo",
+  "streakMessage": "{{count}} Tage in Folge!",
+  "newDayMessage": "Starten wir einen neuen Tag!",
+  "noProfile": {
+    "title": "Willkommen",
+    "subtitle": "Erstellen Sie Ihr Ernährungsprofil, um personalisierte Empfehlungen basierend auf Ihren Zielen und Vorlieben zu erhalten.",
+    "cta": "Mein Profil erstellen"
+  },
+  "todaySummary": "Zusammenfassung des Tages",
+  "stats": {
+    "caloriesConsumed": "Verbrauchte Kalorien",
+    "caloriesRemaining": "Verbleibende Kalorien",
+    "caloriesTarget": "Kalorienziel",
+    "kcalPerDay": "kcal pro Tag",
+    "protein": "Protein",
+    "carbs": "Kohlenhydrate",
+    "fat": "Fett",
+    "water": "Wasser",
+    "goal": "Ziel",
+    "consumed": "verbraucht",
+    "remaining": "verbleibend"
+  },
+  "profileStatus": {
+    "title": "Profilstatus",
+    "complete": "Profil vollständig",
+    "incomplete": "Profil unvollständig",
+    "editProfile": "Mein Profil bearbeiten"
+  },
+  "objective": "Ziel",
+  "streak": {
+    "title": "Aktive Serien",
+    "noStreaks": "Keine aktiven Serien. Beginnen Sie mit der Mahlzeitenverfolgung!",
+    "days": "Tage",
+    "record": "Rekord"
+  },
+  "achievements": {
+    "title": "Letzte Erfolge",
+    "noAchievements": "Noch keine Erfolge. Machen Sie weiter, um welche freizuschalten!"
+  },
+  "journey": {
+    "title": "Ihre Reise",
+    "meals": "Mahlzeiten",
+    "activities": "Aktivitäten",
+    "recipes": "Rezepte",
+    "photos": "Fotos",
+    "achievements": "Erfolge"
+  },
+  "quickActions": {
+    "title": "Schnellaktionen",
+    "scanMeal": "Scannen",
+    "addWater": "Wasser",
+    "logWeight": "Gewicht",
+    "logActivity": "Aktivitäten",
+    "viewRecipes": "Rezepte",
+    "stats": "Stats"
+  },
+  "weeklyProgress": {
+    "title": "Wöchentlicher Fortschritt",
+    "calories": "Kalorien",
+    "protein": "Protein",
+    "average": "Durchschnitt",
+    "noData": "Keine Daten für diese Woche"
+  },
+  "coach": {
+    "title": "Coach-Tipp",
+    "loading": "Der Coach denkt nach...",
+    "refresh": "Neuer Tipp"
+  },
+  "upcomingFeatures": {
+    "title": "Kommende Funktionen",
+    "analyzeMeals": "Analysieren Sie Ihre Mahlzeiten per Foto",
+    "generateRecipes": "Generieren Sie personalisierte Rezepte",
+    "trackProgress": "Verfolgen Sie Ihren Fortschritt",
+    "comingSoon": "Demnächst"
+  },
+  "error": {
+    "loading": "Fehler beim Laden des Dashboards",
+    "unknown": "Unbekannter Fehler",
+    "retry": "Erneut versuchen",
+    "noData": "Keine Daten verfügbar"
+  },
+  "water": {
+    "title": "Wasser hinzufügen",
+    "close": "Schließen"
+  },
+  "hero": {
+    "calories": "Kalorien",
+    "caloriesOver": "{{count}} kcal über Ziel",
+    "caloriesRemaining": "{{count}} kcal verbleibend",
+    "reached": "Erreicht",
+    "meals": "Mahlzeiten",
+    "progression": "Fortschritt",
+    "achievements": "Erfolge",
+    "record": "Rekord",
+    "today": "Heute",
+    "addButton": "+ Hinzufügen"
+  },
+  "macros": {
+    "protein": "Protein",
+    "water": "Wasser",
+    "activity": "Aktivität"
+  },
+  "streakTypes": {
+    "logging": "Verfolgung",
+    "activity": "Aktivität",
+    "water": "Hydration",
+    "calories": "Kalorien"
+  },
+  "levels": {
+    "1": "Anfänger",
+    "2": "Lehrling",
+    "3": "Einsteiger",
+    "4": "Regelmäßig",
+    "5": "Fortgeschritten",
+    "6": "Experte",
+    "7": "Meister",
+    "8": "Champion",
+    "9": "Legende",
+    "10": "Fitness-Gott"
+  },
+  "fab": {
+    "scanMeal": "Mahlzeit scannen",
+    "addWater": "Wasser hinzufügen",
+    "newWeight": "Neues Gewicht",
+    "searchRecipe": "Rezept suchen"
+  },
+  "weeklyChart": {
+    "title": "Diese Woche",
+    "subtitle": "Verfolgen Sie Ihre täglichen Kalorien",
+    "loadError": "Daten konnten nicht geladen werden",
+    "noData": "Keine Daten verfügbar",
+    "hoverHint": "Fahren Sie über einen Tag für Details",
+    "target": "Ziel",
+    "legend": {
+      "reached": "Ziel erreicht",
+      "below": "Unter Ziel",
+      "exceeded": "Überschritten"
+    },
+    "macros": {
+      "protein": "Protein",
+      "carbs": "Kohlenhydrate",
+      "fat": "Fett"
+    },
+    "stats": {
+      "averagePerDay": "Durchschnitt/Tag",
+      "target": "Ziel",
+      "weekTotal": "Wochensumme",
+      "vsTarget": "vs Ziel"
+    }
+  },
+  "scanner": {
+    "title": "Mahlzeit scannen",
+    "subtitle": "Machen Sie ein Foto, um Kalorien automatisch zu analysieren"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "empty": "Keine Benachrichtigungen",
+    "timeAgo": {
+      "now": "Gerade eben",
+      "minutes": "vor {{count}}min",
+      "hours": "vor {{count}}h",
+      "days": "vor {{count}}T"
+    }
+  },
+  "levelProgress": {
+    "level": "Level {{level}}",
+    "nextLevel": "Nächstes Level",
+    "achievements": "Erfolge",
+    "meals": "Mahlzeiten",
+    "activities": "Aktivitäten",
+    "bestStreak": "Beste Serie"
+  }
+}

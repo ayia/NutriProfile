@@ -1,0 +1,127 @@
+{
+  "title": "Escanear comida",
+  "subtitle": "Toma fotos de tus comidas para un seguimiento nutricional automático",
+  "tabs": {
+    "scan": "Escáner",
+    "today": "Hoy",
+    "history": "Historial"
+  },
+  "scan": {
+    "title": "Analizar una comida",
+    "description": "Arrastra una foto aquí o usa tu dispositivo"
+  },
+  "today": {
+    "button": "Hoy",
+    "nutritionSummary": "Resumen nutricional",
+    "meals": "Comidas",
+    "noMeals": "Sin comidas registradas",
+    "scanFirst": "Escanear una comida",
+    "calories": "Calorías",
+    "protein": "Proteína",
+    "carbs": "Carbohidratos",
+    "fat": "Grasa",
+    "water": "Agua"
+  },
+  "history": {
+    "noHistory": "Sin historial"
+  },
+  "common": {
+    "loading": "Cargando..."
+  },
+  "mealTypes": {
+    "breakfast": "Desayuno",
+    "lunch": "Almuerzo",
+    "dinner": "Cena",
+    "snack": "Snack"
+  },
+  "uploader": {
+    "mealTypeLabel": "Tipo de comida",
+    "scanTitle": "Escanea tu comida",
+    "scanDescription": "Arrastra una foto aquí o usa tu dispositivo",
+    "tipsTitle": "Consejos para mejor análisis:",
+    "tip1": "Foto bien iluminada, vista desde arriba",
+    "tip2": "Todos los alimentos visibles en el encuadre",
+    "tip3": "Evita reflejos y sombras fuertes",
+    "takePhoto": "Tomar foto",
+    "gallery": "Galería",
+    "invalidFile": "Por favor selecciona una imagen",
+    "error": "Error durante el análisis. Por favor intenta de nuevo.",
+    "aiWorking": "IA trabajando... ¡paciencia!"
+  },
+  "analysisSteps": {
+    "step1": "Recibiendo imagen",
+    "step2": "Detectando alimentos",
+    "step3": "Calculando nutrientes",
+    "step4": "Análisis de salud personalizado"
+  },
+  "result": {
+    "verdict": {
+      "excellent": "¡Excelente!",
+      "good": "Buena elección",
+      "moderate": "Aceptable",
+      "poor": "Necesita mejora",
+      "excellentDesc": "Esta comida está perfectamente equilibrada",
+      "goodDesc": "Una comida equilibrada para tus objetivos",
+      "moderateDesc": "Algunos ajustes recomendados",
+      "poorDesc": "Esta comida necesita tu atención"
+    },
+    "healthScore": "Puntuación de salud",
+    "analysisComplete": "Análisis completado",
+    "confidence": "Confianza",
+    "macros": {
+      "calories": "Calorías",
+      "protein": "Proteína",
+      "carbs": "Carbohidratos",
+      "fat": "Grasa"
+    },
+    "healthReport": "Informe de salud personalizado",
+    "calorieRemaining": "Te quedan {{count}} kcal para hoy",
+    "calorieExceeded": "Excediste por {{count}} kcal",
+    "positivePoints": "Puntos positivos",
+    "warnings": "Atención",
+    "suggestions": "Sugerencias",
+    "macroBalance": "Balance de macros",
+    "detectedFoods": "Alimentos detectados",
+    "confidenceLabel": {
+      "high": "Alta",
+      "medium": "Media",
+      "low": "Baja"
+    },
+    "edit": {
+      "name": "Nombre",
+      "quantity": "Cantidad",
+      "unit": "Unidad",
+      "cancel": "Cancelar",
+      "save": "Guardar"
+    },
+    "lowConfidence": "Confianza baja",
+    "lowConfidenceMsg": "Recomendamos verificar y corregir los valores en la sección \"Alimentos detectados\".",
+    "actions": {
+      "newAnalysis": "Nuevo análisis",
+      "editMeal": "Editar esta comida",
+      "saveMeal": "Guardar comida",
+      "saving": "Guardando...",
+      "done": "Listo"
+    },
+    "mealSaved": "Comida guardada exitosamente",
+    "saveError": "Error al guardar. Por favor intenta de nuevo.",
+    "modify": "Editar",
+    "corrected": "Corregido"
+  },
+  "foodLog": {
+    "foods": "Alimentos",
+    "showDetails": "Mostrar",
+    "hideDetails": "Ocultar",
+    "edit": "Editar",
+    "deleteConfirm": "¿Eliminar esta comida?",
+    "deleteError": "Error al eliminar. Por favor intenta de nuevo."
+  },
+  "errors": {
+    "uploadFailed": "Error al subir",
+    "analysisFailed": "Error en el análisis",
+    "saveFailed": "Error al guardar",
+    "noImage": "Por favor selecciona una imagen",
+    "imageTooLarge": "Imagen muy grande (máx. 10MB)",
+    "invalidFormat": "Formato inválido. Usa JPG, PNG o WebP"
+  }
+}

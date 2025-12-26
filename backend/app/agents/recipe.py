@@ -5,6 +5,7 @@ from typing import Any
 from app.agents.base import BaseAgent, AgentResponse
 from app.llm.models import ModelCapability
 from app.models.profile import DietType, Goal
+from app.i18n import DEFAULT_LANGUAGE
 
 
 class MealHistoryAnalysis:
@@ -313,20 +314,20 @@ class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
     def build_prompt(self, input_data: RecipeInput) -> str:
         """Construit le prompt pour générer une recette personnalisée."""
         diet_instructions = {
-            DietType.VEGAN: "La recette doit être 100% végétalienne (pas de produits animaux).",
-            DietType.VEGETARIAN: "La recette doit être végétarienne (pas de viande ni poisson).",
-            DietType.PESCATARIAN: "La recette peut contenir du poisson mais pas de viande.",
-            DietType.KETO: "La recette doit être pauvre en glucides (moins de 20g net).",
-            DietType.PALEO: "La recette doit suivre le régime paléo (pas de céréales, légumineuses, produits laitiers).",
-            DietType.MEDITERRANEAN: "La recette doit suivre le régime méditerranéen.",
-            DietType.OMNIVORE: "Pas de restriction particulière.",
+            DietType.VEGAN: self.t("agents.recipe.dietInstructions.vegan"),
+            DietType.VEGETARIAN: self.t("agents.recipe.dietInstructions.vegetarian"),
+            DietType.PESCATARIAN: self.t("agents.recipe.dietInstructions.pescatarian"),
+            DietType.KETO: self.t("agents.recipe.dietInstructions.keto"),
+            DietType.PALEO: self.t("agents.recipe.dietInstructions.paleo"),
+            DietType.MEDITERRANEAN: self.t("agents.recipe.dietInstructions.mediterranean"),
+            DietType.OMNIVORE: self.t("agents.recipe.dietInstructions.omnivore"),
         }
 
         goal_instructions = {
-            Goal.LOSE_WEIGHT: "Privilégie les recettes légères, riches en protéines et fibres, faibles en calories.",
-            Goal.GAIN_MUSCLE: "Privilégie les recettes riches en protéines (30g+ par portion) et glucides complexes.",
-            Goal.MAINTAIN: "Équilibre les macronutriments pour maintenir le poids.",
-            Goal.IMPROVE_HEALTH: "Privilégie les aliments nutritifs, peu transformés, riches en vitamines et minéraux.",
+            Goal.LOSE_WEIGHT: self.t("agents.recipe.goalInstructions.loseWeight"),
+            Goal.GAIN_MUSCLE: self.t("agents.recipe.goalInstructions.gainMuscle"),
+            Goal.MAINTAIN: self.t("agents.recipe.goalInstructions.maintain"),
+            Goal.IMPROVE_HEALTH: self.t("agents.recipe.goalInstructions.improveHealth"),
         }
 
         ingredients_text = ", ".join(input_data.ingredients) if input_data.ingredients else "au choix"
@@ -421,23 +422,23 @@ class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
                 # Aliments à éviter (mangés trop souvent)
                 foods_to_avoid = mh.get_foods_to_avoid()
                 if foods_to_avoid:
-                    history_parts.append(f"ÉVITER (mangés trop souvent cette semaine): {', '.join(foods_to_avoid)}")
+                    history_parts.append(f"{self.t('agents.recipe.mealHistory.avoid')} {', '.join(foods_to_avoid)}")
 
                 # Score de variété
                 if mh.variety_score < 60:
-                    history_parts.append(f"Score variété: {mh.variety_score:.0f}/100 - {mh.get_variety_recommendation()}")
+                    history_parts.append(f"{self.t('agents.recipe.mealHistory.varietyScore')} {mh.variety_score:.0f}/100 - {mh.get_variety_recommendation()}")
 
                 # Protéines suggérées
                 suggested_proteins = mh.get_suggested_proteins(input_data.meal_type)
                 if suggested_proteins and len(suggested_proteins) > 0:
-                    history_parts.append(f"Protéines suggérées (non consommées récemment): {', '.join(suggested_proteins[:5])}")
+                    history_parts.append(f"{self.t('agents.recipe.mealHistory.suggestedProteins')} {', '.join(suggested_proteins[:5])}")
 
                 # Repas logués cette semaine
                 if mh.meals_logged_week > 0:
-                    history_parts.append(f"Repas logués (7j): {mh.meals_logged_week}")
+                    history_parts.append(f"{self.t('agents.recipe.mealHistory.loggedMeals')} {mh.meals_logged_week}")
 
                 if history_parts:
-                    context_parts.append("\nHISTORIQUE ALIMENTAIRE:")
+                    context_parts.append(f"\n{self.t('agents.recipe.mealHistory.header')}")
                     context_parts.extend(history_parts)
 
             # NOUVEAU: Recommandations basées sur l'heure
@@ -446,15 +447,15 @@ class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
                 hour = ctx.current_hour
 
                 if 6 <= hour < 10:
-                    time_recommendations.append("Matin: Privilégier les glucides complexes pour l'énergie")
+                    time_recommendations.append(self.t("agents.recipe.timeRecommendations.morning"))
                 elif 11 <= hour < 14:
-                    time_recommendations.append("Midi: Repas équilibré, protéines + légumes")
+                    time_recommendations.append(self.t("agents.recipe.timeRecommendations.midday"))
                 elif 14 <= hour < 17:
-                    time_recommendations.append("Après-midi: Snack léger si nécessaire")
+                    time_recommendations.append(self.t("agents.recipe.timeRecommendations.afternoon"))
                 elif 18 <= hour < 21:
-                    time_recommendations.append("Soir: Repas léger, éviter les glucides simples")
+                    time_recommendations.append(self.t("agents.recipe.timeRecommendations.evening"))
                 elif hour >= 21 or hour < 6:
-                    time_recommendations.append("Tard: Éviter les repas lourds, privilégier protéines légères")
+                    time_recommendations.append(self.t("agents.recipe.timeRecommendations.late"))
 
                 if time_recommendations:
                     context_parts.extend(time_recommendations)
@@ -572,8 +573,8 @@ Sois créatif mais réaliste. La recette doit être facile à suivre et PARFAITE
         # Recettes de base selon le type de repas
         fallback_recipes = {
             "breakfast": Recipe(
-                title="Bowl de flocons d'avoine aux fruits",
-                description="Un petit-déjeuner équilibré et nutritif",
+                title=self.t("agents.recipe.fallback.oatmealBowl"),
+                description=self.t("agents.recipe.fallback.oatmealDesc"),
                 ingredients=[
                     {"name": "flocons d'avoine", "quantity": "60g"},
                     {"name": "lait", "quantity": "200ml"},
@@ -594,8 +595,8 @@ Sois créatif mais réaliste. La recette doit être facile à suivre et PARFAITE
                 tags=["petit-déjeuner", "rapide", "végétarien"],
             ),
             "lunch": Recipe(
-                title="Salade de poulet grillé",
-                description="Une salade fraîche et protéinée",
+                title=self.t("agents.recipe.fallback.chickenSalad"),
+                description=self.t("agents.recipe.fallback.chickenSaladDesc"),
                 ingredients=[
                     {"name": "blanc de poulet", "quantity": "150g"},
                     {"name": "salade verte", "quantity": "100g"},
@@ -618,8 +619,8 @@ Sois créatif mais réaliste. La recette doit être facile à suivre et PARFAITE
                 tags=["déjeuner", "protéiné", "léger"],
             ),
             "dinner": Recipe(
-                title="Saumon aux légumes rôtis",
-                description="Un dîner sain et savoureux",
+                title=self.t("agents.recipe.fallback.salmonVeggies"),
+                description=self.t("agents.recipe.fallback.salmonDesc"),
                 ingredients=[
                     {"name": "pavé de saumon", "quantity": "150g"},
                     {"name": "brocoli", "quantity": "150g"},
@@ -642,8 +643,8 @@ Sois créatif mais réaliste. La recette doit être facile à suivre et PARFAITE
                 tags=["dîner", "oméga-3", "healthy"],
             ),
             "snack": Recipe(
-                title="Yaourt grec aux noix",
-                description="Un encas protéiné et rassasiant",
+                title=self.t("agents.recipe.fallback.greekYogurt"),
+                description=self.t("agents.recipe.fallback.greekYogurtDesc"),
                 ingredients=[
                     {"name": "yaourt grec", "quantity": "150g"},
                     {"name": "noix", "quantity": "30g"},
@@ -665,6 +666,6 @@ Sois créatif mais réaliste. La recette doit être facile à suivre et PARFAITE
         return fallback_recipes.get(input_data.meal_type, fallback_recipes["lunch"])
 
 
-def get_recipe_agent() -> RecipeAgent:
+def get_recipe_agent(language: str = DEFAULT_LANGUAGE) -> RecipeAgent:
     """Retourne une instance de l'agent recettes."""
-    return RecipeAgent()
+    return RecipeAgent(language=language)

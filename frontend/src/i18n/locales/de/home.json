@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "title": "Ihre personalisierte Ernährung",
+    "subtitle": "Analysieren Sie Ihre Mahlzeiten mit KI, verfolgen Sie Ihre Fortschritte und erreichen Sie Ihre Gesundheitsziele.",
+    "cta": "Kostenlos starten",
+    "ctaSecondary": "Mehr erfahren"
+  },
+  "features": {
+    "title": "Funktionen",
+    "analysis": {
+      "title": "Mahlzeitenanalyse",
+      "description": "Fotografieren Sie Ihre Mahlzeit und unsere KI analysiert sofort den Nährwert."
+    },
+    "tracking": {
+      "title": "Ernährungsverfolgung",
+      "description": "Verfolgen Sie Ihre Kalorien, Makros und Fortschritte mit intuitiven Diagrammen."
+    },
+    "recipes": {
+      "title": "Personalisierte Rezepte",
+      "description": "Erhalten Sie Rezeptvorschläge basierend auf Ihren Vorlieben und Zielen."
+    },
+    "coach": {
+      "title": "KI-Coach",
+      "description": "Erhalten Sie personalisierte Ratschläge und Motivation von unserem KI-Coach."
+    }
+  },
+  "howItWorks": {
+    "title": "Wie es funktioniert",
+    "step1": {
+      "title": "Erstellen Sie Ihr Profil",
+      "description": "Beantworten Sie einige Fragen, um Ihre Ziele und Vorlieben festzulegen."
+    },
+    "step2": {
+      "title": "Scannen Sie Ihre Mahlzeiten",
+      "description": "Fotografieren Sie Ihre Mahlzeiten für eine sofortige Analyse."
+    },
+    "step3": {
+      "title": "Verfolgen Sie Ihre Fortschritte",
+      "description": "Visualisieren Sie Ihre Entwicklung und erreichen Sie Ihre Ziele."
+    }
+  },
+  "testimonials": {
+    "title": "Erfahrungsberichte"
+  },
+  "cta": {
+    "title": "Bereit anzufangen?",
+    "subtitle": "Schließen Sie sich Tausenden von Nutzern an, die ihre Ernährung mit NutriProfile verbessert haben.",
+    "button": "Kostenlos starten"
+  }
+}

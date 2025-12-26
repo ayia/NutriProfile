@@ -1,0 +1,96 @@
+{
+  "title": "Rezepte",
+  "subtitle": "Generieren Sie personalisierte Rezepte, die zu Ihrem Profil passen",
+  "coachActive": "KI-Coach",
+  "active": "Aktiv",
+  "quickSuggestions": "Schnellvorschläge",
+  "suggestions": {
+    "proteinBreakfast": "Protein-Frühstück",
+    "lightLunch": "Leichtes Mittagessen",
+    "vegetarianDinner": "Vegetarisches Abendessen",
+    "healthySnack": "Gesunder Snack",
+    "mealPrep": "Meal Prep",
+    "express": "Express < 15Min"
+  },
+  "tabs": {
+    "generate": "Generieren",
+    "history": "Verlauf",
+    "favorites": "Favoriten"
+  },
+  "search": {
+    "placeholder": "Rezept suchen..."
+  },
+  "filters": {
+    "clear": "Löschen"
+  },
+  "categories": {
+    "breakfast": "Frühstück",
+    "lunch": "Mittagessen",
+    "dinner": "Abendessen",
+    "snack": "Snack"
+  },
+  "recipe": {
+    "minutes": "Min",
+    "servings": "Portionen",
+    "calories": "kcal",
+    "ingredients": "Zutaten",
+    "instructions": "Anleitung"
+  },
+  "card": {
+    "protein": "Prot",
+    "carbs": "Kohlenh",
+    "fat": "Fett",
+    "aiScore": "KI-Score",
+    "hide": "Verbergen",
+    "viewRecipe": "Rezept ansehen"
+  },
+  "generate": {
+    "title": "Rezept generieren",
+    "generating": "Generiere...",
+    "generate": "Rezept generieren",
+    "result": "Ihr Rezept"
+  },
+  "generator": {
+    "activeFilters": "Aktive Filter",
+    "mealType": "Mahlzeittyp",
+    "ingredients": "Verfügbare Zutaten (optional)",
+    "ingredientPlaceholder": "Zutat hinzufügen...",
+    "add": "Hinzufügen",
+    "ingredientsHint": "Leer lassen für ein zufälliges Rezept, das zu Ihrem Profil passt",
+    "maxTime": "Max. Zeit (Min)",
+    "time15": "15 Min",
+    "time30": "30 Min",
+    "time45": "45 Min",
+    "time60": "1 Stunde",
+    "time90": "1,5 Std",
+    "servings": "Portionen",
+    "servingsCount": "{{count}} Portion",
+    "servingsCount_other": "{{count}} Portionen",
+    "confidence": "Konfidenz"
+  },
+  "history": {
+    "loading": "Laden...",
+    "loadError": "Ladefehler",
+    "errorMessage": "Rezeptverlauf konnte nicht geladen werden",
+    "retry": "Erneut versuchen",
+    "noResults": "Keine Ergebnisse",
+    "noHistory": "Kein Verlauf",
+    "noHistoryMessage": "Generieren Sie Ihr erstes Rezept, um Ihre Sammlung zu starten",
+    "noMatchFor": "Kein Rezept entspricht",
+    "generateRecipe": "Rezept generieren"
+  },
+  "favorites": {
+    "loading": "Laden...",
+    "loadError": "Ladefehler",
+    "errorMessage": "Ihre Favoriten konnten nicht geladen werden",
+    "retry": "Erneut versuchen",
+    "noResults": "Keine Ergebnisse",
+    "noFavorites": "Keine Favoriten",
+    "noFavoritesMessage": "Fügen Sie Rezepte zu Ihren Favoriten hinzu, um sie leicht wiederzufinden",
+    "noMatchFor": "Kein Favorit entspricht",
+    "discoverRecipes": "Rezepte entdecken"
+  },
+  "errors": {
+    "generateFailed": "Generierungsfehler. Bitte erneut versuchen."
+  }
+}

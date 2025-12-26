@@ -6,6 +6,7 @@ from typing import Any
 from app.agents.base import BaseAgent, AgentResponse
 from app.llm.models import ModelCapability
 from app.models.profile import DietType, Goal as ProfileGoal
+from app.i18n import DEFAULT_LANGUAGE
 
 
 class CoachInput:
@@ -196,17 +197,17 @@ class CoachAgent(BaseAgent[CoachInput, CoachResponse]):
     def build_prompt(self, input_data: CoachInput) -> str:
         """Construit le prompt pour le coach."""
         goal_text = {
-            ProfileGoal.LOSE_WEIGHT: "perdre du poids",
-            ProfileGoal.GAIN_MUSCLE: "gagner du muscle",
-            ProfileGoal.MAINTAIN: "maintenir son poids",
-            ProfileGoal.IMPROVE_HEALTH: "améliorer sa santé",
-        }.get(input_data.goal, "maintenir son poids")
+            ProfileGoal.LOSE_WEIGHT: self.t("agents.coach.goals.loseWeight"),
+            ProfileGoal.GAIN_MUSCLE: self.t("agents.coach.goals.gainMuscle"),
+            ProfileGoal.MAINTAIN: self.t("agents.coach.goals.maintain"),
+            ProfileGoal.IMPROVE_HEALTH: self.t("agents.coach.goals.improveHealth"),
+        }.get(input_data.goal, self.t("agents.coach.goals.maintain"))
 
         time_context = {
-            "morning": "C'est le matin, moment idéal pour un petit-déjeuner équilibré.",
-            "afternoon": "C'est l'après-midi, attention au coup de fatigue post-déjeuner.",
-            "evening": "C'est le soir, un dîner léger favorise un bon sommeil.",
-            "night": "Il est tard, évite les grignotages nocturnes.",
+            "morning": self.t("agents.coach.timeContext.morning"),
+            "afternoon": self.t("agents.coach.timeContext.afternoon"),
+            "evening": self.t("agents.coach.timeContext.evening"),
+            "night": self.t("agents.coach.timeContext.night"),
         }.get(input_data.time_of_day, "")
 
         calories_remaining = input_data.target_calories - input_data.calories_today
@@ -303,10 +304,9 @@ Donne 2-4 conseils pertinents selon le contexte. Sois positif et encourageant !"
         # Conseil hydratation
         if input_data.water_today < 1500:
             advices.append(CoachAdvice(
-                message="N'oublie pas de boire de l'eau ! Vise au moins 2L par jour.",
+                message=self.t("agents.coach.advice.drinkWater"),
                 category="hydration",
                 priority="high",
-                action="Boire un verre d'eau maintenant",
                 emoji="💧",
             ))
 
@@ -314,17 +314,16 @@ Donne 2-4 conseils pertinents selon le contexte. Sois positif et encourageant !"
         calories_remaining = input_data.target_calories - input_data.calories_today
         if calories_remaining > 500 and input_data.time_of_day in ["afternoon", "evening"]:
             advices.append(CoachAdvice(
-                message=f"Il te reste {calories_remaining} kcal à consommer. Pense à un repas équilibré.",
+                message=self.t("agents.coach.advice.caloriesRemaining", calories=calories_remaining),
                 category="nutrition",
                 priority="medium",
                 emoji="🍽️",
             ))
         elif calories_remaining < -200:
             advices.append(CoachAdvice(
-                message="Tu as dépassé ton objectif calorique. Une petite marche digestive ?",
+                message=self.t("agents.coach.advice.caloriesExceeded"),
                 category="activity",
                 priority="medium",
-                action="Faire 15 min de marche",
                 emoji="🚶",
             ))
 
@@ -332,7 +331,7 @@ Donne 2-4 conseils pertinents selon le contexte. Sois positif et encourageant !"
         protein_remaining = input_data.target_protein - input_data.protein_today
         if protein_remaining > 30:
             advices.append(CoachAdvice(
-                message=f"Encore {protein_remaining:.0f}g de protéines à atteindre. Pense aux œufs, poulet ou légumineuses.",
+                message=self.t("agents.coach.advice.proteinRemaining", protein=int(protein_remaining)),
                 category="nutrition",
                 priority="medium",
                 emoji="💪",
@@ -341,17 +340,16 @@ Donne 2-4 conseils pertinents selon le contexte. Sois positif et encourageant !"
         # Conseil activité
         if input_data.activity_minutes_today == 0:
             advices.append(CoachAdvice(
-                message="Pas encore d'activité aujourd'hui ? Même 15 minutes font la différence !",
+                message=self.t("agents.coach.advice.noActivityYet"),
                 category="activity",
                 priority="low",
-                action="Ajouter une activité",
                 emoji="🏃",
             ))
 
         # Conseil motivation si bonne semaine
         if input_data.days_logged_week >= 5:
             advices.append(CoachAdvice(
-                message=f"Bravo ! {input_data.days_logged_week} jours de suivi cette semaine. Continue comme ça !",
+                message=self.t("agents.coach.streakMessage", days=input_data.days_logged_week),
                 category="motivation",
                 priority="low",
                 emoji="🌟",
@@ -360,31 +358,25 @@ Donne 2-4 conseils pertinents selon le contexte. Sois positif et encourageant !"
         # Fallback si aucun conseil
         if not advices:
             advices.append(CoachAdvice(
-                message="Continue sur ta lancée, tu es sur la bonne voie !",
+                message=self.t("agents.coach.encouragement.onTrack"),
                 category="motivation",
                 priority="low",
                 emoji="✨",
             ))
 
-        # Greeting selon moment
-        greetings = {
-            "morning": f"Bonjour {input_data.name} ! Prêt(e) pour une nouvelle journée ?",
-            "afternoon": f"Hello {input_data.name} ! Comment se passe ta journée ?",
-            "evening": f"Bonsoir {input_data.name} ! On fait le point ?",
-            "night": f"Bonne soirée {input_data.name} ! Repos bien mérité.",
-        }
+        # Greeting
+        greeting = self.t("agents.coach.greeting", name=input_data.name)
 
         # Summary
-        summary = f"Tu as consommé {input_data.calories_today} kcal aujourd'hui"
-        if input_data.activity_minutes_today > 0:
-            summary += f" et fait {input_data.activity_minutes_today} min d'activité"
-        summary += "."
+        summary = self.t("agents.coach.caloriesSummary",
+                         consumed=input_data.calories_today,
+                         target=input_data.target_calories)
 
         return CoachResponse(
-            greeting=greetings.get(input_data.time_of_day, f"Salut {input_data.name} !"),
+            greeting=greeting,
             summary=summary,
             advices=advices,
-            motivation_quote="Chaque petit pas compte. Continue !",
+            motivation_quote=self.t("agents.coach.encouragement.onTrack"),
         )
 
 
@@ -401,6 +393,6 @@ def get_time_of_day() -> str:
         return "night"
 
 
-def get_coach_agent() -> CoachAgent:
+def get_coach_agent(language: str = DEFAULT_LANGUAGE) -> CoachAgent:
     """Retourne une instance de l'agent coach."""
-    return CoachAgent()
+    return CoachAgent(language=language)

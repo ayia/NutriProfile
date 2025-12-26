@@ -1,0 +1,65 @@
+{
+  "loading": "Loading...",
+  "error": "An error occurred",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "confirm": "Confirm",
+  "back": "Back",
+  "next": "Next",
+  "submit": "Submit",
+  "search": "Search",
+  "noResults": "No results found",
+  "yes": "Yes",
+  "no": "No",
+  "close": "Close",
+  "retry": "Retry",
+  "seeMore": "See more",
+  "seeLess": "See less",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "tomorrow": "Tomorrow",
+  "days": "days",
+  "hours": "hours",
+  "minutes": "minutes",
+  "seconds": "seconds",
+  "nav": {
+    "dashboard": "Dashboard",
+    "vision": "Vision",
+    "scan": "Scan",
+    "tracking": "Tracking",
+    "recipes": "Recipes",
+    "settings": "Settings",
+    "profile": "Profile"
+  },
+  "units": {
+    "kcal": "kcal",
+    "g": "g",
+    "mg": "mg",
+    "ml": "ml",
+    "kg": "kg",
+    "cm": "cm",
+    "years": "years"
+  },
+  "macros": {
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "fiber": "Fiber",
+    "water": "Water"
+  },
+  "meals": {
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "snack": "Snack"
+  },
+  "time": {
+    "morning": "morning",
+    "afternoon": "afternoon",
+    "evening": "evening",
+    "night": "night"
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "title": "لوحة التحكم",
+  "greeting": {
+    "morning": "صباح الخير",
+    "afternoon": "مساء الخير",
+    "evening": "مساء الخير"
+  },
+  "welcome": "مرحباً",
+  "hello": "أهلاً",
+  "streakMessage": "{{count}} أيام متتالية!",
+  "newDayMessage": "لنبدأ يوماً جديداً!",
+  "noProfile": {
+    "title": "مرحباً",
+    "subtitle": "أنشئ ملفك الغذائي للحصول على توصيات مخصصة بناءً على أهدافك وتفضيلاتك.",
+    "cta": "إنشاء ملفي"
+  },
+  "todaySummary": "ملخص اليوم",
+  "stats": {
+    "caloriesConsumed": "السعرات المستهلكة",
+    "caloriesRemaining": "السعرات المتبقية",
+    "caloriesTarget": "السعرات المستهدفة",
+    "kcalPerDay": "سعرة/يوم",
+    "protein": "البروتين",
+    "carbs": "الكربوهيدرات",
+    "fat": "الدهون",
+    "water": "الماء",
+    "goal": "الهدف",
+    "consumed": "مستهلكة",
+    "remaining": "متبقية"
+  },
+  "profileStatus": {
+    "title": "حالة الملف",
+    "complete": "الملف مكتمل",
+    "incomplete": "الملف غير مكتمل",
+    "editProfile": "تعديل ملفي"
+  },
+  "objective": "الهدف",
+  "streak": {
+    "title": "السلاسل النشطة",
+    "noStreaks": "لا توجد سلاسل نشطة. ابدأ بتسجيل وجباتك!",
+    "days": "أيام",
+    "record": "الرقم القياسي"
+  },
+  "achievements": {
+    "title": "الإنجازات الأخيرة",
+    "noAchievements": "لا توجد إنجازات بعد. استمر لفتح بعضها!"
+  },
+  "journey": {
+    "title": "رحلتك",
+    "meals": "الوجبات",
+    "activities": "الأنشطة",
+    "recipes": "الوصفات",
+    "photos": "الصور",
+    "achievements": "الإنجازات"
+  },
+  "quickActions": {
+    "title": "إجراءات سريعة",
+    "scanMeal": "مسح",
+    "addWater": "ماء",
+    "logWeight": "الوزن",
+    "logActivity": "الأنشطة",
+    "viewRecipes": "وصفات",
+    "stats": "إحصائيات"
+  },
+  "weeklyProgress": {
+    "title": "التقدم الأسبوعي",
+    "calories": "السعرات",
+    "protein": "البروتين",
+    "average": "المتوسط",
+    "noData": "لا توجد بيانات هذا الأسبوع"
+  },
+  "coach": {
+    "title": "نصيحة المدرب",
+    "loading": "المدرب يفكر...",
+    "refresh": "نصيحة جديدة"
+  },
+  "upcomingFeatures": {
+    "title": "ميزات قادمة",
+    "analyzeMeals": "حلل وجباتك بالصور",
+    "generateRecipes": "أنشئ وصفات مخصصة",
+    "trackProgress": "تابع تقدمك",
+    "comingSoon": "قريباً"
+  },
+  "error": {
+    "loading": "خطأ في تحميل لوحة التحكم",
+    "unknown": "خطأ غير معروف",
+    "retry": "إعادة المحاولة",
+    "noData": "لا توجد بيانات متاحة"
+  },
+  "water": {
+    "title": "إضافة ماء",
+    "close": "إغلاق"
+  },
+  "hero": {
+    "calories": "السعرات",
+    "caloriesOver": "تجاوزت بـ {{count}} سعرة",
+    "caloriesRemaining": "متبقي {{count}} سعرة",
+    "reached": "تم الوصول",
+    "meals": "الوجبات",
+    "progression": "التقدم",
+    "achievements": "الإنجازات",
+    "record": "الرقم القياسي",
+    "today": "اليوم",
+    "addButton": "+ إضافة"
+  },
+  "macros": {
+    "protein": "البروتين",
+    "water": "الماء",
+    "activity": "النشاط"
+  },
+  "streakTypes": {
+    "logging": "التسجيل",
+    "activity": "النشاط",
+    "water": "الترطيب",
+    "calories": "السعرات"
+  },
+  "levels": {
+    "1": "مبتدئ",
+    "2": "متدرب",
+    "3": "مبادر",
+    "4": "منتظم",
+    "5": "متقدم",
+    "6": "خبير",
+    "7": "محترف",
+    "8": "بطل",
+    "9": "أسطورة",
+    "10": "إله اللياقة"
+  },
+  "fab": {
+    "scanMeal": "مسح وجبة",
+    "addWater": "إضافة ماء",
+    "newWeight": "وزن جديد",
+    "searchRecipe": "البحث عن وصفة"
+  },
+  "weeklyChart": {
+    "title": "هذا الأسبوع",
+    "subtitle": "تتبع سعراتك اليومية",
+    "loadError": "تعذر تحميل البيانات",
+    "noData": "لا توجد بيانات متاحة",
+    "hoverHint": "مرر الماوس على يوم لرؤية التفاصيل",
+    "target": "الهدف",
+    "legend": {
+      "reached": "الهدف محقق",
+      "below": "أقل من الهدف",
+      "exceeded": "تجاوز الهدف"
+    },
+    "macros": {
+      "protein": "البروتين",
+      "carbs": "الكربوهيدرات",
+      "fat": "الدهون"
+    },
+    "stats": {
+      "averagePerDay": "المتوسط/يوم",
+      "target": "الهدف",
+      "weekTotal": "إجمالي الأسبوع",
+      "vsTarget": "مقابل الهدف"
+    }
+  },
+  "scanner": {
+    "title": "مسح وجبة",
+    "subtitle": "التقط صورة لتحليل السعرات تلقائياً"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "empty": "لا توجد إشعارات",
+    "timeAgo": {
+      "now": "الآن",
+      "minutes": "منذ {{count}} دقيقة",
+      "hours": "منذ {{count}} ساعة",
+      "days": "منذ {{count}} يوم"
+    }
+  },
+  "levelProgress": {
+    "level": "المستوى {{level}}",
+    "nextLevel": "المستوى التالي",
+    "achievements": "الإنجازات",
+    "meals": "الوجبات",
+    "activities": "الأنشطة",
+    "bestStreak": "أفضل سلسلة"
+  }
+}

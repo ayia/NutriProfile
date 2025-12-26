@@ -1,0 +1,119 @@
+{
+  "title": "Vision Analysis",
+  "subtitle": "Take a photo of your meals for automatic nutritional tracking",
+  "tabs": {
+    "scan": "Scanner",
+    "today": "Today",
+    "history": "History"
+  },
+  "scan": {
+    "title": "Analyze a meal",
+    "description": "Drag a photo here or use your device"
+  },
+  "today": {
+    "button": "Today",
+    "nutritionSummary": "Nutritional summary",
+    "meals": "Meals",
+    "noMeals": "No meals recorded",
+    "scanFirst": "Scan a meal",
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "water": "Water"
+  },
+  "history": {
+    "noHistory": "No history"
+  },
+  "common": {
+    "loading": "Loading..."
+  },
+  "mealTypes": {
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "snack": "Snack"
+  },
+  "uploader": {
+    "mealTypeLabel": "Meal type",
+    "scanTitle": "Scan your meal",
+    "scanDescription": "Drag a photo here or use your device",
+    "tipsTitle": "Tips for better analysis:",
+    "tip1": "Well-lit photo, top-down view",
+    "tip2": "All foods visible in frame",
+    "tip3": "Avoid reflections and harsh shadows",
+    "takePhoto": "Take a photo",
+    "gallery": "Gallery",
+    "invalidFile": "Please select an image",
+    "error": "Error during analysis. Please try again.",
+    "aiWorking": "AI working... patience!"
+  },
+  "analysisSteps": {
+    "step1": "Receiving image",
+    "step2": "Detecting foods",
+    "step3": "Calculating nutrition",
+    "step4": "Personalized health analysis"
+  },
+  "result": {
+    "verdict": {
+      "excellent": "Excellent!",
+      "good": "Good choice",
+      "moderate": "Okay",
+      "poor": "Needs improvement",
+      "excellentDesc": "This meal is perfectly balanced",
+      "goodDesc": "A balanced meal for your goals",
+      "moderateDesc": "Some adjustments recommended",
+      "poorDesc": "This meal needs your attention"
+    },
+    "healthScore": "Health score",
+    "analysisComplete": "Analysis complete",
+    "confidence": "Confidence",
+    "macros": {
+      "calories": "Calories",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fat": "Fat"
+    },
+    "healthReport": "Personalized health report",
+    "calorieRemaining": "You have {{count}} kcal remaining for today",
+    "calorieExceeded": "You exceeded by {{count}} kcal",
+    "positivePoints": "Positive points",
+    "warnings": "Warning",
+    "suggestions": "Suggestions",
+    "macroBalance": "Macro balance",
+    "detectedFoods": "Detected foods",
+    "confidenceLabel": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "edit": {
+      "name": "Name",
+      "quantity": "Quantity",
+      "unit": "Unit",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "lowConfidence": "Low confidence",
+    "lowConfidenceMsg": "We recommend verifying and correcting values in the \"Detected foods\" section.",
+    "actions": {
+      "newAnalysis": "New analysis",
+      "editMeal": "Edit this meal",
+      "saveMeal": "Save meal",
+      "saving": "Saving...",
+      "done": "Done"
+    },
+    "mealSaved": "Meal saved successfully",
+    "saveError": "Error saving. Please try again.",
+    "modify": "Edit",
+    "corrected": "Corrected"
+  },
+  "foodLog": {
+    "foods": "Foods",
+    "showDetails": "Show",
+    "hideDetails": "Hide",
+    "edit": "Edit",
+    "deleteConfirm": "Delete this meal?",
+    "deleteError": "Error deleting. Please try again."
+  }
+}

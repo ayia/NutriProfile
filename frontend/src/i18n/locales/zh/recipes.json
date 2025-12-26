@@ -1,0 +1,96 @@
+{
+  "title": "食谱",
+  "subtitle": "生成适合您个人资料的个性化食谱",
+  "coachActive": "AI教练",
+  "active": "活跃",
+  "quickSuggestions": "快速建议",
+  "suggestions": {
+    "proteinBreakfast": "高蛋白早餐",
+    "lightLunch": "轻便午餐",
+    "vegetarianDinner": "素食晚餐",
+    "healthySnack": "健康零食",
+    "mealPrep": "备餐",
+    "express": "快速 < 15分钟"
+  },
+  "tabs": {
+    "generate": "生成",
+    "history": "历史",
+    "favorites": "收藏"
+  },
+  "search": {
+    "placeholder": "搜索食谱..."
+  },
+  "filters": {
+    "clear": "清除"
+  },
+  "categories": {
+    "breakfast": "早餐",
+    "lunch": "午餐",
+    "dinner": "晚餐",
+    "snack": "零食"
+  },
+  "recipe": {
+    "minutes": "分钟",
+    "servings": "份",
+    "calories": "千卡",
+    "ingredients": "配料",
+    "instructions": "步骤"
+  },
+  "card": {
+    "protein": "蛋白",
+    "carbs": "碳水",
+    "fat": "脂肪",
+    "aiScore": "AI评分",
+    "hide": "隐藏",
+    "viewRecipe": "查看食谱"
+  },
+  "generate": {
+    "title": "生成食谱",
+    "generating": "生成中...",
+    "generate": "生成食谱",
+    "result": "您的食谱"
+  },
+  "generator": {
+    "activeFilters": "活跃筛选",
+    "mealType": "餐食类型",
+    "ingredients": "可用配料（可选）",
+    "ingredientPlaceholder": "添加配料...",
+    "add": "添加",
+    "ingredientsHint": "留空以获取适合您个人资料的随机食谱",
+    "maxTime": "最长时间（分钟）",
+    "time15": "15分钟",
+    "time30": "30分钟",
+    "time45": "45分钟",
+    "time60": "1小时",
+    "time90": "1.5小时",
+    "servings": "份量",
+    "servingsCount": "{{count}}份",
+    "servingsCount_other": "{{count}}份",
+    "confidence": "置信度"
+  },
+  "history": {
+    "loading": "加载中...",
+    "loadError": "加载错误",
+    "errorMessage": "无法加载食谱历史",
+    "retry": "重试",
+    "noResults": "无结果",
+    "noHistory": "无历史记录",
+    "noHistoryMessage": "生成您的第一个食谱以开始收集",
+    "noMatchFor": "没有食谱匹配",
+    "generateRecipe": "生成食谱"
+  },
+  "favorites": {
+    "loading": "加载中...",
+    "loadError": "加载错误",
+    "errorMessage": "无法加载您的收藏",
+    "retry": "重试",
+    "noResults": "无结果",
+    "noFavorites": "无收藏",
+    "noFavoritesMessage": "将食谱添加到收藏以便轻松找到",
+    "noMatchFor": "没有收藏匹配",
+    "discoverRecipes": "发现食谱"
+  },
+  "errors": {
+    "generateFailed": "生成错误，请重试。"
+  }
+}

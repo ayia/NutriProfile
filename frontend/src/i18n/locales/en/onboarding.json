@@ -1,0 +1,142 @@
+{
+  "title": "Create your nutritional profile",
+  "subtitle": "Answer a few questions to receive personalized recommendations.",
+  "error": "An error occurred. Please try again.",
+  "step1": {
+    "title": "Basic Information",
+    "subtitle": "This information helps us calculate your caloric needs.",
+    "age": "Age",
+    "agePlaceholder": "25",
+    "gender": "Gender",
+    "genderSelect": "Select",
+    "genders": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "height": "Height (cm)",
+    "heightPlaceholder": "175",
+    "weight": "Weight (kg)",
+    "weightPlaceholder": "70",
+    "bmiEstimate": "Estimated BMI"
+  },
+  "step2": {
+    "title": "Activity & Goals",
+    "subtitle": "Tell us your activity level and goals.",
+    "activityLevel": "Physical activity level",
+    "goal": "Main goal",
+    "targetWeight": "Target weight (kg) - optional",
+    "targetWeightPlaceholder": "65"
+  },
+  "step3": {
+    "title": "Dietary Preferences",
+    "subtitle": "Customize your recommendations according to your diet.",
+    "dietType": "Diet type",
+    "allergies": "Allergies & intolerances",
+    "otherAllergy": "Other allergy...",
+    "add": "Add",
+    "excludedFoods": "Foods to avoid (optional)",
+    "excludedFoodsPlaceholder": "E.g.: mushrooms, olives (comma separated)",
+    "favoriteFoods": "Favorite foods (optional)",
+    "favoriteFoodsPlaceholder": "E.g.: chicken, rice, broccoli (comma separated)"
+  },
+  "step4": {
+    "title": "Health Information",
+    "subtitle": "This information is optional but helps us personalize your recommendations.",
+    "note": "Note:",
+    "noteText": "This information is confidential and securely stored. It allows us to adapt recommendations and avoid contraindications.",
+    "medicalConditions": "Medical conditions (optional)",
+    "otherConditions": "Other conditions (comma separated)",
+    "medications": "Current medications (optional)",
+    "medicationsPlaceholder": "E.g.: metformin, statins (comma separated)",
+    "medicationsNote": "Some foods may interact with medications."
+  },
+  "step5": {
+    "title": "Summary",
+    "subtitle": "Review your information before creating your profile.",
+    "incompleteData": "Incomplete data. Please go back.",
+    "nutritionTitle": "Your estimated nutritional needs",
+    "kcalPerDay": "kcal/day",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "basicInfo": "Basic Information",
+    "activityGoal": "Activity & Goal",
+    "activity": "Activity",
+    "goal": "Goal",
+    "targetWeight": "Target weight",
+    "dietPreferences": "Dietary Preferences",
+    "diet": "Diet",
+    "allergies": "Allergies",
+    "health": "Health",
+    "conditions": "Conditions",
+    "noConditions": "No conditions specified",
+    "medications": "Medications",
+    "createProfile": "Create my profile"
+  },
+  "conditions": {
+    "diabetes": "Diabetes",
+    "hypertension": "Hypertension",
+    "cholesterol": "Cholesterol",
+    "heartDisease": "Heart disease",
+    "kidneyFailure": "Kidney failure",
+    "digestiveDisorders": "Digestive disorders"
+  },
+  "buttons": {
+    "back": "Back",
+    "continue": "Continue",
+    "viewSummary": "View summary"
+  },
+  "errors": {
+    "ageRequired": "Age required",
+    "ageMin": "Minimum 13 years",
+    "ageMax": "Maximum 120 years",
+    "genderRequired": "Gender required",
+    "heightRequired": "Height required",
+    "heightMin": "Minimum 100 cm",
+    "heightMax": "Maximum 250 cm",
+    "weightRequired": "Weight required",
+    "weightMin": "Minimum 30 kg",
+    "weightMax": "Maximum 300 kg",
+    "activityRequired": "Activity level required",
+    "goalRequired": "Goal required"
+  },
+  "units": {
+    "years": "years",
+    "cm": "cm",
+    "kg": "kg"
+  },
+  "activityLevels": {
+    "sedentary": "Sedentary (little or no exercise)",
+    "light": "Lightly active (1-3 days/week)",
+    "moderate": "Moderately active (3-5 days/week)",
+    "active": "Very active (6-7 days/week)",
+    "very_active": "Extremely active (athlete)"
+  },
+  "goals": {
+    "lose_weight": "Lose weight",
+    "maintain": "Maintain weight",
+    "gain_muscle": "Build muscle",
+    "improve_health": "Improve health"
+  },
+  "diets": {
+    "omnivore": "Omnivore",
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan",
+    "pescatarian": "Pescatarian",
+    "keto": "Keto",
+    "paleo": "Paleo",
+    "mediterranean": "Mediterranean"
+  },
+  "commonAllergies": {
+    "gluten": "Gluten",
+    "lactose": "Lactose",
+    "peanuts": "Peanuts",
+    "treeNuts": "Tree nuts",
+    "eggs": "Eggs",
+    "fish": "Fish",
+    "shellfish": "Shellfish",
+    "soy": "Soy",
+    "sesame": "Sesame"
+  }
+}

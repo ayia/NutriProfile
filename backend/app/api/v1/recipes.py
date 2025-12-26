@@ -272,7 +272,7 @@ async def generate_recipe(
     )
 
     # Générer la recette
-    agent = get_recipe_agent()
+    agent = get_recipe_agent(language=current_user.preferred_language)
     response = await agent.process(recipe_input)
 
     if not response.result:

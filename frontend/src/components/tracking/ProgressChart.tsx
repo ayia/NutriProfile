@@ -1,4 +1,5 @@
 import { useMemo, useState, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { ProgressData } from '@/types/tracking'
 
 interface ProgressChartProps {
@@ -19,28 +20,28 @@ interface TooltipData {
 
 const METRIC_CONFIG = {
   calories: {
-    label: 'Calories',
+    labelKey: 'progressChart.metrics.calories',
     unit: 'kcal',
     icon: '🔥',
     gradient: ['#10B981', '#059669'],
     bgGradient: 'from-emerald-500/10 to-emerald-500/5',
   },
   protein: {
-    label: 'Protéines',
+    labelKey: 'progressChart.metrics.protein',
     unit: 'g',
     icon: '🥩',
     gradient: ['#06B6D4', '#0891B2'],
     bgGradient: 'from-cyan-500/10 to-cyan-500/5',
   },
   weight: {
-    label: 'Poids',
+    labelKey: 'progressChart.metrics.weight',
     unit: 'kg',
     icon: '⚖️',
     gradient: ['#8B5CF6', '#7C3AED'],
     bgGradient: 'from-violet-500/10 to-violet-500/5',
   },
   activity_minutes: {
-    label: 'Activité',
+    labelKey: 'progressChart.metrics.activity',
     unit: 'min',
     icon: '🏃',
     gradient: ['#F97316', '#EA580C'],
@@ -55,6 +56,7 @@ export function ProgressChart({
   height = 220,
   showTrend = true,
 }: ProgressChartProps) {
+  const { t, i18n } = useTranslation('tracking')
   const [hoveredPoint, setHoveredPoint] = useState<TooltipData | null>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -104,8 +106,8 @@ export function ProgressChart({
         <div className="w-12 h-12 bg-neutral-200 rounded-xl flex items-center justify-center mb-3">
           <span className="text-2xl opacity-50">{config.icon}</span>
         </div>
-        <p className="text-neutral-500 text-sm font-medium">Pas de données</p>
-        <p className="text-neutral-400 text-xs mt-1">Commence à tracker pour voir ta progression</p>
+        <p className="text-neutral-500 text-sm font-medium">{t('progressChart.noData')}</p>
+        <p className="text-neutral-400 text-xs mt-1">{t('progressChart.startTracking')}</p>
       </div>
     )
   }
@@ -187,11 +189,11 @@ export function ProgressChart({
       .map((date, index) => {
         const d = new Date(date)
         return {
-          label: d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }),
+          label: d.toLocaleDateString(i18n.language, { day: 'numeric', month: 'short' }),
           index: index * step,
         }
       })
-  }, [data.dates])
+  }, [data.dates, i18n.language])
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!containerRef.current) return
@@ -269,7 +271,7 @@ export function ProgressChart({
           </div>
         </div>
         <div className="text-xs text-neutral-400">
-          Moy: {formatValue(chartData.avg)} {config.unit}
+          {t('progressChart.avg')}: {formatValue(chartData.avg)} {config.unit}
         </div>
       </div>
 
@@ -414,7 +416,7 @@ export function ProgressChart({
               {formatValue(hoveredPoint.value)} {config.unit}
             </div>
             <div className="text-neutral-400 text-xs">
-              {new Date(hoveredPoint.date).toLocaleDateString('fr-FR', {
+              {new Date(hoveredPoint.date).toLocaleDateString(i18n.language, {
                 weekday: 'short',
                 day: 'numeric',
                 month: 'short',

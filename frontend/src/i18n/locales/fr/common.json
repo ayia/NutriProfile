@@ -1,0 +1,67 @@
+{
+  "appName": "NutriProfile",
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "vision": "Vision IA",
+    "recipes": "Recettes",
+    "tracking": "Suivi",
+    "settings": "Paramètres",
+    "profile": "Profil"
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Soumettre",
+    "loading": "Chargement...",
+    "retry": "Réessayer"
+  },
+  "units": {
+    "kcal": "kcal",
+    "g": "g",
+    "mg": "mg",
+    "ml": "ml",
+    "kg": "kg",
+    "cm": "cm",
+    "percent": "%"
+  },
+  "macros": {
+    "calories": "Calories",
+    "protein": "Protéines",
+    "carbs": "Glucides",
+    "fat": "Lipides",
+    "fiber": "Fibres"
+  },
+  "meals": {
+    "breakfast": "Petit-déjeuner",
+    "lunch": "Déjeuner",
+    "dinner": "Dîner",
+    "snack": "Collation"
+  },
+  "time": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "thisWeek": "Cette semaine",
+    "thisMonth": "Ce mois",
+    "days": "jours",
+    "hours": "heures",
+    "minutes": "minutes"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite",
+    "network": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "unauthorized": "Session expirée. Veuillez vous reconnecter.",
+    "notFound": "Ressource non trouvée"
+  },
+  "success": {
+    "saved": "Enregistré avec succès",
+    "deleted": "Supprimé avec succès",
+    "updated": "Mis à jour avec succès"
+  }
+}

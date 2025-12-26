@@ -5,6 +5,7 @@ from typing import Any
 
 from app.agents.base import BaseAgent, AgentResponse
 from app.llm.models import ModelCapability
+from app.i18n import DEFAULT_LANGUAGE, get_translator
 
 
 class VisionInput:
@@ -220,27 +221,35 @@ class VisionAgent(BaseAgent[VisionInput, FoodAnalysis]):
             return await self.fallback(input_data)
 
     def build_prompt(self, input_data: VisionInput) -> str:
-        """Construit le prompt pour l'analyse d'image."""
+        """Construit le prompt pour l'analyse d'image selon la langue."""
+        # Map language codes to full names for the LLM
+        lang_names = {
+            "en": "English", "fr": "French", "de": "German", "es": "Spanish",
+            "pt": "Portuguese", "zh": "Chinese", "ar": "Arabic"
+        }
+        lang_name = lang_names.get(self.language, "English")
+
         context_hint = ""
         if input_data.context:
-            context_hint = f"\nContexte: C'est un {input_data.context}."
+            context_hint = f"\nContext: This is a {input_data.context}."
 
-        return f"""Analyse cette image de nourriture et identifie tous les aliments visibles.
+        # Use English prompt but ask for response in user's language
+        return f"""Analyze this food image and identify all visible foods.
 {context_hint}
 
-Pour chaque aliment détecté, estime:
-1. Le nom de l'aliment
-2. La quantité approximative
-3. L'unité (g, ml, pièce, portion, etc.)
-4. Les valeurs nutritionnelles estimées
+For each detected food, estimate:
+1. The food name
+2. The approximate quantity
+3. The unit (g, ml, piece, portion, etc.)
+4. The estimated nutritional values
 
-Réponds UNIQUEMENT en JSON avec ce format exact:
+Respond ONLY in JSON with this exact format:
 {{
-    "description": "Description courte du repas",
+    "description": "Short description of the meal",
     "meal_type": "breakfast|lunch|dinner|snack",
     "items": [
         {{
-            "name": "nom de l'aliment",
+            "name": "food name",
             "quantity": "100",
             "unit": "g",
             "calories": 150,
@@ -252,8 +261,15 @@ Réponds UNIQUEMENT en JSON avec ce format exact:
     ]
 }}
 
-Sois précis sur les portions. Pour les plats composés, décompose les ingrédients principaux.
-Base tes estimations sur des valeurs nutritionnelles moyennes connues."""
+Be precise about portions. For composed dishes, break down the main ingredients.
+Base your estimates on known average nutritional values.
+
+CRITICAL LANGUAGE REQUIREMENT:
+- You MUST write the "description" field in {lang_name}.
+- You MUST write ALL food "name" fields in {lang_name}.
+- Do NOT use English for these fields. Use {lang_name} only.
+- Example for German: "description": "Eine Schüssel Kichererbsen-Curry mit Brot"
+- Example for French: "description": "Un bol de curry de pois chiches avec du pain" """
 
     def build_vision_request(self, input_data: VisionInput) -> dict:
         """Construit la requête pour un modèle vision."""
@@ -317,7 +333,7 @@ Base tes estimations sur des valeurs nutritionnelles moyennes connues."""
         return FoodAnalysis(
             items=[
                 FoodItem(
-                    name="Repas non identifié",
+                    name=self.t("agents.vision.fallback.unidentifiedMeal"),
                     quantity="1",
                     unit="portion",
                     calories=500,
@@ -328,7 +344,7 @@ Base tes estimations sur des valeurs nutritionnelles moyennes connues."""
                 )
             ],
             meal_type=input_data.context or "lunch",
-            description="Analyse automatique non disponible. Veuillez corriger manuellement.",
+            description=self.t("agents.vision.autoAnalysisUnavailable"),
         )
 
 
@@ -395,9 +411,9 @@ def validate_nutrition(item: FoodItem) -> FoodItem:
     return item
 
 
-def get_vision_agent() -> VisionAgent:
+def get_vision_agent(language: str = DEFAULT_LANGUAGE) -> VisionAgent:
     """Retourne une instance de l'agent vision."""
-    return VisionAgent()
+    return VisionAgent(language=language)
 
 
 def _calculate_weekly_impact(
@@ -405,10 +421,12 @@ def _calculate_weekly_impact(
     target_calories: int,
     goal: str,
     daily_consumed: dict | None = None,
+    language: str = DEFAULT_LANGUAGE,
 ) -> dict:
     """
     Calcule l'impact de ce repas sur la progression hebdomadaire.
     """
+    t = get_translator(language)
     consumed_today = daily_consumed.get("calories", 0) if daily_consumed else 0
     total_today = consumed_today + meal_calories
 
@@ -423,32 +441,30 @@ def _calculate_weekly_impact(
             estimated_loss = round(weekly_deficit / 7700, 2)  # kg par semaine
             return {
                 "status": "on_track",
-                "message": f"En gardant ce rythme, vous pourriez perdre ~{estimated_loss}kg/semaine",
+                "message": t.get("agents.vision.weeklyImpact.maintainLoss", loss=estimated_loss),
                 "daily_balance": daily_diff,
                 "trend": "positive",
             }
         else:
             return {
                 "status": "over_target",
-                "message": f"Vous êtes à +{daily_diff} kcal aujourd'hui. Équilibrez demain.",
+                "message": t.get("agents.vision.weeklyImpact.dailySurplus", diff=daily_diff),
                 "daily_balance": daily_diff,
                 "trend": "negative",
             }
     elif goal == "gain_muscle":
         if daily_diff > 0:
             # Surplus = bon pour prise de masse
-            weekly_surplus = daily_diff * 7
-            estimated_gain = round(weekly_surplus / 7700, 2)
             return {
                 "status": "on_track",
-                "message": f"Bon surplus calorique pour la prise de masse (+{daily_diff} kcal)",
+                "message": t.get("agents.vision.weeklyImpact.goodSurplusGain", diff=daily_diff),
                 "daily_balance": daily_diff,
                 "trend": "positive",
             }
         else:
             return {
                 "status": "under_target",
-                "message": f"Déficit de {abs(daily_diff)} kcal - augmentez l'apport pour la prise de masse",
+                "message": t.get("agents.vision.weeklyImpact.deficitForGain", diff=abs(daily_diff)),
                 "daily_balance": daily_diff,
                 "trend": "negative",
             }
@@ -457,21 +473,21 @@ def _calculate_weekly_impact(
         if abs(daily_diff) <= target_calories * 0.1:
             return {
                 "status": "balanced",
-                "message": "Apport équilibré pour le maintien",
+                "message": t.get("agents.vision.weeklyImpact.balancedIntake"),
                 "daily_balance": daily_diff,
                 "trend": "neutral",
             }
         elif daily_diff > 0:
             return {
                 "status": "over_target",
-                "message": f"Léger surplus de {daily_diff} kcal",
+                "message": t.get("agents.vision.weeklyImpact.slightSurplus", diff=daily_diff),
                 "daily_balance": daily_diff,
                 "trend": "warning",
             }
         else:
             return {
                 "status": "under_target",
-                "message": f"Léger déficit de {abs(daily_diff)} kcal",
+                "message": t.get("agents.vision.weeklyImpact.slightDeficit", diff=abs(daily_diff)),
                 "daily_balance": daily_diff,
                 "trend": "warning",
             }
@@ -482,56 +498,59 @@ def _get_meal_timing_feedback(
     meal_calories: int,
     meal_carbs: float,
     meal_protein: float,
+    language: str = DEFAULT_LANGUAGE,
 ) -> str:
     """
     Génère un feedback basé sur l'heure du repas et sa composition.
     """
+    t = get_translator(language)
+
     if 5 <= current_hour < 10:
         # Petit-déjeuner
         if meal_carbs >= 30:
-            return "Bon timing! Les glucides du matin fournissent l'énergie pour la journée."
+            return t.get("agents.vision.mealTiming.morningCarbsGood")
         elif meal_protein >= 20:
-            return "Bon apport en protéines pour bien démarrer la journée."
+            return t.get("agents.vision.mealTiming.morningProteinGood")
         else:
-            return "Le petit-déjeuner est idéal pour les glucides complexes et protéines."
+            return t.get("agents.vision.mealTiming.breakfastIdeal")
 
     elif 11 <= current_hour < 14:
         # Déjeuner
         if meal_protein >= 25 and meal_calories >= 400:
-            return "Déjeuner équilibré - parfait pour maintenir l'énergie l'après-midi."
+            return t.get("agents.vision.mealTiming.lunchBalanced")
         elif meal_calories < 300:
-            return "Déjeuner léger - prévoyez un encas sain en après-midi."
+            return t.get("agents.vision.mealTiming.lunchLight")
         else:
-            return "Bon moment pour un repas complet et équilibré."
+            return t.get("agents.vision.mealTiming.lunchGoodTime")
 
     elif 14 <= current_hour < 17:
         # Encas après-midi
         if meal_calories <= 200:
-            return "Encas raisonnable pour éviter les fringales du soir."
+            return t.get("agents.vision.mealTiming.snackReasonable")
         elif meal_calories > 400:
-            return "Cet encas est copieux - allégez le dîner en conséquence."
+            return t.get("agents.vision.mealTiming.snackHeavy")
         else:
-            return "Encas modéré - attention à ne pas trop manger ce soir."
+            return t.get("agents.vision.mealTiming.snackModerate")
 
     elif 18 <= current_hour < 21:
         # Dîner
         if meal_carbs < 40 and meal_protein >= 20:
-            return "Dîner idéal: protéines et peu de glucides pour un bon sommeil."
+            return t.get("agents.vision.mealTiming.dinnerIdeal")
         elif meal_calories > 800:
-            return "Dîner copieux - évitez de manger trop tard pour la digestion."
+            return t.get("agents.vision.mealTiming.dinnerHeavy")
         else:
-            return "Dîner raisonnable - évitez les sucres rapides avant le coucher."
+            return t.get("agents.vision.mealTiming.dinnerReasonable")
 
     elif current_hour >= 21 or current_hour < 5:
         # Repas tardif
         if meal_calories > 300:
-            return "Repas tardif et calorique - peut affecter le sommeil et le métabolisme."
+            return t.get("agents.vision.mealTiming.lateHeavy")
         elif meal_protein >= 15:
-            return "Collation tardive protéinée - acceptable pour la récupération musculaire."
+            return t.get("agents.vision.mealTiming.lateProtein")
         else:
-            return "Manger tard peut perturber le sommeil. Privilégiez des repas plus tôt."
+            return t.get("agents.vision.mealTiming.lateGeneral")
 
-    return "Bon appétit!"
+    return t.get("agents.vision.mealTiming.enjoyMeal")
 
 
 def calculate_health_report(
@@ -541,6 +560,7 @@ def calculate_health_report(
     activities_today: dict | None = None,
     weight_trend: dict | None = None,
     meal_history: dict | None = None,
+    language: str = DEFAULT_LANGUAGE,
 ) -> HealthReport:
     """
     Calcule un rapport de santé personnalisé ultra-complet basé sur:
@@ -551,6 +571,7 @@ def calculate_health_report(
     - La tendance de poids (7 derniers jours)
     - L'historique alimentaire récent (variété, patterns)
     """
+    t = get_translator(language)
     positive_points = []
     negative_points = []
     recommendations = []
@@ -625,59 +646,59 @@ def calculate_health_report(
 
     # Ratio typique par repas (25-35% des calories journalières)
     if 20 <= meal_ratio <= 40:
-        positive_points.append("Portion caloriquement équilibrée pour un repas")
+        positive_points.append(t.get("agents.vision.healthReport.portionBalanced"))
         health_score += 10
     elif meal_ratio > 50:
-        negative_points.append(f"Ce repas représente {meal_ratio:.0f}% de vos calories journalières")
+        negative_points.append(t.get("agents.vision.healthReport.mealHighPercent", percent=int(meal_ratio)))
         health_score -= 15
-        recommendations.append("Privilégiez des portions plus petites aux prochains repas")
+        recommendations.append(t.get("agents.vision.healthReport.preferSmaller"))
     elif meal_ratio < 15:
-        negative_points.append("Repas très léger, risque de fringale")
-        recommendations.append("Ajoutez une source de protéines pour plus de satiété")
+        negative_points.append(t.get("agents.vision.healthReport.mealVeryLight"))
+        recommendations.append(t.get("agents.vision.healthReport.addProteinSatiety"))
 
     # === ANALYSE DES PROTÉINES ===
     if meal_protein >= 20:
-        positive_points.append(f"Bonne source de protéines ({meal_protein:.0f}g)")
+        positive_points.append(t.get("agents.vision.healthReport.goodProtein", protein=int(meal_protein)))
         health_score += 10
     elif meal_protein < 10:
-        negative_points.append("Faible en protéines")
-        recommendations.append("Ajoutez œufs, légumineuses ou viande maigre")
+        negative_points.append(t.get("agents.vision.healthReport.lowProtein"))
+        recommendations.append(t.get("agents.vision.healthReport.addProteinSuggestion"))
 
     # === ANALYSE SELON L'OBJECTIF ===
     if goal == "lose_weight":
         if meal_calories <= remaining_calories * 0.35:
-            positive_points.append("Compatible avec votre objectif de perte de poids")
+            positive_points.append(t.get("agents.vision.healthReport.compatibleWeightLoss"))
             goal_compatibility += 20
         elif meal_calories > remaining_calories * 0.5:
-            negative_points.append("Repas calorique pour un objectif de perte de poids")
+            negative_points.append(t.get("agents.vision.healthReport.caloricForWeightLoss"))
             goal_compatibility -= 20
-            recommendations.append("Réduisez les portions ou choisissez des aliments moins caloriques")
+            recommendations.append(t.get("agents.vision.healthReport.reducePortion"))
 
         if meal_protein >= 25:
-            positive_points.append("Riche en protéines - favorise la satiété")
+            positive_points.append(t.get("agents.vision.healthReport.highProteinSatiety"))
             goal_compatibility += 10
 
         # Feedback basé sur la tendance de poids
         if weight_trend_direction == "losing":
-            positive_points.append("Votre poids diminue - continuez ainsi!")
+            positive_points.append(t.get("agents.vision.healthReport.weightDecreasing"))
             goal_compatibility += 10
         elif weight_trend_direction == "gaining":
-            negative_points.append("Attention: votre poids augmente cette semaine")
-            recommendations.append("Réduisez légèrement les portions pour inverser la tendance")
+            negative_points.append(t.get("agents.vision.healthReport.weightIncreasing"))
+            recommendations.append(t.get("agents.vision.healthReport.reducePortion"))
             goal_compatibility -= 10
 
     elif goal == "gain_muscle":
         if meal_protein >= 30:
-            positive_points.append("Excellent apport protéique pour la prise de muscle")
+            positive_points.append(t.get("agents.vision.healthReport.excellentProteinMuscle"))
             goal_compatibility += 25
         elif meal_protein < 20:
-            negative_points.append("Insuffisant en protéines pour la prise de masse")
+            negative_points.append(t.get("agents.vision.healthReport.insufficientProteinMuscle"))
             goal_compatibility -= 15
-            recommendations.append("Visez au moins 30g de protéines par repas")
+            recommendations.append(t.get("agents.vision.healthReport.aim30gProtein"))
 
         # Vérifier l'apport calorique suffisant
         if net_calories_today + meal_calories < tdee * 0.9 if tdee else False:
-            recommendations.append("Vous êtes en déficit calorique - mangez plus pour prendre du muscle")
+            recommendations.append(t.get("agents.vision.healthReport.caloricDeficitMuscle"))
 
     elif goal == "improve_health":
         # Vérifier la présence de légumes/fibres
@@ -686,47 +707,47 @@ def calculate_health_report(
             for item in analysis.items
         )
         if has_vegetables:
-            positive_points.append("Contient des légumes - bon pour la santé")
+            positive_points.append(t.get("agents.vision.healthReport.containsVegetables"))
             health_score += 15
             goal_compatibility += 15
         else:
-            recommendations.append("Ajoutez des légumes pour plus de fibres et vitamines")
+            recommendations.append(t.get("agents.vision.healthReport.addVegetables"))
 
     # === INTÉGRATION DES ACTIVITÉS DU JOUR ===
     if calories_burned_today > 0:
-        positive_points.append(f"Bravo! Vous avez brûlé {calories_burned_today} kcal aujourd'hui")
+        positive_points.append(t.get("agents.vision.healthReport.burnedCalories", calories=calories_burned_today))
         health_score += 5
 
         # Ajuster les recommandations si très actif
         if calories_burned_today > 400:
             if meal_protein < 25:
-                recommendations.append("Après l'effort, augmentez les protéines pour la récupération")
+                recommendations.append(t.get("agents.vision.healthReport.increaseProteinRecovery"))
             if meal_carbs < 30:
-                recommendations.append("Ajoutez des glucides complexes pour recharger vos réserves")
+                recommendations.append(t.get("agents.vision.healthReport.addCarbsEnergy"))
 
     if activity_minutes_today > 30:
-        positive_points.append(f"{activity_minutes_today} minutes d'activité aujourd'hui")
+        positive_points.append(t.get("agents.vision.healthReport.activityMinutes", minutes=activity_minutes_today))
 
     # === ANALYSE SELON L'ÂGE ET LE GENRE ===
     if age:
         if age >= 50:
             # Plus de 50 ans: emphase sur protéines et calcium
             if meal_protein < 20:
-                recommendations.append("À votre âge, les protéines sont essentielles pour préserver la masse musculaire")
+                recommendations.append(t.get("agents.vision.healthReport.proteinEssentialAge"))
             if any(d in [item.name.lower() for item in analysis.items] for d in ["fromage", "lait", "yaourt"]):
-                positive_points.append("Bon apport en calcium pour la santé osseuse")
+                positive_points.append(t.get("agents.vision.healthReport.goodCalcium"))
                 health_score += 5
         elif age < 25:
             # Jeunes: plus de flexibilité mais vigilance sur la nutrition
             if meal_calories > target_calories * 0.5:
-                recommendations.append("Même jeune, surveillez les portions pour de bonnes habitudes")
+                recommendations.append(t.get("agents.vision.healthReport.watchPortions"))
 
     if gender == "female":
         # Femmes: attention au fer
         iron_rich = ["viande", "boeuf", "épinard", "lentilles", "haricots"]
         has_iron = any(any(f in item.name.lower() for f in iron_rich) for item in analysis.items)
         if has_iron:
-            positive_points.append("Bon apport en fer")
+            positive_points.append(t.get("agents.vision.healthReport.goodIronIntake"))
             health_score += 5
 
     # === CONDITIONS MÉDICALES ===
@@ -734,30 +755,30 @@ def calculate_health_report(
         # Diabète
         if any("diabète" in c.lower() or "diabetes" in c.lower() for c in medical_conditions):
             if meal_carbs > 50:
-                negative_points.append("⚠️ Attention: repas riche en glucides (diabète)")
+                negative_points.append(t.get("agents.vision.healthReport.diabetesWarning"))
                 health_score -= 15
-                recommendations.append("Limitez les glucides simples et privilégiez les fibres")
+                recommendations.append(t.get("agents.vision.healthReport.limitSimpleCarbs"))
             sugar_items = ["sucre", "gâteau", "bonbon", "soda", "jus"]
             if any(any(s in item.name.lower() for s in sugar_items) for item in analysis.items):
-                negative_points.append("⚠️ Contient des sucres rapides (déconseillé pour diabète)")
+                negative_points.append(t.get("agents.vision.healthReport.diabetesSugarWarning"))
                 health_score -= 20
 
         # Hypertension
         if any("hypertension" in c.lower() or "tension" in c.lower() for c in medical_conditions):
             salty_items = ["fromage", "charcuterie", "jambon", "chips", "frites"]
             if any(any(s in item.name.lower() for s in salty_items) for item in analysis.items):
-                negative_points.append("⚠️ Aliments potentiellement riches en sel (hypertension)")
+                negative_points.append(t.get("agents.vision.healthReport.hypertensionWarning"))
                 health_score -= 10
-                recommendations.append("Préférez des aliments pauvres en sodium")
+                recommendations.append(t.get("agents.vision.healthReport.preferLowSodium"))
 
         # Cholestérol
         if any("cholestérol" in c.lower() or "cholesterol" in c.lower() for c in medical_conditions):
             if meal_fat > 25:
-                negative_points.append("Repas riche en graisses (attention au cholestérol)")
+                negative_points.append(t.get("agents.vision.healthReport.highFatCholesterol"))
                 health_score -= 10
             fatty_items = ["beurre", "crème", "friture", "bacon"]
             if any(any(f in item.name.lower() for f in fatty_items) for item in analysis.items):
-                recommendations.append("Limitez les graisses saturées pour votre cholestérol")
+                recommendations.append(t.get("agents.vision.healthReport.limitSaturatedFat"))
 
     # === INTERACTIONS MÉDICAMENTS ===
     if medications:
@@ -765,13 +786,13 @@ def calculate_health_report(
         if any("warfarin" in m.lower() or "coumadin" in m.lower() or "anticoagulant" in m.lower() for m in medications):
             vit_k_foods = ["épinard", "brocoli", "chou", "laitue"]
             if any(any(v in item.name.lower() for v in vit_k_foods) for item in analysis.items):
-                negative_points.append("⚠️ Aliment riche en vitamine K (attention avec anticoagulants)")
-                recommendations.append("Consultez votre médecin sur la consommation de légumes verts")
+                negative_points.append(t.get("agents.vision.healthReport.vitaminKWarning"))
+                recommendations.append(t.get("agents.vision.healthReport.consultDoctor"))
 
         # Statines et pamplemousse
         if any("statine" in m.lower() or "atorvastatine" in m.lower() or "simvastatine" in m.lower() for m in medications):
             if any("pamplemousse" in item.name.lower() for item in analysis.items):
-                negative_points.append("⚠️ Le pamplemousse interagit avec les statines!")
+                negative_points.append(t.get("agents.vision.healthReport.grapefruitStatins"))
                 health_score -= 25
 
     # === VÉRIFICATION ALLERGIES ET EXCLUSIONS ===
@@ -779,13 +800,13 @@ def calculate_health_report(
         item_lower = item.name.lower()
         for allergen in allergies:
             if allergen.lower() in item_lower:
-                negative_points.append(f"⚠️ ATTENTION: Contient potentiellement {allergen}")
+                negative_points.append(t.get("agents.vision.healthReport.containsAllergen", allergen=allergen))
                 health_score -= 30
                 goal_compatibility -= 30
 
         for excluded in excluded_foods:
             if excluded.lower() in item_lower:
-                negative_points.append(f"Contient {excluded} (aliment exclu)")
+                negative_points.append(t.get("agents.vision.healthReport.containsExcluded", food=excluded))
                 goal_compatibility -= 10
 
     # === VÉRIFICATION DU RÉGIME ALIMENTAIRE ===
@@ -798,23 +819,23 @@ def calculate_health_report(
     has_dairy = any(any(d in item.name.lower() for d in dairy_items) for item in analysis.items)
 
     if diet_type == "vegetarian" and has_meat:
-        negative_points.append("Contient de la viande (régime végétarien)")
+        negative_points.append(t.get("agents.vision.healthReport.containsMeat"))
         goal_compatibility -= 25
     elif diet_type == "vegan" and (has_meat or has_fish or has_dairy):
-        negative_points.append("Contient des produits animaux (régime vegan)")
+        negative_points.append(t.get("agents.vision.healthReport.containsAnimal"))
         goal_compatibility -= 25
     elif diet_type == "pescatarian" and has_meat:
-        negative_points.append("Contient de la viande (régime pescétarien)")
+        negative_points.append(t.get("agents.vision.healthReport.containsMeatPesc"))
         goal_compatibility -= 25
     elif diet_type == "keto":
         if meal_carbs > 20:
-            negative_points.append(f"Trop de glucides ({meal_carbs:.0f}g) pour un régime keto")
+            negative_points.append(t.get("agents.vision.healthReport.tooManyCarbs", carbs=int(meal_carbs)))
             goal_compatibility -= 20
         if meal_fat < meal_protein:
-            recommendations.append("En keto, privilégiez les lipides aux protéines")
+            recommendations.append(t.get("agents.vision.healthReport.ketoFatAdvice"))
     elif diet_type == "mediterranean":
         if has_fish or any("huile d'olive" in item.name.lower() for item in analysis.items):
-            positive_points.append("Conforme au régime méditerranéen")
+            positive_points.append(t.get("agents.vision.healthReport.mediterraneanCompliant"))
             goal_compatibility += 10
 
     # === ANALYSE DE VARIÉTÉ (HISTORIQUE) ===
@@ -822,25 +843,25 @@ def calculate_health_report(
         current_items = [item.name.lower() for item in analysis.items]
         repeated = [f for f in recent_foods if any(f.lower() in ci for ci in current_items)]
         if len(repeated) > 2:
-            recommendations.append("Variez votre alimentation - vous mangez souvent les mêmes aliments")
+            recommendations.append(t.get("agents.vision.healthReport.varyDiet"))
             health_score -= 5
         if variety_score < 40:
-            recommendations.append("Essayez de nouveaux aliments pour plus de nutriments variés")
+            recommendations.append(t.get("agents.vision.healthReport.tryNewFoods"))
 
     # === HYDRATATION ===
     if water_ml < 1500:
-        recommendations.append(f"N'oubliez pas l'eau! Seulement {water_ml}ml aujourd'hui")
+        recommendations.append(t.get("agents.vision.healthReport.waterReminder", water=water_ml))
     elif water_ml >= 2000:
-        positive_points.append("Bonne hydratation aujourd'hui")
+        positive_points.append(t.get("agents.vision.healthReport.goodHydration"))
         health_score += 5
 
     # === IMPACT SUR CALORIES RESTANTES ===
     new_remaining = remaining_calories - meal_calories
     if new_remaining < 0:
-        negative_points.append(f"Vous dépassez vos objectifs caloriques de {abs(new_remaining):.0f} kcal")
+        negative_points.append(t.get("agents.vision.healthReport.exceededCalories", calories=int(abs(new_remaining))))
         goal_compatibility -= 20
     elif new_remaining < target_calories * 0.15:
-        recommendations.append(f"Il vous reste {new_remaining:.0f} kcal pour le reste de la journée")
+        recommendations.append(t.get("agents.vision.healthReport.remainingCalories", calories=int(new_remaining)))
 
     # === CALCULER LES SCORES FINAUX ===
     health_score = max(0, min(100, health_score))
@@ -851,23 +872,23 @@ def calculate_health_report(
     if avg_score >= 80:
         verdict = "excellent"
         verdict_color = "green"
-        summary = "Excellent choix! Ce repas est parfaitement adapté à votre profil."
+        summary = t.get("agents.vision.healthReport.verdictExcellent")
     elif avg_score >= 65:
         verdict = "good"
         verdict_color = "emerald"
-        summary = "Bon choix! Ce repas contribue positivement à vos objectifs."
+        summary = t.get("agents.vision.healthReport.verdictGood")
     elif avg_score >= 45:
         verdict = "neutral"
         verdict_color = "yellow"
-        summary = "Repas acceptable. Quelques ajustements pourraient l'améliorer."
+        summary = t.get("agents.vision.healthReport.verdictNeutral")
     elif avg_score >= 30:
         verdict = "poor"
         verdict_color = "orange"
-        summary = "Ce repas n'est pas idéal pour vos objectifs. Considérez les recommandations."
+        summary = t.get("agents.vision.healthReport.verdictPoor")
     else:
         verdict = "bad"
         verdict_color = "red"
-        summary = "Attention! Ce repas ne correspond pas à votre profil nutritionnel."
+        summary = t.get("agents.vision.healthReport.verdictBad")
 
     # === ANALYSE DES MACROS ENRICHIE POUR LE FRONTEND ===
     macro_analysis = {
@@ -913,6 +934,7 @@ def calculate_health_report(
         target_calories=target_calories,
         goal=goal,
         daily_consumed=daily_consumed,
+        language=language,
     )
 
     # Enrichir avec la tendance de poids
@@ -924,9 +946,9 @@ def calculate_health_report(
         }
         if weight_change_7d is not None:
             if goal == "lose_weight" and weight_change_7d < 0:
-                weekly_impact["message"] = f"Excellente progression! -{abs(weight_change_7d):.1f}kg cette semaine"
+                weekly_impact["message"] = t.get("agents.vision.healthReport.weeklyExcellentLoss", weight=abs(weight_change_7d))
             elif goal == "gain_muscle" and weight_change_7d > 0:
-                weekly_impact["message"] = f"Bonne prise de masse: +{weight_change_7d:.1f}kg cette semaine"
+                weekly_impact["message"] = t.get("agents.vision.healthReport.weeklyGoodGain", weight=weight_change_7d)
 
     # Feedback basé sur l'heure du repas
     from datetime import datetime
@@ -936,6 +958,7 @@ def calculate_health_report(
         meal_calories=meal_calories,
         meal_carbs=meal_carbs,
         meal_protein=meal_protein,
+        language=language,
     )
 
     return HealthReport(

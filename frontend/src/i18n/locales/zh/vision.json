@@ -1,0 +1,127 @@
+{
+  "title": "扫描餐食",
+  "subtitle": "拍摄餐食照片，自动追踪营养",
+  "tabs": {
+    "scan": "扫描",
+    "today": "今天",
+    "history": "历史"
+  },
+  "scan": {
+    "title": "分析餐食",
+    "description": "拖放照片到这里或使用您的设备"
+  },
+  "today": {
+    "button": "今天",
+    "nutritionSummary": "营养摘要",
+    "meals": "餐食",
+    "noMeals": "暂无餐食记录",
+    "scanFirst": "扫描一餐",
+    "calories": "卡路里",
+    "protein": "蛋白质",
+    "carbs": "碳水化合物",
+    "fat": "脂肪",
+    "water": "水"
+  },
+  "history": {
+    "noHistory": "暂无历史"
+  },
+  "common": {
+    "loading": "加载中..."
+  },
+  "mealTypes": {
+    "breakfast": "早餐",
+    "lunch": "午餐",
+    "dinner": "晚餐",
+    "snack": "零食"
+  },
+  "uploader": {
+    "mealTypeLabel": "餐食类型",
+    "scanTitle": "扫描您的餐食",
+    "scanDescription": "拖放照片到这里或使用您的设备",
+    "tipsTitle": "更好分析的提示：",
+    "tip1": "光线充足的照片，俯视角度",
+    "tip2": "所有食物都在画面中可见",
+    "tip3": "避免反光和强烈阴影",
+    "takePhoto": "拍照",
+    "gallery": "相册",
+    "invalidFile": "请选择一张图片",
+    "error": "分析时出错。请重试。",
+    "aiWorking": "AI正在工作...请耐心等待！"
+  },
+  "analysisSteps": {
+    "step1": "接收图片",
+    "step2": "检测食物",
+    "step3": "计算营养",
+    "step4": "个性化健康分析"
+  },
+  "result": {
+    "verdict": {
+      "excellent": "非常棒！",
+      "good": "不错的选择",
+      "moderate": "还可以",
+      "poor": "需要改进",
+      "excellentDesc": "这顿餐食营养均衡完美",
+      "goodDesc": "一顿符合您目标的均衡餐食",
+      "moderateDesc": "建议做一些调整",
+      "poorDesc": "这顿餐食需要您的关注"
+    },
+    "healthScore": "健康评分",
+    "analysisComplete": "分析完成",
+    "confidence": "置信度",
+    "macros": {
+      "calories": "卡路里",
+      "protein": "蛋白质",
+      "carbs": "碳水化合物",
+      "fat": "脂肪"
+    },
+    "healthReport": "个性化健康报告",
+    "calorieRemaining": "今天还剩{{count}}千卡",
+    "calorieExceeded": "超出了{{count}}千卡",
+    "positivePoints": "优点",
+    "warnings": "注意",
+    "suggestions": "建议",
+    "macroBalance": "宏量营养素平衡",
+    "detectedFoods": "检测到的食物",
+    "confidenceLabel": {
+      "high": "高",
+      "medium": "中",
+      "low": "低"
+    },
+    "edit": {
+      "name": "名称",
+      "quantity": "数量",
+      "unit": "单位",
+      "cancel": "取消",
+      "save": "保存"
+    },
+    "lowConfidence": "置信度低",
+    "lowConfidenceMsg": "我们建议您在\"检测到的食物\"部分验证并修正数值。",
+    "actions": {
+      "newAnalysis": "新分析",
+      "editMeal": "编辑此餐",
+      "saveMeal": "保存餐食",
+      "saving": "保存中...",
+      "done": "完成"
+    },
+    "mealSaved": "餐食保存成功",
+    "saveError": "保存失败。请重试。",
+    "modify": "编辑",
+    "corrected": "已修正"
+  },
+  "foodLog": {
+    "foods": "食物",
+    "showDetails": "显示",
+    "hideDetails": "隐藏",
+    "edit": "编辑",
+    "deleteConfirm": "删除这餐？",
+    "deleteError": "删除失败。请重试。"
+  },
+  "errors": {
+    "uploadFailed": "上传失败",
+    "analysisFailed": "分析失败",
+    "saveFailed": "保存失败",
+    "noImage": "请选择一张图片",
+    "imageTooLarge": "图片太大（最大10MB）",
+    "invalidFormat": "格式无效。请使用JPG、PNG或WebP"
+  }
+}

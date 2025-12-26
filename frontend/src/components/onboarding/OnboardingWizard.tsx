@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { useOnboardingStore } from '@/store/onboardingStore'
 import { useAuthStore } from '@/store/authStore'
 import { profileApi } from '@/services/profileApi'
@@ -12,6 +13,7 @@ import { Step5Summary } from './Step5Summary'
 const TOTAL_STEPS = 5
 
 export function OnboardingWizard() {
+  const { t } = useTranslation('onboarding')
   const navigate = useNavigate()
   const { currentStep, getFullProfile, reset } = useOnboardingStore()
   const { setProfileStatus } = useAuthStore()
@@ -19,7 +21,7 @@ export function OnboardingWizard() {
   const createProfile = useMutation({
     mutationFn: profileApi.createProfile,
     onSuccess: () => {
-      setProfileStatus(true) // Marquer que le profil existe maintenant
+      setProfileStatus(true)
       reset()
       navigate('/dashboard')
     },
@@ -61,7 +63,7 @@ export function OnboardingWizard() {
       {/* Error message */}
       {createProfile.error && (
         <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
-          Une erreur est survenue. Veuillez réessayer.
+          {t('error')}
         </div>
       )}
 

@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import type { FoodLog } from '@/types/foodLog'
-import { MEAL_TYPE_LABELS, MEAL_TYPE_ICONS } from '@/types/foodLog'
+import { MEAL_TYPE_ICONS } from '@/types/foodLog'
 
 interface FoodLogCardProps {
   log: FoodLog
@@ -11,19 +12,19 @@ interface FoodLogCardProps {
 }
 
 export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
+  const { t } = useTranslation('vision')
   const [showDetails, setShowDetails] = useState(false)
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation({
     mutationFn: () => visionApi.deleteLog(log.id),
     onSuccess: () => {
-      // Forcer le refetch immédiat avec refetchType: 'all'
       queryClient.invalidateQueries({ queryKey: ['foodLogs'], refetchType: 'all' })
       queryClient.invalidateQueries({ queryKey: ['dailyMeals'], refetchType: 'all' })
     },
     onError: (error) => {
-      console.error('Erreur suppression:', error)
-      alert('Erreur lors de la suppression. Veuillez réessayer.')
+      console.error('Delete error:', error)
+      alert(t('foodLog.deleteError'))
     },
   })
 
@@ -44,7 +45,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
           </span>
           <div>
             <div className="font-medium">
-              {MEAL_TYPE_LABELS[log.meal_type as keyof typeof MEAL_TYPE_LABELS]}
+              {t(`mealTypes.${log.meal_type}`)}
             </div>
             <div className="text-sm text-gray-500">{formatTime(log.meal_date)}</div>
           </div>
@@ -63,7 +64,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
           )}
           {log.user_corrected && (
             <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
-              Corrigé
+              {t('result.corrected')}
             </span>
           )}
         </div>
@@ -102,10 +103,10 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
         </div>
       </div>
 
-      {/* Détails (collapsible) */}
+      {/* Details (collapsible) */}
       {showDetails && log.items.length > 0 && (
         <div className="border-t p-4 space-y-2">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Aliments</h4>
+          <h4 className="text-sm font-medium text-gray-700 mb-2">{t('foodLog.foods')}</h4>
           {log.items.map((item) => (
             <div
               key={item.id}
@@ -133,19 +134,19 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
           variant="ghost"
           onClick={() => setShowDetails(!showDetails)}
         >
-          {showDetails ? 'Masquer' : `Voir (${log.items.length})`}
+          {showDetails ? t('foodLog.hideDetails') : `${t('foodLog.showDetails')} (${log.items.length})`}
         </Button>
         <div className="flex gap-2">
           {onEdit && (
             <Button size="sm" variant="outline" onClick={onEdit}>
-              Modifier
+              {t('foodLog.edit')}
             </Button>
           )}
           <Button
             size="sm"
             variant="ghost"
             onClick={() => {
-              if (confirm('Supprimer ce repas ?')) {
+              if (confirm(t('foodLog.deleteConfirm'))) {
                 deleteMutation.mutate()
               }
             }}

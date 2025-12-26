@@ -1,0 +1,108 @@
+{
+  "hero": {
+    "badge": "New: Personalized health analysis!",
+    "title": "Your nutrition,",
+    "titleHighlight": "powered by AI",
+    "subtitle": "Photograph your meals, get instant analysis and personalized recommendations. Reach your health goals with NutriProfile.",
+    "cta": "Start for free",
+    "ctaSecondary": "I already have an account"
+  },
+  "stats": {
+    "activeUsers": "Active users",
+    "mealsAnalyzed": "Meals analyzed",
+    "aiAccuracy": "AI Accuracy",
+    "averageRating": "Average rating"
+  },
+  "howItWorks": {
+    "title": "How does it work?",
+    "subtitle": "Transform your diet in 3 simple steps",
+    "step1": {
+      "title": "Photograph",
+      "description": "Take a photo of your plate from any angle"
+    },
+    "step2": {
+      "title": "AI Analysis",
+      "description": "Our AI identifies foods and calculates nutrients"
+    },
+    "step3": {
+      "title": "Results",
+      "description": "Receive a detailed health report with personalized advice"
+    }
+  },
+  "preview": {
+    "title": "NutriProfile - Vision Analysis",
+    "detected": "Spaghetti bolognese detected",
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "feedback": "Good protein/carbs balance!"
+  },
+  "features": {
+    "title": "Everything you need",
+    "subtitle": "Powerful features to reach your goals",
+    "visionScan": {
+      "title": "AI Vision Scan",
+      "description": "Photograph your meal and instantly get nutritional values thanks to our AI"
+    },
+    "personalizedProfile": {
+      "title": "Personalized Profile",
+      "description": "A nutrition plan tailored to your goals: weight loss, muscle gain or maintenance"
+    },
+    "aiCoach": {
+      "title": "Multi-Agent AI Coach",
+      "description": "Recommendations validated by multiple AI models for maximum accuracy"
+    },
+    "smartTracking": {
+      "title": "Smart Tracking",
+      "description": "Visualize your progress with detailed charts and weekly reports"
+    },
+    "personalizedRecipes": {
+      "title": "Personalized Recipes",
+      "description": "AI-generated recipes based on your tastes, restrictions and goals"
+    },
+    "gamification": {
+      "title": "Gamification",
+      "description": "Earn XP points, unlock badges and maintain your daily streak"
+    }
+  },
+  "testimonials": {
+    "title": "They transformed their diet",
+    "subtitle": "Discover testimonials from our community",
+    "marie": {
+      "name": "Marie L.",
+      "role": "Lost 8kg in 3 months",
+      "text": "The photo analysis is incredibly accurate! I no longer need to weigh my food."
+    },
+    "thomas": {
+      "name": "Thomas R.",
+      "role": "Amateur athlete",
+      "text": "The protein recommendations are perfectly suited to my training."
+    },
+    "sophie": {
+      "name": "Sophie M.",
+      "role": "Vegetarian",
+      "text": "Finally an app that understands my diet and offers alternatives!"
+    }
+  },
+  "cta": {
+    "title": "Ready to transform your diet?",
+    "subtitle": "Join thousands of users who have already reached their goals with NutriProfile",
+    "button": "Start now - It's free!",
+    "note": "No credit card required"
+  },
+  "footer": {
+    "tagline": "Your intelligent nutrition companion powered by AI",
+    "product": "Product",
+    "features": "Features",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms of Service",
+    "cookies": "Cookies",
+    "contact": "Contact",
+    "support": "Support",
+    "copyright": "© 2024 NutriProfile. All rights reserved."
+  }
+}

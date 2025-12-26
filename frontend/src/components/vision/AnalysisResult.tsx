@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -12,39 +13,32 @@ interface AnalysisResultProps {
   onClose: () => void
 }
 
-// Configuration des verdicts
-const VERDICT_CONFIG = {
+// Verdict styling config (labels come from translations)
+const VERDICT_STYLE = {
   excellent: {
     emoji: '🌟',
-    label: 'Excellent !',
     bgGradient: 'from-green-500 to-emerald-600',
     textColor: 'text-white',
-    description: 'Ce repas est parfaitement équilibré',
   },
   good: {
     emoji: '👍',
-    label: 'Bon choix',
     bgGradient: 'from-blue-500 to-cyan-600',
     textColor: 'text-white',
-    description: 'Un repas équilibré pour vos objectifs',
   },
   moderate: {
     emoji: '😐',
-    label: 'Correct',
     bgGradient: 'from-yellow-500 to-orange-500',
     textColor: 'text-white',
-    description: 'Quelques ajustements recommandés',
   },
   poor: {
     emoji: '⚠️',
-    label: 'À améliorer',
     bgGradient: 'from-red-500 to-rose-600',
     textColor: 'text-white',
-    description: 'Ce repas nécessite votre attention',
   },
 }
 
 export function AnalysisResult({ result, imageBase64, mealType, onClose }: AnalysisResultProps) {
+  const { t } = useTranslation('vision')
   const [editingItem, setEditingItem] = useState<number | null>(null)
   const [editForm, setEditForm] = useState<FoodItemUpdate>({})
   const [showSuccess, setShowSuccess] = useState(false)
@@ -99,13 +93,13 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
   }
 
   const getConfidenceLabel = (confidence: number) => {
-    if (confidence >= 0.8) return 'Haute'
-    if (confidence >= 0.6) return 'Moyenne'
-    return 'Faible'
+    if (confidence >= 0.8) return t('result.confidenceLabel.high')
+    if (confidence >= 0.6) return t('result.confidenceLabel.medium')
+    return t('result.confidenceLabel.low')
   }
 
   const healthReport = result.health_report
-  const verdictConfig = healthReport ? VERDICT_CONFIG[healthReport.verdict] : null
+  const verdictStyle = healthReport ? VERDICT_STYLE[healthReport.verdict] : null
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden relative">
@@ -124,36 +118,36 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
         </div>
       )}
 
-      {/* Verdict Banner - Le plus important visuellement */}
-      {verdictConfig && healthReport && (
-        <div className={`p-6 bg-gradient-to-r ${verdictConfig.bgGradient} ${verdictConfig.textColor}`}>
+      {/* Verdict Banner - Most important visually */}
+      {verdictStyle && healthReport && (
+        <div className={`p-6 bg-gradient-to-r ${verdictStyle.bgGradient} ${verdictStyle.textColor}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="text-5xl animate-pulse">{verdictConfig.emoji}</div>
+              <div className="text-5xl animate-pulse">{verdictStyle.emoji}</div>
               <div>
-                <h2 className="text-2xl font-bold">{verdictConfig.label}</h2>
+                <h2 className="text-2xl font-bold">{t(`result.verdict.${healthReport.verdict}`)}</h2>
                 <p className="text-sm opacity-90">{healthReport.verdict_message}</p>
               </div>
             </div>
             <div className="text-right">
               <div className="text-4xl font-bold">{healthReport.overall_score}</div>
-              <div className="text-sm opacity-75">Score santé</div>
+              <div className="text-sm opacity-75">{t('result.healthScore')}</div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Header classique si pas de health report */}
-      {!verdictConfig && (
+      {/* Classic header if no health report */}
+      {!verdictStyle && (
         <div className="p-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="font-semibold text-lg">Analyse terminée</h3>
+              <h3 className="font-semibold text-lg">{t('result.analysisComplete')}</h3>
               <p className="text-primary-100 text-sm mt-1">{result.description}</p>
             </div>
             <div className="text-right">
               <div className={`text-sm ${result.confidence >= 0.7 ? 'text-green-200' : 'text-yellow-200'}`}>
-                Confiance: {Math.round(result.confidence * 100)}%
+                {t('result.confidence')}: {Math.round(result.confidence * 100)}%
               </div>
             </div>
           </div>
@@ -185,10 +179,10 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                 <span className="text-sm font-bold text-gray-800">{result.total_calories}</span>
               </div>
             </div>
-            <div className="text-xs text-gray-600 mt-1 font-medium">Calories</div>
+            <div className="text-xs text-gray-600 mt-1 font-medium">{t('result.macros.calories')}</div>
           </div>
 
-          {/* Protéines */}
+          {/* Protein */}
           <div className="text-center">
             <div className="relative inline-block w-16 h-16">
               <svg className="w-16 h-16 transform -rotate-90">
@@ -210,10 +204,10 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                 <span className="text-sm font-bold text-blue-600">{result.total_protein}g</span>
               </div>
             </div>
-            <div className="text-xs text-gray-600 mt-1 font-medium">Protéines</div>
+            <div className="text-xs text-gray-600 mt-1 font-medium">{t('result.macros.protein')}</div>
           </div>
 
-          {/* Glucides */}
+          {/* Carbs */}
           <div className="text-center">
             <div className="relative inline-block w-16 h-16">
               <svg className="w-16 h-16 transform -rotate-90">
@@ -235,10 +229,10 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                 <span className="text-sm font-bold text-yellow-600">{result.total_carbs}g</span>
               </div>
             </div>
-            <div className="text-xs text-gray-600 mt-1 font-medium">Glucides</div>
+            <div className="text-xs text-gray-600 mt-1 font-medium">{t('result.macros.carbs')}</div>
           </div>
 
-          {/* Lipides */}
+          {/* Fat */}
           <div className="text-center">
             <div className="relative inline-block w-16 h-16">
               <svg className="w-16 h-16 transform -rotate-90">
@@ -260,14 +254,14 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                 <span className="text-sm font-bold text-orange-600">{result.total_fat}g</span>
               </div>
             </div>
-            <div className="text-xs text-gray-600 mt-1 font-medium">Lipides</div>
+            <div className="text-xs text-gray-600 mt-1 font-medium">{t('result.macros.fat')}</div>
           </div>
         </div>
       </div>
 
-      {/* Sections accordion: Rapport santé + Aliments */}
+      {/* Sections accordion: Health report + Foods */}
       <div className="divide-y">
-        {/* Section Rapport de Santé */}
+        {/* Health report section */}
         {healthReport && (
           <div>
             <button
@@ -276,7 +270,7 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
             >
               <div className="flex items-center gap-2">
                 <span className="text-xl">💚</span>
-                <span className="font-semibold text-gray-800">Rapport de santé personnalisé</span>
+                <span className="font-semibold text-gray-800">{t('result.healthReport')}</span>
               </div>
               <span className={`transform transition-transform ${expandedSection === 'health' ? 'rotate-180' : ''}`}>
                 ▼
@@ -298,19 +292,19 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                     {healthReport.calorie_analysis.remaining !== 0 && (
                       <p className="text-xs text-gray-600 ml-6">
                         {healthReport.calorie_analysis.remaining > 0
-                          ? `Il vous reste ${healthReport.calorie_analysis.remaining} kcal pour aujourd'hui`
-                          : `Vous avez dépassé de ${Math.abs(healthReport.calorie_analysis.remaining)} kcal`
+                          ? t('result.calorieRemaining', { count: healthReport.calorie_analysis.remaining })
+                          : t('result.calorieExceeded', { count: Math.abs(healthReport.calorie_analysis.remaining) })
                         }
                       </p>
                     )}
                   </div>
                 )}
 
-                {/* Points positifs */}
+                {/* Positive points */}
                 {healthReport.positive_points && healthReport.positive_points.length > 0 && (
                   <div className="bg-green-50 p-3 rounded-lg">
                     <h5 className="font-medium text-green-800 text-sm mb-2 flex items-center gap-2">
-                      <span>✨</span> Points positifs
+                      <span>✨</span> {t('result.positivePoints')}
                     </h5>
                     <ul className="space-y-1">
                       {healthReport.positive_points.map((point, idx) => (
@@ -323,11 +317,11 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                   </div>
                 )}
 
-                {/* Avertissements santé */}
+                {/* Health warnings */}
                 {healthReport.health_warnings && healthReport.health_warnings.length > 0 && (
                   <div className="bg-red-50 p-3 rounded-lg border border-red-100">
                     <h5 className="font-medium text-red-800 text-sm mb-2 flex items-center gap-2">
-                      <span>⚠️</span> Attention
+                      <span>⚠️</span> {t('result.warnings')}
                     </h5>
                     <ul className="space-y-1">
                       {healthReport.health_warnings.map((warning, idx) => (
@@ -344,7 +338,7 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                 {healthReport.suggestions && healthReport.suggestions.length > 0 && (
                   <div className="bg-blue-50 p-3 rounded-lg">
                     <h5 className="font-medium text-blue-800 text-sm mb-2 flex items-center gap-2">
-                      <span>💡</span> Suggestions
+                      <span>💡</span> {t('result.suggestions')}
                     </h5>
                     <ul className="space-y-1">
                       {healthReport.suggestions.map((suggestion, idx) => (
@@ -357,24 +351,24 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                   </div>
                 )}
 
-                {/* Recommandations macros */}
+                {/* Macro recommendations */}
                 {healthReport.macro_analysis && healthReport.macro_analysis.recommendations && healthReport.macro_analysis.recommendations.length > 0 && (
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <h5 className="font-medium text-gray-800 text-sm mb-2 flex items-center gap-2">
-                      <span>📊</span> Équilibre macros
+                      <span>📊</span> {t('result.macroBalance')}
                     </h5>
                     <div className="grid grid-cols-3 gap-2 text-xs mb-2">
                       <div className="text-center p-2 bg-white rounded">
                         <div className="text-blue-600 font-medium">{healthReport.macro_analysis.protein_status}</div>
-                        <div className="text-gray-500">Protéines</div>
+                        <div className="text-gray-500">{t('result.macros.protein')}</div>
                       </div>
                       <div className="text-center p-2 bg-white rounded">
                         <div className="text-yellow-600 font-medium">{healthReport.macro_analysis.carbs_status}</div>
-                        <div className="text-gray-500">Glucides</div>
+                        <div className="text-gray-500">{t('result.macros.carbs')}</div>
                       </div>
                       <div className="text-center p-2 bg-white rounded">
                         <div className="text-orange-600 font-medium">{healthReport.macro_analysis.fat_status}</div>
-                        <div className="text-gray-500">Lipides</div>
+                        <div className="text-gray-500">{t('result.macros.fat')}</div>
                       </div>
                     </div>
                   </div>
@@ -384,7 +378,7 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
           </div>
         )}
 
-        {/* Section Aliments détectés */}
+        {/* Detected foods section */}
         <div>
           <button
             onClick={() => setExpandedSection(expandedSection === 'items' ? null : 'items')}
@@ -392,7 +386,7 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
           >
             <div className="flex items-center gap-2">
               <span className="text-xl">🍽️</span>
-              <span className="font-semibold text-gray-800">Aliments détectés</span>
+              <span className="font-semibold text-gray-800">{t('result.detectedFoods')}</span>
               <span className="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">
                 {result.items.length}
               </span>
@@ -410,23 +404,23 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                   className="border rounded-lg p-3 hover:border-primary-300 hover:shadow-sm transition-all"
                 >
                   {editingItem === index ? (
-                    // Mode édition
+                    // Edit mode
                     <div className="space-y-3">
                       <div className="grid grid-cols-3 gap-2">
                         <Input
                           value={editForm.name || ''}
                           onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                          placeholder="Nom"
+                          placeholder={t('result.edit.name')}
                         />
                         <Input
                           value={editForm.quantity || ''}
                           onChange={(e) => setEditForm({ ...editForm, quantity: e.target.value })}
-                          placeholder="Quantité"
+                          placeholder={t('result.edit.quantity')}
                         />
                         <Input
                           value={editForm.unit || ''}
                           onChange={(e) => setEditForm({ ...editForm, unit: e.target.value })}
-                          placeholder="Unité"
+                          placeholder={t('result.edit.unit')}
                         />
                       </div>
                       <div className="grid grid-cols-4 gap-2">
@@ -434,25 +428,25 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                           type="number"
                           value={editForm.calories || ''}
                           onChange={(e) => setEditForm({ ...editForm, calories: parseInt(e.target.value) })}
-                          placeholder="Calories"
+                          placeholder={t('result.macros.calories')}
                         />
                         <Input
                           type="number"
                           value={editForm.protein || ''}
                           onChange={(e) => setEditForm({ ...editForm, protein: parseFloat(e.target.value) })}
-                          placeholder="Protéines"
+                          placeholder={t('result.macros.protein')}
                         />
                         <Input
                           type="number"
                           value={editForm.carbs || ''}
                           onChange={(e) => setEditForm({ ...editForm, carbs: parseFloat(e.target.value) })}
-                          placeholder="Glucides"
+                          placeholder={t('result.macros.carbs')}
                         />
                         <Input
                           type="number"
                           value={editForm.fat || ''}
                           onChange={(e) => setEditForm({ ...editForm, fat: parseFloat(e.target.value) })}
-                          placeholder="Lipides"
+                          placeholder={t('result.macros.fat')}
                         />
                       </div>
                       <div className="flex justify-end gap-2">
@@ -461,10 +455,10 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                           variant="ghost"
                           onClick={() => setEditingItem(null)}
                         >
-                          Annuler
+                          {t('result.edit.cancel')}
                         </Button>
                         <Button size="sm" onClick={() => saveEdit()}>
-                          Enregistrer
+                          {t('result.edit.save')}
                         </Button>
                       </div>
                     </div>
@@ -502,7 +496,7 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
                         onClick={() => startEditing(item, index)}
                         className="text-gray-400 hover:text-primary-600"
                       >
-                        ✏️ Modifier
+                        ✏️ {t('result.modify')}
                       </Button>
                     </div>
                   )}
@@ -513,45 +507,45 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
         </div>
       </div>
 
-      {/* Note sur les corrections */}
+      {/* Low confidence warning */}
       {result.confidence < 0.7 && (
         <div className="px-4 py-3 bg-yellow-50 border-t border-yellow-100">
           <div className="flex items-start gap-2">
             <span className="text-yellow-600">⚠️</span>
             <div>
-              <p className="text-sm font-medium text-yellow-800">Confiance faible ({Math.round(result.confidence * 100)}%)</p>
+              <p className="text-sm font-medium text-yellow-800">{t('result.lowConfidence')} ({Math.round(result.confidence * 100)}%)</p>
               <p className="text-xs text-yellow-700">
-                Nous vous recommandons de vérifier et corriger les valeurs dans la section "Aliments détectés".
+                {t('result.lowConfidenceMsg')}
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Actions améliorées */}
+      {/* Actions */}
       <div className="p-4 border-t bg-gradient-to-r from-gray-50 to-white">
         <div className="flex flex-col sm:flex-row gap-3">
-          {/* Bouton principal - Nouvelle analyse */}
+          {/* New analysis button */}
           <Button
             variant="outline"
             onClick={onClose}
             className="flex-1 gap-2 py-3"
           >
             <span>📸</span>
-            Nouvelle analyse
+            {t('result.actions.newAnalysis')}
           </Button>
 
-          {/* Bouton secondaire - Modifier le repas */}
+          {/* Edit meal button */}
           <Button
             variant="ghost"
             onClick={() => setExpandedSection('items')}
             className="flex-1 gap-2 py-3 border border-dashed border-gray-300 hover:border-primary-400"
           >
             <span>✏️</span>
-            Modifier ce repas
+            {t('result.actions.editMeal')}
           </Button>
 
-          {/* Bouton principal - Enregistrer ou Fermer */}
+          {/* Save or close button */}
           {!isSaved ? (
             <Button
               onClick={() => saveMutation.mutate()}
@@ -561,12 +555,12 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
               {saveMutation.isPending ? (
                 <>
                   <span className="animate-spin">⏳</span>
-                  Enregistrement...
+                  {t('result.actions.saving')}
                 </>
               ) : (
                 <>
                   <span>💾</span>
-                  Enregistrer le repas
+                  {t('result.actions.saveMeal')}
                 </>
               )}
             </Button>
@@ -576,20 +570,20 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
               className="flex-1 gap-2 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg"
             >
               <span>✓</span>
-              Terminé
+              {t('result.actions.done')}
             </Button>
           )}
         </div>
 
-        {/* Indication du log */}
+        {/* Status messages */}
         {isSaved && (
           <p className="text-center text-xs text-green-600 mt-3 font-medium">
-            ✓ Repas enregistré avec succès
+            ✓ {t('result.mealSaved')}
           </p>
         )}
         {saveMutation.isError && (
           <p className="text-center text-xs text-red-600 mt-3">
-            Erreur lors de l'enregistrement. Réessayez.
+            {t('result.saveError')}
           </p>
         )}
       </div>

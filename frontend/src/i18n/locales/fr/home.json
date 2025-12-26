@@ -1,0 +1,108 @@
+{
+  "hero": {
+    "badge": "Nouveau : Analyse sante personnalisee !",
+    "title": "Votre nutrition,",
+    "titleHighlight": "propulsee par l'IA",
+    "subtitle": "Photographiez vos repas, obtenez des analyses instantanees et des recommandations personnalisees. Atteignez vos objectifs sante avec NutriProfile.",
+    "cta": "Commencer gratuitement",
+    "ctaSecondary": "J'ai deja un compte"
+  },
+  "stats": {
+    "activeUsers": "Utilisateurs actifs",
+    "mealsAnalyzed": "Repas analyses",
+    "aiAccuracy": "Precision IA",
+    "averageRating": "Note moyenne"
+  },
+  "howItWorks": {
+    "title": "Comment ca fonctionne ?",
+    "subtitle": "En 3 etapes simples, transformez votre alimentation",
+    "step1": {
+      "title": "Photographiez",
+      "description": "Prenez en photo votre assiette sous n'importe quel angle"
+    },
+    "step2": {
+      "title": "Analyse IA",
+      "description": "Notre IA identifie les aliments et calcule les nutriments"
+    },
+    "step3": {
+      "title": "Resultats",
+      "description": "Recevez un rapport sante detaille avec des conseils personnalises"
+    }
+  },
+  "preview": {
+    "title": "NutriProfile - Analyse Vision",
+    "detected": "Pates a la bolognaise detectees",
+    "calories": "Calories",
+    "protein": "Proteines",
+    "carbs": "Glucides",
+    "fat": "Lipides",
+    "feedback": "Bon equilibre proteines/glucides !"
+  },
+  "features": {
+    "title": "Tout ce dont vous avez besoin",
+    "subtitle": "Des fonctionnalites puissantes pour atteindre vos objectifs",
+    "visionScan": {
+      "title": "Scan Vision IA",
+      "description": "Photographiez votre repas et obtenez instantanement les valeurs nutritionnelles grace a notre IA"
+    },
+    "personalizedProfile": {
+      "title": "Profil Personnalise",
+      "description": "Un plan nutritionnel adapte a vos objectifs : perte de poids, prise de muscle ou maintien"
+    },
+    "aiCoach": {
+      "title": "Coach IA Multi-Agents",
+      "description": "Des recommandations validees par plusieurs modeles IA pour une precision maximale"
+    },
+    "smartTracking": {
+      "title": "Suivi Intelligent",
+      "description": "Visualisez vos progres avec des graphiques detailles et des rapports hebdomadaires"
+    },
+    "personalizedRecipes": {
+      "title": "Recettes Personnalisees",
+      "description": "Des recettes generees par IA selon vos gouts, restrictions et objectifs"
+    },
+    "gamification": {
+      "title": "Gamification",
+      "description": "Gagnez des points XP, debloquez des badges et maintenez votre streak quotidien"
+    }
+  },
+  "testimonials": {
+    "title": "Ils ont transforme leur alimentation",
+    "subtitle": "Decouvrez les temoignages de notre communaute",
+    "marie": {
+      "name": "Marie L.",
+      "role": "A perdu 8kg en 3 mois",
+      "text": "L'analyse photo est incroyablement precise ! Je n'ai plus besoin de peser mes aliments."
+    },
+    "thomas": {
+      "name": "Thomas R.",
+      "role": "Sportif amateur",
+      "text": "Les recommandations proteiques sont parfaitement adaptees a mes entrainements."
+    },
+    "sophie": {
+      "name": "Sophie M.",
+      "role": "Vegetarienne",
+      "text": "Enfin une app qui comprend mon regime alimentaire et me propose des alternatives !"
+    }
+  },
+  "cta": {
+    "title": "Pret a transformer votre alimentation ?",
+    "subtitle": "Rejoignez des milliers d'utilisateurs qui ont deja atteint leurs objectifs avec NutriProfile",
+    "button": "Commencer maintenant - C'est gratuit !",
+    "note": "Aucune carte bancaire requise"
+  },
+  "footer": {
+    "tagline": "Votre compagnon nutrition intelligent propulse par l'IA",
+    "product": "Produit",
+    "features": "Fonctionnalites",
+    "pricing": "Tarifs",
+    "faq": "FAQ",
+    "legal": "Legal",
+    "privacy": "Confidentialite",
+    "terms": "CGU",
+    "cookies": "Cookies",
+    "contact": "Contact",
+    "support": "Support",
+    "copyright": "© 2024 NutriProfile. Tous droits reserves."
+  }
+}

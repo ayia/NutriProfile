@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import type { WeeklyChartDay } from '@/types/tracking'
 
@@ -7,7 +8,8 @@ interface WeeklyChartProps {
   title?: string
 }
 
-export function WeeklyChart({ title = 'Cette semaine' }: WeeklyChartProps) {
+export function WeeklyChart({ title }: WeeklyChartProps) {
+  const { t } = useTranslation('dashboard')
   const { data: chartData, isLoading, isError } = useQuery({
     queryKey: ['weeklyChart'],
     queryFn: trackingApi.getWeeklyChartData,
@@ -53,7 +55,7 @@ export function WeeklyChart({ title = 'Cette semaine' }: WeeklyChartProps) {
           <div className="w-12 h-12 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-3">
             <span className="text-2xl">⚠️</span>
           </div>
-          <p className="text-neutral-600 text-sm">Impossible de charger les données</p>
+          <p className="text-neutral-600 text-sm">{t('weeklyChart.loadError')}</p>
         </div>
       </div>
     )
@@ -67,7 +69,7 @@ export function WeeklyChart({ title = 'Cette semaine' }: WeeklyChartProps) {
           <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-3">
             <span className="text-2xl">📊</span>
           </div>
-          <p className="text-neutral-600 text-sm">Aucune donnée disponible</p>
+          <p className="text-neutral-600 text-sm">{t('weeklyChart.noData')}</p>
         </div>
       </div>
     )
@@ -129,17 +131,17 @@ export function WeeklyChart({ title = 'Cette semaine' }: WeeklyChartProps) {
               </svg>
             </div>
             <div>
-              <h3 className="heading-4">{title}</h3>
-              <p className="text-xs text-neutral-500">Suivi de tes calories quotidiennes</p>
+              <h3 className="heading-4">{title || t('weeklyChart.title')}</h3>
+              <p className="text-xs text-neutral-500">{t('weeklyChart.subtitle')}</p>
             </div>
           </div>
 
           {/* Légende compacte */}
           <div className="hidden md:flex items-center gap-3">
             {[
-              { color: 'bg-emerald-400', label: 'Objectif atteint' },
-              { color: 'bg-amber-400', label: 'En dessous' },
-              { color: 'bg-rose-400', label: 'Dépassé' },
+              { color: 'bg-emerald-400', label: t('weeklyChart.legend.reached') },
+              { color: 'bg-amber-400', label: t('weeklyChart.legend.below') },
+              { color: 'bg-rose-400', label: t('weeklyChart.legend.exceeded') },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-1.5">
                 <div className={`w-2.5 h-2.5 ${item.color} rounded-full`} />
@@ -158,7 +160,7 @@ export function WeeklyChart({ title = 'Cette semaine' }: WeeklyChartProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-neutral-500">
-                {activeDay ? activeDay.day : 'Survole un jour pour voir les détails'}
+                {activeDay ? activeDay.day : t('weeklyChart.hoverHint')}
               </p>
               <p className="text-2xl font-bold text-neutral-800">
                 {activeDay ? `${activeDay.calories.toLocaleString()} kcal` : '---'}
@@ -168,15 +170,15 @@ export function WeeklyChart({ title = 'Cette semaine' }: WeeklyChartProps) {
               <div className="flex gap-4">
                 <div className="text-center">
                   <div className="text-lg font-semibold text-secondary-600">{activeDay.protein || 0}g</div>
-                  <div className="text-xs text-neutral-500">Protéines</div>
+                  <div className="text-xs text-neutral-500">{t('weeklyChart.macros.protein')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-lg font-semibold text-amber-600">{activeDay.carbs || 0}g</div>
-                  <div className="text-xs text-neutral-500">Glucides</div>
+                  <div className="text-xs text-neutral-500">{t('weeklyChart.macros.carbs')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-lg font-semibold text-rose-600">{activeDay.fat || 0}g</div>
-                  <div className="text-xs text-neutral-500">Lipides</div>
+                  <div className="text-xs text-neutral-500">{t('weeklyChart.macros.fat')}</div>
                 </div>
               </div>
             )}
@@ -223,7 +225,7 @@ export function WeeklyChart({ title = 'Cette semaine' }: WeeklyChartProps) {
                     >
                       {index === data.length - 1 && (
                         <span className="absolute -right-1 -top-4 text-[9px] text-primary-500 font-medium">
-                          Objectif
+                          {t('weeklyChart.target')}
                         </span>
                       )}
                     </div>
@@ -293,28 +295,28 @@ export function WeeklyChart({ title = 'Cette semaine' }: WeeklyChartProps) {
         <div className="grid grid-cols-4 gap-3 mt-6 pt-5 border-t border-neutral-100">
           {[
             {
-              label: 'Moyenne/jour',
+              label: t('weeklyChart.stats.averagePerDay'),
               value: average,
               unit: 'kcal',
               color: average <= targetAverage ? 'text-emerald-600' : 'text-rose-600',
               bg: average <= targetAverage ? 'bg-emerald-50' : 'bg-rose-50'
             },
             {
-              label: 'Objectif',
+              label: t('weeklyChart.stats.target'),
               value: targetAverage,
               unit: 'kcal',
               color: 'text-primary-600',
               bg: 'bg-primary-50'
             },
             {
-              label: 'Total semaine',
+              label: t('weeklyChart.stats.weekTotal'),
               value: totalCalories,
               unit: 'kcal',
               color: 'text-secondary-600',
               bg: 'bg-secondary-50'
             },
             {
-              label: 'vs Objectif',
+              label: t('weeklyChart.stats.vsTarget'),
               value: `${totalCalories <= weeklyTarget ? '' : '+'}${totalCalories - weeklyTarget}`,
               unit: '',
               color: totalCalories <= weeklyTarget ? 'text-emerald-600' : 'text-rose-600',

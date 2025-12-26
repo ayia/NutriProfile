@@ -1,0 +1,300 @@
+{
+  "common": {
+    "fallbackUsed": "Fallback determinístico utilizado",
+    "noModelAvailable": "No hay modelo disponible para {{capability}}",
+    "noFallbackDefined": "No se definió fallback determinístico",
+    "analysisComplete": "Análisis completado",
+    "none": "Ninguno"
+  },
+  "coach": {
+    "greeting": "Hola {{name}}! Soy tu coach de nutrición personal.",
+    "greetingMorning": "¡Buenos días {{name}}!",
+    "greetingAfternoon": "¡Buenas tardes {{name}}!",
+    "greetingEvening": "¡Buenas noches {{name}}!",
+    "dailySummary": "Aquí está tu resumen nutricional de hoy:",
+    "caloriesSummary": "Has consumido {{consumed}} de tu objetivo de {{target}} kcal.",
+    "goalProgress": "Estás al {{percent}}% de tu objetivo de {{goal}}.",
+    "fallbackSummary": {
+      "farFromGoal": "Todavía estás lejos de tu objetivo calórico. ¡No olvides comer bien!",
+      "onTrackGood": "¡Vas por buen camino! Sigue así.",
+      "almostThere": "¡Excelente! Te acercas a tu objetivo calórico.",
+      "exceeded": "Cuidado, has superado tu objetivo calórico hoy."
+    },
+    "fallbackAdvice": {
+      "drinkWater": "¡Recuerda beber agua regularmente!",
+      "drinkWaterAction": "Beber un vaso de agua",
+      "increaseProtein": "Aumenta tu consumo de proteínas.",
+      "increaseProteinAction": "Comer alimentos ricos en proteínas",
+      "doExercise": "¡Un poco de ejercicio te vendría bien!",
+      "doExerciseAction": "Dar un paseo de 15 minutos",
+      "keepItUp": "¡Sigue así, vas por buen camino!"
+    },
+    "fallbackMotivation": "Cada pequeño paso cuenta hacia un estilo de vida más saludable.",
+    "encouragement": {
+      "onTrack": "¡Excelente trabajo! Estás perfectamente en camino con tus objetivos nutricionales.",
+      "slightlyOver": "Has superado ligeramente tu objetivo calórico, pero no te preocupes - ¡mañana es un nuevo día!",
+      "slightlyUnder": "Estás un poco por debajo de tu objetivo. Considera tomar un snack saludable.",
+      "significantlyOver": "Has excedido tu objetivo calórico hoy. Planifiquemos mejor las comidas para mañana.",
+      "significantlyUnder": "Estás bastante por debajo de tu objetivo calórico. Asegúrate de comer lo suficiente para nutrir tu cuerpo."
+    },
+    "mealSuggestion": "Basándome en tus calorías restantes, te sugiero: {{suggestion}}",
+    "waterReminder": "¡No olvides mantenerte hidratado! Has bebido {{glasses}} vasos de agua hoy.",
+    "weeklyReview": "Esta semana has logrado el {{percent}}% de tus objetivos nutricionales. {{feedback}}",
+    "tipOfTheDay": "Consejo del día: {{tip}}",
+    "streakMessage": "¡Increíble! ¡Llevas {{days}} días seguidos registrando tus comidas!",
+    "goals": {
+      "loseWeight": "perder peso",
+      "gainMuscle": "ganar músculo",
+      "maintain": "mantener peso",
+      "improveHealth": "mejorar salud"
+    },
+    "timeContext": {
+      "morning": "Es de mañana, ideal para un desayuno equilibrado.",
+      "afternoon": "Es por la tarde, cuidado con el bajón post-comida.",
+      "evening": "Es de noche, una cena ligera favorece un buen sueño.",
+      "night": "Es tarde, evita los picoteos nocturnos."
+    },
+    "advice": {
+      "drinkWater": "¡No olvides beber agua! Apunta a al menos 2L por día.",
+      "caloriesRemaining": "Te quedan {{calories}} kcal por consumir. Piensa en una comida equilibrada.",
+      "caloriesExceeded": "Has excedido tu objetivo calórico. ¿Qué tal un paseo corto?",
+      "proteinRemaining": "Aún te faltan {{protein}}g de proteína. Prueba huevos, pollo o legumbres.",
+      "noActivityYet": "¿Sin actividad hoy todavía? ¡Incluso 15 minutos hacen la diferencia!"
+    }
+  },
+  "vision": {
+    "analyzing": "Analizando tu foto de comida...",
+    "detectionComplete": "¡Análisis completado! He detectado los siguientes alimentos:",
+    "lowConfidence": "No estoy muy seguro sobre algunos alimentos. Por favor revisa y corrige si es necesario.",
+    "highConfidence": "Estoy bastante seguro de este análisis.",
+    "noFoodDetected": "No pude detectar alimentos en esta imagen. Por favor intenta con una foto más clara.",
+    "autoAnalysisUnavailable": "Análisis automático no disponible. Por favor corrige manualmente.",
+    "mealQuality": {
+      "excellent": "¡Esta es una comida excelente y bien equilibrada!",
+      "good": "Esta es una buena elección de comida para tus objetivos.",
+      "moderate": "Esta comida es aceptable, pero podría mejorarse.",
+      "poor": "Esta comida puede no alinearse bien con tus objetivos nutricionales."
+    },
+    "positivePoints": "Puntos positivos:",
+    "warnings": "Puntos a vigilar:",
+    "suggestions": "Sugerencias de mejora:",
+    "weeklyImpact": {
+      "maintainLoss": "A este ritmo, podrías perder ~{{loss}}kg/semana",
+      "dailySurplus": "Estás en +{{diff}} kcal hoy. Equilibra mañana.",
+      "goodSurplusGain": "Buen superávit calórico para ganar músculo (+{{diff}} kcal)",
+      "deficitForGain": "Déficit de {{diff}} kcal - aumenta la ingesta para ganar músculo",
+      "onTrack": "on_track",
+      "overTarget": "over_target",
+      "underTarget": "under_target",
+      "balanced": "balanced",
+      "balancedIntake": "Ingesta equilibrada para mantenimiento",
+      "slightSurplus": "Ligero superávit de {{diff}} kcal",
+      "slightDeficit": "Ligero déficit de {{diff}} kcal"
+    },
+    "mealTiming": {
+      "morningCarbsGood": "¡Buen timing! Los carbohidratos por la mañana proporcionan energía para el día.",
+      "morningProteinGood": "Buena ingesta de proteínas para empezar el día.",
+      "breakfastIdeal": "El desayuno es ideal para carbohidratos complejos y proteínas.",
+      "lunchBalanced": "Almuerzo equilibrado - perfecto para mantener la energía por la tarde.",
+      "lunchLight": "Almuerzo ligero - planifica un snack saludable para la tarde.",
+      "lunchGoodTime": "Buen momento para una comida completa y equilibrada.",
+      "snackReasonable": "Snack razonable para evitar antojos por la noche.",
+      "snackHeavy": "Este snack es pesado - aligera la cena en consecuencia.",
+      "snackModerate": "Snack moderado - ten cuidado de no comer demasiado esta noche.",
+      "dinnerIdeal": "Cena ideal: proteínas y pocos carbohidratos para un buen sueño.",
+      "dinnerHeavy": "Cena pesada - evita comer muy tarde para la digestión.",
+      "dinnerReasonable": "Cena razonable - evita azúcares rápidos antes de dormir.",
+      "lateHeavy": "Comida tardía y calórica - puede afectar el sueño y el metabolismo.",
+      "lateProtein": "Snack proteico tardío - aceptable para la recuperación muscular.",
+      "lateGeneral": "Comer tarde puede alterar el sueño. Prefiere comidas más tempranas.",
+      "enjoyMeal": "¡Buen provecho!"
+    },
+    "fallback": {
+      "unidentifiedMeal": "Comida no identificada"
+    },
+    "healthReport": {
+      "portionBalanced": "Porción calóricamente equilibrada para una comida",
+      "mealHighPercent": "Esta comida representa {{percent}}% de tus calorías diarias",
+      "mealVeryLight": "Comida muy ligera, riesgo de antojos",
+      "preferSmaller": "Prefiere porciones más pequeñas en las próximas comidas",
+      "addProteinSatiety": "Añade una fuente de proteína para más saciedad",
+      "goodProtein": "Buena fuente de proteína ({{protein}}g)",
+      "lowProtein": "Baja en proteínas",
+      "addProteinSuggestion": "Añade huevos, legumbres o carne magra",
+      "compatibleWeightLoss": "Compatible con tu objetivo de pérdida de peso",
+      "caloricForWeightLoss": "Comida calórica para un objetivo de pérdida de peso",
+      "reducePortions": "Reduce las porciones o elige alimentos menos calóricos",
+      "highProteinSatiety": "Rica en proteínas - favorece la saciedad",
+      "weightDecreasing": "Tu peso está disminuyendo - ¡sigue así!",
+      "weightIncreasing": "Atención: tu peso está aumentando esta semana",
+      "reducePortion": "Reduce ligeramente las porciones para invertir la tendencia",
+      "excellentProteinMuscle": "Excelente aporte proteico para ganar músculo",
+      "insufficientProteinMuscle": "Insuficiente en proteínas para ganar masa",
+      "aim30gProtein": "Apunta a al menos 30g de proteína por comida",
+      "caloricDeficitMuscle": "Estás en déficit calórico - come más para ganar músculo",
+      "containsVegetables": "Contiene verduras - bueno para la salud",
+      "addVegetables": "Añade verduras para más fibra y vitaminas",
+      "burnedCalories": "¡Bien hecho! Has quemado {{calories}} kcal hoy",
+      "activityMinutes": "{{minutes}} minutos de actividad hoy",
+      "increaseProteinRecovery": "Después del ejercicio, aumenta las proteínas para la recuperación",
+      "addCarbsEnergy": "Añade carbohidratos complejos para recargar tus reservas",
+      "proteinEssentialAge": "A tu edad, las proteínas son esenciales para preservar la masa muscular",
+      "goodCalcium": "Buen aporte de calcio para la salud ósea",
+      "watchPortions": "Aunque seas joven, vigila las porciones para buenos hábitos",
+      "goodIronIntake": "Buen aporte de hierro",
+      "diabetesWarning": "⚠️ Atención: comida rica en carbohidratos (diabetes)",
+      "limitSimpleCarbs": "Limita los carbohidratos simples y prefiere la fibra",
+      "diabetesSugarWarning": "⚠️ Contiene azúcares rápidos (no recomendado para diabetes)",
+      "hypertensionWarning": "⚠️ Alimentos potencialmente ricos en sal (hipertensión)",
+      "preferLowSodium": "Prefiere alimentos bajos en sodio",
+      "highFatCholesterol": "Comida rica en grasas (atención al colesterol)",
+      "limitSaturatedFat": "Limita las grasas saturadas para tu colesterol",
+      "vitaminKWarning": "⚠️ Alimento rico en vitamina K (precaución con anticoagulantes)",
+      "consultDoctor": "Consulta a tu médico sobre el consumo de verduras verdes",
+      "grapefruitStatins": "⚠️ ¡El pomelo interactúa con las estatinas!",
+      "containsAllergen": "⚠️ ATENCIÓN: Contiene potencialmente {{allergen}}",
+      "containsExcluded": "Contiene {{food}} (alimento excluido)",
+      "containsMeat": "Contiene carne (dieta vegetariana)",
+      "containsAnimal": "Contiene productos animales (dieta vegana)",
+      "containsMeatPesc": "Contiene carne (dieta pescetariana)",
+      "tooManyCarbs": "Demasiados carbohidratos ({{carbs}}g) para una dieta keto",
+      "ketoFatAdvice": "En keto, prioriza las grasas sobre las proteínas",
+      "mediterraneanCompliant": "Conforme a la dieta mediterránea",
+      "varyDiet": "Varía tu alimentación - comes a menudo los mismos alimentos",
+      "tryNewFoods": "Prueba nuevos alimentos para más nutrientes variados",
+      "waterReminder": "¡No olvides el agua! Solo {{water}}ml hoy",
+      "goodHydration": "Buena hidratación hoy",
+      "exceededCalories": "Superas tu objetivo calórico en {{calories}} kcal",
+      "remainingCalories": "Te quedan {{calories}} kcal para el resto del día",
+      "verdictExcellent": "¡Excelente elección! Esta comida se adapta perfectamente a tu perfil.",
+      "verdictGood": "¡Buena elección! Esta comida contribuye positivamente a tus objetivos.",
+      "verdictNeutral": "Comida aceptable. Algunos ajustes podrían mejorarla.",
+      "verdictPoor": "Esta comida no es ideal para tus objetivos. Considera las recomendaciones.",
+      "verdictBad": "¡Atención! Esta comida no corresponde a tu perfil nutricional.",
+      "weeklyExcellentLoss": "¡Excelente progreso! -{{weight}}kg esta semana",
+      "weeklyGoodGain": "Buen aumento de masa: +{{weight}}kg esta semana"
+    }
+  },
+  "recipe": {
+    "generating": "Creando una receta personalizada basada en tus ingredientes y preferencias...",
+    "complete": "¡Aquí tienes una receta hecha especialmente para ti!",
+    "noIngredientsMatch": "No pude crear una receta con esos ingredientes. Intenta añadir más opciones.",
+    "dietaryNote": "Esta receta ha sido adaptada a tu preferencia dietética {{diet}}.",
+    "allergenWarning": "Nota: Por favor verifica todos los ingredientes en busca de alérgenos.",
+    "nutritionInfo": "Información nutricional por porción:",
+    "cookingTip": "Consejo del chef: {{tip}}",
+    "servingSuggestion": "Sugerencia de presentación: {{suggestion}}",
+    "dietInstructions": {
+      "vegan": "La receta debe ser 100% vegana (sin productos animales).",
+      "vegetarian": "La receta debe ser vegetariana (sin carne ni pescado).",
+      "pescatarian": "La receta puede incluir pescado pero no carne.",
+      "keto": "La receta debe ser baja en carbohidratos (menos de 20g de carbohidratos netos).",
+      "paleo": "La receta debe seguir la dieta paleo (sin cereales, legumbres, lácteos).",
+      "mediterranean": "La receta debe seguir la dieta mediterránea.",
+      "omnivore": "Sin restricciones particulares."
+    },
+    "goalInstructions": {
+      "loseWeight": "Prefiere recetas ligeras, altas en proteína y fibra, bajas en calorías.",
+      "gainMuscle": "Prefiere recetas altas en proteína (30g+ por porción) y carbohidratos complejos.",
+      "maintain": "Equilibra los macronutrientes para mantener el peso.",
+      "improveHealth": "Prefiere alimentos nutritivos, mínimamente procesados, ricos en vitaminas y minerales."
+    },
+    "mealHistory": {
+      "avoid": "EVITAR (comido muy a menudo esta semana):",
+      "varietyScore": "Puntuación de variedad:",
+      "suggestedProteins": "Proteínas sugeridas (no consumidas recientemente):",
+      "loggedMeals": "Comidas registradas (7d):",
+      "header": "HISTORIAL DE COMIDAS:"
+    },
+    "timeRecommendations": {
+      "morning": "Mañana: Prefiere carbohidratos complejos para energía",
+      "midday": "Mediodía: Comida equilibrada, proteína + verduras",
+      "afternoon": "Tarde: Snack ligero si es necesario",
+      "evening": "Noche: Comida ligera, evita carbohidratos simples",
+      "late": "Tarde noche: Evita comidas pesadas, prefiere proteínas ligeras"
+    },
+    "fallback": {
+      "oatmealBowl": "Bowl de avena con frutas",
+      "oatmealDesc": "Un desayuno equilibrado y nutritivo",
+      "chickenSalad": "Ensalada de pollo a la parrilla",
+      "chickenSaladDesc": "Una ensalada fresca y rica en proteínas",
+      "salmonVeggies": "Salmón con verduras asadas",
+      "salmonDesc": "Una cena saludable y sabrosa",
+      "greekYogurt": "Yogur griego con nueces",
+      "greekYogurtDesc": "Un snack rico en proteínas y saciante"
+    }
+  },
+  "profiling": {
+    "welcome": "¡Bienvenido a NutriProfile! Creemos tu plan de nutrición personalizado.",
+    "calculatingNeeds": "Calculando tus necesidades nutricionales diarias según tu perfil...",
+    "profileComplete": "¡Tu perfil está completo! Aquí están tus recomendaciones personalizadas:",
+    "calorieExplanation": "Según tu edad, peso, altura y nivel de actividad, tu objetivo calórico diario es de {{calories}} kcal.",
+    "macroExplanation": "Tu distribución óptima de macros es: {{protein}}g de proteína, {{carbs}}g de carbohidratos, {{fat}}g de grasa.",
+    "goalAdvice": {
+      "lose": "Para alcanzar tu objetivo de pérdida de peso, hemos establecido un déficit calórico moderado.",
+      "maintain": "Para mantener tu peso actual, hemos equilibrado tu ingesta con tu gasto.",
+      "gain": "Para desarrollar músculo, hemos añadido calorías extra con énfasis en proteínas."
+    },
+    "recommendations": {
+      "loseWeight": {
+        "leanProtein": "Prioriza las proteínas magras para mantener la masa muscular",
+        "drinkWater": "Bebe al menos 2L de agua al día"
+      },
+      "gainMuscle": {
+        "proteinEveryMeal": "Consume proteína en cada comida",
+        "postWorkout": "Come dentro de los 30 minutos después del entrenamiento"
+      },
+      "general": {
+        "varyProtein": "Varía tus fuentes de proteína",
+        "fruitsVeggies": "Consume 5 porciones de frutas y verduras al día",
+        "limitProcessed": "Limita los alimentos ultraprocesados"
+      }
+    },
+    "deficiencies": {
+      "vegan": {
+        "b12": "Vitamina B12 (suplementación recomendada)",
+        "iron": "Hierro (fuentes vegetales: lentejas, espinacas)"
+      },
+      "vegetarian": {
+        "iron": "Hierro (combinar con vitamina C para absorción)"
+      }
+    },
+    "warnings": {
+      "diabetes": "Vigila tu ingesta de carbohidratos y su índice glucémico",
+      "hypertension": "Limita tu consumo de sal a 5g por día",
+      "allergyTrace": "Cuidado con trazas de {{allergy}} en productos procesados"
+    }
+  },
+  "nutrition": {
+    "validating": "Validando datos nutricionales...",
+    "dataVerified": "Los valores nutricionales han sido verificados y están dentro de los rangos normales.",
+    "outlierDetected": "Algunos valores parecen inusuales y pueden necesitar verificación.",
+    "missingData": "Falta información nutricional. Usando valores estimados.",
+    "balanceAnalysis": "Tu análisis de balance de macros:",
+    "proteinStatus": {
+      "low": "Tu ingesta de proteína está por debajo del objetivo. Considera añadir más proteínas magras.",
+      "optimal": "Tu ingesta de proteína está en el objetivo.",
+      "high": "Tu ingesta de proteína está por encima del objetivo."
+    },
+    "carbStatus": {
+      "low": "Tu ingesta de carbohidratos es baja. Considera añadir carbohidratos complejos.",
+      "optimal": "Tu ingesta de carbohidratos está bien equilibrada.",
+      "high": "Tu ingesta de carbohidratos es alta. Considera reducir los carbohidratos refinados."
+    },
+    "fatStatus": {
+      "low": "Tu ingesta de grasas es baja. No olvides que las grasas saludables son esenciales.",
+      "optimal": "Tu ingesta de grasas está equilibrada.",
+      "high": "Tu ingesta de grasas está por encima del objetivo. Enfócate en fuentes de grasas saludables."
+    }
+  },
+  "consensus": {
+    "noResponses": "No hay respuestas para validar",
+    "fewModels": "Solo {{count}} modelos respondieron",
+    "lowAgreement": "Bajo acuerdo entre modelos ({{score}})",
+    "disagreements": "{{count}} desacuerdos detectados",
+    "noRecipesToMerge": "No hay recetas para fusionar",
+    "ingredientDisagreement": "Desacuerdo significativo en ingredientes",
+    "foodDisagreement": "Fuerte desacuerdo: {{unique}} alimentos únicos, {{common}} en común",
+    "outlierOn": "Valores atípicos en {{field}}"
+  }
+}

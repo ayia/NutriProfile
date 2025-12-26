@@ -1,5 +1,5 @@
+import { useTranslation } from 'react-i18next'
 import type { QuickStats, UserStats } from '@/types/dashboard'
-import { LEVEL_TITLES } from '@/types/dashboard'
 import { NotificationBell } from './NotificationBell'
 
 interface HeroCardProps {
@@ -19,7 +19,8 @@ export function HeroCard({
   unreadCount,
   onWaterClick,
 }: HeroCardProps) {
-  const levelTitle = LEVEL_TITLES[userStats.level] || `Niveau ${userStats.level}`
+  const { t } = useTranslation('dashboard')
+  const levelTitle = t(`levels.${userStats.level}`, { defaultValue: `Level ${userStats.level}` })
 
   // Calcul du pourcentage des calories
   const caloriesPercent = Math.min((quickStats.calories_today / quickStats.calories_target) * 100, 100)
@@ -44,7 +45,7 @@ export function HeroCard({
   // Macros data
   const macros = [
     {
-      label: 'Protéines',
+      label: t('macros.protein'),
       icon: '💪',
       value: quickStats.protein_today,
       max: quickStats.protein_target,
@@ -53,7 +54,7 @@ export function HeroCard({
       textColor: 'text-secondary-600',
     },
     {
-      label: 'Eau',
+      label: t('macros.water'),
       icon: '💧',
       value: quickStats.water_today,
       max: quickStats.water_target,
@@ -64,7 +65,7 @@ export function HeroCard({
       unit: 'ml',
     },
     {
-      label: 'Activité',
+      label: t('macros.activity'),
       icon: '🏃',
       value: quickStats.activity_today,
       max: quickStats.activity_target,
@@ -91,14 +92,14 @@ export function HeroCard({
               </div>
             </div>
             <div>
-              <h1 className="heading-3">Bonjour, {userName} !</h1>
+              <h1 className="heading-3">{t('hello')}, {userName} !</h1>
               <p className="body-md">
                 {quickStats.streak_days > 0 ? (
                   <span className="flex items-center gap-1 text-accent-600 font-medium">
-                    🔥 {quickStats.streak_days} jours de suite !
+                    🔥 {t('streakMessage', { count: quickStats.streak_days })}
                   </span>
                 ) : (
-                  "Commençons une nouvelle journée !"
+                  t('newDayMessage')
                 )}
               </p>
             </div>
@@ -158,14 +159,14 @@ export function HeroCard({
             {/* Info calories */}
             <div className="flex-1 space-y-3">
               <div>
-                <h3 className="heading-4">Calories</h3>
+                <h3 className="heading-4">{t('hero.calories')}</h3>
                 {isOverCalories ? (
                   <p className="body-sm text-error-600">
-                    Dépassement de {quickStats.calories_today - quickStats.calories_target} kcal
+                    {t('hero.caloriesOver', { count: quickStats.calories_today - quickStats.calories_target })}
                   </p>
                 ) : (
                   <p className="body-sm">
-                    {caloriesRemaining} kcal restantes
+                    {t('hero.caloriesRemaining', { count: caloriesRemaining })}
                   </p>
                 )}
               </div>
@@ -176,13 +177,13 @@ export function HeroCard({
                   <div className="text-lg font-bold text-neutral-800">
                     {Math.round(caloriesPercent)}%
                   </div>
-                  <div className="text-xs text-neutral-500">Atteint</div>
+                  <div className="text-xs text-neutral-500">{t('hero.reached')}</div>
                 </div>
                 <div className="bg-neutral-50 rounded-xl p-3 text-center">
                   <div className="text-lg font-bold text-neutral-800">
                     {userStats.total_meals_logged}
                   </div>
-                  <div className="text-xs text-neutral-500">Repas</div>
+                  <div className="text-xs text-neutral-500">{t('hero.meals')}</div>
                 </div>
               </div>
             </div>
@@ -195,7 +196,7 @@ export function HeroCard({
             <span className="w-8 h-8 bg-warning-100 rounded-lg flex items-center justify-center text-lg">
               🏆
             </span>
-            <h3 className="heading-4">Progression</h3>
+            <h3 className="heading-4">{t('hero.progression')}</h3>
           </div>
 
           {/* Level info */}
@@ -221,15 +222,15 @@ export function HeroCard({
           <div className="grid grid-cols-3 gap-2">
             <div className="bg-primary-50 rounded-xl p-3 text-center">
               <div className="text-xl font-bold text-primary-600">{userStats.achievements_count}</div>
-              <div className="text-xs text-neutral-600">Succès</div>
+              <div className="text-xs text-neutral-600">{t('hero.achievements')}</div>
             </div>
             <div className="bg-secondary-50 rounded-xl p-3 text-center">
               <div className="text-xl font-bold text-secondary-600">{userStats.total_meals_logged}</div>
-              <div className="text-xs text-neutral-600">Repas</div>
+              <div className="text-xs text-neutral-600">{t('hero.meals')}</div>
             </div>
             <div className="bg-accent-50 rounded-xl p-3 text-center">
               <div className="text-xl font-bold text-accent-600">{userStats.best_streak_logging}</div>
-              <div className="text-xs text-neutral-600">Record</div>
+              <div className="text-xs text-neutral-600">{t('hero.record')}</div>
             </div>
           </div>
         </div>
@@ -241,7 +242,7 @@ export function HeroCard({
           <span className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center text-lg">
             📊
           </span>
-          <h3 className="heading-4">Aujourd'hui</h3>
+          <h3 className="heading-4">{t('hero.today')}</h3>
         </div>
 
         <div className="space-y-4">
@@ -276,7 +277,7 @@ export function HeroCard({
                   </div>
                   {macro.onClick && (
                     <button className="flex-shrink-0 bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-blue-200 transition-colors">
-                      + Ajouter
+                      {t('hero.addButton')}
                     </button>
                   )}
                 </div>

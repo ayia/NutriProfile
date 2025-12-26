@@ -1,24 +1,19 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/hooks/useAuth'
 
-interface NavItem {
-  path: string
-  label: string
-  icon: string
-  activeIcon: string
-}
-
-const navItems: NavItem[] = [
-  { path: '/dashboard', label: 'Accueil', icon: '🏠', activeIcon: '🏡' },
-  { path: '/vision', label: 'Scanner', icon: '📷', activeIcon: '📸' },
-  { path: '/tracking', label: 'Suivi', icon: '📊', activeIcon: '📈' },
-  { path: '/recipes', label: 'Recettes', icon: '🍳', activeIcon: '👨‍🍳' },
-  { path: '/settings', label: 'Profil', icon: '👤', activeIcon: '👤' },
-]
-
 export function BottomNav() {
+  const { t } = useTranslation('common')
   const location = useLocation()
   const { isAuthenticated } = useAuth()
+
+  const navItems = [
+    { path: '/dashboard', label: t('nav.dashboard'), icon: '🏠', activeIcon: '🏡' },
+    { path: '/vision', label: t('nav.vision'), icon: '📷', activeIcon: '📸' },
+    { path: '/tracking', label: t('nav.tracking'), icon: '📊', activeIcon: '📈' },
+    { path: '/recipes', label: t('nav.recipes'), icon: '🍳', activeIcon: '👨‍🍳' },
+    { path: '/settings', label: t('nav.profile'), icon: '👤', activeIcon: '👤' },
+  ]
 
   // Ne pas afficher sur certaines pages
   const hiddenPaths = ['/', '/login', '/register', '/onboarding']

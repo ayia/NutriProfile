@@ -1,0 +1,300 @@
+{
+  "common": {
+    "fallbackUsed": "Deterministic fallback used",
+    "noModelAvailable": "No model available for {{capability}}",
+    "noFallbackDefined": "No deterministic fallback defined",
+    "analysisComplete": "Analysis completed",
+    "none": "None"
+  },
+  "coach": {
+    "greeting": "Hello {{name}}! I'm your personal nutrition coach.",
+    "greetingMorning": "Good morning {{name}}!",
+    "greetingAfternoon": "Good afternoon {{name}}!",
+    "greetingEvening": "Good evening {{name}}!",
+    "dailySummary": "Here's your nutrition summary for today:",
+    "caloriesSummary": "You've consumed {{consumed}} of your {{target}} kcal goal.",
+    "goalProgress": "You're {{percent}}% towards your {{goal}} goal.",
+    "fallbackSummary": {
+      "farFromGoal": "You're still far from your calorie goal. Don't forget to eat well!",
+      "onTrackGood": "You're on the right track! Keep it up.",
+      "almostThere": "Excellent! You're approaching your calorie goal.",
+      "exceeded": "Watch out, you've exceeded your calorie goal today."
+    },
+    "fallbackAdvice": {
+      "drinkWater": "Remember to drink water regularly!",
+      "drinkWaterAction": "Drink a glass of water",
+      "increaseProtein": "Increase your protein intake.",
+      "increaseProteinAction": "Eat protein-rich foods",
+      "doExercise": "A little exercise would do you good!",
+      "doExerciseAction": "Take a 15-minute walk",
+      "keepItUp": "Keep it up, you're on the right track!"
+    },
+    "fallbackMotivation": "Every small step counts towards a healthier lifestyle.",
+    "encouragement": {
+      "onTrack": "Great job! You're right on track with your nutrition goals.",
+      "slightlyOver": "You're slightly over your calorie target, but don't worry - tomorrow is a new day!",
+      "slightlyUnder": "You're a bit under your target. Consider having a healthy snack.",
+      "significantlyOver": "You've exceeded your calorie goal today. Let's plan better meals for tomorrow.",
+      "significantlyUnder": "You're quite under your calorie target. Make sure you're eating enough to fuel your body."
+    },
+    "mealSuggestion": "Based on your remaining calories, I suggest: {{suggestion}}",
+    "waterReminder": "Don't forget to stay hydrated! You've had {{glasses}} glasses of water today.",
+    "weeklyReview": "This week you achieved {{percent}}% of your nutrition goals. {{feedback}}",
+    "tipOfTheDay": "Today's tip: {{tip}}",
+    "streakMessage": "Amazing! You're on a {{days}}-day streak of tracking your meals!",
+    "goals": {
+      "loseWeight": "lose weight",
+      "gainMuscle": "build muscle",
+      "maintain": "maintain weight",
+      "improveHealth": "improve health"
+    },
+    "timeContext": {
+      "morning": "It's morning, ideal time for a balanced breakfast.",
+      "afternoon": "It's afternoon, watch out for post-lunch fatigue.",
+      "evening": "It's evening, a light dinner promotes good sleep.",
+      "night": "It's late, avoid nighttime snacking."
+    },
+    "advice": {
+      "drinkWater": "Don't forget to drink water! Aim for at least 2L per day.",
+      "caloriesRemaining": "You have {{calories}} kcal left to consume. Think about a balanced meal.",
+      "caloriesExceeded": "You've exceeded your calorie goal. How about a short walk?",
+      "proteinRemaining": "Still {{protein}}g of protein to reach. Try eggs, chicken, or legumes.",
+      "noActivityYet": "No activity yet today? Even 15 minutes make a difference!"
+    }
+  },
+  "vision": {
+    "analyzing": "Analyzing your meal photo...",
+    "detectionComplete": "Analysis complete! I detected the following items:",
+    "lowConfidence": "I'm not very confident about some items. Please review and correct if needed.",
+    "highConfidence": "I'm quite confident about this analysis.",
+    "noFoodDetected": "I couldn't detect any food items in this image. Please try again with a clearer photo.",
+    "autoAnalysisUnavailable": "Automatic analysis unavailable. Please correct manually.",
+    "mealQuality": {
+      "excellent": "This is an excellent, well-balanced meal!",
+      "good": "This is a good meal choice for your goals.",
+      "moderate": "This meal is acceptable, but could be improved.",
+      "poor": "This meal might not align well with your nutrition goals."
+    },
+    "positivePoints": "Positive points:",
+    "warnings": "Things to watch:",
+    "suggestions": "Suggestions for improvement:",
+    "weeklyImpact": {
+      "maintainLoss": "At this pace, you could lose ~{{loss}}kg/week",
+      "dailySurplus": "You're at +{{diff}} kcal today. Balance tomorrow.",
+      "goodSurplusGain": "Good caloric surplus for muscle gain (+{{diff}} kcal)",
+      "deficitForGain": "Deficit of {{diff}} kcal - increase intake for muscle gain",
+      "onTrack": "on_track",
+      "overTarget": "over_target",
+      "underTarget": "under_target",
+      "balanced": "balanced",
+      "balancedIntake": "Balanced intake for maintenance",
+      "slightSurplus": "Slight surplus of {{diff}} kcal",
+      "slightDeficit": "Slight deficit of {{diff}} kcal"
+    },
+    "mealTiming": {
+      "morningCarbsGood": "Good timing! Morning carbs provide energy for the day.",
+      "morningProteinGood": "Good protein intake to start the day.",
+      "breakfastIdeal": "Breakfast is ideal for complex carbs and protein.",
+      "lunchBalanced": "Balanced lunch - perfect to maintain energy throughout the afternoon.",
+      "lunchLight": "Light lunch - plan a healthy snack for the afternoon.",
+      "lunchGoodTime": "Good time for a complete and balanced meal.",
+      "snackReasonable": "Reasonable snack to avoid evening cravings.",
+      "snackHeavy": "This snack is heavy - lighten dinner accordingly.",
+      "snackModerate": "Moderate snack - be careful not to eat too much tonight.",
+      "dinnerIdeal": "Ideal dinner: protein and low carbs for good sleep.",
+      "dinnerHeavy": "Heavy dinner - avoid eating too late for digestion.",
+      "dinnerReasonable": "Reasonable dinner - avoid quick sugars before bed.",
+      "lateHeavy": "Late and caloric meal - may affect sleep and metabolism.",
+      "lateProtein": "Late protein snack - acceptable for muscle recovery.",
+      "lateGeneral": "Eating late can disrupt sleep. Prefer earlier meals.",
+      "enjoyMeal": "Enjoy your meal!"
+    },
+    "fallback": {
+      "unidentifiedMeal": "Unidentified meal"
+    },
+    "healthReport": {
+      "portionBalanced": "Calorically balanced portion for a meal",
+      "mealHighPercent": "This meal represents {{percent}}% of your daily calories",
+      "mealVeryLight": "Very light meal, risk of cravings",
+      "preferSmaller": "Prefer smaller portions at next meals",
+      "addProteinSatiety": "Add a protein source for more satiety",
+      "goodProtein": "Good protein source ({{protein}}g)",
+      "lowProtein": "Low in protein",
+      "addProteinSuggestion": "Add eggs, legumes, or lean meat",
+      "compatibleWeightLoss": "Compatible with your weight loss goal",
+      "caloricForWeightLoss": "Caloric meal for a weight loss goal",
+      "reducePortions": "Reduce portions or choose less caloric foods",
+      "highProteinSatiety": "High in protein - promotes satiety",
+      "weightDecreasing": "Your weight is decreasing - keep it up!",
+      "weightIncreasing": "Warning: your weight is increasing this week",
+      "reducePortion": "Slightly reduce portions to reverse the trend",
+      "excellentProteinMuscle": "Excellent protein intake for muscle building",
+      "insufficientProteinMuscle": "Insufficient protein for muscle building",
+      "aim30gProtein": "Aim for at least 30g of protein per meal",
+      "caloricDeficitMuscle": "You're in caloric deficit - eat more to build muscle",
+      "containsVegetables": "Contains vegetables - good for health",
+      "addVegetables": "Add vegetables for more fiber and vitamins",
+      "burnedCalories": "Well done! You burned {{calories}} kcal today",
+      "activityMinutes": "{{minutes}} minutes of activity today",
+      "increaseProteinRecovery": "After exercise, increase protein for recovery",
+      "addCarbsEnergy": "Add complex carbs to recharge your reserves",
+      "proteinEssentialAge": "At your age, protein is essential to preserve muscle mass",
+      "goodCalcium": "Good calcium intake for bone health",
+      "watchPortions": "Even young, watch portions for good habits",
+      "goodIronIntake": "Good iron intake",
+      "diabetesWarning": "⚠️ Warning: high-carb meal (diabetes)",
+      "limitSimpleCarbs": "Limit simple carbs and prefer fiber",
+      "diabetesSugarWarning": "⚠️ Contains quick sugars (not recommended for diabetes)",
+      "hypertensionWarning": "⚠️ Potentially high-salt foods (hypertension)",
+      "preferLowSodium": "Prefer low-sodium foods",
+      "highFatCholesterol": "High-fat meal (watch cholesterol)",
+      "limitSaturatedFat": "Limit saturated fats for your cholesterol",
+      "vitaminKWarning": "⚠️ Food rich in vitamin K (caution with anticoagulants)",
+      "consultDoctor": "Consult your doctor about green vegetable consumption",
+      "grapefruitStatins": "⚠️ Grapefruit interacts with statins!",
+      "containsAllergen": "⚠️ WARNING: Potentially contains {{allergen}}",
+      "containsExcluded": "Contains {{food}} (excluded food)",
+      "containsMeat": "Contains meat (vegetarian diet)",
+      "containsAnimal": "Contains animal products (vegan diet)",
+      "containsMeatPesc": "Contains meat (pescatarian diet)",
+      "tooManyCarbs": "Too many carbs ({{carbs}}g) for a keto diet",
+      "ketoFatAdvice": "In keto, prioritize fats over proteins",
+      "mediterraneanCompliant": "Mediterranean diet compliant",
+      "varyDiet": "Vary your diet - you often eat the same foods",
+      "tryNewFoods": "Try new foods for more varied nutrients",
+      "waterReminder": "Don't forget water! Only {{water}}ml today",
+      "goodHydration": "Good hydration today",
+      "exceededCalories": "You exceed your calorie goals by {{calories}} kcal",
+      "remainingCalories": "You have {{calories}} kcal left for the rest of the day",
+      "verdictExcellent": "Excellent choice! This meal is perfectly suited to your profile.",
+      "verdictGood": "Good choice! This meal contributes positively to your goals.",
+      "verdictNeutral": "Acceptable meal. Some adjustments could improve it.",
+      "verdictPoor": "This meal is not ideal for your goals. Consider the recommendations.",
+      "verdictBad": "Warning! This meal doesn't match your nutritional profile.",
+      "weeklyExcellentLoss": "Excellent progress! -{{weight}}kg this week",
+      "weeklyGoodGain": "Good muscle gain: +{{weight}}kg this week"
+    }
+  },
+  "recipe": {
+    "generating": "Creating a personalized recipe based on your ingredients and preferences...",
+    "complete": "Here's a recipe tailored just for you!",
+    "noIngredientsMatch": "I couldn't create a recipe with those ingredients. Try adding more options.",
+    "dietaryNote": "This recipe has been adapted to your {{diet}} dietary preference.",
+    "allergenWarning": "Note: Please verify all ingredients for allergens.",
+    "nutritionInfo": "Nutritional information per serving:",
+    "cookingTip": "Chef's tip: {{tip}}",
+    "servingSuggestion": "Serving suggestion: {{suggestion}}",
+    "dietInstructions": {
+      "vegan": "The recipe must be 100% vegan (no animal products).",
+      "vegetarian": "The recipe must be vegetarian (no meat or fish).",
+      "pescatarian": "The recipe can include fish but no meat.",
+      "keto": "The recipe must be low-carb (less than 20g net carbs).",
+      "paleo": "The recipe must follow the paleo diet (no grains, legumes, dairy).",
+      "mediterranean": "The recipe must follow the Mediterranean diet.",
+      "omnivore": "No particular restrictions."
+    },
+    "goalInstructions": {
+      "loseWeight": "Prefer light recipes, high in protein and fiber, low in calories.",
+      "gainMuscle": "Prefer recipes high in protein (30g+ per serving) and complex carbs.",
+      "maintain": "Balance macronutrients to maintain weight.",
+      "improveHealth": "Prefer nutritious, minimally processed foods rich in vitamins and minerals."
+    },
+    "mealHistory": {
+      "avoid": "AVOID (eaten too often this week):",
+      "varietyScore": "Variety score:",
+      "suggestedProteins": "Suggested proteins (not consumed recently):",
+      "loggedMeals": "Logged meals (7d):",
+      "header": "MEAL HISTORY:"
+    },
+    "timeRecommendations": {
+      "morning": "Morning: Prefer complex carbs for energy",
+      "midday": "Midday: Balanced meal, protein + vegetables",
+      "afternoon": "Afternoon: Light snack if needed",
+      "evening": "Evening: Light meal, avoid simple carbs",
+      "late": "Late: Avoid heavy meals, prefer light proteins"
+    },
+    "fallback": {
+      "oatmealBowl": "Oatmeal bowl with fruits",
+      "oatmealDesc": "A balanced and nutritious breakfast",
+      "chickenSalad": "Grilled chicken salad",
+      "chickenSaladDesc": "A fresh and protein-rich salad",
+      "salmonVeggies": "Salmon with roasted vegetables",
+      "salmonDesc": "A healthy and flavorful dinner",
+      "greekYogurt": "Greek yogurt with nuts",
+      "greekYogurtDesc": "A protein-rich and filling snack"
+    }
+  },
+  "profiling": {
+    "welcome": "Welcome to NutriProfile! Let's create your personalized nutrition plan.",
+    "calculatingNeeds": "Calculating your daily nutritional needs based on your profile...",
+    "profileComplete": "Your profile is complete! Here are your personalized recommendations:",
+    "calorieExplanation": "Based on your age, weight, height, and activity level, your daily calorie target is {{calories}} kcal.",
+    "macroExplanation": "Your optimal macro split is: {{protein}}g protein, {{carbs}}g carbs, {{fat}}g fat.",
+    "goalAdvice": {
+      "lose": "To reach your weight loss goal, we've set a moderate calorie deficit.",
+      "maintain": "To maintain your current weight, we've balanced your intake with your expenditure.",
+      "gain": "To build muscle, we've added extra calories with a focus on protein."
+    },
+    "recommendations": {
+      "loseWeight": {
+        "leanProtein": "Prioritize lean proteins to maintain muscle mass",
+        "drinkWater": "Drink at least 2L of water per day"
+      },
+      "gainMuscle": {
+        "proteinEveryMeal": "Consume protein at every meal",
+        "postWorkout": "Eat within 30 minutes after training"
+      },
+      "general": {
+        "varyProtein": "Vary your protein sources",
+        "fruitsVeggies": "Consume 5 portions of fruits and vegetables daily",
+        "limitProcessed": "Limit ultra-processed foods"
+      }
+    },
+    "deficiencies": {
+      "vegan": {
+        "b12": "Vitamin B12 (supplementation recommended)",
+        "iron": "Iron (plant sources: lentils, spinach)"
+      },
+      "vegetarian": {
+        "iron": "Iron (combine with vitamin C for absorption)"
+      }
+    },
+    "warnings": {
+      "diabetes": "Monitor your carb intake and their glycemic index",
+      "hypertension": "Limit your salt intake to 5g per day",
+      "allergyTrace": "Watch out for traces of {{allergy}} in processed foods"
+    }
+  },
+  "nutrition": {
+    "validating": "Validating nutritional data...",
+    "dataVerified": "Nutritional values have been verified and are within normal ranges.",
+    "outlierDetected": "Some values seem unusual and may need verification.",
+    "missingData": "Some nutritional information is missing. Using estimated values.",
+    "balanceAnalysis": "Your macro balance analysis:",
+    "proteinStatus": {
+      "low": "Your protein intake is below target. Consider adding more lean proteins.",
+      "optimal": "Your protein intake is on target.",
+      "high": "Your protein intake is above target."
+    },
+    "carbStatus": {
+      "low": "Your carb intake is low. Consider adding complex carbohydrates.",
+      "optimal": "Your carb intake is well balanced.",
+      "high": "Your carb intake is high. Consider reducing refined carbs."
+    },
+    "fatStatus": {
+      "low": "Your fat intake is low. Don't forget healthy fats are essential.",
+      "optimal": "Your fat intake is balanced.",
+      "high": "Your fat intake is above target. Focus on healthy fat sources."
+    }
+  },
+  "consensus": {
+    "noResponses": "No responses to validate",
+    "fewModels": "Only {{count}} models responded",
+    "lowAgreement": "Low agreement between models ({{score}})",
+    "disagreements": "{{count}} disagreements detected",
+    "noRecipesToMerge": "No recipes to merge",
+    "ingredientDisagreement": "Significant ingredient disagreement",
+    "foodDisagreement": "Strong disagreement: {{unique}} unique foods, {{common}} in common",
+    "outlierOn": "Outliers on {{field}}"
+  }
+}

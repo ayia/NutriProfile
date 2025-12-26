@@ -1,0 +1,127 @@
+{
+  "title": "Escanear refeição",
+  "subtitle": "Tire fotos das suas refeições para rastreamento nutricional automático",
+  "tabs": {
+    "scan": "Scanner",
+    "today": "Hoje",
+    "history": "Histórico"
+  },
+  "scan": {
+    "title": "Analisar uma refeição",
+    "description": "Arraste uma foto aqui ou use seu dispositivo"
+  },
+  "today": {
+    "button": "Hoje",
+    "nutritionSummary": "Resumo nutricional",
+    "meals": "Refeições",
+    "noMeals": "Nenhuma refeição registrada",
+    "scanFirst": "Escanear uma refeição",
+    "calories": "Calorias",
+    "protein": "Proteína",
+    "carbs": "Carboidratos",
+    "fat": "Gordura",
+    "water": "Água"
+  },
+  "history": {
+    "noHistory": "Sem histórico"
+  },
+  "common": {
+    "loading": "Carregando..."
+  },
+  "mealTypes": {
+    "breakfast": "Café da manhã",
+    "lunch": "Almoço",
+    "dinner": "Jantar",
+    "snack": "Lanche"
+  },
+  "uploader": {
+    "mealTypeLabel": "Tipo de refeição",
+    "scanTitle": "Escaneie sua refeição",
+    "scanDescription": "Arraste uma foto aqui ou use seu dispositivo",
+    "tipsTitle": "Dicas para melhor análise:",
+    "tip1": "Foto bem iluminada, vista de cima",
+    "tip2": "Todos os alimentos visíveis no quadro",
+    "tip3": "Evite reflexos e sombras fortes",
+    "takePhoto": "Tirar foto",
+    "gallery": "Galeria",
+    "invalidFile": "Por favor selecione uma imagem",
+    "error": "Erro durante a análise. Por favor tente novamente.",
+    "aiWorking": "IA trabalhando... paciência!"
+  },
+  "analysisSteps": {
+    "step1": "Recebendo imagem",
+    "step2": "Detectando alimentos",
+    "step3": "Calculando nutrientes",
+    "step4": "Análise de saúde personalizada"
+  },
+  "result": {
+    "verdict": {
+      "excellent": "Excelente!",
+      "good": "Boa escolha",
+      "moderate": "Aceitável",
+      "poor": "Precisa melhorar",
+      "excellentDesc": "Esta refeição está perfeitamente equilibrada",
+      "goodDesc": "Uma refeição equilibrada para seus objetivos",
+      "moderateDesc": "Alguns ajustes recomendados",
+      "poorDesc": "Esta refeição precisa de sua atenção"
+    },
+    "healthScore": "Pontuação de saúde",
+    "analysisComplete": "Análise concluída",
+    "confidence": "Confiança",
+    "macros": {
+      "calories": "Calorias",
+      "protein": "Proteína",
+      "carbs": "Carboidratos",
+      "fat": "Gordura"
+    },
+    "healthReport": "Relatório de saúde personalizado",
+    "calorieRemaining": "Você tem {{count}} kcal restantes para hoje",
+    "calorieExceeded": "Você excedeu por {{count}} kcal",
+    "positivePoints": "Pontos positivos",
+    "warnings": "Atenção",
+    "suggestions": "Sugestões",
+    "macroBalance": "Balanço de macros",
+    "detectedFoods": "Alimentos detectados",
+    "confidenceLabel": {
+      "high": "Alta",
+      "medium": "Média",
+      "low": "Baixa"
+    },
+    "edit": {
+      "name": "Nome",
+      "quantity": "Quantidade",
+      "unit": "Unidade",
+      "cancel": "Cancelar",
+      "save": "Salvar"
+    },
+    "lowConfidence": "Confiança baixa",
+    "lowConfidenceMsg": "Recomendamos verificar e corrigir os valores na seção \"Alimentos detectados\".",
+    "actions": {
+      "newAnalysis": "Nova análise",
+      "editMeal": "Editar esta refeição",
+      "saveMeal": "Salvar refeição",
+      "saving": "Salvando...",
+      "done": "Concluído"
+    },
+    "mealSaved": "Refeição salva com sucesso",
+    "saveError": "Erro ao salvar. Por favor tente novamente.",
+    "modify": "Editar",
+    "corrected": "Corrigido"
+  },
+  "foodLog": {
+    "foods": "Alimentos",
+    "showDetails": "Mostrar",
+    "hideDetails": "Ocultar",
+    "edit": "Editar",
+    "deleteConfirm": "Excluir esta refeição?",
+    "deleteError": "Erro ao excluir. Por favor tente novamente."
+  },
+  "errors": {
+    "uploadFailed": "Falha ao enviar",
+    "analysisFailed": "Falha na análise",
+    "saveFailed": "Falha ao salvar",
+    "noImage": "Por favor selecione uma imagem",
+    "imageTooLarge": "Imagem muito grande (máx. 10MB)",
+    "invalidFormat": "Formato inválido. Use JPG, PNG ou WebP"
+  }
+}

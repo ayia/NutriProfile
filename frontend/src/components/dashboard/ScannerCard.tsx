@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export function ScannerCard() {
+  const { t } = useTranslation('dashboard')
+
   return (
     <Link
       to="/vision"
@@ -11,9 +14,9 @@ export function ScannerCard() {
           <span className="text-3xl">📸</span>
         </div>
         <div className="flex-1">
-          <h3 className="font-bold text-lg">Scanner un repas</h3>
+          <h3 className="font-bold text-lg">{t('scanner.title')}</h3>
           <p className="text-white/80 text-sm">
-            Prenez une photo pour analyser automatiquement les calories
+            {t('scanner.subtitle')}
           </p>
         </div>
         <div className="text-white/60 group-hover:translate-x-1 transition-transform">

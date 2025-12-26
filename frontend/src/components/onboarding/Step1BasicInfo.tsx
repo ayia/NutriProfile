@@ -1,10 +1,12 @@
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useOnboardingStore } from '@/store/onboardingStore'
 import type { ProfileStep1 } from '@/types/profile'
 
 export function Step1BasicInfo() {
+  const { t } = useTranslation('onboarding')
   const { step1, setStep1, nextStep } = useOnboardingStore()
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm<ProfileStep1>({
@@ -19,9 +21,9 @@ export function Step1BasicInfo() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold">Informations de base</h2>
+        <h2 className="text-2xl font-bold">{t('step1.title')}</h2>
         <p className="text-gray-600 mt-2">
-          Ces informations nous permettent de calculer vos besoins caloriques.
+          {t('step1.subtitle')}
         </p>
       </div>
 
@@ -29,27 +31,27 @@ export function Step1BasicInfo() {
         <Input
           id="age"
           type="number"
-          label="Âge"
-          placeholder="25"
+          label={t('step1.age')}
+          placeholder={t('step1.agePlaceholder')}
           error={errors.age?.message}
           {...register('age', {
-            required: 'Âge requis',
+            required: t('errors.ageRequired'),
             valueAsNumber: true,
-            min: { value: 13, message: 'Minimum 13 ans' },
-            max: { value: 120, message: 'Maximum 120 ans' },
+            min: { value: 13, message: t('errors.ageMin') },
+            max: { value: 120, message: t('errors.ageMax') },
           })}
         />
 
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">Genre</label>
+          <label className="block text-sm font-medium text-gray-700">{t('step1.gender')}</label>
           <select
             className="block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:ring-primary-500 focus:outline-none"
-            {...register('gender', { required: 'Genre requis' })}
+            {...register('gender', { required: t('errors.genderRequired') })}
           >
-            <option value="">Sélectionner</option>
-            <option value="male">Homme</option>
-            <option value="female">Femme</option>
-            <option value="other">Autre</option>
+            <option value="">{t('step1.genderSelect')}</option>
+            <option value="male">{t('step1.genders.male')}</option>
+            <option value="female">{t('step1.genders.female')}</option>
+            <option value="other">{t('step1.genders.other')}</option>
           </select>
           {errors.gender && (
             <p className="text-sm text-red-600">{errors.gender.message}</p>
@@ -61,14 +63,14 @@ export function Step1BasicInfo() {
         <Input
           id="height_cm"
           type="number"
-          label="Taille (cm)"
-          placeholder="175"
+          label={t('step1.height')}
+          placeholder={t('step1.heightPlaceholder')}
           error={errors.height_cm?.message}
           {...register('height_cm', {
-            required: 'Taille requise',
+            required: t('errors.heightRequired'),
             valueAsNumber: true,
-            min: { value: 100, message: 'Minimum 100 cm' },
-            max: { value: 250, message: 'Maximum 250 cm' },
+            min: { value: 100, message: t('errors.heightMin') },
+            max: { value: 250, message: t('errors.heightMax') },
           })}
         />
 
@@ -76,14 +78,14 @@ export function Step1BasicInfo() {
           id="weight_kg"
           type="number"
           step="0.1"
-          label="Poids (kg)"
-          placeholder="70"
+          label={t('step1.weight')}
+          placeholder={t('step1.weightPlaceholder')}
           error={errors.weight_kg?.message}
           {...register('weight_kg', {
-            required: 'Poids requis',
+            required: t('errors.weightRequired'),
             valueAsNumber: true,
-            min: { value: 30, message: 'Minimum 30 kg' },
-            max: { value: 300, message: 'Maximum 300 kg' },
+            min: { value: 30, message: t('errors.weightMin') },
+            max: { value: 300, message: t('errors.weightMax') },
           })}
         />
       </div>
@@ -98,7 +100,7 @@ export function Step1BasicInfo() {
             return (
               <div className="p-4 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-600">
-                  IMC estimé:{' '}
+                  {t('step1.bmiEstimate')}:{' '}
                   <span className="font-semibold">{bmi.toFixed(1)}</span>
                 </p>
               </div>
@@ -109,7 +111,7 @@ export function Step1BasicInfo() {
       })()}
 
       <div className="flex justify-end">
-        <Button type="submit">Continuer</Button>
+        <Button type="submit">{t('buttons.continue')}</Button>
       </div>
     </form>
   )

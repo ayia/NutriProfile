@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { useOnboardingStore } from '@/store/onboardingStore'
 import { profileApi } from '@/services/profileApi'
-import { ACTIVITY_LABELS, GOAL_LABELS, DIET_LABELS } from '@/types/profile'
 
 interface Step5SummaryProps {
   onSubmit: () => void
@@ -10,6 +10,7 @@ interface Step5SummaryProps {
 }
 
 export function Step5Summary({ onSubmit, isLoading }: Step5SummaryProps) {
+  const { t } = useTranslation('onboarding')
   const { step1, step2, step3, step4, getFullProfile, prevStep } = useOnboardingStore()
 
   const profile = getFullProfile()
@@ -24,18 +25,26 @@ export function Step5Summary({ onSubmit, isLoading }: Step5SummaryProps) {
   if (!profile) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-600">Données incomplètes. Veuillez revenir en arrière.</p>
-        <Button onClick={prevStep} className="mt-4">Retour</Button>
+        <p className="text-red-600">{t('step5.incompleteData')}</p>
+        <Button onClick={prevStep} className="mt-4">{t('buttons.back')}</Button>
       </div>
     )
+  }
+
+  const getGenderLabel = (gender: string) => {
+    switch (gender) {
+      case 'male': return t('step1.genders.male')
+      case 'female': return t('step1.genders.female')
+      default: return t('step1.genders.other')
+    }
   }
 
   return (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold">Récapitulatif</h2>
+        <h2 className="text-2xl font-bold">{t('step5.title')}</h2>
         <p className="text-gray-600 mt-2">
-          Vérifiez vos informations avant de créer votre profil.
+          {t('step5.subtitle')}
         </p>
       </div>
 
@@ -43,32 +52,32 @@ export function Step5Summary({ onSubmit, isLoading }: Step5SummaryProps) {
       {nutrition && (
         <div className="p-6 bg-primary-50 rounded-xl">
           <h3 className="font-semibold text-lg mb-4 text-primary-800">
-            Vos besoins nutritionnels estimés
+            {t('step5.nutritionTitle')}
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="text-center">
               <div className="text-3xl font-bold text-primary-600">
                 {nutrition.daily_calories}
               </div>
-              <div className="text-sm text-gray-600">kcal/jour</div>
+              <div className="text-sm text-gray-600">{t('step5.kcalPerDay')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">
                 {nutrition.protein_g}g
               </div>
-              <div className="text-sm text-gray-600">Protéines</div>
+              <div className="text-sm text-gray-600">{t('step5.protein')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-yellow-600">
                 {nutrition.carbs_g}g
               </div>
-              <div className="text-sm text-gray-600">Glucides</div>
+              <div className="text-sm text-gray-600">{t('step5.carbs')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
                 {nutrition.fat_g}g
               </div>
-              <div className="text-sm text-gray-600">Lipides</div>
+              <div className="text-sm text-gray-600">{t('step5.fat')}</div>
             </div>
           </div>
           <p className="text-xs text-gray-500 mt-4 text-center">
@@ -92,49 +101,49 @@ export function Step5Summary({ onSubmit, isLoading }: Step5SummaryProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Infos de base */}
         <div className="p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-medium mb-2">Informations de base</h4>
+          <h4 className="font-medium mb-2">{t('step5.basicInfo')}</h4>
           <ul className="text-sm text-gray-600 space-y-1">
-            <li>Âge: <strong>{step1.age} ans</strong></li>
-            <li>Genre: <strong>{step1.gender === 'male' ? 'Homme' : step1.gender === 'female' ? 'Femme' : 'Autre'}</strong></li>
-            <li>Taille: <strong>{step1.height_cm} cm</strong></li>
-            <li>Poids: <strong>{step1.weight_kg} kg</strong></li>
+            <li>{t('step1.age')}: <strong>{step1.age} {t('units.years')}</strong></li>
+            <li>{t('step1.gender')}: <strong>{getGenderLabel(step1.gender || '')}</strong></li>
+            <li>{t('step1.height')}: <strong>{step1.height_cm} {t('units.cm')}</strong></li>
+            <li>{t('step1.weight')}: <strong>{step1.weight_kg} {t('units.kg')}</strong></li>
           </ul>
         </div>
 
         {/* Activité */}
         <div className="p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-medium mb-2">Activité & Objectif</h4>
+          <h4 className="font-medium mb-2">{t('step5.activityGoal')}</h4>
           <ul className="text-sm text-gray-600 space-y-1">
-            <li>Activité: <strong>{step2.activity_level ? ACTIVITY_LABELS[step2.activity_level] : '-'}</strong></li>
-            <li>Objectif: <strong>{step2.goal ? GOAL_LABELS[step2.goal] : '-'}</strong></li>
+            <li>{t('step5.activity')}: <strong>{step2.activity_level ? t(`activityLevels.${step2.activity_level}`) : '-'}</strong></li>
+            <li>{t('step5.goal')}: <strong>{step2.goal ? t(`goals.${step2.goal}`) : '-'}</strong></li>
             {step2.target_weight_kg && (
-              <li>Poids cible: <strong>{step2.target_weight_kg} kg</strong></li>
+              <li>{t('step5.targetWeight')}: <strong>{step2.target_weight_kg} {t('units.kg')}</strong></li>
             )}
           </ul>
         </div>
 
         {/* Régime */}
         <div className="p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-medium mb-2">Préférences alimentaires</h4>
+          <h4 className="font-medium mb-2">{t('step5.dietPreferences')}</h4>
           <ul className="text-sm text-gray-600 space-y-1">
-            <li>Régime: <strong>{step3.diet_type ? DIET_LABELS[step3.diet_type] : 'Omnivore'}</strong></li>
+            <li>{t('step5.diet')}: <strong>{step3.diet_type ? t(`diets.${step3.diet_type}`) : t('diets.omnivore')}</strong></li>
             {step3.allergies && step3.allergies.length > 0 && (
-              <li>Allergies: <strong>{step3.allergies.join(', ')}</strong></li>
+              <li>{t('step5.allergies')}: <strong>{step3.allergies.join(', ')}</strong></li>
             )}
           </ul>
         </div>
 
         {/* Santé */}
         <div className="p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-medium mb-2">Santé</h4>
+          <h4 className="font-medium mb-2">{t('step5.health')}</h4>
           <ul className="text-sm text-gray-600 space-y-1">
             {step4.medical_conditions && step4.medical_conditions.length > 0 ? (
-              <li>Conditions: <strong>{step4.medical_conditions.join(', ')}</strong></li>
+              <li>{t('step5.conditions')}: <strong>{step4.medical_conditions.join(', ')}</strong></li>
             ) : (
-              <li className="text-gray-400">Aucune condition renseignée</li>
+              <li className="text-gray-400">{t('step5.noConditions')}</li>
             )}
             {step4.medications && step4.medications.length > 0 && (
-              <li>Médicaments: <strong>{step4.medications.join(', ')}</strong></li>
+              <li>{t('step5.medications')}: <strong>{step4.medications.join(', ')}</strong></li>
             )}
           </ul>
         </div>
@@ -142,10 +151,10 @@ export function Step5Summary({ onSubmit, isLoading }: Step5SummaryProps) {
 
       <div className="flex justify-between pt-4">
         <Button type="button" variant="outline" onClick={prevStep}>
-          Retour
+          {t('buttons.back')}
         </Button>
         <Button onClick={onSubmit} isLoading={isLoading}>
-          Créer mon profil
+          {t('step5.createProfile')}
         </Button>
       </div>
     </div>

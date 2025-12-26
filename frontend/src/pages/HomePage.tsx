@@ -1,77 +1,80 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 
-const features = [
-  {
-    icon: '📸',
-    title: 'Scan Vision IA',
-    description: 'Photographiez votre repas et obtenez instantanément les valeurs nutritionnelles grâce à notre IA',
-    color: 'from-blue-500 to-cyan-500',
-  },
-  {
-    icon: '🎯',
-    title: 'Profil Personnalisé',
-    description: 'Un plan nutritionnel adapté à vos objectifs : perte de poids, prise de muscle ou maintien',
-    color: 'from-purple-500 to-pink-500',
-  },
-  {
-    icon: '🤖',
-    title: 'Coach IA Multi-Agents',
-    description: 'Des recommandations validées par plusieurs modèles IA pour une précision maximale',
-    color: 'from-green-500 to-emerald-500',
-  },
-  {
-    icon: '📊',
-    title: 'Suivi Intelligent',
-    description: 'Visualisez vos progrès avec des graphiques détaillés et des rapports hebdomadaires',
-    color: 'from-orange-500 to-amber-500',
-  },
-  {
-    icon: '🍳',
-    title: 'Recettes Personnalisées',
-    description: 'Des recettes générées par IA selon vos goûts, restrictions et objectifs',
-    color: 'from-red-500 to-rose-500',
-  },
-  {
-    icon: '🏆',
-    title: 'Gamification',
-    description: 'Gagnez des points XP, débloquez des badges et maintenez votre streak quotidien',
-    color: 'from-indigo-500 to-violet-500',
-  },
-]
-
-const testimonials = [
-  {
-    name: 'Marie L.',
-    role: 'A perdu 8kg en 3 mois',
-    avatar: '👩',
-    text: "L'analyse photo est incroyablement précise ! Je n'ai plus besoin de peser mes aliments.",
-    rating: 5,
-  },
-  {
-    name: 'Thomas R.',
-    role: 'Sportif amateur',
-    avatar: '👨',
-    text: 'Les recommandations protéiques sont parfaitement adaptées à mes entraînements.',
-    rating: 5,
-  },
-  {
-    name: 'Sophie M.',
-    role: 'Végétarienne',
-    avatar: '👩‍🦰',
-    text: 'Enfin une app qui comprend mon régime alimentaire et me propose des alternatives !',
-    rating: 5,
-  },
-]
-
-const stats = [
-  { value: '50K+', label: 'Utilisateurs actifs' },
-  { value: '2M+', label: 'Repas analysés' },
-  { value: '98%', label: 'Précision IA' },
-  { value: '4.9', label: 'Note moyenne' },
-]
-
 export function HomePage() {
+  const { t } = useTranslation('home')
+
+  const features = [
+    {
+      icon: '📸',
+      title: t('features.visionScan.title'),
+      description: t('features.visionScan.description'),
+      color: 'from-blue-500 to-cyan-500',
+    },
+    {
+      icon: '🎯',
+      title: t('features.personalizedProfile.title'),
+      description: t('features.personalizedProfile.description'),
+      color: 'from-purple-500 to-pink-500',
+    },
+    {
+      icon: '🤖',
+      title: t('features.aiCoach.title'),
+      description: t('features.aiCoach.description'),
+      color: 'from-green-500 to-emerald-500',
+    },
+    {
+      icon: '📊',
+      title: t('features.smartTracking.title'),
+      description: t('features.smartTracking.description'),
+      color: 'from-orange-500 to-amber-500',
+    },
+    {
+      icon: '🍳',
+      title: t('features.personalizedRecipes.title'),
+      description: t('features.personalizedRecipes.description'),
+      color: 'from-red-500 to-rose-500',
+    },
+    {
+      icon: '🏆',
+      title: t('features.gamification.title'),
+      description: t('features.gamification.description'),
+      color: 'from-indigo-500 to-violet-500',
+    },
+  ]
+
+  const testimonials = [
+    {
+      name: t('testimonials.marie.name'),
+      role: t('testimonials.marie.role'),
+      avatar: '👩',
+      text: t('testimonials.marie.text'),
+      rating: 5,
+    },
+    {
+      name: t('testimonials.thomas.name'),
+      role: t('testimonials.thomas.role'),
+      avatar: '👨',
+      text: t('testimonials.thomas.text'),
+      rating: 5,
+    },
+    {
+      name: t('testimonials.sophie.name'),
+      role: t('testimonials.sophie.role'),
+      avatar: '👩‍🦰',
+      text: t('testimonials.sophie.text'),
+      rating: 5,
+    },
+  ]
+
+  const stats = [
+    { value: '50K+', label: t('stats.activeUsers') },
+    { value: '2M+', label: t('stats.mealsAnalyzed') },
+    { value: '98%', label: t('stats.aiAccuracy') },
+    { value: '4.9', label: t('stats.averageRating') },
+  ]
+
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
@@ -86,33 +89,32 @@ export function HomePage() {
           <div className="text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full text-primary-700 text-sm font-medium mb-6">
               <span className="animate-pulse w-2 h-2 bg-green-500 rounded-full"></span>
-              Nouveau : Analyse santé personnalisée !
+              {t('hero.badge')}
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Votre nutrition,
+              {t('hero.title')}
               <br />
               <span className="bg-gradient-to-r from-primary-600 to-green-600 bg-clip-text text-transparent">
-                propulsée par l'IA
+                {t('hero.titleHighlight')}
               </span>
             </h1>
 
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Photographiez vos repas, obtenez des analyses instantanées et des recommandations personnalisées.
-              Atteignez vos objectifs santé avec NutriProfile.
+              {t('hero.subtitle')}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register">
                 <Button size="lg" className="w-full sm:w-auto gap-2 shadow-lg hover:shadow-xl transition-shadow">
                   <span>🚀</span>
-                  Commencer gratuitement
+                  {t('hero.cta')}
                 </Button>
               </Link>
               <Link to="/login">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto gap-2">
                   <span>👋</span>
-                  J'ai déjà un compte
+                  {t('hero.ctaSecondary')}
                 </Button>
               </Link>
             </div>
@@ -135,10 +137,10 @@ export function HomePage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Comment ça fonctionne ?
+              {t('howItWorks.title')}
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              En 3 étapes simples, transformez votre alimentation
+              {t('howItWorks.subtitle')}
             </p>
           </div>
 
@@ -150,9 +152,9 @@ export function HomePage() {
                   1
                 </div>
                 <div className="text-6xl mb-4">📸</div>
-                <h3 className="font-semibold text-lg mb-2">Photographiez</h3>
+                <h3 className="font-semibold text-lg mb-2">{t('howItWorks.step1.title')}</h3>
                 <p className="text-gray-600 text-sm">
-                  Prenez en photo votre assiette sous n'importe quel angle
+                  {t('howItWorks.step1.description')}
                 </p>
               </div>
             </div>
@@ -164,9 +166,9 @@ export function HomePage() {
                   2
                 </div>
                 <div className="text-6xl mb-4">🤖</div>
-                <h3 className="font-semibold text-lg mb-2">Analyse IA</h3>
+                <h3 className="font-semibold text-lg mb-2">{t('howItWorks.step2.title')}</h3>
                 <p className="text-gray-600 text-sm">
-                  Notre IA identifie les aliments et calcule les nutriments
+                  {t('howItWorks.step2.description')}
                 </p>
               </div>
             </div>
@@ -178,9 +180,9 @@ export function HomePage() {
                   3
                 </div>
                 <div className="text-6xl mb-4">📊</div>
-                <h3 className="font-semibold text-lg mb-2">Résultats</h3>
+                <h3 className="font-semibold text-lg mb-2">{t('howItWorks.step3.title')}</h3>
                 <p className="text-gray-600 text-sm">
-                  Recevez un rapport santé détaillé avec des conseils personnalisés
+                  {t('howItWorks.step3.description')}
                 </p>
               </div>
             </div>
@@ -193,7 +195,7 @@ export function HomePage() {
                 <div className="w-3 h-3 bg-red-400 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                <span className="ml-4 text-sm text-gray-500">NutriProfile - Analyse Vision</span>
+                <span className="ml-4 text-sm text-gray-500">{t('preview.title')}</span>
               </div>
               <div className="p-6 grid md:grid-cols-2 gap-6">
                 {/* Image simulée */}
@@ -204,29 +206,29 @@ export function HomePage() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">✅</span>
-                    <span className="font-medium">Pâtes à la bolognaise détectées</span>
+                    <span className="font-medium">{t('preview.detected')}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-orange-100 rounded-lg p-3 text-center">
                       <div className="text-2xl font-bold text-orange-600">520</div>
-                      <div className="text-xs text-orange-700">Calories</div>
+                      <div className="text-xs text-orange-700">{t('preview.calories')}</div>
                     </div>
                     <div className="bg-blue-100 rounded-lg p-3 text-center">
                       <div className="text-2xl font-bold text-blue-600">28g</div>
-                      <div className="text-xs text-blue-700">Protéines</div>
+                      <div className="text-xs text-blue-700">{t('preview.protein')}</div>
                     </div>
                     <div className="bg-yellow-100 rounded-lg p-3 text-center">
                       <div className="text-2xl font-bold text-yellow-600">65g</div>
-                      <div className="text-xs text-yellow-700">Glucides</div>
+                      <div className="text-xs text-yellow-700">{t('preview.carbs')}</div>
                     </div>
                     <div className="bg-pink-100 rounded-lg p-3 text-center">
                       <div className="text-2xl font-bold text-pink-600">18g</div>
-                      <div className="text-xs text-pink-700">Lipides</div>
+                      <div className="text-xs text-pink-700">{t('preview.fat')}</div>
                     </div>
                   </div>
                   <div className="bg-green-100 rounded-lg p-3 flex items-center gap-2">
                     <span className="text-xl">💚</span>
-                    <span className="text-sm text-green-800">Bon équilibre protéines/glucides !</span>
+                    <span className="text-sm text-green-800">{t('preview.feedback')}</span>
                   </div>
                 </div>
               </div>
@@ -240,10 +242,10 @@ export function HomePage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Tout ce dont vous avez besoin
+              {t('features.title')}
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Des fonctionnalités puissantes pour atteindre vos objectifs
+              {t('features.subtitle')}
             </p>
           </div>
 
@@ -269,10 +271,10 @@ export function HomePage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Ils ont transformé leur alimentation
+              {t('testimonials.title')}
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Découvrez les témoignages de notre communauté
+              {t('testimonials.subtitle')}
             </p>
           </div>
 
@@ -307,19 +309,19 @@ export function HomePage() {
       <section className="py-16 bg-gradient-to-br from-primary-600 to-green-600">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Prêt à transformer votre alimentation ?
+            {t('cta.title')}
           </h2>
           <p className="text-primary-100 text-lg mb-8 max-w-2xl mx-auto">
-            Rejoignez des milliers d'utilisateurs qui ont déjà atteint leurs objectifs avec NutriProfile
+            {t('cta.subtitle')}
           </p>
           <Link to="/register">
             <Button size="lg" className="!bg-white !text-primary-600 hover:!bg-gray-100 gap-2 shadow-xl">
               <span>🚀</span>
-              Commencer maintenant - C'est gratuit !
+              {t('cta.button')}
             </Button>
           </Link>
           <p className="text-primary-200 text-sm mt-4">
-            Aucune carte bancaire requise
+            {t('cta.note')}
           </p>
         </div>
       </section>
@@ -334,35 +336,35 @@ export function HomePage() {
                 <span className="text-xl font-bold text-white">NutriProfile</span>
               </div>
               <p className="text-gray-400 text-sm">
-                Votre compagnon nutrition intelligent propulsé par l'IA
+                {t('footer.tagline')}
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-4">Produit</h4>
+              <h4 className="font-semibold text-white mb-4">{t('footer.product')}</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white">Fonctionnalités</a></li>
-                <li><a href="#" className="hover:text-white">Tarifs</a></li>
-                <li><a href="#" className="hover:text-white">FAQ</a></li>
+                <li><a href="#" className="hover:text-white">{t('footer.features')}</a></li>
+                <li><a href="#" className="hover:text-white">{t('footer.pricing')}</a></li>
+                <li><a href="#" className="hover:text-white">{t('footer.faq')}</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-4">Légal</h4>
+              <h4 className="font-semibold text-white mb-4">{t('footer.legal')}</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white">Confidentialité</a></li>
-                <li><a href="#" className="hover:text-white">CGU</a></li>
-                <li><a href="#" className="hover:text-white">Cookies</a></li>
+                <li><a href="#" className="hover:text-white">{t('footer.privacy')}</a></li>
+                <li><a href="#" className="hover:text-white">{t('footer.terms')}</a></li>
+                <li><a href="#" className="hover:text-white">{t('footer.cookies')}</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-4">Contact</h4>
+              <h4 className="font-semibold text-white mb-4">{t('footer.contact')}</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white">Support</a></li>
+                <li><a href="#" className="hover:text-white">{t('footer.support')}</a></li>
                 <li><a href="#" className="hover:text-white">contact@nutriprofile.app</a></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
-            © 2024 NutriProfile. Tous droits réservés.
+            {t('footer.copyright')}
           </div>
         </div>
       </footer>

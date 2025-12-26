@@ -1,0 +1,127 @@
+{
+  "title": "مسح الوجبة",
+  "subtitle": "التقط صوراً لوجباتك لتتبع غذائي تلقائي",
+  "tabs": {
+    "scan": "الماسح",
+    "today": "اليوم",
+    "history": "السجل"
+  },
+  "scan": {
+    "title": "تحليل وجبة",
+    "description": "اسحب صورة هنا أو استخدم جهازك"
+  },
+  "today": {
+    "button": "اليوم",
+    "nutritionSummary": "ملخص التغذية",
+    "meals": "الوجبات",
+    "noMeals": "لا توجد وجبات مسجلة",
+    "scanFirst": "امسح وجبة",
+    "calories": "السعرات",
+    "protein": "البروتين",
+    "carbs": "الكربوهيدرات",
+    "fat": "الدهون",
+    "water": "الماء"
+  },
+  "history": {
+    "noHistory": "لا يوجد سجل"
+  },
+  "common": {
+    "loading": "جاري التحميل..."
+  },
+  "mealTypes": {
+    "breakfast": "فطور",
+    "lunch": "غداء",
+    "dinner": "عشاء",
+    "snack": "وجبة خفيفة"
+  },
+  "uploader": {
+    "mealTypeLabel": "نوع الوجبة",
+    "scanTitle": "امسح وجبتك",
+    "scanDescription": "اسحب صورة هنا أو استخدم جهازك",
+    "tipsTitle": "نصائح لتحليل أفضل:",
+    "tip1": "صورة مضاءة جيداً، من الأعلى",
+    "tip2": "جميع الأطعمة مرئية في الإطار",
+    "tip3": "تجنب الانعكاسات والظلال القوية",
+    "takePhoto": "التقاط صورة",
+    "gallery": "المعرض",
+    "invalidFile": "يرجى اختيار صورة",
+    "error": "خطأ أثناء التحليل. يرجى المحاولة مرة أخرى.",
+    "aiWorking": "الذكاء الاصطناعي يعمل... صبراً!"
+  },
+  "analysisSteps": {
+    "step1": "استلام الصورة",
+    "step2": "اكتشاف الأطعمة",
+    "step3": "حساب القيم الغذائية",
+    "step4": "تحليل صحي مخصص"
+  },
+  "result": {
+    "verdict": {
+      "excellent": "ممتاز!",
+      "good": "اختيار جيد",
+      "moderate": "مقبول",
+      "poor": "يحتاج تحسين",
+      "excellentDesc": "هذه الوجبة متوازنة تماماً",
+      "goodDesc": "وجبة متوازنة لأهدافك",
+      "moderateDesc": "بعض التعديلات موصى بها",
+      "poorDesc": "هذه الوجبة تحتاج اهتمامك"
+    },
+    "healthScore": "درجة الصحة",
+    "analysisComplete": "اكتمل التحليل",
+    "confidence": "الثقة",
+    "macros": {
+      "calories": "السعرات",
+      "protein": "البروتين",
+      "carbs": "الكربوهيدرات",
+      "fat": "الدهون"
+    },
+    "healthReport": "تقرير صحي مخصص",
+    "calorieRemaining": "لديك {{count}} سعرة متبقية لليوم",
+    "calorieExceeded": "تجاوزت بـ {{count}} سعرة",
+    "positivePoints": "نقاط إيجابية",
+    "warnings": "تحذير",
+    "suggestions": "اقتراحات",
+    "macroBalance": "توازن المغذيات الكبرى",
+    "detectedFoods": "الأطعمة المكتشفة",
+    "confidenceLabel": {
+      "high": "عالية",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "edit": {
+      "name": "الاسم",
+      "quantity": "الكمية",
+      "unit": "الوحدة",
+      "cancel": "إلغاء",
+      "save": "حفظ"
+    },
+    "lowConfidence": "ثقة منخفضة",
+    "lowConfidenceMsg": "نوصي بالتحقق من القيم وتصحيحها في قسم \"الأطعمة المكتشفة\".",
+    "actions": {
+      "newAnalysis": "تحليل جديد",
+      "editMeal": "تعديل هذه الوجبة",
+      "saveMeal": "حفظ الوجبة",
+      "saving": "جاري الحفظ...",
+      "done": "تم"
+    },
+    "mealSaved": "تم حفظ الوجبة بنجاح",
+    "saveError": "خطأ في الحفظ. يرجى المحاولة مرة أخرى.",
+    "modify": "تعديل",
+    "corrected": "تم التصحيح"
+  },
+  "foodLog": {
+    "foods": "الأطعمة",
+    "showDetails": "عرض",
+    "hideDetails": "إخفاء",
+    "edit": "تعديل",
+    "deleteConfirm": "حذف هذه الوجبة؟",
+    "deleteError": "خطأ في الحذف. يرجى المحاولة مرة أخرى."
+  },
+  "errors": {
+    "uploadFailed": "فشل الرفع",
+    "analysisFailed": "فشل التحليل",
+    "saveFailed": "فشل الحفظ",
+    "noImage": "يرجى اختيار صورة",
+    "imageTooLarge": "الصورة كبيرة جداً (الحد الأقصى 10 ميغابايت)",
+    "invalidFormat": "تنسيق غير صالح. استخدم JPG أو PNG أو WebP"
+  }
+}

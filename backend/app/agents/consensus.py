@@ -4,6 +4,7 @@ import structlog
 from statistics import mean, stdev
 
 from app.agents.base import AgentResponse
+from app.i18n import get_translator, DEFAULT_LANGUAGE
 
 logger = structlog.get_logger()
 
@@ -30,8 +31,14 @@ class ConsensusValidator:
     - Nutrition: moyenne pondérée avec exclusion des outliers
     """
 
-    def __init__(self, min_confidence: float = 0.6):
+    def __init__(self, min_confidence: float = 0.6, language: str = DEFAULT_LANGUAGE):
         self.min_confidence = min_confidence
+        self.language = language
+        self.translator = get_translator(language)
+
+    def t(self, key: str, **kwargs: Any) -> str:
+        """Helper to get translations."""
+        return self.translator.get(key, **kwargs)
 
     def validate(
         self,
@@ -46,7 +53,7 @@ class ConsensusValidator:
                 confidence=0.0,
                 merged_result=None,
                 agreement_score=0.0,
-                warnings=["Aucune réponse à valider"],
+                warnings=[self.t("agents.consensus.noResponses")],
             )
 
         # Filtrer les réponses avec confiance suffisante
@@ -80,11 +87,11 @@ class ConsensusValidator:
         # Générer les warnings
         warnings = []
         if len(valid_responses) < min_agreement:
-            warnings.append(f"Seulement {len(valid_responses)} modèles ont répondu")
+            warnings.append(self.t("agents.consensus.fewModels", count=len(valid_responses)))
         if agreement_score < 0.7:
-            warnings.append(f"Faible accord entre modèles ({agreement_score:.2f})")
+            warnings.append(self.t("agents.consensus.lowAgreement", score=f"{agreement_score:.2f}"))
         if disagreements:
-            warnings.append(f"{len(disagreements)} désaccords détectés")
+            warnings.append(self.t("agents.consensus.disagreements", count=len(disagreements)))
 
         is_valid = (
             len(valid_responses) >= min_agreement
@@ -130,7 +137,7 @@ class ConsensusValidator:
         results = [r.result for r in responses if r.result]
 
         if not results:
-            return {}, ["Pas de recettes à fusionner"]
+            return {}, [self.t("agents.consensus.noRecipesToMerge")]
 
         # Si c'est une liste de recettes, prendre la première de chaque
         if isinstance(results[0], list):
@@ -155,7 +162,7 @@ class ConsensusValidator:
         if all_ingredients:
             all_unique = set.union(*all_ingredients)
             if len(all_unique) > len(common_ingredients) * 1.5:
-                disagreements.append("Désaccord significatif sur les ingrédients")
+                disagreements.append(self.t("agents.consensus.ingredientDisagreement"))
 
         return {
             "title": title,
@@ -198,7 +205,7 @@ class ConsensusValidator:
         # Détecter les désaccords
         total_unique = len(all_foods)
         if total_unique > len(common_foods) * 2:
-            disagreements.append(f"Fort désaccord: {total_unique} aliments uniques, {len(common_foods)} en commun")
+            disagreements.append(self.t("agents.consensus.foodDisagreement", unique=total_unique, common=len(common_foods)))
 
         return {"foods": common_foods}, disagreements
 
@@ -226,7 +233,7 @@ class ConsensusValidator:
                     if filtered:
                         values = filtered
                     else:
-                        disagreements.append(f"Outliers sur {field}")
+                        disagreements.append(self.t("agents.consensus.outlierOn", field=field))
 
                 merged[field] = round(mean(values), 1)
 

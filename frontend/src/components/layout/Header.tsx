@@ -1,25 +1,22 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/hooks/useAuth'
-
-interface NavLink {
-  path: string
-  label: string
-  icon: string
-}
-
-const mainNavLinks: NavLink[] = [
-  { path: '/dashboard', label: 'Dashboard', icon: '📊' },
-  { path: '/vision', label: 'Scanner', icon: '📸' },
-  { path: '/tracking', label: 'Suivi', icon: '📈' },
-  { path: '/recipes', label: 'Recettes', icon: '🍳' },
-]
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
 
 export function Header() {
+  const { t } = useTranslation('common')
   const { isAuthenticated, logout, user } = useAuth()
   const location = useLocation()
   const [showUserMenu, setShowUserMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  const mainNavLinks = [
+    { path: '/dashboard', label: t('nav.dashboard'), icon: '📊' },
+    { path: '/vision', label: t('nav.vision'), icon: '📸' },
+    { path: '/tracking', label: t('nav.tracking'), icon: '📈' },
+    { path: '/recipes', label: t('nav.recipes'), icon: '🍳' },
+  ]
 
   // Fermer le menu quand on clique ailleurs
   useEffect(() => {
@@ -79,6 +76,9 @@ export function Header() {
 
         {/* Actions à droite */}
         <div className="flex items-center gap-3">
+          {/* Language Switcher */}
+          <LanguageSwitcher variant="compact" />
+
           {isAuthenticated ? (
             <div className="relative" ref={menuRef}>
               {/* Avatar/Menu utilisateur */}
@@ -118,21 +118,21 @@ export function Header() {
                       className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <span>⚙️</span>
-                      <span>Paramètres</span>
+                      <span>{t('nav.settings')}</span>
                     </Link>
                     <Link
                       to="/settings"
                       className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <span>👤</span>
-                      <span>Mon profil</span>
+                      <span>{t('nav.profile')}</span>
                     </Link>
                     <Link
                       to="/tracking"
                       className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <span>📊</span>
-                      <span>Mes statistiques</span>
+                      <span>{t('nav.tracking')}</span>
                     </Link>
                   </div>
 
@@ -143,7 +143,7 @@ export function Header() {
                       className="flex items-center gap-3 px-4 py-2 w-full text-left text-red-600 hover:bg-red-50 transition-colors"
                     >
                       <span>🚪</span>
-                      <span>Déconnexion</span>
+                      <span>{t('actions.logout', { ns: 'settings' })}</span>
                     </button>
                   </div>
                 </div>
@@ -155,13 +155,13 @@ export function Header() {
                 to="/login"
                 className="hidden sm:block px-4 py-2 text-gray-600 hover:text-primary-600 transition-colors"
               >
-                Connexion
+                {t('login.submit', { ns: 'auth' })}
               </Link>
               <Link
                 to="/register"
                 className="px-4 py-2 bg-gradient-to-r from-primary-600 to-green-600 text-white rounded-lg hover:shadow-md transition-all font-medium"
               >
-                Commencer
+                {t('register.submit', { ns: 'auth' })}
               </Link>
             </>
           )}

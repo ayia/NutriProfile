@@ -5,6 +5,7 @@ import structlog
 
 from app.llm.client import get_hf_client, HuggingFaceClient
 from app.llm.models import ModelInfo, ModelCapability, get_primary_models, get_fallback_model
+from app.i18n import get_translator, Translator, DEFAULT_LANGUAGE
 
 logger = structlog.get_logger()
 
@@ -31,10 +32,24 @@ class BaseAgent(ABC, Generic[InputT, OutputT]):
     capability: ModelCapability = ModelCapability.PROFILING
     confidence_threshold: float = 0.7
 
-    def __init__(self, client: HuggingFaceClient | None = None):
+    def __init__(self, client: HuggingFaceClient | None = None, language: str = DEFAULT_LANGUAGE):
         self.client = client or get_hf_client()
         self._models = get_primary_models(self.capability)
         self._fallback = get_fallback_model(self.capability)
+        self.language = language
+        self.translator = get_translator(language)
+
+    def t(self, key: str, **kwargs: Any) -> str:
+        """Shortcut for translation."""
+        return self.translator.get(key, **kwargs)
+
+    def t_agent(self, message_key: str, **kwargs: Any) -> str:
+        """Get agent-specific message."""
+        return self.translator.get_agent_message(self.name.lower().replace("agent", ""), message_key, **kwargs)
+
+    def t_prompt(self, prompt_name: str, **kwargs: Any) -> str:
+        """Get prompt for this agent."""
+        return self.translator.get_prompt(self.name.lower().replace("agent", ""), prompt_name, **kwargs)
 
     @abstractmethod
     def build_prompt(self, input_data: InputT) -> str:
@@ -126,7 +141,7 @@ class BaseAgent(ABC, Generic[InputT, OutputT]):
                 result=result,
                 confidence=0.5,
                 model_used="deterministic",
-                reasoning="Fallback déterministe utilisé",
+                reasoning=self.t("agents.common.fallbackUsed"),
                 used_fallback=True,
             )
 

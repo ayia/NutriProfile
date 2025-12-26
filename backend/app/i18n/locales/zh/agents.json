@@ -1,0 +1,300 @@
+{
+  "common": {
+    "fallbackUsed": "已使用确定性回退",
+    "noModelAvailable": "没有可用于 {{capability}} 的模型",
+    "noFallbackDefined": "未定义确定性回退",
+    "analysisComplete": "分析完成",
+    "none": "无"
+  },
+  "coach": {
+    "greeting": "你好 {{name}}！我是你的私人营养教练。",
+    "greetingMorning": "早上好 {{name}}！",
+    "greetingAfternoon": "下午好 {{name}}！",
+    "greetingEvening": "晚上好 {{name}}！",
+    "dailySummary": "这是你今天的营养摘要：",
+    "caloriesSummary": "你已摄入 {{consumed}} / {{target}} 千卡目标。",
+    "goalProgress": "你已完成 {{goal}} 目标的 {{percent}}%。",
+    "fallbackSummary": {
+      "farFromGoal": "你离热量目标还很远。别忘了好好吃饭！",
+      "onTrackGood": "你进展顺利！继续保持。",
+      "almostThere": "太棒了！你快要达到热量目标了。",
+      "exceeded": "注意，你今天已经超过了热量目标。"
+    },
+    "fallbackAdvice": {
+      "drinkWater": "记得经常喝水！",
+      "drinkWaterAction": "喝一杯水",
+      "increaseProtein": "增加蛋白质摄入。",
+      "increaseProteinAction": "吃富含蛋白质的食物",
+      "doExercise": "做点运动对你有好处！",
+      "doExerciseAction": "散步15分钟",
+      "keepItUp": "继续保持，你做得很好！"
+    },
+    "fallbackMotivation": "每一小步都是通向更健康生活方式的进步。",
+    "encouragement": {
+      "onTrack": "做得好！你的营养目标进展顺利。",
+      "slightlyOver": "你略微超过了热量目标，但不用担心——明天是新的一天！",
+      "slightlyUnder": "你略低于目标。考虑吃一份健康的零食。",
+      "significantlyOver": "你今天超过了热量目标。让我们为明天更好地规划饮食。",
+      "significantlyUnder": "你远低于热量目标。确保摄入足够的食物来滋养身体。"
+    },
+    "mealSuggestion": "根据你剩余的热量，我建议：{{suggestion}}",
+    "waterReminder": "别忘了保持水分！你今天喝了 {{glasses}} 杯水。",
+    "weeklyReview": "本周你达成了 {{percent}}% 的营养目标。{{feedback}}",
+    "tipOfTheDay": "今日小贴士：{{tip}}",
+    "streakMessage": "太棒了！你已连续 {{days}} 天记录饮食！",
+    "goals": {
+      "loseWeight": "减重",
+      "gainMuscle": "增肌",
+      "maintain": "保持体重",
+      "improveHealth": "改善健康"
+    },
+    "timeContext": {
+      "morning": "现在是早上，适合吃一顿均衡的早餐。",
+      "afternoon": "现在是下午，注意避免午后困倦。",
+      "evening": "现在是晚上，清淡的晚餐有助于良好睡眠。",
+      "night": "现在很晚了，避免夜间零食。"
+    },
+    "advice": {
+      "drinkWater": "别忘了喝水！目标是每天至少2升。",
+      "caloriesRemaining": "你还有 {{calories}} 千卡未消耗。考虑一顿均衡的餐食。",
+      "caloriesExceeded": "你已超过热量目标。要不要出去散个步？",
+      "proteinRemaining": "还需要 {{protein}}g 蛋白质。试试鸡蛋、鸡肉或豆类。",
+      "noActivityYet": "今天还没运动？即使15分钟也有帮助！"
+    }
+  },
+  "vision": {
+    "analyzing": "正在分析你的餐食照片...",
+    "detectionComplete": "分析完成！检测到以下食物：",
+    "lowConfidence": "对某些食物不太确定。请检查并在必要时进行更正。",
+    "highConfidence": "对这次分析相当有信心。",
+    "noFoodDetected": "无法在这张图片中检测到食物。请尝试用更清晰的照片重试。",
+    "autoAnalysisUnavailable": "自动分析不可用。请手动更正。",
+    "mealQuality": {
+      "excellent": "这是一顿出色的、均衡的餐食！",
+      "good": "这是符合你目标的好选择。",
+      "moderate": "这顿餐可以接受，但可以改进。",
+      "poor": "这顿餐可能不太符合你的营养目标。"
+    },
+    "positivePoints": "优点：",
+    "warnings": "注意事项：",
+    "suggestions": "改进建议：",
+    "weeklyImpact": {
+      "maintainLoss": "按这个速度，你每周可能减掉约 {{loss}} 公斤",
+      "dailySurplus": "你今天多摄入了 +{{diff}} 千卡。明天平衡一下。",
+      "goodSurplusGain": "增肌的良好热量盈余（+{{diff}} 千卡）",
+      "deficitForGain": "热量赤字 {{diff}} 千卡 - 增加摄入以增肌",
+      "onTrack": "on_track",
+      "overTarget": "over_target",
+      "underTarget": "under_target",
+      "balanced": "balanced",
+      "balancedIntake": "均衡摄入以保持体重",
+      "slightSurplus": "轻微盈余 {{diff}} 千卡",
+      "slightDeficit": "轻微赤字 {{diff}} 千卡"
+    },
+    "mealTiming": {
+      "morningCarbsGood": "时机很好！早上的碳水化合物为一天提供能量。",
+      "morningProteinGood": "良好的蛋白质摄入开启新的一天。",
+      "breakfastIdeal": "早餐是摄入复合碳水和蛋白质的理想时间。",
+      "lunchBalanced": "均衡午餐 - 非常适合保持下午的能量。",
+      "lunchLight": "午餐较轻 - 下午安排一份健康零食。",
+      "lunchGoodTime": "适合吃一顿完整均衡的餐食。",
+      "snackReasonable": "合理的零食，避免晚上饥饿。",
+      "snackHeavy": "这份零食较重 - 相应减少晚餐。",
+      "snackModerate": "适度零食 - 注意今晚不要吃太多。",
+      "dinnerIdeal": "理想晚餐：蛋白质和少量碳水有助睡眠。",
+      "dinnerHeavy": "晚餐较重 - 避免太晚进食以利消化。",
+      "dinnerReasonable": "合理晚餐 - 睡前避免快糖。",
+      "lateHeavy": "晚间高热量餐食 - 可能影响睡眠和代谢。",
+      "lateProtein": "晚间蛋白质零食 - 有助肌肉恢复。",
+      "lateGeneral": "晚食可能干扰睡眠。建议早点用餐。",
+      "enjoyMeal": "祝您用餐愉快！"
+    },
+    "fallback": {
+      "unidentifiedMeal": "未识别的餐食"
+    },
+    "healthReport": {
+      "portionBalanced": "热量均衡的餐食份量",
+      "mealHighPercent": "这顿餐占每日热量的 {{percent}}%",
+      "mealVeryLight": "餐食过轻，有饥饿风险",
+      "preferSmaller": "建议下顿餐减少份量",
+      "addProteinSatiety": "添加蛋白质来源增加饱腹感",
+      "goodProtein": "良好的蛋白质来源（{{protein}}g）",
+      "lowProtein": "蛋白质偏低",
+      "addProteinSuggestion": "添加鸡蛋、豆类或瘦肉",
+      "compatibleWeightLoss": "符合您的减重目标",
+      "caloricForWeightLoss": "对于减重目标来说热量较高",
+      "reducePortions": "减少份量或选择低热量食物",
+      "highProteinSatiety": "高蛋白 - 促进饱腹感",
+      "weightDecreasing": "体重在下降 - 继续保持！",
+      "weightIncreasing": "注意：本周体重在增加",
+      "reducePortion": "稍微减少份量以扭转趋势",
+      "excellentProteinMuscle": "增肌的优秀蛋白质摄入",
+      "insufficientProteinMuscle": "增肌蛋白质不足",
+      "aim30gProtein": "每餐目标至少30g蛋白质",
+      "caloricDeficitMuscle": "您处于热量赤字 - 增加摄入以增肌",
+      "containsVegetables": "含有蔬菜 - 有益健康",
+      "addVegetables": "添加蔬菜以获取更多纤维和维生素",
+      "burnedCalories": "做得好！今天消耗了 {{calories}} 千卡",
+      "activityMinutes": "今天 {{minutes}} 分钟运动",
+      "increaseProteinRecovery": "运动后增加蛋白质以促进恢复",
+      "addCarbsEnergy": "添加复合碳水以补充能量储备",
+      "proteinEssentialAge": "在您这个年龄，蛋白质对保持肌肉量至关重要",
+      "goodCalcium": "良好的钙摄入有益骨骼健康",
+      "watchPortions": "即使年轻也要注意份量养成好习惯",
+      "goodIronIntake": "良好的铁摄入",
+      "diabetesWarning": "⚠️ 注意：高碳水餐食（糖尿病）",
+      "limitSimpleCarbs": "限制简单碳水，多吃纤维",
+      "diabetesSugarWarning": "⚠️ 含快糖（不推荐糖尿病患者）",
+      "hypertensionWarning": "⚠️ 可能含盐量高的食物（高血压）",
+      "preferLowSodium": "选择低钠食物",
+      "highFatCholesterol": "高脂肪餐食（注意胆固醇）",
+      "limitSaturatedFat": "限制饱和脂肪以控制胆固醇",
+      "vitaminKWarning": "⚠️ 富含维生素K的食物（使用抗凝剂需谨慎）",
+      "consultDoctor": "咨询医生关于绿叶蔬菜的摄入",
+      "grapefruitStatins": "⚠️ 西柚与他汀类药物有相互作用！",
+      "containsAllergen": "⚠️ 警告：可能含有 {{allergen}}",
+      "containsExcluded": "含有 {{food}}（排除食物）",
+      "containsMeat": "含肉（素食饮食）",
+      "containsAnimal": "含动物产品（纯素饮食）",
+      "containsMeatPesc": "含肉（鱼素饮食）",
+      "tooManyCarbs": "碳水过多（{{carbs}}g）不适合生酮饮食",
+      "ketoFatAdvice": "生酮饮食应优先脂肪而非蛋白质",
+      "mediterraneanCompliant": "符合地中海饮食",
+      "varyDiet": "饮食要多样化 - 您经常吃相同的食物",
+      "tryNewFoods": "尝试新食物以获取更多营养",
+      "waterReminder": "别忘了喝水！今天只喝了 {{water}}ml",
+      "goodHydration": "今天水分摄入良好",
+      "exceededCalories": "超出热量目标 {{calories}} 千卡",
+      "remainingCalories": "今天还剩 {{calories}} 千卡额度",
+      "verdictExcellent": "绝佳选择！这顿餐完美适合您的需求。",
+      "verdictGood": "不错的选择！这顿餐对您的目标有积极贡献。",
+      "verdictNeutral": "餐食可接受。一些调整可以改善它。",
+      "verdictPoor": "这顿餐不太适合您的目标。请考虑建议。",
+      "verdictBad": "注意！这顿餐不符合您的营养需求。",
+      "weeklyExcellentLoss": "进展出色！本周 -{{weight}}kg",
+      "weeklyGoodGain": "增肌良好：本周 +{{weight}}kg"
+    }
+  },
+  "recipe": {
+    "generating": "根据你的食材和偏好创建个性化食谱...",
+    "complete": "这是专门为你定制的食谱！",
+    "noIngredientsMatch": "无法用这些食材创建食谱。尝试添加更多选项。",
+    "dietaryNote": "这个食谱已根据你的 {{diet}} 饮食偏好进行调整。",
+    "allergenWarning": "注意：请检查所有食材是否含有过敏原。",
+    "nutritionInfo": "每份营养信息：",
+    "cookingTip": "烹饪小贴士：{{tip}}",
+    "servingSuggestion": "摆盘建议：{{suggestion}}",
+    "dietInstructions": {
+      "vegan": "食谱必须是100%纯素的（无动物产品）。",
+      "vegetarian": "食谱必须是素食的（无肉或鱼）。",
+      "pescatarian": "食谱可以包含鱼但不能有肉。",
+      "keto": "食谱必须低碳水（少于20g净碳水）。",
+      "paleo": "食谱必须遵循旧石器饮食（无谷物、豆类、乳制品）。",
+      "mediterranean": "食谱必须遵循地中海饮食。",
+      "omnivore": "无特殊限制。"
+    },
+    "goalInstructions": {
+      "loseWeight": "优选清淡食谱，高蛋白高纤维，低热量。",
+      "gainMuscle": "优选高蛋白食谱（每份30g以上）和复合碳水。",
+      "maintain": "平衡宏量营养素以保持体重。",
+      "improveHealth": "优选营养丰富、加工程度低、富含维生素和矿物质的食物。"
+    },
+    "mealHistory": {
+      "avoid": "避免（本周吃得太频繁）：",
+      "varietyScore": "多样性评分：",
+      "suggestedProteins": "建议的蛋白质（最近未食用）：",
+      "loggedMeals": "已记录的餐食（7天）：",
+      "header": "餐食历史："
+    },
+    "timeRecommendations": {
+      "morning": "早晨：优选复合碳水补充能量",
+      "midday": "中午：均衡餐食，蛋白质 + 蔬菜",
+      "afternoon": "下午：如需要可吃轻食零食",
+      "evening": "晚上：清淡餐食，避免简单碳水",
+      "late": "深夜：避免重食，优选清淡蛋白质"
+    },
+    "fallback": {
+      "oatmealBowl": "水果燕麦碗",
+      "oatmealDesc": "均衡营养的早餐",
+      "chickenSalad": "烤鸡沙拉",
+      "chickenSaladDesc": "新鲜且富含蛋白质的沙拉",
+      "salmonVeggies": "三文鱼配烤蔬菜",
+      "salmonDesc": "健康美味的晚餐",
+      "greekYogurt": "希腊酸奶配坚果",
+      "greekYogurtDesc": "富含蛋白质且饱腹的零食"
+    }
+  },
+  "profiling": {
+    "welcome": "欢迎来到 NutriProfile！让我们创建你的个性化营养计划。",
+    "calculatingNeeds": "根据你的个人资料计算每日营养需求...",
+    "profileComplete": "你的个人资料已完成！以下是你的个性化建议：",
+    "calorieExplanation": "根据你的年龄、体重、身高和活动水平，你的每日热量目标是 {{calories}} 千卡。",
+    "macroExplanation": "你的最佳宏量营养素分配是：{{protein}}g 蛋白质、{{carbs}}g 碳水化合物、{{fat}}g 脂肪。",
+    "goalAdvice": {
+      "lose": "为了达到你的减重目标，我们设定了适度的热量赤字。",
+      "maintain": "为了维持当前体重，我们平衡了你的摄入和消耗。",
+      "gain": "为了增肌，我们增加了额外热量并着重蛋白质。"
+    },
+    "recommendations": {
+      "loseWeight": {
+        "leanProtein": "优先选择瘦肉蛋白以保持肌肉质量",
+        "drinkWater": "每天至少喝2升水"
+      },
+      "gainMuscle": {
+        "proteinEveryMeal": "每餐都要摄入蛋白质",
+        "postWorkout": "训练后30分钟内进食"
+      },
+      "general": {
+        "varyProtein": "变换蛋白质来源",
+        "fruitsVeggies": "每天摄入5份水果和蔬菜",
+        "limitProcessed": "限制超加工食品"
+      }
+    },
+    "deficiencies": {
+      "vegan": {
+        "b12": "维生素B12（建议补充）",
+        "iron": "铁（植物来源：扁豆、菠菜）"
+      },
+      "vegetarian": {
+        "iron": "铁（与维生素C搭配促进吸收）"
+      }
+    },
+    "warnings": {
+      "diabetes": "监控碳水摄入及其血糖指数",
+      "hypertension": "将每日盐摄入量限制在5克",
+      "allergyTrace": "注意加工产品中可能含有的 {{allergy}} 痕迹"
+    }
+  },
+  "nutrition": {
+    "validating": "验证营养数据...",
+    "dataVerified": "营养值已验证，在正常范围内。",
+    "outlierDetected": "某些值似乎异常，可能需要验证。",
+    "missingData": "部分营养信息缺失。使用估计值。",
+    "balanceAnalysis": "你的宏量营养素平衡分析：",
+    "proteinStatus": {
+      "low": "你的蛋白质摄入低于目标。考虑添加更多瘦肉蛋白。",
+      "optimal": "你的蛋白质摄入达标。",
+      "high": "你的蛋白质摄入高于目标。"
+    },
+    "carbStatus": {
+      "low": "你的碳水化合物摄入偏低。考虑添加复合碳水化合物。",
+      "optimal": "你的碳水化合物摄入均衡。",
+      "high": "你的碳水化合物摄入偏高。考虑减少精制碳水。"
+    },
+    "fatStatus": {
+      "low": "你的脂肪摄入偏低。别忘了健康脂肪是必需的。",
+      "optimal": "你的脂肪摄入均衡。",
+      "high": "你的脂肪摄入高于目标。专注于健康脂肪来源。"
+    }
+  },
+  "consensus": {
+    "noResponses": "没有响应需要验证",
+    "fewModels": "只有 {{count}} 个模型响应了",
+    "lowAgreement": "模型间一致性低（{{score}}）",
+    "disagreements": "检测到 {{count}} 个分歧",
+    "noRecipesToMerge": "没有需要合并的食谱",
+    "ingredientDisagreement": "食材存在重大分歧",
+    "foodDisagreement": "强烈分歧：{{unique}} 种独特食物，{{common}} 种共同",
+    "outlierOn": "{{field}} 存在异常值"
+  }
+}

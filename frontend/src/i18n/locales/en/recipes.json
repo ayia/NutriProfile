@@ -1,0 +1,96 @@
+{
+  "title": "Recipes",
+  "subtitle": "Generate personalized recipes adapted to your profile",
+  "coachActive": "AI Coach",
+  "active": "Active",
+  "quickSuggestions": "Quick suggestions",
+  "suggestions": {
+    "proteinBreakfast": "Protein breakfast",
+    "lightLunch": "Light lunch",
+    "vegetarianDinner": "Vegetarian dinner",
+    "healthySnack": "Healthy snack",
+    "mealPrep": "Meal prep",
+    "express": "Express < 15min"
+  },
+  "tabs": {
+    "generate": "Generate",
+    "history": "History",
+    "favorites": "Favorites"
+  },
+  "search": {
+    "placeholder": "Search for a recipe..."
+  },
+  "filters": {
+    "clear": "Clear"
+  },
+  "categories": {
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "snack": "Snack"
+  },
+  "recipe": {
+    "minutes": "min",
+    "servings": "servings",
+    "calories": "kcal",
+    "ingredients": "Ingredients",
+    "instructions": "Instructions"
+  },
+  "card": {
+    "protein": "prot",
+    "carbs": "carbs",
+    "fat": "fat",
+    "aiScore": "AI Score",
+    "hide": "Hide",
+    "viewRecipe": "View recipe"
+  },
+  "generate": {
+    "title": "Generate a recipe",
+    "generating": "Generating...",
+    "generate": "Generate a recipe",
+    "result": "Your recipe"
+  },
+  "generator": {
+    "activeFilters": "Active filters",
+    "mealType": "Meal type",
+    "ingredients": "Available ingredients (optional)",
+    "ingredientPlaceholder": "Add an ingredient...",
+    "add": "Add",
+    "ingredientsHint": "Leave empty for a random recipe adapted to your profile",
+    "maxTime": "Max time (min)",
+    "time15": "15 min",
+    "time30": "30 min",
+    "time45": "45 min",
+    "time60": "1 hour",
+    "time90": "1h30",
+    "servings": "Servings",
+    "servingsCount": "{{count}} serving",
+    "servingsCount_other": "{{count}} servings",
+    "confidence": "Confidence"
+  },
+  "history": {
+    "loading": "Loading...",
+    "loadError": "Loading error",
+    "errorMessage": "Unable to load recipe history",
+    "retry": "Retry",
+    "noResults": "No results",
+    "noHistory": "No history",
+    "noHistoryMessage": "Generate your first recipe to start your collection",
+    "noMatchFor": "No recipe matches",
+    "generateRecipe": "Generate a recipe"
+  },
+  "favorites": {
+    "loading": "Loading...",
+    "loadError": "Loading error",
+    "errorMessage": "Unable to load your favorites",
+    "retry": "Retry",
+    "noResults": "No results",
+    "noFavorites": "No favorites",
+    "noFavoritesMessage": "Add recipes to your favorites to find them easily",
+    "noMatchFor": "No favorite matches",
+    "discoverRecipes": "Discover recipes"
+  },
+  "errors": {
+    "generateFailed": "Generation error. Please try again."
+  }
+}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -12,6 +13,7 @@ interface WeightFormProps {
 }
 
 export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormProps) {
+  const { t } = useTranslation('tracking')
   const queryClient = useQueryClient()
   const [formData, setFormData] = useState<WeightLogCreate>({
     weight_kg: currentWeight || 70,
@@ -46,7 +48,7 @@ export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormPro
       {/* Poids */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Poids (kg)
+          {t('weightForm.weight')}
         </label>
         <Input
           type="number"
@@ -63,7 +65,7 @@ export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormPro
       {/* Pourcentage de graisse */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Masse grasse (%)
+          {t('weightForm.bodyFat')}
         </label>
         <Input
           type="number"
@@ -77,14 +79,14 @@ export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormPro
               body_fat_percent: parseFloat(e.target.value) || undefined,
             })
           }
-          placeholder="Optionnel"
+          placeholder={t('weightForm.optional')}
         />
       </div>
 
       {/* Masse musculaire */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Masse musculaire (kg)
+          {t('weightForm.muscleMass')}
         </label>
         <Input
           type="number"
@@ -98,21 +100,21 @@ export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormPro
               muscle_mass_kg: parseFloat(e.target.value) || undefined,
             })
           }
-          placeholder="Optionnel"
+          placeholder={t('weightForm.optional')}
         />
       </div>
 
       {/* Notes */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Notes
+          {t('weightForm.notes')}
         </label>
         <textarea
           className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           rows={2}
           value={formData.notes || ''}
           onChange={(e) => setFormData({ ...formData, notes: e.target.value || undefined })}
-          placeholder="Notes optionnelles..."
+          placeholder={t('weightForm.notesPlaceholder')}
         />
       </div>
 
@@ -120,7 +122,7 @@ export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormPro
       <div className="flex gap-3">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
-            Annuler
+            {t('common:cancel')}
           </Button>
         )}
         <Button
@@ -128,15 +130,15 @@ export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormPro
           className="flex-1"
           isLoading={createMutation.isPending}
         >
-          Enregistrer
+          {t('common:save')}
         </Button>
       </div>
 
       {createMutation.error && (
         <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
           {(createMutation.error as any)?.response?.status === 401
-            ? 'Session expirée - veuillez vous reconnecter'
-            : 'Erreur lors de l\'enregistrement'}
+            ? t('errors.sessionExpired')
+            : t('errors.saveFailed')}
         </div>
       )}
     </form>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 
@@ -9,6 +10,7 @@ interface ForgotPasswordForm {
 }
 
 export function ForgotPasswordPage() {
+  const { t } = useTranslation('auth')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { register, handleSubmit, formState: { errors }, watch } = useForm<ForgotPasswordForm>()
@@ -31,19 +33,19 @@ export function ForgotPasswordPage() {
             <span className="text-4xl">✉️</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Email envoyé !
+            {t('forgotPassword.successTitle')}
           </h1>
           <p className="text-gray-600 mb-6">
-            Si un compte existe avec l'adresse <strong>{email}</strong>,
-            vous recevrez un lien de réinitialisation dans quelques minutes.
+            {t('forgotPassword.successMessage')} <strong>{email}</strong>,
+            {' '}{t('forgotPassword.successMessage2')}
           </p>
           <div className="space-y-3">
             <p className="text-sm text-gray-500">
-              Vérifiez également vos spams si vous ne voyez pas l'email.
+              {t('forgotPassword.checkSpam')}
             </p>
             <Link to="/login">
               <Button variant="outline" className="w-full">
-                Retour à la connexion
+                {t('forgotPassword.backToLogin')}
               </Button>
             </Link>
           </div>
@@ -61,10 +63,10 @@ export function ForgotPasswordPage() {
             <span className="text-3xl">🔑</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Mot de passe oublié ?
+            {t('forgotPassword.title')}
           </h1>
           <p className="text-gray-600 mt-2">
-            Pas de panique ! Entrez votre email et nous vous enverrons un lien de réinitialisation.
+            {t('forgotPassword.subtitle')}
           </p>
         </div>
 
@@ -72,28 +74,28 @@ export function ForgotPasswordPage() {
           <Input
             id="email"
             type="email"
-            label="Adresse email"
-            placeholder="vous@exemple.com"
+            label={t('forgotPassword.email')}
+            placeholder={t('forgotPassword.emailPlaceholder')}
             error={errors.email?.message}
             {...register('email', {
-              required: 'Email requis',
+              required: t('forgotPassword.emailRequired'),
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Email invalide',
+                message: t('forgotPassword.emailInvalid'),
               },
             })}
           />
 
           <Button type="submit" className="w-full" isLoading={isLoading}>
-            Envoyer le lien de réinitialisation
+            {t('forgotPassword.submit')}
           </Button>
         </form>
 
         <div className="mt-6 pt-6 border-t border-gray-200 text-center">
           <p className="text-gray-600">
-            Vous vous souvenez de votre mot de passe ?{' '}
+            {t('forgotPassword.rememberPassword')}{' '}
             <Link to="/login" className="text-primary-600 hover:underline font-medium">
-              Se connecter
+              {t('forgotPassword.signIn')}
             </Link>
           </p>
         </div>
@@ -101,20 +103,20 @@ export function ForgotPasswordPage() {
         {/* Conseils de sécurité */}
         <div className="mt-6 bg-blue-50 rounded-lg p-4">
           <h3 className="text-sm font-medium text-blue-800 mb-2">
-            Conseils de sécurité
+            {t('forgotPassword.securityTips')}
           </h3>
           <ul className="text-xs text-blue-700 space-y-1">
             <li className="flex items-start gap-2">
               <span className="text-blue-500">•</span>
-              Utilisez un mot de passe unique pour NutriProfile
+              {t('forgotPassword.tip1')}
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-500">•</span>
-              Minimum 8 caractères avec majuscules et chiffres
+              {t('forgotPassword.tip2')}
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-500">•</span>
-              Ne partagez jamais vos identifiants
+              {t('forgotPassword.tip3')}
             </li>
           </ul>
         </div>

@@ -7,6 +7,7 @@ from app.llm.models import ModelCapability
 from app.models.profile import Gender, ActivityLevel, Goal, DietType
 from app.services.nutrition import get_nutrition_service
 from app.schemas.profile import NutritionCalculation
+from app.i18n import DEFAULT_LANGUAGE
 
 
 class ProfileInput:
@@ -146,28 +147,34 @@ class ProfilingAgent(BaseAgent[ProfileInput, ProfileAnalysis]):
 
     def build_prompt(self, input_data: ProfileInput) -> str:
         """Construit le prompt pour l'analyse de profil."""
-        return f"""Tu es un expert en nutrition. Analyse ce profil et fournis des recommandations personnalisées.
+        none_text = self.t("agents.common.none")
 
-PROFIL:
-- Âge: {input_data.age} ans
-- Genre: {input_data.gender.value}
-- Taille: {input_data.height_cm} cm
-- Poids: {input_data.weight_kg} kg
-- Niveau d'activité: {input_data.activity_level.value}
-- Objectif: {input_data.goal.value}
-- Régime: {input_data.diet_type.value}
-- Allergies: {', '.join(input_data.allergies) if input_data.allergies else 'Aucune'}
-- Conditions médicales: {', '.join(input_data.medical_conditions) if input_data.medical_conditions else 'Aucune'}
+        allergies_text = ', '.join(input_data.allergies) if input_data.allergies else none_text
+        conditions_text = ', '.join(input_data.medical_conditions) if input_data.medical_conditions else none_text
 
-Réponds en JSON avec ce format exact:
+        return self.t_prompt(
+            "calculate",
+            age=input_data.age,
+            gender=input_data.gender.value,
+            height=input_data.height_cm,
+            weight=input_data.weight_kg,
+            activity=input_data.activity_level.value,
+            goal=input_data.goal.value
+        ) + f"""
+
+Diet: {input_data.diet_type.value}
+Allergies: {allergies_text}
+Medical conditions: {conditions_text}
+
+Respond in JSON with this exact format:
 {{
-    "recommendations": ["recommandation 1", "recommandation 2", "recommandation 3"],
-    "warnings": ["avertissement si condition médicale ou allergie"],
-    "deficiencies": ["carence potentielle 1", "carence potentielle 2"],
-    "reasoning": "explication courte de ton analyse"
+    "recommendations": ["recommendation 1", "recommendation 2", "recommendation 3"],
+    "warnings": ["warning if medical condition or allergy"],
+    "deficiencies": ["potential deficiency 1", "potential deficiency 2"],
+    "reasoning": "short explanation of your analysis"
 }}
 
-Sois concis et pratique. Maximum 3 recommandations, 2 warnings, 2 carences."""
+Be concise and practical. Maximum 3 recommendations, 2 warnings, 2 deficiencies."""
 
     def parse_response(self, raw_response: str, input_data: ProfileInput) -> ProfileAnalysis:
         """Parse la réponse LLM et combine avec les calculs déterministes."""
@@ -248,38 +255,39 @@ Sois concis et pratique. Maximum 3 recommandations, 2 warnings, 2 carences."""
 
         # Recommandations selon l'objectif
         if input_data.goal == Goal.LOSE_WEIGHT:
-            recommendations.append("Privilégiez les protéines maigres pour maintenir la masse musculaire")
-            recommendations.append("Buvez au moins 2L d'eau par jour")
+            recommendations.append(self.t("agents.profiling.recommendations.loseWeight.leanProtein"))
+            recommendations.append(self.t("agents.profiling.recommendations.loseWeight.drinkWater"))
         elif input_data.goal == Goal.GAIN_MUSCLE:
-            recommendations.append("Consommez des protéines à chaque repas")
-            recommendations.append("Mangez dans les 30 minutes après l'entraînement")
+            recommendations.append(self.t("agents.profiling.recommendations.gainMuscle.proteinEveryMeal"))
+            recommendations.append(self.t("agents.profiling.recommendations.gainMuscle.postWorkout"))
         else:
-            recommendations.append("Variez vos sources de protéines")
-            recommendations.append("Consommez 5 portions de fruits et légumes par jour")
+            recommendations.append(self.t("agents.profiling.recommendations.general.varyProtein"))
+            recommendations.append(self.t("agents.profiling.recommendations.general.fruitsVeggies"))
 
-        recommendations.append("Limitez les aliments ultra-transformés")
+        recommendations.append(self.t("agents.profiling.recommendations.general.limitProcessed"))
 
         # Carences selon le régime
         if input_data.diet_type == DietType.VEGAN:
-            deficiencies.append("Vitamine B12 (supplémentation recommandée)")
-            deficiencies.append("Fer (sources végétales: lentilles, épinards)")
+            deficiencies.append(self.t("agents.profiling.deficiencies.vegan.b12"))
+            deficiencies.append(self.t("agents.profiling.deficiencies.vegan.iron"))
         elif input_data.diet_type == DietType.VEGETARIAN:
-            deficiencies.append("Fer (combinez avec vitamine C pour absorption)")
+            deficiencies.append(self.t("agents.profiling.deficiencies.vegetarian.iron"))
 
         # Warnings selon les conditions médicales
-        if "diabète" in [c.lower() for c in input_data.medical_conditions]:
-            warnings.append("Surveillez votre consommation de glucides et leur index glycémique")
-        if "hypertension" in [c.lower() for c in input_data.medical_conditions]:
-            warnings.append("Limitez votre consommation de sel à 5g par jour")
+        conditions_lower = [c.lower() for c in input_data.medical_conditions]
+        if "diabète" in conditions_lower or "diabetes" in conditions_lower:
+            warnings.append(self.t("agents.profiling.warnings.diabetes"))
+        if "hypertension" in conditions_lower:
+            warnings.append(self.t("agents.profiling.warnings.hypertension"))
 
         # Warnings allergies
         for allergy in input_data.allergies:
-            warnings.append(f"Attention aux traces de {allergy} dans les produits transformés")
+            warnings.append(self.t("agents.profiling.warnings.allergyTrace", allergy=allergy))
 
         return recommendations[:3], warnings[:2], deficiencies[:2]
 
 
 # Factory
-def get_profiling_agent() -> ProfilingAgent:
+def get_profiling_agent(language: str = DEFAULT_LANGUAGE) -> ProfilingAgent:
     """Retourne une instance de l'agent de profilage."""
-    return ProfilingAgent()
+    return ProfilingAgent(language=language)

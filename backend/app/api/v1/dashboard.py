@@ -12,6 +12,7 @@ from app.models.food_log import FoodLog, DailyNutrition
 from app.models.activity import ActivityLog
 from app.models.gamification import Achievement, Streak, Notification, UserStats, ACHIEVEMENTS, calculate_level
 from app.agents.coach import get_coach_agent, CoachInput, get_time_of_day
+from app.i18n import get_translator, DEFAULT_LANGUAGE
 from app.schemas.dashboard import (
     CoachResponseSchema,
     CoachAdviceSchema,
@@ -128,7 +129,7 @@ async def get_dashboard(
         if not hf_token or hf_token == "" or "your-" in hf_token.lower() or "placeholder" in hf_token.lower():
             import logging
             logging.info("Hugging Face token not configured, using fallback coach advice")
-            coach_advice = get_fallback_coach_advice(current_user.name, quick_stats)
+            coach_advice = get_fallback_coach_advice(current_user.name, quick_stats, current_user.preferred_language)
         else:
             try:
                 # Timeout de 5 secondes pour éviter que le dashboard reste bloqué
@@ -139,12 +140,12 @@ async def get_dashboard(
             except asyncio.TimeoutError:
                 import logging
                 logging.warning("Coach AI timed out after 5s, using fallback")
-                coach_advice = get_fallback_coach_advice(current_user.name, quick_stats)
+                coach_advice = get_fallback_coach_advice(current_user.name, quick_stats, current_user.preferred_language)
             except Exception as e:
                 # Si le coach IA échoue, on utilise un conseil par défaut
                 import logging
                 logging.warning(f"Coach AI failed, using fallback: {e}")
-                coach_advice = get_fallback_coach_advice(current_user.name, quick_stats)
+                coach_advice = get_fallback_coach_advice(current_user.name, quick_stats, current_user.preferred_language)
 
     # Achievements récents
     achievements_query = (
@@ -256,67 +257,68 @@ async def get_coach(
     except asyncio.TimeoutError:
         import logging
         logging.warning("Coach AI timed out after 5s, using fallback")
-        return get_fallback_coach_advice(current_user.name, quick_stats)
+        return get_fallback_coach_advice(current_user.name, quick_stats, current_user.preferred_language)
     except Exception as e:
         import logging
         logging.warning(f"Coach AI failed, using fallback: {e}")
-        return get_fallback_coach_advice(current_user.name, quick_stats)
+        return get_fallback_coach_advice(current_user.name, quick_stats, current_user.preferred_language)
 
 
-def get_fallback_coach_advice(user_name: str, quick_stats: QuickStats) -> CoachResponseSchema:
+def get_fallback_coach_advice(user_name: str, quick_stats: QuickStats, language: str = DEFAULT_LANGUAGE) -> CoachResponseSchema:
     """Génère des conseils par défaut quand l'IA n'est pas disponible."""
     time_of_day = get_time_of_day()
+    t = get_translator(language)
 
     greetings = {
-        "morning": f"Bonjour {user_name} !",
-        "afternoon": f"Bon après-midi {user_name} !",
-        "evening": f"Bonsoir {user_name} !",
+        "morning": t.get("agents.coach.greetingMorning", name=user_name),
+        "afternoon": t.get("agents.coach.greetingAfternoon", name=user_name),
+        "evening": t.get("agents.coach.greetingEvening", name=user_name),
     }
 
     # Générer un résumé basé sur les stats
     calories_percent = quick_stats.calories_percent
     if calories_percent < 50:
-        summary = "Vous êtes encore loin de votre objectif calorique. N'oubliez pas de bien manger !"
+        summary = t.get("agents.coach.fallbackSummary.farFromGoal")
     elif calories_percent < 80:
-        summary = "Vous êtes sur la bonne voie ! Continuez ainsi."
+        summary = t.get("agents.coach.fallbackSummary.onTrackGood")
     elif calories_percent <= 100:
-        summary = "Excellent ! Vous approchez de votre objectif calorique."
+        summary = t.get("agents.coach.fallbackSummary.almostThere")
     else:
-        summary = "Attention, vous avez dépassé votre objectif calorique aujourd'hui."
+        summary = t.get("agents.coach.fallbackSummary.exceeded")
 
     # Conseils par défaut
     advices = []
 
     if quick_stats.water_today < 1500:
         advices.append(CoachAdviceSchema(
-            message="Pensez à boire de l'eau régulièrement !",
+            message=t.get("agents.coach.fallbackAdvice.drinkWater"),
             category="hydration",
             priority="high",
-            action="Boire un verre d'eau",
+            action=t.get("agents.coach.fallbackAdvice.drinkWaterAction"),
             emoji="💧"
         ))
 
     if quick_stats.protein_percent < 50:
         advices.append(CoachAdviceSchema(
-            message="Augmentez votre apport en protéines.",
+            message=t.get("agents.coach.fallbackAdvice.increaseProtein"),
             category="nutrition",
             priority="medium",
-            action="Manger des aliments riches en protéines",
+            action=t.get("agents.coach.fallbackAdvice.increaseProteinAction"),
             emoji="🥩"
         ))
 
     if quick_stats.activity_today < 15:
         advices.append(CoachAdviceSchema(
-            message="Un peu d'exercice vous ferait du bien !",
+            message=t.get("agents.coach.fallbackAdvice.doExercise"),
             category="activity",
             priority="medium",
-            action="Faire une marche de 15 minutes",
+            action=t.get("agents.coach.fallbackAdvice.doExerciseAction"),
             emoji="🚶"
         ))
 
     if not advices:
         advices.append(CoachAdviceSchema(
-            message="Continuez comme ça, vous êtes sur la bonne voie !",
+            message=t.get("agents.coach.fallbackAdvice.keepItUp"),
             category="motivation",
             priority="low",
             action=None,
@@ -324,10 +326,10 @@ def get_fallback_coach_advice(user_name: str, quick_stats: QuickStats) -> CoachR
         ))
 
     return CoachResponseSchema(
-        greeting=greetings.get(time_of_day, f"Bonjour {user_name} !"),
+        greeting=greetings.get(time_of_day, t.get("agents.coach.greetingMorning", name=user_name)),
         summary=summary,
         advices=advices,
-        motivation_quote="Chaque petit pas compte vers un mode de vie plus sain.",
+        motivation_quote=t.get("agents.coach.fallbackMotivation"),
         confidence=0.5,  # Confidence basse car ce n'est pas l'IA
     )
 
@@ -350,7 +352,7 @@ async def get_coach_advice(db: AsyncSession, user: User, quick_stats: QuickStats
     week_result = await db.execute(week_nutrition_query)
     avg_calories_week = week_result.scalar() or 0
 
-    coach = get_coach_agent()
+    coach = get_coach_agent(language=user.preferred_language)
     coach_input = CoachInput(
         name=user.name,
         age=profile.age if profile else 30,

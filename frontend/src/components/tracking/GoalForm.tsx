@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -12,6 +13,7 @@ interface GoalFormProps {
 }
 
 export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
+  const { t } = useTranslation('tracking')
   const queryClient = useQueryClient()
   const [formData, setFormData] = useState<GoalCreate>({
     goal_type: 'calories',
@@ -69,10 +71,10 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
       {/* Type d'objectif */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Type d'objectif
+          {t('goalForm.type')}
         </label>
         <div className="grid grid-cols-3 gap-2">
-          {Object.entries(GOAL_TYPES).map(([type, { name, icon }]) => (
+          {Object.entries(GOAL_TYPES).map(([type, { icon }]) => (
             <button
               key={type}
               type="button"
@@ -84,7 +86,7 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
               }`}
             >
               <span className="text-2xl">{icon}</span>
-              <span className="text-xs mt-1">{name}</span>
+              <span className="text-xs mt-1">{t(`goalForm.types.${type}`)}</span>
             </button>
           ))}
         </div>
@@ -93,7 +95,7 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
       {/* Valeur cible */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Objectif ({formData.unit})
+          {t('goalForm.target', { unit: formData.unit })}
         </label>
         <Input
           type="number"
@@ -108,7 +110,7 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
       {/* Période */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Période
+          {t('goalForm.period')}
         </label>
         <div className="flex gap-2">
           {(['daily', 'weekly', 'monthly'] as const).map((period) => (
@@ -122,9 +124,7 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
                   : 'border-gray-200 hover:border-gray-300'
               }`}
             >
-              {period === 'daily' && 'Quotidien'}
-              {period === 'weekly' && 'Hebdomadaire'}
-              {period === 'monthly' && 'Mensuel'}
+              {t(`goalForm.periods.${period}`)}
             </button>
           ))}
         </div>
@@ -134,7 +134,7 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
       <div className="flex gap-3">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
-            Annuler
+            {t('common:cancel')}
           </Button>
         )}
         <Button
@@ -142,13 +142,13 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
           className="flex-1"
           isLoading={createMutation.isPending}
         >
-          Créer l'objectif
+          {t('goalForm.submit')}
         </Button>
       </div>
 
       {createMutation.error && (
         <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-          Erreur lors de la création de l'objectif
+          {t('errors.goalFailed')}
         </div>
       )}
     </form>

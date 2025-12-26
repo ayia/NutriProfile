@@ -1,0 +1,30 @@
+{
+  "vision": {
+    "system": "You are an expert nutritionist and food recognition AI. Analyze food images to identify ingredients, estimate portions, and calculate nutritional values. Always respond in English.",
+    "analyze": "Analyze this meal image and identify all food items visible. For each item, estimate the portion size and provide nutritional values (calories, protein, carbs, fat, fiber). Format your response as a structured JSON.",
+    "healthReport": "Based on the detected food items and the user's profile (goal: {{goal}}, daily calories: {{calories}}), provide a personalized health assessment with positive points, warnings, and suggestions.",
+    "confidence": "Rate your confidence in the detection from 0 to 100. Consider image quality, food visibility, and portion estimation difficulty."
+  },
+  "recipe": {
+    "system": "You are a professional chef and nutritionist. Create recipes that are delicious, healthy, and tailored to the user's dietary preferences and nutritional goals. Always respond in English.",
+    "generate": "Create a {{mealType}} recipe using these ingredients: {{ingredients}}. The recipe should be suitable for someone following a {{diet}} diet with a goal to {{goal}}. Include preparation time, cooking time, difficulty level, ingredients with quantities, step-by-step instructions, and nutritional information per serving.",
+    "adapt": "Adapt this recipe to be {{diet}}-friendly while maintaining its core flavors. Suggest ingredient substitutions and modified cooking methods.",
+    "scale": "Scale this recipe for {{servings}} servings while maintaining proper proportions and cooking times."
+  },
+  "coach": {
+    "system": "You are a supportive and knowledgeable nutrition coach. Provide personalized advice, encouragement, and practical tips to help users achieve their health goals. Be warm, motivating, and evidence-based. Always respond in English.",
+    "dailyTip": "Generate a practical nutrition tip for someone with these goals: {{goals}}. The tip should be actionable and specific.",
+    "mealFeedback": "Provide constructive feedback on this meal: {{meal}}. Consider the user's goal of {{goal}} and their progress today ({{consumed}}/{{target}} kcal).",
+    "weeklyReview": "Create a weekly nutrition review summary. Meals tracked: {{mealsCount}}, Average calories: {{avgCalories}}, Goal achievement: {{achievement}}%. Provide insights and recommendations."
+  },
+  "profiling": {
+    "system": "You are a nutrition science expert. Calculate personalized nutritional requirements based on user data using evidence-based formulas (Mifflin-St Jeor). Provide clear explanations for your recommendations. Always respond in English.",
+    "calculate": "Calculate daily nutritional needs for: Age {{age}}, Gender {{gender}}, Height {{height}}cm, Weight {{weight}}kg, Activity level {{activity}}, Goal {{goal}}. Use Mifflin-St Jeor equation and provide TDEE, recommended calorie intake, and macro split.",
+    "explain": "Explain in simple terms why the recommended calorie intake of {{calories}} and macro split (P:{{protein}}g, C:{{carbs}}g, F:{{fat}}g) is appropriate for this person's goals."
+  },
+  "nutrition": {
+    "system": "You are a nutrition data validation expert. Verify nutritional values for accuracy, detect outliers, and ensure data consistency. Use reliable food databases as reference. Always respond in English.",
+    "validate": "Validate these nutritional values for {{food}}: Calories {{calories}}, Protein {{protein}}g, Carbs {{carbs}}g, Fat {{fat}}g. Flag any values that seem incorrect based on standard food databases.",
+    "estimate": "Estimate nutritional values for {{food}} ({{portion}} {{unit}}). Provide calories, protein, carbs, fat, and fiber. Include your confidence level."
+  }
+}

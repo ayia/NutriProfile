@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { ACTIVITY_TYPES, INTENSITY_LABELS } from '@/types/tracking'
+import { ACTIVITY_TYPES } from '@/types/tracking'
 import type { ActivityLogCreate } from '@/types/tracking'
 
 interface ActivityFormProps {
@@ -12,6 +13,7 @@ interface ActivityFormProps {
 }
 
 export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
+  const { t } = useTranslation('tracking')
   const queryClient = useQueryClient()
   const [formData, setFormData] = useState<ActivityLogCreate>({
     activity_type: 'walking',
@@ -49,10 +51,10 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
       {/* Type d'activité */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Type d'activité
+          {t('activityForm.type')}
         </label>
         <div className="grid grid-cols-4 gap-2">
-          {Object.entries(ACTIVITY_TYPES).map(([type, { name, icon }]) => (
+          {Object.entries(ACTIVITY_TYPES).map(([type, { icon }]) => (
             <button
               key={type}
               type="button"
@@ -64,7 +66,7 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
               }`}
             >
               <span className="text-xl">{icon}</span>
-              <span className="text-xs mt-1">{name}</span>
+              <span className="text-xs mt-1">{t(`activityForm.types.${type}`)}</span>
             </button>
           ))}
         </div>
@@ -73,7 +75,7 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
       {/* Durée */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Durée (minutes)
+          {t('activityForm.duration')}
         </label>
         <Input
           type="number"
@@ -89,7 +91,7 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
       {/* Intensité */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Intensité
+          {t('activityForm.intensity')}
         </label>
         <div className="flex gap-2">
           {(['light', 'moderate', 'intense'] as const).map((intensity) => (
@@ -103,7 +105,7 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
                   : 'border-gray-200 hover:border-gray-300'
               }`}
             >
-              {INTENSITY_LABELS[intensity]}
+              {t(`activityForm.intensities.${intensity}`)}
             </button>
           ))}
         </div>
@@ -113,7 +115,7 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Distance (km)
+            {t('activityForm.distance')}
           </label>
           <Input
             type="number"
@@ -123,12 +125,12 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
             onChange={(e) =>
               setFormData({ ...formData, distance_km: parseFloat(e.target.value) || undefined })
             }
-            placeholder="Optionnel"
+            placeholder={t('activityForm.optional')}
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Pas
+            {t('activityForm.steps')}
           </label>
           <Input
             type="number"
@@ -137,7 +139,7 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
             onChange={(e) =>
               setFormData({ ...formData, steps: parseInt(e.target.value) || undefined })
             }
-            placeholder="Optionnel"
+            placeholder={t('activityForm.optional')}
           />
         </div>
       </div>
@@ -145,14 +147,14 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
       {/* Notes */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Notes
+          {t('activityForm.notes')}
         </label>
         <textarea
           className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           rows={2}
           value={formData.notes || ''}
           onChange={(e) => setFormData({ ...formData, notes: e.target.value || undefined })}
-          placeholder="Notes optionnelles..."
+          placeholder={t('activityForm.notesPlaceholder')}
         />
       </div>
 
@@ -160,7 +162,7 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
       <div className="flex gap-3">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
-            Annuler
+            {t('common:cancel')}
           </Button>
         )}
         <Button
@@ -168,15 +170,15 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
           className="flex-1"
           isLoading={createMutation.isPending}
         >
-          Ajouter l'activité
+          {t('activityForm.submit')}
         </Button>
       </div>
 
       {createMutation.error && (
         <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
           {(createMutation.error as any)?.response?.status === 401
-            ? 'Session expirée - veuillez vous reconnecter'
-            : 'Erreur lors de l\'ajout de l\'activité'}
+            ? t('errors.sessionExpired')
+            : t('errors.activityFailed')}
         </div>
       )}
     </form>

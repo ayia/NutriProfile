@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { recipeApi } from '@/services/recipeApi'
 import { Button } from '@/components/ui/Button'
 import type { Recipe } from '@/types/recipe'
-import { MEAL_TYPE_LABELS, MEAL_TYPE_ICONS } from '@/types/recipe'
+import { MEAL_TYPE_ICONS } from '@/types/recipe'
 
 interface RecipeCardProps {
   recipe: Recipe
@@ -13,6 +14,7 @@ interface RecipeCardProps {
 
 export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _onViewDetails }: RecipeCardProps) {
   void _onViewDetails
+  const { t } = useTranslation('recipes')
   const [showDetails, setShowDetails] = useState(false)
   const [isFavorite, setIsFavorite] = useState(initialFavorite)
   const queryClient = useQueryClient()
@@ -48,7 +50,7 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
         <div className="flex items-start justify-between">
           <div>
             <span className="text-sm text-gray-500">
-              {MEAL_TYPE_ICONS[recipe.meal_type]} {MEAL_TYPE_LABELS[recipe.meal_type]}
+              {MEAL_TYPE_ICONS[recipe.meal_type]} {t(`categories.${recipe.meal_type}`)}
             </span>
             <h3 className="font-semibold text-lg mt-1">{recipe.title}</h3>
           </div>
@@ -71,15 +73,15 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
       <div className="grid grid-cols-3 divide-x border-b">
         <div className="p-3 text-center">
           <div className="text-lg font-semibold">{recipe.total_time}</div>
-          <div className="text-xs text-gray-500">min</div>
+          <div className="text-xs text-gray-500">{t('recipe.minutes')}</div>
         </div>
         <div className="p-3 text-center">
           <div className="text-lg font-semibold">{recipe.servings}</div>
-          <div className="text-xs text-gray-500">portions</div>
+          <div className="text-xs text-gray-500">{t('recipe.servings')}</div>
         </div>
         <div className="p-3 text-center">
           <div className="text-lg font-semibold">{recipe.calories || '--'}</div>
-          <div className="text-xs text-gray-500">kcal</div>
+          <div className="text-xs text-gray-500">{t('recipe.calories')}</div>
         </div>
       </div>
 
@@ -88,15 +90,15 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
         <div className="flex justify-around p-3 bg-gray-50 text-sm">
           <div className="text-center">
             <span className="font-medium text-blue-600">{recipe.protein_g}g</span>
-            <span className="text-gray-500 ml-1">prot</span>
+            <span className="text-gray-500 ml-1">{t('card.protein')}</span>
           </div>
           <div className="text-center">
             <span className="font-medium text-yellow-600">{recipe.carbs_g}g</span>
-            <span className="text-gray-500 ml-1">gluc</span>
+            <span className="text-gray-500 ml-1">{t('card.carbs')}</span>
           </div>
           <div className="text-center">
             <span className="font-medium text-orange-600">{recipe.fat_g}g</span>
-            <span className="text-gray-500 ml-1">lip</span>
+            <span className="text-gray-500 ml-1">{t('card.fat')}</span>
           </div>
         </div>
       )}
@@ -120,7 +122,7 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
         <div className="p-4 border-t space-y-4">
           {/* Ingrédients */}
           <div>
-            <h4 className="font-medium mb-2">Ingrédients</h4>
+            <h4 className="font-medium mb-2">{t('recipe.ingredients')}</h4>
             <ul className="space-y-1">
               {recipe.ingredients.map((ing, i) => (
                 <li key={i} className="flex items-center gap-2 text-sm">
@@ -134,7 +136,7 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
 
           {/* Instructions */}
           <div>
-            <h4 className="font-medium mb-2">Instructions</h4>
+            <h4 className="font-medium mb-2">{t('recipe.instructions')}</h4>
             <ol className="space-y-2">
               {recipe.instructions.map((step, i) => (
                 <li key={i} className="flex gap-3 text-sm">
@@ -150,7 +152,7 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
           {/* Score de confiance */}
           {recipe.confidence_score && (
             <div className="text-xs text-gray-500 text-right">
-              Score IA: {Math.round(recipe.confidence_score * 100)}%
+              {t('card.aiScore')}: {Math.round(recipe.confidence_score * 100)}%
             </div>
           )}
         </div>
@@ -164,7 +166,7 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
           className="flex-1"
           onClick={() => setShowDetails(!showDetails)}
         >
-          {showDetails ? 'Masquer' : 'Voir la recette'}
+          {showDetails ? t('card.hide') : t('card.viewRecipe')}
         </Button>
       </div>
     </div>

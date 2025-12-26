@@ -1,0 +1,152 @@
+{
+  "title": "المتابعة",
+  "subtitle": "تابع تقدمك وحقق أهدافك",
+  "tabs": {
+    "overview": "نظرة عامة",
+    "activities": "الأنشطة",
+    "weight": "الوزن",
+    "goals": "الأهداف"
+  },
+  "today": {
+    "title": "اليوم",
+    "caloriesConsumed": "سعرة مستهلكة",
+    "caloriesBurned": "سعرة محروقة",
+    "activityMinutes": "دقيقة نشاط",
+    "waterMl": "مل ماء",
+    "addWater": "+ إضافة"
+  },
+  "week": {
+    "title": "هذا الأسبوع",
+    "avgCalories": "متوسط السعرات",
+    "totalActivity": "إجمالي النشاط",
+    "totalSteps": "إجمالي الخطوات",
+    "weightChange": "تغير الوزن"
+  },
+  "progress": {
+    "title": "التقدم",
+    "calories": "السعرات",
+    "activityMinutes": "النشاط (دقائق)",
+    "weight": "الوزن",
+    "days7": "7 أيام",
+    "days14": "14 يوم",
+    "days30": "30 يوم"
+  },
+  "progressChart": {
+    "noData": "لا توجد بيانات",
+    "startTracking": "ابدأ التتبع لرؤية تقدمك",
+    "avg": "متوسط",
+    "metrics": {
+      "calories": "السعرات",
+      "protein": "البروتين",
+      "weight": "الوزن",
+      "activity": "النشاط"
+    }
+  },
+  "activities": {
+    "title": "توزيع الأنشطة (30 يوم)",
+    "newActivity": "+ نشاط جديد",
+    "noActivities": "لا توجد أنشطة مسجلة",
+    "addActivity": "إضافة نشاط"
+  },
+  "activityForm": {
+    "type": "نوع النشاط",
+    "types": {
+      "walking": "المشي",
+      "running": "الجري",
+      "cycling": "ركوب الدراجة",
+      "swimming": "السباحة",
+      "gym": "تمارين القوة",
+      "yoga": "اليوغا",
+      "other": "أخرى"
+    },
+    "duration": "المدة (دقائق)",
+    "intensity": "الشدة",
+    "intensities": {
+      "light": "خفيفة",
+      "moderate": "متوسطة",
+      "intense": "عالية"
+    },
+    "distance": "المسافة (كم)",
+    "steps": "الخطوات",
+    "optional": "اختياري",
+    "notes": "ملاحظات",
+    "notesPlaceholder": "ملاحظات اختيارية...",
+    "submit": "إضافة النشاط"
+  },
+  "weight": {
+    "title": "تطور الوزن",
+    "newWeight": "+ وزن جديد",
+    "noWeight": "لا توجد أوزان مسجلة",
+    "addWeight": "إضافة وزن",
+    "bodyFat": "دهون"
+  },
+  "weightForm": {
+    "weight": "الوزن (كغ)",
+    "bodyFat": "نسبة الدهون (%)",
+    "muscleMass": "الكتلة العضلية (كغ)",
+    "optional": "اختياري",
+    "notes": "ملاحظات",
+    "notesPlaceholder": "ملاحظات اختيارية..."
+  },
+  "goals": {
+    "newGoal": "+ هدف جديد",
+    "noGoals": "لا توجد أهداف محددة",
+    "createGoal": "إنشاء هدف"
+  },
+  "goalForm": {
+    "type": "نوع الهدف",
+    "types": {
+      "calories": "السعرات",
+      "steps": "الخطوات",
+      "activity": "النشاط",
+      "water": "الماء",
+      "weight": "الوزن"
+    },
+    "target": "الهدف ({{unit}})",
+    "period": "الفترة",
+    "periods": {
+      "daily": "يومي",
+      "weekly": "أسبوعي",
+      "monthly": "شهري"
+    },
+    "submit": "إنشاء الهدف"
+  },
+  "goalCard": {
+    "types": {
+      "calories": "السعرات",
+      "steps": "الخطوات",
+      "activity": "النشاط",
+      "water": "الماء",
+      "weight": "الوزن"
+    },
+    "periods": {
+      "daily": "يومي",
+      "weekly": "أسبوعي",
+      "monthly": "شهري"
+    },
+    "deleteConfirm": "حذف هذا الهدف؟"
+  },
+  "actions": {
+    "addActivity": "+ نشاط",
+    "addWeight": "+ وزن",
+    "addWater": "+ ماء"
+  },
+  "modal": {
+    "newActivity": "نشاط جديد",
+    "newWeight": "وزن جديد",
+    "newGoal": "هدف جديد",
+    "addWater": "إضافة ماء"
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "min": "دقيقة",
+    "kcal": "سعرة",
+    "kg": "كغ"
+  },
+  "errors": {
+    "sessionExpired": "انتهت الجلسة - يرجى تسجيل الدخول مرة أخرى",
+    "saveFailed": "خطأ في الحفظ",
+    "activityFailed": "خطأ في إضافة النشاط",
+    "goalFailed": "خطأ في إنشاء الهدف"
+  }
+}

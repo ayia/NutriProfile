@@ -1,11 +1,15 @@
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useOnboardingStore } from '@/store/onboardingStore'
-import type { ProfileStep2 } from '@/types/profile'
-import { ACTIVITY_LABELS, GOAL_LABELS } from '@/types/profile'
+import type { ProfileStep2, ActivityLevel, Goal } from '@/types/profile'
+
+const ACTIVITY_LEVELS: ActivityLevel[] = ['sedentary', 'light', 'moderate', 'active', 'very_active']
+const GOALS: Goal[] = ['lose_weight', 'maintain', 'gain_muscle', 'improve_health']
 
 export function Step2Activity() {
+  const { t } = useTranslation('onboarding')
   const { step2, setStep2, nextStep, prevStep } = useOnboardingStore()
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm<ProfileStep2>({
@@ -22,19 +26,19 @@ export function Step2Activity() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold">Activité & Objectifs</h2>
+        <h2 className="text-2xl font-bold">{t('step2.title')}</h2>
         <p className="text-gray-600 mt-2">
-          Dites-nous votre niveau d'activité et vos objectifs.
+          {t('step2.subtitle')}
         </p>
       </div>
 
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Niveau d'activité physique
+            {t('step2.activityLevel')}
           </label>
           <div className="space-y-2">
-            {Object.entries(ACTIVITY_LABELS).map(([value, label]) => (
+            {ACTIVITY_LEVELS.map((value) => (
               <label
                 key={value}
                 className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
@@ -47,9 +51,9 @@ export function Step2Activity() {
                   type="radio"
                   value={value}
                   className="sr-only"
-                  {...register('activity_level', { required: 'Niveau d\'activité requis' })}
+                  {...register('activity_level', { required: t('errors.activityRequired') })}
                 />
-                <span className="text-sm">{label}</span>
+                <span className="text-sm">{t(`activityLevels.${value}`)}</span>
               </label>
             ))}
           </div>
@@ -60,10 +64,10 @@ export function Step2Activity() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Objectif principal
+            {t('step2.goal')}
           </label>
           <div className="grid grid-cols-2 gap-2">
-            {Object.entries(GOAL_LABELS).map(([value, label]) => (
+            {GOALS.map((value) => (
               <label
                 key={value}
                 className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer transition-colors text-center ${
@@ -76,9 +80,9 @@ export function Step2Activity() {
                   type="radio"
                   value={value}
                   className="sr-only"
-                  {...register('goal', { required: 'Objectif requis' })}
+                  {...register('goal', { required: t('errors.goalRequired') })}
                 />
-                <span className="text-sm">{label}</span>
+                <span className="text-sm">{t(`goals.${value}`)}</span>
               </label>
             ))}
           </div>
@@ -92,13 +96,13 @@ export function Step2Activity() {
             id="target_weight_kg"
             type="number"
             step="0.1"
-            label="Poids cible (kg) - optionnel"
-            placeholder="65"
+            label={t('step2.targetWeight')}
+            placeholder={t('step2.targetWeightPlaceholder')}
             error={errors.target_weight_kg?.message}
             {...register('target_weight_kg', {
               valueAsNumber: true,
-              min: { value: 30, message: 'Minimum 30 kg' },
-              max: { value: 300, message: 'Maximum 300 kg' },
+              min: { value: 30, message: t('errors.weightMin') },
+              max: { value: 300, message: t('errors.weightMax') },
             })}
           />
         )}
@@ -106,9 +110,9 @@ export function Step2Activity() {
 
       <div className="flex justify-between">
         <Button type="button" variant="outline" onClick={prevStep}>
-          Retour
+          {t('buttons.back')}
         </Button>
-        <Button type="submit">Continuer</Button>
+        <Button type="submit">{t('buttons.continue')}</Button>
       </div>
     </form>
   )

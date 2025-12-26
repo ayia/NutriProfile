@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { recipeApi } from '@/services/recipeApi'
 import { RecipeGenerator } from '@/components/recipes/RecipeGenerator'
 import { RecipeCard } from '@/components/recipes/RecipeCard'
@@ -8,20 +9,21 @@ import { SkeletonRecipeCard } from '@/components/ui/SkeletonLoader'
 
 type Tab = 'generate' | 'history' | 'favorites'
 
-// Suggestions de types de recettes rapides
-const quickSuggestions = [
-  { label: 'Petit-déjeuner protéiné', icon: '🥚', tags: ['petit-dejeuner', 'protéines'] },
-  { label: 'Déjeuner léger', icon: '🥗', tags: ['dejeuner', 'light'] },
-  { label: 'Dîner végétarien', icon: '🥬', tags: ['diner', 'vegetarien'] },
-  { label: 'Snack sain', icon: '🍎', tags: ['snack', 'healthy'] },
-  { label: 'Meal prep', icon: '📦', tags: ['meal-prep', 'batch'] },
-  { label: 'Express < 15min', icon: '⚡', tags: ['rapide', 'facile'] },
-]
-
 export function RecipesPage() {
+  const { t, i18n } = useTranslation('recipes')
   const [activeTab, setActiveTab] = useState<Tab>('generate')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+
+  // Suggestions de types de recettes rapides
+  const quickSuggestions = [
+    { label: t('suggestions.proteinBreakfast'), icon: '🥚', tags: ['petit-dejeuner', 'protéines'] },
+    { label: t('suggestions.lightLunch'), icon: '🥗', tags: ['dejeuner', 'light'] },
+    { label: t('suggestions.vegetarianDinner'), icon: '🥬', tags: ['diner', 'vegetarien'] },
+    { label: t('suggestions.healthySnack'), icon: '🍎', tags: ['snack', 'healthy'] },
+    { label: t('suggestions.mealPrep'), icon: '📦', tags: ['meal-prep', 'batch'] },
+    { label: t('suggestions.express'), icon: '⚡', tags: ['rapide', 'facile'] },
+  ]
 
   const historyQuery = useQuery({
     queryKey: ['recipes', 'history'],
@@ -36,9 +38,9 @@ export function RecipesPage() {
   })
 
   const tabs: { id: Tab; label: string; icon: string; count?: number }[] = [
-    { id: 'generate', label: 'Générer', icon: '✨' },
-    { id: 'history', label: 'Historique', icon: '📜', count: historyQuery.data?.length },
-    { id: 'favorites', label: 'Favoris', icon: '❤️', count: favoritesQuery.data?.length },
+    { id: 'generate', label: t('tabs.generate'), icon: '✨' },
+    { id: 'history', label: t('tabs.history'), icon: '📜', count: historyQuery.data?.length },
+    { id: 'favorites', label: t('tabs.favorites'), icon: '❤️', count: favoritesQuery.data?.length },
   ]
 
   const handleQuickSuggestion = (tags: string[]) => {
@@ -64,22 +66,22 @@ export function RecipesPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Recettes</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
             <p className="text-gray-600 mt-1">
-              Générez des recettes personnalisées adaptées à votre profil
+              {t('subtitle')}
             </p>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-primary-600 font-medium">Coach IA</span>
+            <span className="text-primary-600 font-medium">{t('coachActive')}</span>
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-gray-500">Actif</span>
+            <span className="text-gray-500">{t('active')}</span>
           </div>
         </div>
       </div>
 
       {/* Suggestions rapides */}
       <div className="mb-6">
-        <p className="text-sm font-medium text-gray-600 mb-3">Suggestions rapides</p>
+        <p className="text-sm font-medium text-gray-600 mb-3">{t('quickSuggestions')}</p>
         <div className="flex flex-wrap gap-2">
           {quickSuggestions.map((suggestion) => (
             <button
@@ -125,7 +127,7 @@ export function RecipesPage() {
           <div className="relative">
             <input
               type="text"
-              placeholder="Rechercher une recette..."
+              placeholder={t('search.placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-3 pl-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
@@ -162,11 +164,11 @@ export function RecipesPage() {
             <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg flex items-center gap-3">
               <span className="text-xl">⚠️</span>
               <div>
-                <p className="font-medium">Erreur de chargement</p>
-                <p className="text-sm">Impossible de charger l'historique des recettes</p>
+                <p className="font-medium">{t('history.loadError')}</p>
+                <p className="text-sm">{t('history.errorMessage')}</p>
               </div>
               <Button variant="outline" size="sm" onClick={() => historyQuery.refetch()} className="ml-auto">
-                Réessayer
+                {t('history.retry')}
               </Button>
             </div>
           )}
@@ -177,17 +179,17 @@ export function RecipesPage() {
                 <span className="text-4xl">📜</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {searchQuery ? 'Aucun résultat' : 'Aucun historique'}
+                {searchQuery ? t('history.noResults') : t('history.noHistory')}
               </h3>
               <p className="text-gray-500 mb-6 max-w-md mx-auto">
                 {searchQuery
-                  ? `Aucune recette ne correspond à "${searchQuery}"`
-                  : 'Générez votre première recette pour commencer votre collection'}
+                  ? `${t('history.noMatchFor')} "${searchQuery}"`
+                  : t('history.noHistoryMessage')}
               </p>
               {!searchQuery && (
                 <Button onClick={() => setActiveTab('generate')} className="gap-2">
                   <span>✨</span>
-                  Générer une recette
+                  {t('history.generateRecipe')}
                 </Button>
               )}
             </div>
@@ -200,7 +202,7 @@ export function RecipesPage() {
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <span className="text-lg">📅</span>
                     <span>
-                      {new Date(item.created_at).toLocaleDateString('fr-FR', {
+                      {new Date(item.created_at).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric',
@@ -240,11 +242,11 @@ export function RecipesPage() {
             <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg flex items-center gap-3">
               <span className="text-xl">⚠️</span>
               <div>
-                <p className="font-medium">Erreur de chargement</p>
-                <p className="text-sm">Impossible de charger vos favoris</p>
+                <p className="font-medium">{t('favorites.loadError')}</p>
+                <p className="text-sm">{t('favorites.errorMessage')}</p>
               </div>
               <Button variant="outline" size="sm" onClick={() => favoritesQuery.refetch()} className="ml-auto">
-                Réessayer
+                {t('favorites.retry')}
               </Button>
             </div>
           )}
@@ -255,17 +257,17 @@ export function RecipesPage() {
                 <span className="text-4xl">❤️</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {searchQuery ? 'Aucun résultat' : 'Aucun favori'}
+                {searchQuery ? t('favorites.noResults') : t('favorites.noFavorites')}
               </h3>
               <p className="text-gray-500 mb-6 max-w-md mx-auto">
                 {searchQuery
-                  ? `Aucun favori ne correspond à "${searchQuery}"`
-                  : 'Ajoutez des recettes à vos favoris pour les retrouver facilement'}
+                  ? `${t('favorites.noMatchFor')} "${searchQuery}"`
+                  : t('favorites.noFavoritesMessage')}
               </p>
               {!searchQuery && (
                 <Button onClick={() => setActiveTab('generate')} className="gap-2">
                   <span>✨</span>
-                  Découvrir des recettes
+                  {t('favorites.discoverRecipes')}
                 </Button>
               )}
             </div>

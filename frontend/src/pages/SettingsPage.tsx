@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { profileApi } from '@/services/profileApi'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/Button'
@@ -12,6 +13,7 @@ import { ACTIVITY_LABELS, GOAL_LABELS, DIET_LABELS, COMMON_ALLERGIES } from '@/t
 type SettingsTab = 'profile' | 'account' | 'notifications' | 'privacy'
 
 export function SettingsPage() {
+  const { t } = useTranslation('settings')
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -38,14 +40,14 @@ export function SettingsPage() {
   })
 
   const tabs: { id: SettingsTab; label: string; icon: string }[] = [
-    { id: 'profile', label: 'Profil', icon: '👤' },
-    { id: 'account', label: 'Compte', icon: '🔐' },
-    { id: 'notifications', label: 'Notifications', icon: '🔔' },
-    { id: 'privacy', label: 'Confidentialité', icon: '🛡️' },
+    { id: 'profile', label: t('tabs.profile'), icon: '👤' },
+    { id: 'account', label: t('tabs.account'), icon: '🔐' },
+    { id: 'notifications', label: t('tabs.notifications'), icon: '🔔' },
+    { id: 'privacy', label: t('tabs.privacy'), icon: '🛡️' },
   ]
 
   const handleDeleteAccount = () => {
-    if (deleteConfirmText === 'SUPPRIMER') {
+    if (deleteConfirmText === t('account.deletePlaceholder')) {
       deleteProfileMutation.mutate()
     }
   }
@@ -120,23 +122,23 @@ export function SettingsPage() {
                 <span className="text-3xl">⚠️</span>
               </div>
               <h3 className="heading-3 mb-2">
-                Supprimer votre compte
+                {t('account.deleteTitle')}
               </h3>
               <p className="body-md">
-                Cette action est irréversible. Toutes vos données seront supprimées définitivement.
+                {t('account.deleteConfirm')}
               </p>
             </div>
 
             <div className="mb-6">
               <label className="label mb-2 block">
-                Tapez <span className="font-bold text-error-600">SUPPRIMER</span> pour confirmer
+                {t('account.typeDelete')} <span className="font-bold text-error-600">{t('account.deletePlaceholder')}</span> {t('account.toConfirm')}
               </label>
               <input
                 type="text"
                 value={deleteConfirmText}
                 onChange={(e) => setDeleteConfirmText(e.target.value)}
                 className="input focus:ring-error-500"
-                placeholder="SUPPRIMER"
+                placeholder={t('account.deletePlaceholder')}
               />
             </div>
 
@@ -149,16 +151,16 @@ export function SettingsPage() {
                   setDeleteConfirmText('')
                 }}
               >
-                Annuler
+                {t('profile.cancel')}
               </Button>
               <Button
                 variant="primary"
                 className="flex-1 !bg-error-500 hover:!bg-error-600"
                 onClick={handleDeleteAccount}
-                disabled={deleteConfirmText !== 'SUPPRIMER'}
+                disabled={deleteConfirmText !== t('account.deletePlaceholder')}
                 isLoading={deleteProfileMutation.isPending}
               >
-                Supprimer
+                {t('account.deleteAccount')}
               </Button>
             </div>
           </div>
@@ -177,6 +179,7 @@ interface ProfileSettingsProps {
 }
 
 function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSettingsProps) {
+  const { t } = useTranslation('settings')
   const [editSection, setEditSection] = useState<string | null>(null)
   const { register, handleSubmit, reset } = useForm<Partial<ProfileCreate>>()
 
@@ -200,31 +203,31 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
   const sections = [
     {
       id: 'physical',
-      title: 'Informations physiques',
+      title: t('profile.physicalInfo'),
       icon: '📏',
       fields: [
-        { key: 'age', label: 'Âge', value: profile?.age, suffix: 'ans' },
-        { key: 'height_cm', label: 'Taille', value: profile?.height_cm, suffix: 'cm' },
-        { key: 'weight_kg', label: 'Poids', value: profile?.weight_kg, suffix: 'kg' },
+        { key: 'age', label: t('profile.age'), value: profile?.age, suffix: t('profile.ageUnit') },
+        { key: 'height_cm', label: t('profile.height'), value: profile?.height_cm, suffix: t('profile.heightUnit') },
+        { key: 'weight_kg', label: t('profile.weight'), value: profile?.weight_kg, suffix: t('profile.weightUnit') },
       ],
     },
     {
       id: 'goals',
-      title: 'Objectifs',
+      title: t('profile.goals'),
       icon: '🎯',
       fields: [
-        { key: 'goal', label: 'Objectif', value: profile?.goal ? GOAL_LABELS[profile.goal] : '-' },
-        { key: 'target_weight_kg', label: 'Poids cible', value: profile?.target_weight_kg, suffix: 'kg' },
-        { key: 'activity_level', label: 'Activité', value: profile?.activity_level ? ACTIVITY_LABELS[profile.activity_level] : '-' },
+        { key: 'goal', label: t('profile.goal'), value: profile?.goal ? GOAL_LABELS[profile.goal] : '-' },
+        { key: 'target_weight_kg', label: t('profile.targetWeight'), value: profile?.target_weight_kg, suffix: t('profile.weightUnit') },
+        { key: 'activity_level', label: t('profile.activity'), value: profile?.activity_level ? ACTIVITY_LABELS[profile.activity_level] : '-' },
       ],
     },
     {
       id: 'diet',
-      title: 'Régime alimentaire',
+      title: t('profile.diet'),
       icon: '🥗',
       fields: [
-        { key: 'diet_type', label: 'Type de régime', value: profile?.diet_type ? DIET_LABELS[profile.diet_type] : '-' },
-        { key: 'allergies', label: 'Allergies', value: profile?.allergies?.join(', ') || 'Aucune' },
+        { key: 'diet_type', label: t('profile.dietType'), value: profile?.diet_type ? DIET_LABELS[profile.diet_type] : '-' },
+        { key: 'allergies', label: t('profile.allergies'), value: profile?.allergies?.join(', ') || t('profile.noAllergies') },
       ],
     },
   ]
@@ -242,7 +245,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
               onClick={() => setEditSection(editSection === section.id ? null : section.id)}
               className="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors"
             >
-              {editSection === section.id ? 'Annuler' : 'Modifier'}
+              {editSection === section.id ? t('profile.cancel') : t('profile.modify')}
             </button>
           </div>
 
@@ -253,21 +256,21 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                   <Input
                     id="age"
                     type="number"
-                    label="Âge"
+                    label={t('profile.age')}
                     defaultValue={profile?.age}
                     {...register('age', { valueAsNumber: true })}
                   />
                   <Input
                     id="height_cm"
                     type="number"
-                    label="Taille (cm)"
+                    label={`${t('profile.height')} (${t('profile.heightUnit')})`}
                     defaultValue={profile?.height_cm}
                     {...register('height_cm', { valueAsNumber: true })}
                   />
                   <Input
                     id="weight_kg"
                     type="number"
-                    label="Poids (kg)"
+                    label={`${t('profile.weight')} (${t('profile.weightUnit')})`}
                     step="0.1"
                     defaultValue={profile?.weight_kg}
                     {...register('weight_kg', { valueAsNumber: true })}
@@ -278,7 +281,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
               {section.id === 'goals' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="label mb-2 block">Objectif</label>
+                    <label className="label mb-2 block">{t('profile.goal')}</label>
                     <select
                       className="input"
                       defaultValue={profile?.goal}
@@ -290,7 +293,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                     </select>
                   </div>
                   <div>
-                    <label className="label mb-2 block">Niveau d'activité</label>
+                    <label className="label mb-2 block">{t('profile.activityLevel')}</label>
                     <select
                       className="input"
                       defaultValue={profile?.activity_level}
@@ -304,7 +307,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                   <Input
                     id="target_weight_kg"
                     type="number"
-                    label="Poids cible (kg)"
+                    label={`${t('profile.targetWeight')} (${t('profile.weightUnit')})`}
                     step="0.1"
                     defaultValue={profile?.target_weight_kg}
                     {...register('target_weight_kg', { valueAsNumber: true })}
@@ -315,7 +318,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
               {section.id === 'diet' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="label mb-2 block">Type de régime</label>
+                    <label className="label mb-2 block">{t('profile.dietType')}</label>
                     <select
                       className="input"
                       defaultValue={profile?.diet_type}
@@ -327,7 +330,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                     </select>
                   </div>
                   <div>
-                    <label className="label mb-2 block">Allergies</label>
+                    <label className="label mb-2 block">{t('profile.allergies')}</label>
                     <div className="flex flex-wrap gap-2">
                       {COMMON_ALLERGIES.map((allergy) => (
                         <label key={allergy} className="flex items-center gap-2 px-3 py-1.5 bg-neutral-100 rounded-full text-sm cursor-pointer hover:bg-neutral-200 transition-colors">
@@ -346,7 +349,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
 
               <div className="flex justify-end pt-4">
                 <Button type="submit" isLoading={isUpdating}>
-                  Enregistrer
+                  {t('profile.save')}
                 </Button>
               </div>
             </form>
@@ -369,29 +372,29 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
       <div className="p-6 bg-gradient-to-r from-primary-50 to-secondary-50">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">📊</span>
-          <h3 className="heading-4">Besoins nutritionnels quotidiens</h3>
+          <h3 className="heading-4">{t('profile.nutritionalNeeds')}</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <NutritionCard
-            label="Calories"
+            label={t('profile.calories')}
             value={profile?.daily_calories}
             unit="kcal"
             color="bg-accent-100 text-accent-700"
           />
           <NutritionCard
-            label="Protéines"
+            label={t('profile.protein')}
             value={profile?.protein_g}
             unit="g"
             color="bg-secondary-100 text-secondary-700"
           />
           <NutritionCard
-            label="Glucides"
+            label={t('profile.carbs')}
             value={profile?.carbs_g}
             unit="g"
             color="bg-warning-100 text-warning-700"
           />
           <NutritionCard
-            label="Lipides"
+            label={t('profile.fat')}
             value={profile?.fat_g}
             unit="g"
             color="bg-error-100 text-error-700"
@@ -419,6 +422,7 @@ interface AccountSettingsProps {
 }
 
 function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
+  const { t } = useTranslation('settings')
   const [showPasswordForm, setShowPasswordForm] = useState(false)
 
   return (
@@ -427,11 +431,11 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">✉️</span>
-          <h3 className="heading-4">Adresse email</h3>
+          <h3 className="heading-4">{t('account.email')}</h3>
         </div>
         <p className="body-md">{user?.email}</p>
         <p className="body-sm mt-2">
-          L'adresse email ne peut pas être modifiée pour des raisons de sécurité.
+          {t('account.emailNote')}
         </p>
       </div>
 
@@ -440,13 +444,13 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <span className="text-xl">🔒</span>
-            <h3 className="heading-4">Mot de passe</h3>
+            <h3 className="heading-4">{t('account.password')}</h3>
           </div>
           <button
             onClick={() => setShowPasswordForm(!showPasswordForm)}
             className="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors"
           >
-            {showPasswordForm ? 'Annuler' : 'Modifier'}
+            {showPasswordForm ? t('profile.cancel') : t('profile.modify')}
           </button>
         </div>
 
@@ -455,24 +459,24 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
             <Input
               id="current_password"
               type="password"
-              label="Mot de passe actuel"
+              label={t('account.currentPassword')}
               placeholder="••••••••"
             />
             <Input
               id="new_password"
               type="password"
-              label="Nouveau mot de passe"
+              label={t('account.newPassword')}
               placeholder="••••••••"
             />
             <Input
               id="confirm_password"
               type="password"
-              label="Confirmer le nouveau mot de passe"
+              label={t('account.confirmPassword')}
               placeholder="••••••••"
             />
             <div className="flex justify-end">
               <Button type="submit">
-                Changer le mot de passe
+                {t('account.changePassword')}
               </Button>
             </div>
           </form>
@@ -485,17 +489,17 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
       <div className="p-6 bg-error-50">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">⚠️</span>
-          <h3 className="font-semibold text-error-700">Zone de danger</h3>
+          <h3 className="font-semibold text-error-700">{t('account.dangerZone')}</h3>
         </div>
         <p className="body-md mb-4">
-          La suppression de votre compte est irréversible. Toutes vos données (profil, historique, recettes sauvegardées) seront définitivement supprimées.
+          {t('account.deleteWarning')}
         </p>
         <Button
           variant="outline"
           className="!border-error-500 !text-error-600 hover:!bg-error-100"
           onClick={onDeleteClick}
         >
-          Supprimer mon compte
+          {t('account.deleteAccount')}
         </Button>
       </div>
     </div>
@@ -504,6 +508,7 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
 
 // Composant Paramètres des Notifications
 function NotificationSettings() {
+  const { t } = useTranslation('settings')
   const [settings, setSettings] = useState({
     dailyReminder: true,
     weeklyReport: true,
@@ -517,11 +522,11 @@ function NotificationSettings() {
   }
 
   const notificationOptions = [
-    { key: 'dailyReminder' as const, label: 'Rappel quotidien', description: 'Recevoir un rappel pour enregistrer vos repas', icon: '⏰' },
-    { key: 'weeklyReport' as const, label: 'Rapport hebdomadaire', description: 'Résumé de votre semaine nutritionnelle', icon: '📈' },
-    { key: 'newRecipes' as const, label: 'Nouvelles recettes', description: 'Suggestions de recettes personnalisées', icon: '🍽️' },
-    { key: 'achievements' as const, label: 'Succès et badges', description: 'Notifications quand vous débloquez un succès', icon: '🏆' },
-    { key: 'tips' as const, label: 'Conseils nutrition', description: 'Astuces et conseils de notre coach IA', icon: '💡' },
+    { key: 'dailyReminder' as const, label: t('notifications.dailyReminder'), description: t('notifications.dailyReminderDesc'), icon: '⏰' },
+    { key: 'weeklyReport' as const, label: t('notifications.weeklyReport'), description: t('notifications.weeklyReportDesc'), icon: '📈' },
+    { key: 'newRecipes' as const, label: t('notifications.newRecipes'), description: t('notifications.newRecipesDesc'), icon: '🍽️' },
+    { key: 'achievements' as const, label: t('notifications.achievements'), description: t('notifications.achievementsDesc'), icon: '🏆' },
+    { key: 'tips' as const, label: t('notifications.tips'), description: t('notifications.tipsDesc'), icon: '💡' },
   ]
 
   return (
@@ -552,7 +557,7 @@ function NotificationSettings() {
 
       <div className="p-6">
         <Button className="w-full md:w-auto">
-          Enregistrer les préférences
+          {t('notifications.savePreferences')}
         </Button>
       </div>
     </div>
@@ -561,39 +566,41 @@ function NotificationSettings() {
 
 // Composant Paramètres de Confidentialité
 function PrivacySettings() {
+  const { t } = useTranslation('settings')
+
   return (
     <div className="divide-y divide-neutral-100">
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">📋</span>
-          <h3 className="heading-4">Vos données</h3>
+          <h3 className="heading-4">{t('privacy.yourData')}</h3>
         </div>
         <p className="body-md mb-4">
-          Conformément au RGPD, vous avez le droit d'accéder à vos données personnelles et de les télécharger.
+          {t('privacy.gdprNote')}
         </p>
         <Button variant="outline">
-          Télécharger mes données
+          {t('privacy.downloadData')}
         </Button>
       </div>
 
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">🔐</span>
-          <h3 className="heading-4">Partage des données</h3>
+          <h3 className="heading-4">{t('privacy.dataSharing')}</h3>
         </div>
         <div className="space-y-4">
           <label className="flex items-center gap-3 cursor-pointer">
             <input type="checkbox" className="w-5 h-5 rounded text-primary-500" />
             <div>
-              <p className="font-medium text-neutral-800">Amélioration du service</p>
-              <p className="body-sm">Autoriser l'utilisation anonyme de mes données pour améliorer les algorithmes</p>
+              <p className="font-medium text-neutral-800">{t('privacy.serviceImprovement')}</p>
+              <p className="body-sm">{t('privacy.serviceImprovementDesc')}</p>
             </div>
           </label>
           <label className="flex items-center gap-3 cursor-pointer">
             <input type="checkbox" className="w-5 h-5 rounded text-primary-500" />
             <div>
-              <p className="font-medium text-neutral-800">Statistiques anonymes</p>
-              <p className="body-sm">Partager des statistiques anonymes pour la recherche en nutrition</p>
+              <p className="font-medium text-neutral-800">{t('privacy.anonymousStats')}</p>
+              <p className="body-sm">{t('privacy.anonymousStatsDesc')}</p>
             </div>
           </label>
         </div>
@@ -602,12 +609,12 @@ function PrivacySettings() {
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xl">📄</span>
-          <h3 className="heading-4">Documents légaux</h3>
+          <h3 className="heading-4">{t('privacy.legalDocs')}</h3>
         </div>
         <div className="space-y-2">
-          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">Politique de confidentialité</a>
-          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">Conditions d'utilisation</a>
-          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">Politique des cookies</a>
+          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">{t('privacy.privacyPolicy')}</a>
+          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">{t('privacy.termsOfService')}</a>
+          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">{t('privacy.cookiePolicy')}</a>
         </div>
       </div>
     </div>

@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "title": "您的个性化营养方案",
+    "subtitle": "使用AI分析您的餐食，跟踪您的进展，实现您的健康目标。",
+    "cta": "免费开始",
+    "ctaSecondary": "了解更多"
+  },
+  "features": {
+    "title": "功能特点",
+    "analysis": {
+      "title": "餐食分析",
+      "description": "拍摄您的餐食照片，我们的AI将即时分析其营养价值。"
+    },
+    "tracking": {
+      "title": "营养追踪",
+      "description": "通过直观的图表跟踪您的卡路里、宏量营养素和进展。"
+    },
+    "recipes": {
+      "title": "个性化食谱",
+      "description": "根据您的偏好和目标获取食谱建议。"
+    },
+    "coach": {
+      "title": "AI教练",
+      "description": "从我们的AI教练获取个性化建议和激励。"
+    }
+  },
+  "howItWorks": {
+    "title": "如何使用",
+    "step1": {
+      "title": "创建您的个人资料",
+      "description": "回答几个问题来设定您的目标和偏好。"
+    },
+    "step2": {
+      "title": "扫描您的餐食",
+      "description": "拍摄餐食照片以获取即时分析。"
+    },
+    "step3": {
+      "title": "追踪您的进展",
+      "description": "可视化您的发展并实现您的目标。"
+    }
+  },
+  "testimonials": {
+    "title": "用户评价"
+  },
+  "cta": {
+    "title": "准备好开始了吗？",
+    "subtitle": "加入数千名通过NutriProfile改善营养的用户。",
+    "button": "免费开始"
+  }
+}

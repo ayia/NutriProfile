@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { recipeApi } from '@/services/recipeApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { RecipeCard } from './RecipeCard'
 import type { RecipeGenerateRequest, RecipeGenerateResponse } from '@/types/recipe'
-import { MEAL_TYPE_LABELS, MEAL_TYPE_ICONS } from '@/types/recipe'
+import { MEAL_TYPE_ICONS } from '@/types/recipe'
 
 interface RecipeGeneratorProps {
   initialTags?: string[]
@@ -14,6 +15,7 @@ interface RecipeGeneratorProps {
 }
 
 export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGeneratorProps) {
+  const { t } = useTranslation('recipes')
   const [ingredients, setIngredients] = useState<string[]>([])
   const [newIngredient, setNewIngredient] = useState('')
   const [generatedRecipe, setGeneratedRecipe] = useState<RecipeGenerateResponse | null>(null)
@@ -69,12 +71,12 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
   return (
     <div className="space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-xl shadow-sm p-6 space-y-6">
-        <h2 className="text-xl font-semibold">Générer une recette</h2>
+        <h2 className="text-xl font-semibold">{t('generate.title')}</h2>
 
         {/* Active tags from quick suggestions */}
         {activeTags.length > 0 && (
           <div className="flex items-center gap-2 p-3 bg-primary-50 border border-primary-200 rounded-lg">
-            <span className="text-sm text-primary-700">Filtres actifs:</span>
+            <span className="text-sm text-primary-700">{t('generator.activeFilters')}:</span>
             <div className="flex flex-wrap gap-1">
               {activeTags.map((tag) => (
                 <span
@@ -90,7 +92,7 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
               onClick={clearTags}
               className="ml-auto text-primary-600 hover:text-primary-800 text-sm"
             >
-              Effacer
+              {t('filters.clear')}
             </button>
           </div>
         )}
@@ -98,10 +100,10 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
         {/* Type de repas */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Type de repas
+            {t('generator.mealType')}
           </label>
           <div className="grid grid-cols-4 gap-2">
-            {Object.entries(MEAL_TYPE_LABELS).map(([value, label]) => (
+            {Object.keys(MEAL_TYPE_ICONS).map((value) => (
               <label
                 key={value}
                 className={`flex flex-col items-center p-3 border rounded-lg cursor-pointer transition-colors ${
@@ -117,7 +119,7 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
                   {...register('meal_type')}
                 />
                 <span className="text-2xl">{MEAL_TYPE_ICONS[value]}</span>
-                <span className="text-sm mt-1">{label}</span>
+                <span className="text-sm mt-1">{t(`categories.${value}`)}</span>
               </label>
             ))}
           </div>
@@ -126,11 +128,11 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
         {/* Ingrédients */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Ingrédients disponibles (optionnel)
+            {t('generator.ingredients')}
           </label>
           <div className="flex gap-2 mb-2">
             <Input
-              placeholder="Ajouter un ingrédient..."
+              placeholder={t('generator.ingredientPlaceholder')}
               value={newIngredient}
               onChange={(e) => setNewIngredient(e.target.value)}
               onKeyDown={(e) => {
@@ -141,7 +143,7 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
               }}
             />
             <Button type="button" variant="outline" onClick={addIngredient}>
-              Ajouter
+              {t('generator.add')}
             </Button>
           </div>
           {ingredients.length > 0 && (
@@ -164,7 +166,7 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
             </div>
           )}
           <p className="text-xs text-gray-500 mt-1">
-            Laissez vide pour une recette aléatoire adaptée à votre profil
+            {t('generator.ingredientsHint')}
           </p>
         </div>
 
@@ -172,22 +174,22 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Temps max (min)
+              {t('generator.maxTime')}
             </label>
             <select
               className="block w-full rounded-lg border border-gray-300 px-3 py-2"
               {...register('max_prep_time', { valueAsNumber: true })}
             >
-              <option value={15}>15 min</option>
-              <option value={30}>30 min</option>
-              <option value={45}>45 min</option>
-              <option value={60}>1 heure</option>
-              <option value={90}>1h30</option>
+              <option value={15}>{t('generator.time15')}</option>
+              <option value={30}>{t('generator.time30')}</option>
+              <option value={45}>{t('generator.time45')}</option>
+              <option value={60}>{t('generator.time60')}</option>
+              <option value={90}>{t('generator.time90')}</option>
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Portions
+              {t('generator.servings')}
             </label>
             <select
               className="block w-full rounded-lg border border-gray-300 px-3 py-2"
@@ -195,7 +197,7 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
             >
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <option key={n} value={n}>
-                  {n} {n === 1 ? 'portion' : 'portions'}
+                  {t('generator.servingsCount', { count: n })}
                 </option>
               ))}
             </select>
@@ -207,12 +209,12 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
           className="w-full"
           isLoading={generateMutation.isPending}
         >
-          {generateMutation.isPending ? 'Génération en cours...' : 'Générer une recette'}
+          {generateMutation.isPending ? t('generate.generating') : t('generate.generate')}
         </Button>
 
         {generateMutation.error && (
           <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-            Erreur lors de la génération. Veuillez réessayer.
+            {t('errors.generateFailed')}
           </div>
         )}
       </form>
@@ -221,7 +223,7 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
       {generatedRecipe && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Votre recette</h3>
+            <h3 className="text-lg font-semibold">{t('generate.result')}</h3>
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span
                 className={`w-2 h-2 rounded-full ${
@@ -232,7 +234,7 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
                     : 'bg-orange-500'
                 }`}
               />
-              Confiance: {Math.round(generatedRecipe.confidence * 100)}%
+              {t('generator.confidence')}: {Math.round(generatedRecipe.confidence * 100)}%
               {generatedRecipe.used_fallback && (
                 <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">fallback</span>
               )}

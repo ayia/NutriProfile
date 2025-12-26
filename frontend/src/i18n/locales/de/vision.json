@@ -1,0 +1,127 @@
+{
+  "title": "Mahlzeit scannen",
+  "subtitle": "Fotografieren Sie Ihre Mahlzeiten für automatische Nährwertverfolgung",
+  "tabs": {
+    "scan": "Scanner",
+    "today": "Heute",
+    "history": "Verlauf"
+  },
+  "scan": {
+    "title": "Mahlzeit analysieren",
+    "description": "Ziehen Sie ein Foto hierher oder verwenden Sie Ihr Gerät"
+  },
+  "today": {
+    "button": "Heute",
+    "nutritionSummary": "Nährwertzusammenfassung",
+    "meals": "Mahlzeiten",
+    "noMeals": "Keine Mahlzeiten erfasst",
+    "scanFirst": "Mahlzeit scannen",
+    "calories": "Kalorien",
+    "protein": "Protein",
+    "carbs": "Kohlenhydrate",
+    "fat": "Fett",
+    "water": "Wasser"
+  },
+  "history": {
+    "noHistory": "Kein Verlauf"
+  },
+  "common": {
+    "loading": "Laden..."
+  },
+  "mealTypes": {
+    "breakfast": "Frühstück",
+    "lunch": "Mittagessen",
+    "dinner": "Abendessen",
+    "snack": "Snack"
+  },
+  "uploader": {
+    "mealTypeLabel": "Mahlzeittyp",
+    "scanTitle": "Scannen Sie Ihre Mahlzeit",
+    "scanDescription": "Ziehen Sie ein Foto hierher oder verwenden Sie Ihr Gerät",
+    "tipsTitle": "Tipps für bessere Analyse:",
+    "tip1": "Gut beleuchtetes Foto, Draufsicht",
+    "tip2": "Alle Lebensmittel im Bild sichtbar",
+    "tip3": "Vermeiden Sie Reflexionen und harte Schatten",
+    "takePhoto": "Foto aufnehmen",
+    "gallery": "Galerie",
+    "invalidFile": "Bitte wählen Sie ein Bild aus",
+    "error": "Fehler bei der Analyse. Bitte versuchen Sie es erneut.",
+    "aiWorking": "KI arbeitet... Geduld!"
+  },
+  "analysisSteps": {
+    "step1": "Bild empfangen",
+    "step2": "Lebensmittel erkennen",
+    "step3": "Nährwerte berechnen",
+    "step4": "Personalisierte Gesundheitsanalyse"
+  },
+  "result": {
+    "verdict": {
+      "excellent": "Ausgezeichnet!",
+      "good": "Gute Wahl",
+      "moderate": "In Ordnung",
+      "poor": "Verbesserungswürdig",
+      "excellentDesc": "Diese Mahlzeit ist perfekt ausgewogen",
+      "goodDesc": "Eine ausgewogene Mahlzeit für Ihre Ziele",
+      "moderateDesc": "Einige Anpassungen empfohlen",
+      "poorDesc": "Diese Mahlzeit erfordert Ihre Aufmerksamkeit"
+    },
+    "healthScore": "Gesundheitswert",
+    "analysisComplete": "Analyse abgeschlossen",
+    "confidence": "Konfidenz",
+    "macros": {
+      "calories": "Kalorien",
+      "protein": "Protein",
+      "carbs": "Kohlenhydrate",
+      "fat": "Fett"
+    },
+    "healthReport": "Personalisierter Gesundheitsbericht",
+    "calorieRemaining": "Sie haben noch {{count}} kcal für heute",
+    "calorieExceeded": "Sie haben {{count}} kcal überschritten",
+    "positivePoints": "Positive Punkte",
+    "warnings": "Achtung",
+    "suggestions": "Vorschläge",
+    "macroBalance": "Makro-Balance",
+    "detectedFoods": "Erkannte Lebensmittel",
+    "confidenceLabel": {
+      "high": "Hoch",
+      "medium": "Mittel",
+      "low": "Niedrig"
+    },
+    "edit": {
+      "name": "Name",
+      "quantity": "Menge",
+      "unit": "Einheit",
+      "cancel": "Abbrechen",
+      "save": "Speichern"
+    },
+    "lowConfidence": "Niedrige Konfidenz",
+    "lowConfidenceMsg": "Wir empfehlen, die Werte im Abschnitt \"Erkannte Lebensmittel\" zu überprüfen und zu korrigieren.",
+    "actions": {
+      "newAnalysis": "Neue Analyse",
+      "editMeal": "Mahlzeit bearbeiten",
+      "saveMeal": "Mahlzeit speichern",
+      "saving": "Speichern...",
+      "done": "Fertig"
+    },
+    "mealSaved": "Mahlzeit erfolgreich gespeichert",
+    "saveError": "Fehler beim Speichern. Bitte versuchen Sie es erneut.",
+    "modify": "Bearbeiten",
+    "corrected": "Korrigiert"
+  },
+  "foodLog": {
+    "foods": "Lebensmittel",
+    "showDetails": "Anzeigen",
+    "hideDetails": "Verbergen",
+    "edit": "Bearbeiten",
+    "deleteConfirm": "Diese Mahlzeit löschen?",
+    "deleteError": "Fehler beim Löschen. Bitte versuchen Sie es erneut."
+  },
+  "errors": {
+    "uploadFailed": "Hochladen fehlgeschlagen",
+    "analysisFailed": "Analyse fehlgeschlagen",
+    "saveFailed": "Speichern fehlgeschlagen",
+    "noImage": "Bitte wählen Sie ein Bild aus",
+    "imageTooLarge": "Bild zu groß (max. 10MB)",
+    "invalidFormat": "Ungültiges Format. Verwenden Sie JPG, PNG oder WebP"
+  }
+}

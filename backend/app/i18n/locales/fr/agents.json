@@ -1,0 +1,300 @@
+{
+  "common": {
+    "fallbackUsed": "Fallback déterministe utilisé",
+    "noModelAvailable": "Aucun modèle disponible pour {{capability}}",
+    "noFallbackDefined": "Pas de fallback déterministe défini",
+    "analysisComplete": "Analyse terminée",
+    "none": "Aucun"
+  },
+  "coach": {
+    "greeting": "Bonjour {{name}} ! Je suis votre coach nutritionnel personnel.",
+    "greetingMorning": "Bonjour {{name}} !",
+    "greetingAfternoon": "Bon après-midi {{name}} !",
+    "greetingEvening": "Bonsoir {{name}} !",
+    "dailySummary": "Voici votre résumé nutritionnel pour aujourd'hui :",
+    "caloriesSummary": "Vous avez consommé {{consumed}} sur vos {{target}} kcal objectif.",
+    "goalProgress": "Vous êtes à {{percent}}% de votre objectif de {{goal}}.",
+    "fallbackSummary": {
+      "farFromGoal": "Vous êtes encore loin de votre objectif calorique. N'oubliez pas de bien manger !",
+      "onTrackGood": "Vous êtes sur la bonne voie ! Continuez ainsi.",
+      "almostThere": "Excellent ! Vous approchez de votre objectif calorique.",
+      "exceeded": "Attention, vous avez dépassé votre objectif calorique aujourd'hui."
+    },
+    "fallbackAdvice": {
+      "drinkWater": "Pensez à boire de l'eau régulièrement !",
+      "drinkWaterAction": "Boire un verre d'eau",
+      "increaseProtein": "Augmentez votre apport en protéines.",
+      "increaseProteinAction": "Manger des aliments riches en protéines",
+      "doExercise": "Un peu d'exercice vous ferait du bien !",
+      "doExerciseAction": "Faire une marche de 15 minutes",
+      "keepItUp": "Continuez comme ça, vous êtes sur la bonne voie !"
+    },
+    "fallbackMotivation": "Chaque petit pas compte vers un mode de vie plus sain.",
+    "encouragement": {
+      "onTrack": "Excellent travail ! Vous êtes parfaitement dans vos objectifs nutritionnels.",
+      "slightlyOver": "Vous avez légèrement dépassé votre objectif calorique, mais ne vous inquiétez pas - demain est un nouveau jour !",
+      "slightlyUnder": "Vous êtes un peu en dessous de votre objectif. Pensez à prendre une collation saine.",
+      "significantlyOver": "Vous avez dépassé votre objectif calorique aujourd'hui. Planifions mieux les repas pour demain.",
+      "significantlyUnder": "Vous êtes bien en dessous de votre objectif calorique. Assurez-vous de manger suffisamment pour nourrir votre corps."
+    },
+    "mealSuggestion": "Selon vos calories restantes, je vous suggère : {{suggestion}}",
+    "waterReminder": "N'oubliez pas de rester hydraté(e) ! Vous avez bu {{glasses}} verres d'eau aujourd'hui.",
+    "weeklyReview": "Cette semaine, vous avez atteint {{percent}}% de vos objectifs nutritionnels. {{feedback}}",
+    "tipOfTheDay": "Conseil du jour : {{tip}}",
+    "streakMessage": "Incroyable ! Vous êtes sur une série de {{days}} jours de suivi de vos repas !",
+    "goals": {
+      "loseWeight": "perdre du poids",
+      "gainMuscle": "prendre du muscle",
+      "maintain": "maintenir son poids",
+      "improveHealth": "améliorer sa santé"
+    },
+    "timeContext": {
+      "morning": "C'est le matin, idéal pour un petit-déjeuner équilibré.",
+      "afternoon": "C'est l'après-midi, attention au coup de fatigue post-repas.",
+      "evening": "C'est le soir, un dîner léger favorise un bon sommeil.",
+      "night": "Il est tard, évitez les grignotages nocturnes."
+    },
+    "advice": {
+      "drinkWater": "N'oubliez pas de boire de l'eau ! Visez au moins 2L par jour.",
+      "caloriesRemaining": "Il vous reste {{calories}} kcal à consommer. Pensez à un repas équilibré.",
+      "caloriesExceeded": "Vous avez dépassé votre objectif calorique. Que diriez-vous d'une petite marche ?",
+      "proteinRemaining": "Encore {{protein}}g de protéines à atteindre. Essayez les œufs, le poulet ou les légumineuses.",
+      "noActivityYet": "Pas encore d'activité aujourd'hui ? Même 15 minutes font la différence !"
+    }
+  },
+  "vision": {
+    "analyzing": "Analyse de votre photo de repas en cours...",
+    "detectionComplete": "Analyse terminée ! J'ai détecté les aliments suivants :",
+    "lowConfidence": "Je ne suis pas très confiant sur certains aliments. Veuillez vérifier et corriger si nécessaire.",
+    "highConfidence": "Je suis assez confiant sur cette analyse.",
+    "noFoodDetected": "Je n'ai pas pu détecter d'aliments dans cette image. Veuillez réessayer avec une photo plus claire.",
+    "autoAnalysisUnavailable": "Analyse automatique non disponible. Veuillez corriger manuellement.",
+    "mealQuality": {
+      "excellent": "C'est un excellent repas, parfaitement équilibré !",
+      "good": "C'est un bon choix de repas pour vos objectifs.",
+      "moderate": "Ce repas est acceptable, mais pourrait être amélioré.",
+      "poor": "Ce repas ne correspond pas vraiment à vos objectifs nutritionnels."
+    },
+    "positivePoints": "Points positifs :",
+    "warnings": "Points d'attention :",
+    "suggestions": "Suggestions d'amélioration :",
+    "weeklyImpact": {
+      "maintainLoss": "À ce rythme, vous pourriez perdre ~{{loss}}kg/semaine",
+      "dailySurplus": "Vous êtes à +{{diff}} kcal aujourd'hui. Équilibrez demain.",
+      "goodSurplusGain": "Bon surplus calorique pour la prise de muscle (+{{diff}} kcal)",
+      "deficitForGain": "Déficit de {{diff}} kcal - augmentez vos apports pour la prise de muscle",
+      "onTrack": "on_track",
+      "overTarget": "over_target",
+      "underTarget": "under_target",
+      "balanced": "balanced",
+      "balancedIntake": "Apport équilibré pour le maintien",
+      "slightSurplus": "Léger surplus de {{diff}} kcal",
+      "slightDeficit": "Léger déficit de {{diff}} kcal"
+    },
+    "mealTiming": {
+      "morningCarbsGood": "Bon timing ! Les glucides le matin fournissent de l'énergie pour la journée.",
+      "morningProteinGood": "Bon apport en protéines pour commencer la journée.",
+      "breakfastIdeal": "Le petit-déjeuner est idéal pour les glucides complexes et protéines.",
+      "lunchBalanced": "Déjeuner équilibré - parfait pour maintenir l'énergie l'après-midi.",
+      "lunchLight": "Déjeuner léger - prévoyez un encas sain en après-midi.",
+      "lunchGoodTime": "Bon moment pour un repas complet et équilibré.",
+      "snackReasonable": "Encas raisonnable pour éviter les fringales du soir.",
+      "snackHeavy": "Cet encas est copieux - allégez le dîner en conséquence.",
+      "snackModerate": "Encas modéré - attention à ne pas trop manger ce soir.",
+      "dinnerIdeal": "Dîner idéal: protéines et peu de glucides pour un bon sommeil.",
+      "dinnerHeavy": "Dîner copieux - évitez de manger trop tard pour la digestion.",
+      "dinnerReasonable": "Dîner raisonnable - évitez les sucres rapides avant le coucher.",
+      "lateHeavy": "Repas tardif et calorique - peut affecter le sommeil et le métabolisme.",
+      "lateProtein": "Collation tardive protéinée - acceptable pour la récupération musculaire.",
+      "lateGeneral": "Manger tard peut perturber le sommeil. Privilégiez des repas plus tôt.",
+      "enjoyMeal": "Bon appétit !"
+    },
+    "fallback": {
+      "unidentifiedMeal": "Repas non identifié"
+    },
+    "healthReport": {
+      "portionBalanced": "Portion caloriquement équilibrée pour un repas",
+      "mealHighPercent": "Ce repas représente {{percent}}% de vos calories journalières",
+      "mealVeryLight": "Repas très léger, risque de fringale",
+      "preferSmaller": "Privilégiez des portions plus petites aux prochains repas",
+      "addProteinSatiety": "Ajoutez une source de protéines pour plus de satiété",
+      "goodProtein": "Bonne source de protéines ({{protein}}g)",
+      "lowProtein": "Faible en protéines",
+      "addProteinSuggestion": "Ajoutez œufs, légumineuses ou viande maigre",
+      "compatibleWeightLoss": "Compatible avec votre objectif de perte de poids",
+      "caloricForWeightLoss": "Repas calorique pour un objectif de perte de poids",
+      "reducePortions": "Réduisez les portions ou choisissez des aliments moins caloriques",
+      "highProteinSatiety": "Riche en protéines - favorise la satiété",
+      "weightDecreasing": "Votre poids diminue - continuez ainsi!",
+      "weightIncreasing": "Attention: votre poids augmente cette semaine",
+      "reducePortion": "Réduisez légèrement les portions pour inverser la tendance",
+      "excellentProteinMuscle": "Excellent apport protéique pour la prise de muscle",
+      "insufficientProteinMuscle": "Insuffisant en protéines pour la prise de masse",
+      "aim30gProtein": "Visez au moins 30g de protéines par repas",
+      "caloricDeficitMuscle": "Vous êtes en déficit calorique - mangez plus pour prendre du muscle",
+      "containsVegetables": "Contient des légumes - bon pour la santé",
+      "addVegetables": "Ajoutez des légumes pour plus de fibres et vitamines",
+      "burnedCalories": "Bravo! Vous avez brûlé {{calories}} kcal aujourd'hui",
+      "activityMinutes": "{{minutes}} minutes d'activité aujourd'hui",
+      "increaseProteinRecovery": "Après l'effort, augmentez les protéines pour la récupération",
+      "addCarbsEnergy": "Ajoutez des glucides complexes pour recharger vos réserves",
+      "proteinEssentialAge": "À votre âge, les protéines sont essentielles pour préserver la masse musculaire",
+      "goodCalcium": "Bon apport en calcium pour la santé osseuse",
+      "watchPortions": "Même jeune, surveillez les portions pour de bonnes habitudes",
+      "goodIronIntake": "Bon apport en fer",
+      "diabetesWarning": "⚠️ Attention: repas riche en glucides (diabète)",
+      "limitSimpleCarbs": "Limitez les glucides simples et privilégiez les fibres",
+      "diabetesSugarWarning": "⚠️ Contient des sucres rapides (déconseillé pour diabète)",
+      "hypertensionWarning": "⚠️ Aliments potentiellement riches en sel (hypertension)",
+      "preferLowSodium": "Préférez des aliments pauvres en sodium",
+      "highFatCholesterol": "Repas riche en graisses (attention au cholestérol)",
+      "limitSaturatedFat": "Limitez les graisses saturées pour votre cholestérol",
+      "vitaminKWarning": "⚠️ Aliment riche en vitamine K (attention avec anticoagulants)",
+      "consultDoctor": "Consultez votre médecin sur la consommation de légumes verts",
+      "grapefruitStatins": "⚠️ Le pamplemousse interagit avec les statines!",
+      "containsAllergen": "⚠️ ATTENTION: Contient potentiellement {{allergen}}",
+      "containsExcluded": "Contient {{food}} (aliment exclu)",
+      "containsMeat": "Contient de la viande (régime végétarien)",
+      "containsAnimal": "Contient des produits animaux (régime vegan)",
+      "containsMeatPesc": "Contient de la viande (régime pescétarien)",
+      "tooManyCarbs": "Trop de glucides ({{carbs}}g) pour un régime keto",
+      "ketoFatAdvice": "En keto, privilégiez les lipides aux protéines",
+      "mediterraneanCompliant": "Conforme au régime méditerranéen",
+      "varyDiet": "Variez votre alimentation - vous mangez souvent les mêmes aliments",
+      "tryNewFoods": "Essayez de nouveaux aliments pour plus de nutriments variés",
+      "waterReminder": "N'oubliez pas l'eau! Seulement {{water}}ml aujourd'hui",
+      "goodHydration": "Bonne hydratation aujourd'hui",
+      "exceededCalories": "Vous dépassez vos objectifs caloriques de {{calories}} kcal",
+      "remainingCalories": "Il vous reste {{calories}} kcal pour le reste de la journée",
+      "verdictExcellent": "Excellent choix! Ce repas est parfaitement adapté à votre profil.",
+      "verdictGood": "Bon choix! Ce repas contribue positivement à vos objectifs.",
+      "verdictNeutral": "Repas acceptable. Quelques ajustements pourraient l'améliorer.",
+      "verdictPoor": "Ce repas n'est pas idéal pour vos objectifs. Considérez les recommandations.",
+      "verdictBad": "Attention! Ce repas ne correspond pas à votre profil nutritionnel.",
+      "weeklyExcellentLoss": "Excellente progression! -{{weight}}kg cette semaine",
+      "weeklyGoodGain": "Bonne prise de masse: +{{weight}}kg cette semaine"
+    }
+  },
+  "recipe": {
+    "generating": "Création d'une recette personnalisée selon vos ingrédients et préférences...",
+    "complete": "Voici une recette créée spécialement pour vous !",
+    "noIngredientsMatch": "Je n'ai pas pu créer de recette avec ces ingrédients. Essayez d'en ajouter d'autres.",
+    "dietaryNote": "Cette recette a été adaptée à votre régime {{diet}}.",
+    "allergenWarning": "Note : Veuillez vérifier tous les ingrédients pour les allergènes.",
+    "nutritionInfo": "Informations nutritionnelles par portion :",
+    "cookingTip": "Astuce du chef : {{tip}}",
+    "servingSuggestion": "Suggestion de présentation : {{suggestion}}",
+    "dietInstructions": {
+      "vegan": "La recette doit être 100% végétalienne (aucun produit animal).",
+      "vegetarian": "La recette doit être végétarienne (pas de viande ni poisson).",
+      "pescatarian": "La recette peut inclure du poisson mais pas de viande.",
+      "keto": "La recette doit être faible en glucides (moins de 20g de glucides nets).",
+      "paleo": "La recette doit suivre le régime paléo (sans céréales, légumineuses, produits laitiers).",
+      "mediterranean": "La recette doit suivre le régime méditerranéen.",
+      "omnivore": "Pas de restriction particulière."
+    },
+    "goalInstructions": {
+      "loseWeight": "Privilégiez les recettes légères, riches en protéines et fibres, faibles en calories.",
+      "gainMuscle": "Privilégiez les recettes riches en protéines (30g+ par portion) et glucides complexes.",
+      "maintain": "Équilibrez les macronutriments pour maintenir le poids.",
+      "improveHealth": "Privilégiez les aliments nutritifs, peu transformés, riches en vitamines et minéraux."
+    },
+    "mealHistory": {
+      "avoid": "À ÉVITER (mangé trop souvent cette semaine) :",
+      "varietyScore": "Score de variété :",
+      "suggestedProteins": "Protéines suggérées (non consommées récemment) :",
+      "loggedMeals": "Repas enregistrés (7j) :",
+      "header": "HISTORIQUE DES REPAS :"
+    },
+    "timeRecommendations": {
+      "morning": "Matin : Privilégiez les glucides complexes pour l'énergie",
+      "midday": "Midi : Repas équilibré, protéines + légumes",
+      "afternoon": "Après-midi : Collation légère si besoin",
+      "evening": "Soir : Repas léger, évitez les glucides simples",
+      "late": "Tard : Évitez les repas lourds, préférez les protéines légères"
+    },
+    "fallback": {
+      "oatmealBowl": "Bowl de flocons d'avoine aux fruits",
+      "oatmealDesc": "Un petit-déjeuner équilibré et nutritif",
+      "chickenSalad": "Salade de poulet grillé",
+      "chickenSaladDesc": "Une salade fraîche et riche en protéines",
+      "salmonVeggies": "Saumon aux légumes rôtis",
+      "salmonDesc": "Un dîner sain et savoureux",
+      "greekYogurt": "Yaourt grec aux noix",
+      "greekYogurtDesc": "Un snack riche en protéines et rassasiant"
+    }
+  },
+  "profiling": {
+    "welcome": "Bienvenue sur NutriProfile ! Créons votre plan nutritionnel personnalisé.",
+    "calculatingNeeds": "Calcul de vos besoins nutritionnels quotidiens selon votre profil...",
+    "profileComplete": "Votre profil est complet ! Voici vos recommandations personnalisées :",
+    "calorieExplanation": "Selon votre âge, poids, taille et niveau d'activité, votre objectif calorique quotidien est de {{calories}} kcal.",
+    "macroExplanation": "Votre répartition optimale de macros est : {{protein}}g de protéines, {{carbs}}g de glucides, {{fat}}g de lipides.",
+    "goalAdvice": {
+      "lose": "Pour atteindre votre objectif de perte de poids, nous avons défini un déficit calorique modéré.",
+      "maintain": "Pour maintenir votre poids actuel, nous avons équilibré vos apports avec vos dépenses.",
+      "gain": "Pour développer votre masse musculaire, nous avons ajouté des calories supplémentaires avec un accent sur les protéines."
+    },
+    "recommendations": {
+      "loseWeight": {
+        "leanProtein": "Privilégiez les protéines maigres pour maintenir la masse musculaire",
+        "drinkWater": "Buvez au moins 2L d'eau par jour"
+      },
+      "gainMuscle": {
+        "proteinEveryMeal": "Consommez des protéines à chaque repas",
+        "postWorkout": "Mangez dans les 30 minutes après l'entraînement"
+      },
+      "general": {
+        "varyProtein": "Variez vos sources de protéines",
+        "fruitsVeggies": "Consommez 5 portions de fruits et légumes par jour",
+        "limitProcessed": "Limitez les aliments ultra-transformés"
+      }
+    },
+    "deficiencies": {
+      "vegan": {
+        "b12": "Vitamine B12 (supplémentation recommandée)",
+        "iron": "Fer (sources végétales : lentilles, épinards)"
+      },
+      "vegetarian": {
+        "iron": "Fer (combinez avec vitamine C pour l'absorption)"
+      }
+    },
+    "warnings": {
+      "diabetes": "Surveillez votre apport en glucides et leur index glycémique",
+      "hypertension": "Limitez votre consommation de sel à 5g par jour",
+      "allergyTrace": "Attention aux traces de {{allergy}} dans les produits transformés"
+    }
+  },
+  "nutrition": {
+    "validating": "Validation des données nutritionnelles...",
+    "dataVerified": "Les valeurs nutritionnelles ont été vérifiées et sont dans les normes.",
+    "outlierDetected": "Certaines valeurs semblent inhabituelles et nécessitent une vérification.",
+    "missingData": "Certaines informations nutritionnelles sont manquantes. Utilisation de valeurs estimées.",
+    "balanceAnalysis": "Analyse de votre équilibre en macros :",
+    "proteinStatus": {
+      "low": "Votre apport en protéines est en dessous de l'objectif. Pensez à ajouter des protéines maigres.",
+      "optimal": "Votre apport en protéines est dans l'objectif.",
+      "high": "Votre apport en protéines est au-dessus de l'objectif."
+    },
+    "carbStatus": {
+      "low": "Votre apport en glucides est faible. Pensez à ajouter des glucides complexes.",
+      "optimal": "Votre apport en glucides est bien équilibré.",
+      "high": "Votre apport en glucides est élevé. Pensez à réduire les glucides raffinés."
+    },
+    "fatStatus": {
+      "low": "Votre apport en lipides est faible. N'oubliez pas que les graisses saines sont essentielles.",
+      "optimal": "Votre apport en lipides est équilibré.",
+      "high": "Votre apport en lipides est au-dessus de l'objectif. Privilégiez les sources de graisses saines."
+    }
+  },
+  "consensus": {
+    "noResponses": "Aucune réponse à valider",
+    "fewModels": "Seulement {{count}} modèles ont répondu",
+    "lowAgreement": "Faible accord entre les modèles ({{score}})",
+    "disagreements": "{{count}} désaccords détectés",
+    "noRecipesToMerge": "Aucune recette à fusionner",
+    "ingredientDisagreement": "Désaccord significatif sur les ingrédients",
+    "foodDisagreement": "Fort désaccord : {{unique}} aliments uniques, {{common}} en commun",
+    "outlierOn": "Valeurs aberrantes sur {{field}}"
+  }
+}

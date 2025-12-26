@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/hooks/useAuth'
@@ -10,24 +11,8 @@ interface RegisterFormData extends RegisterData {
   confirmPassword: string
 }
 
-// Calculer la force du mot de passe
-function getPasswordStrength(password: string): { score: number; label: string; color: string } {
-  let score = 0
-
-  if (password.length >= 8) score++
-  if (password.length >= 12) score++
-  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++
-  if (/\d/.test(password)) score++
-  if (/[^a-zA-Z0-9]/.test(password)) score++
-
-  if (score <= 1) return { score, label: 'Faible', color: 'bg-red-500' }
-  if (score <= 2) return { score, label: 'Moyen', color: 'bg-orange-500' }
-  if (score <= 3) return { score, label: 'Bon', color: 'bg-yellow-500' }
-  if (score <= 4) return { score, label: 'Fort', color: 'bg-green-500' }
-  return { score, label: 'Excellent', color: 'bg-emerald-500' }
-}
-
 export function RegisterPage() {
+  const { t } = useTranslation('auth')
   const { register: registerUser, isRegistering, registerError } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -42,17 +27,32 @@ export function RegisterPage() {
   })
 
   const password = watch('password', '')
-  const passwordStrength = useMemo(() => getPasswordStrength(password), [password])
+
+  // Calculer la force du mot de passe
+  const passwordStrength = useMemo(() => {
+    let score = 0
+    if (password.length >= 8) score++
+    if (password.length >= 12) score++
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++
+    if (/\d/.test(password)) score++
+    if (/[^a-zA-Z0-9]/.test(password)) score++
+
+    if (score <= 1) return { score, label: t('register.passwordStrength.weak'), color: 'bg-red-500' }
+    if (score <= 2) return { score, label: t('register.passwordStrength.medium'), color: 'bg-orange-500' }
+    if (score <= 3) return { score, label: t('register.passwordStrength.good'), color: 'bg-yellow-500' }
+    if (score <= 4) return { score, label: t('register.passwordStrength.strong'), color: 'bg-green-500' }
+    return { score, label: t('register.passwordStrength.excellent'), color: 'bg-emerald-500' }
+  }, [password, t])
 
   const onSubmit = (data: RegisterData) => {
     registerUser(data)
   }
 
   const passwordRequirements = [
-    { test: password.length >= 8, label: 'Au moins 8 caractères' },
-    { test: /[A-Z]/.test(password), label: 'Une majuscule' },
-    { test: /[a-z]/.test(password), label: 'Une minuscule' },
-    { test: /\d/.test(password), label: 'Un chiffre' },
+    { test: password.length >= 8, label: t('register.requirements.minLength') },
+    { test: /[A-Z]/.test(password), label: t('register.requirements.uppercase') },
+    { test: /[a-z]/.test(password), label: t('register.requirements.lowercase') },
+    { test: /\d/.test(password), label: t('register.requirements.number') },
   ]
 
   return (
@@ -63,16 +63,14 @@ export function RegisterPage() {
           <div className="w-16 h-16 gradient-vitality rounded-full flex items-center justify-center mx-auto mb-4 shadow-elevated">
             <span className="text-3xl">🎉</span>
           </div>
-          <h1 className="heading-2">Créer un compte</h1>
-          <p className="body-md mt-1">
-            Rejoignez NutriProfile gratuitement
-          </p>
+          <h1 className="heading-2">{t('register.title')}</h1>
+          <p className="body-md mt-1">{t('register.subtitle')}</p>
         </div>
 
         {registerError && (
           <div className="mb-4 p-3 bg-error-50 border border-error-200 text-error-600 rounded-xl text-sm flex items-center gap-2">
             <span>⚠️</span>
-            <span>Une erreur est survenue. Veuillez réessayer.</span>
+            <span>{t('register.error')}</span>
           </div>
         )}
 
@@ -82,14 +80,14 @@ export function RegisterPage() {
             <Input
               id="name"
               type="text"
-              label="Nom"
-              placeholder="Votre nom"
+              label={t('register.name')}
+              placeholder={t('register.namePlaceholder')}
               error={errors.name?.message}
               {...register('name', {
-                required: 'Nom requis',
+                required: t('register.nameRequired'),
                 minLength: {
                   value: 2,
-                  message: 'Minimum 2 caractères',
+                  message: t('register.nameMinLength'),
                 },
               })}
             />
@@ -103,14 +101,14 @@ export function RegisterPage() {
             <Input
               id="email"
               type="email"
-              label="Email"
-              placeholder="vous@exemple.com"
+              label={t('register.email')}
+              placeholder={t('register.emailPlaceholder')}
               error={errors.email?.message}
               {...register('email', {
-                required: 'Email requis',
+                required: t('register.emailRequired'),
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Email invalide',
+                  message: t('register.emailInvalid'),
                 },
               })}
             />
@@ -125,14 +123,14 @@ export function RegisterPage() {
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                label="Mot de passe"
+                label={t('register.password')}
                 placeholder="••••••••"
                 error={errors.password?.message}
                 {...register('password', {
-                  required: 'Mot de passe requis',
+                  required: t('register.passwordRequired'),
                   minLength: {
                     value: 8,
-                    message: 'Minimum 8 caractères',
+                    message: t('register.passwordMinLength'),
                   },
                 })}
               />
@@ -183,13 +181,13 @@ export function RegisterPage() {
             <Input
               id="confirmPassword"
               type={showConfirmPassword ? 'text' : 'password'}
-              label="Confirmer le mot de passe"
+              label={t('register.confirmPassword')}
               placeholder="••••••••"
               error={errors.confirmPassword?.message}
               {...register('confirmPassword', {
-                required: 'Confirmation requise',
+                required: t('register.confirmPasswordRequired'),
                 validate: (value) =>
-                  value === watch('password') || 'Les mots de passe ne correspondent pas',
+                  value === watch('password') || t('register.passwordMismatch'),
               })}
             />
             <button
@@ -206,13 +204,13 @@ export function RegisterPage() {
 
           {/* Conditions */}
           <div className="text-xs text-neutral-500">
-            En créant un compte, vous acceptez nos{' '}
+            {t('register.terms')}{' '}
             <a href="#" className="text-primary-600 hover:underline">
-              Conditions d'utilisation
+              {t('register.termsLink')}
             </a>{' '}
-            et notre{' '}
+            {t('register.and')}{' '}
             <a href="#" className="text-primary-600 hover:underline">
-              Politique de confidentialité
+              {t('register.privacyLink')}
             </a>
             .
           </div>
@@ -223,7 +221,7 @@ export function RegisterPage() {
             isLoading={isRegistering}
             disabled={!isValid}
           >
-            Créer mon compte
+            {t('register.submit')}
           </Button>
         </form>
 
@@ -233,7 +231,7 @@ export function RegisterPage() {
             <div className="w-full border-t border-neutral-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-4 text-neutral-500">ou</span>
+            <span className="bg-white px-4 text-neutral-500">{t('register.or')}</span>
           </div>
         </div>
 
@@ -262,14 +260,14 @@ export function RegisterPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            <span className="text-neutral-500">Bientôt disponible</span>
+            <span className="text-neutral-500">{t('register.googleComingSoon')}</span>
           </button>
         </div>
 
         <p className="mt-6 text-center body-md">
-          Déjà un compte ?{' '}
+          {t('register.hasAccount')}{' '}
           <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
-            Se connecter
+            {t('register.signIn')}
           </Link>
         </p>
       </div>

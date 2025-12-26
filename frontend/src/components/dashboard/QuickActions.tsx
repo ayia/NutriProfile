@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 interface QuickAction {
   icon: string
-  label: string
+  labelKey: string
   to?: string
   onClick?: () => void
   color: string
@@ -14,45 +15,47 @@ interface QuickActionsProps {
 }
 
 export function QuickActions({ onWaterClick }: QuickActionsProps) {
+  const { t } = useTranslation('dashboard')
+
   const actions: QuickAction[] = [
     {
       icon: '📸',
-      label: 'Scanner',
+      labelKey: 'quickActions.scanMeal',
       to: '/vision',
       color: 'text-primary-600',
       bgColor: 'bg-primary-100',
     },
     {
       icon: '🔍',
-      label: 'Recettes',
+      labelKey: 'quickActions.viewRecipes',
       to: '/recipes',
       color: 'text-accent-600',
       bgColor: 'bg-accent-100',
     },
     {
       icon: '💧',
-      label: 'Eau',
+      labelKey: 'quickActions.addWater',
       onClick: onWaterClick,
       color: 'text-secondary-600',
       bgColor: 'bg-secondary-100',
     },
     {
       icon: '🏃',
-      label: 'Activités',
+      labelKey: 'quickActions.logActivity',
       to: '/tracking',
       color: 'text-primary-600',
       bgColor: 'bg-primary-100',
     },
     {
       icon: '⚖️',
-      label: 'Poids',
+      labelKey: 'quickActions.logWeight',
       to: '/tracking?tab=weight',
       color: 'text-warning-600',
       bgColor: 'bg-warning-100',
     },
     {
       icon: '📊',
-      label: 'Stats',
+      labelKey: 'quickActions.stats',
       to: '/tracking?tab=history',
       color: 'text-secondary-600',
       bgColor: 'bg-secondary-100',
@@ -71,7 +74,7 @@ export function QuickActions({ onWaterClick }: QuickActionsProps) {
                 <span className="text-2xl">{action.icon}</span>
               </div>
               <span className={`text-xs font-medium text-neutral-700`}>
-                {action.label}
+                {t(action.labelKey)}
               </span>
             </>
           )
@@ -79,7 +82,7 @@ export function QuickActions({ onWaterClick }: QuickActionsProps) {
           if (action.to) {
             return (
               <Link
-                key={action.label}
+                key={action.labelKey}
                 to={action.to}
                 className="group flex flex-col items-center p-3 bg-white rounded-2xl shadow-card hover:shadow-elevated transition-all min-w-[80px]"
               >
@@ -90,7 +93,7 @@ export function QuickActions({ onWaterClick }: QuickActionsProps) {
 
           return (
             <button
-              key={action.label}
+              key={action.labelKey}
               onClick={action.onClick}
               className="group flex flex-col items-center p-3 bg-white rounded-2xl shadow-card hover:shadow-elevated transition-all min-w-[80px]"
             >

@@ -1,10 +1,13 @@
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useOnboardingStore } from '@/store/onboardingStore'
 import type { ProfileStep3, DietType } from '@/types/profile'
-import { DIET_LABELS, COMMON_ALLERGIES } from '@/types/profile'
+
+const DIET_TYPES: DietType[] = ['omnivore', 'vegetarian', 'vegan', 'pescatarian', 'keto', 'paleo', 'mediterranean']
+const ALLERGY_KEYS = ['gluten', 'lactose', 'peanuts', 'treeNuts', 'eggs', 'fish', 'shellfish', 'soy', 'sesame'] as const
 
 interface Step3FormData {
   diet_type: DietType
@@ -14,6 +17,7 @@ interface Step3FormData {
 }
 
 export function Step3Diet() {
+  const { t } = useTranslation('onboarding')
   const { step3, setStep3, nextStep, prevStep } = useOnboardingStore()
 
   const { register, handleSubmit, watch, setValue } = useForm<Step3FormData>({
@@ -58,9 +62,9 @@ export function Step3Diet() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold">Préférences alimentaires</h2>
+        <h2 className="text-2xl font-bold">{t('step3.title')}</h2>
         <p className="text-gray-600 mt-2">
-          Personnalisez vos recommandations selon votre régime.
+          {t('step3.subtitle')}
         </p>
       </div>
 
@@ -68,10 +72,10 @@ export function Step3Diet() {
         {/* Type de régime */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Type de régime
+            {t('step3.dietType')}
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {Object.entries(DIET_LABELS).map(([value, label]) => (
+            {DIET_TYPES.map((value) => (
               <label
                 key={value}
                 className={`flex items-center justify-center p-3 border rounded-lg cursor-pointer transition-colors text-center ${
@@ -86,7 +90,7 @@ export function Step3Diet() {
                   className="sr-only"
                   {...register('diet_type')}
                 />
-                <span className="text-sm">{label}</span>
+                <span className="text-sm">{t(`diets.${value}`)}</span>
               </label>
             ))}
           </div>
@@ -95,27 +99,30 @@ export function Step3Diet() {
         {/* Allergies */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Allergies & intolérances
+            {t('step3.allergies')}
           </label>
           <div className="flex flex-wrap gap-2 mb-2">
-            {COMMON_ALLERGIES.map((allergy) => (
-              <button
-                key={allergy}
-                type="button"
-                onClick={() => toggleAllergy(allergy)}
-                className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                  allergies.includes(allergy)
-                    ? 'bg-red-100 text-red-700 border border-red-300'
-                    : 'bg-gray-100 text-gray-700 border border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                {allergy}
-              </button>
-            ))}
+            {ALLERGY_KEYS.map((key) => {
+              const label = t(`commonAllergies.${key}`)
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => toggleAllergy(label)}
+                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                    allergies.includes(label)
+                      ? 'bg-red-100 text-red-700 border border-red-300'
+                      : 'bg-gray-100 text-gray-700 border border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  {label}
+                </button>
+              )
+            })}
           </div>
 
           {/* Allergies sélectionnées */}
-          {allergies.filter((a) => !COMMON_ALLERGIES.includes(a)).map((allergy) => (
+          {allergies.filter((a) => !ALLERGY_KEYS.map(k => t(`commonAllergies.${k}`)).includes(a)).map((allergy) => (
             <span
               key={allergy}
               className="inline-flex items-center gap-1 px-3 py-1 mr-2 mb-2 rounded-full text-sm bg-red-100 text-red-700"
@@ -134,13 +141,13 @@ export function Step3Diet() {
           {/* Ajout personnalisé */}
           <div className="flex gap-2 mt-2">
             <Input
-              placeholder="Autre allergie..."
+              placeholder={t('step3.otherAllergy')}
               value={customAllergy}
               onChange={(e) => setCustomAllergy(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomAllergy())}
             />
             <Button type="button" variant="outline" onClick={addCustomAllergy}>
-              Ajouter
+              {t('step3.add')}
             </Button>
           </div>
         </div>
@@ -148,10 +155,10 @@ export function Step3Diet() {
         {/* Aliments exclus */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Aliments à éviter (optionnel)
+            {t('step3.excludedFoods')}
           </label>
           <Input
-            placeholder="Ex: champignons, olives (séparés par des virgules)"
+            placeholder={t('step3.excludedFoodsPlaceholder')}
             {...register('excluded_foods_text')}
           />
         </div>
@@ -159,10 +166,10 @@ export function Step3Diet() {
         {/* Aliments préférés */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Aliments préférés (optionnel)
+            {t('step3.favoriteFoods')}
           </label>
           <Input
-            placeholder="Ex: poulet, riz, brocoli (séparés par des virgules)"
+            placeholder={t('step3.favoriteFoodsPlaceholder')}
             {...register('favorite_foods_text')}
           />
         </div>
@@ -170,9 +177,9 @@ export function Step3Diet() {
 
       <div className="flex justify-between">
         <Button type="button" variant="outline" onClick={prevStep}>
-          Retour
+          {t('buttons.back')}
         </Button>
-        <Button type="submit">Continuer</Button>
+        <Button type="submit">{t('buttons.continue')}</Button>
       </div>
     </form>
   )

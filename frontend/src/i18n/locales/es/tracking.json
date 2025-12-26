@@ -1,0 +1,152 @@
+{
+  "title": "Seguimiento",
+  "subtitle": "Sigue tu progreso y alcanza tus objetivos",
+  "tabs": {
+    "overview": "Resumen",
+    "activities": "Actividades",
+    "weight": "Peso",
+    "goals": "Objetivos"
+  },
+  "today": {
+    "title": "Hoy",
+    "caloriesConsumed": "kcal consumidas",
+    "caloriesBurned": "kcal quemadas",
+    "activityMinutes": "min de actividad",
+    "waterMl": "ml de agua",
+    "addWater": "+ Agregar"
+  },
+  "week": {
+    "title": "Esta semana",
+    "avgCalories": "Promedio calorías",
+    "totalActivity": "Total actividad",
+    "totalSteps": "Total pasos",
+    "weightChange": "Cambio de peso"
+  },
+  "progress": {
+    "title": "Progreso",
+    "calories": "Calorías",
+    "activityMinutes": "Actividad (minutos)",
+    "weight": "Peso",
+    "days7": "7d",
+    "days14": "14d",
+    "days30": "30d"
+  },
+  "progressChart": {
+    "noData": "Sin datos",
+    "startTracking": "Comienza a registrar para ver tu progreso",
+    "avg": "Prom",
+    "metrics": {
+      "calories": "Calorías",
+      "protein": "Proteína",
+      "weight": "Peso",
+      "activity": "Actividad"
+    }
+  },
+  "activities": {
+    "title": "Distribución de actividades (30d)",
+    "newActivity": "+ Nueva actividad",
+    "noActivities": "Sin actividades registradas",
+    "addActivity": "Agregar actividad"
+  },
+  "activityForm": {
+    "type": "Tipo de actividad",
+    "types": {
+      "walking": "Caminar",
+      "running": "Correr",
+      "cycling": "Ciclismo",
+      "swimming": "Natación",
+      "gym": "Musculación",
+      "yoga": "Yoga",
+      "other": "Otro"
+    },
+    "duration": "Duración (minutos)",
+    "intensity": "Intensidad",
+    "intensities": {
+      "light": "Ligera",
+      "moderate": "Moderada",
+      "intense": "Intensa"
+    },
+    "distance": "Distancia (km)",
+    "steps": "Pasos",
+    "optional": "Opcional",
+    "notes": "Notas",
+    "notesPlaceholder": "Notas opcionales...",
+    "submit": "Agregar actividad"
+  },
+  "weight": {
+    "title": "Evolución del peso",
+    "newWeight": "+ Nuevo pesaje",
+    "noWeight": "Sin pesajes registrados",
+    "addWeight": "Agregar pesaje",
+    "bodyFat": "GC"
+  },
+  "weightForm": {
+    "weight": "Peso (kg)",
+    "bodyFat": "Grasa corporal (%)",
+    "muscleMass": "Masa muscular (kg)",
+    "optional": "Opcional",
+    "notes": "Notas",
+    "notesPlaceholder": "Notas opcionales..."
+  },
+  "goals": {
+    "newGoal": "+ Nuevo objetivo",
+    "noGoals": "Sin objetivos definidos",
+    "createGoal": "Crear objetivo"
+  },
+  "goalForm": {
+    "type": "Tipo de objetivo",
+    "types": {
+      "calories": "Calorías",
+      "steps": "Pasos",
+      "activity": "Actividad",
+      "water": "Agua",
+      "weight": "Peso"
+    },
+    "target": "Objetivo ({{unit}})",
+    "period": "Período",
+    "periods": {
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual"
+    },
+    "submit": "Crear objetivo"
+  },
+  "goalCard": {
+    "types": {
+      "calories": "Calorías",
+      "steps": "Pasos",
+      "activity": "Actividad",
+      "water": "Agua",
+      "weight": "Peso"
+    },
+    "periods": {
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual"
+    },
+    "deleteConfirm": "¿Eliminar este objetivo?"
+  },
+  "actions": {
+    "addActivity": "+ Actividad",
+    "addWeight": "+ Peso",
+    "addWater": "+ Agua"
+  },
+  "modal": {
+    "newActivity": "Nueva actividad",
+    "newWeight": "Nuevo pesaje",
+    "newGoal": "Nuevo objetivo",
+    "addWater": "Agregar agua"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "min": "min",
+    "kcal": "kcal",
+    "kg": "kg"
+  },
+  "errors": {
+    "sessionExpired": "Sesión expirada - por favor inicia sesión de nuevo",
+    "saveFailed": "Error al guardar",
+    "activityFailed": "Error al agregar la actividad",
+    "goalFailed": "Error al crear el objetivo"
+  }
+}

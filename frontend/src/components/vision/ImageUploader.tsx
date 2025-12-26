@@ -1,9 +1,10 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { visionApi, compressImage } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import type { MealType, ImageAnalyzeResponse } from '@/types/foodLog'
-import { MEAL_TYPE_LABELS, MEAL_TYPE_ICONS } from '@/types/foodLog'
+import { MEAL_TYPE_ICONS } from '@/types/foodLog'
 
 export interface AnalysisData {
   result: ImageAnalyzeResponse
@@ -15,15 +16,18 @@ interface ImageUploaderProps {
   onAnalysisComplete: (data: AnalysisData) => void
 }
 
-// Étapes d'analyse pour le skeleton loader
-const ANALYSIS_STEPS = [
-  { id: 1, label: 'Réception de l\'image', icon: '📥', duration: 800 },
-  { id: 2, label: 'Détection des aliments', icon: '🔍', duration: 1500 },
-  { id: 3, label: 'Calcul nutritionnel', icon: '🧮', duration: 1200 },
-  { id: 4, label: 'Analyse santé personnalisée', icon: '💚', duration: 1000 },
+// Analysis step icons and durations (labels come from translations)
+const ANALYSIS_STEP_CONFIG = [
+  { id: 1, key: 'step1', icon: '📥', duration: 800 },
+  { id: 2, key: 'step2', icon: '🔍', duration: 1500 },
+  { id: 3, key: 'step3', icon: '🧮', duration: 1200 },
+  { id: 4, key: 'step4', icon: '💚', duration: 1000 },
 ]
 
+const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack']
+
 export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
+  const { t } = useTranslation('vision')
   const [selectedMealType, setSelectedMealType] = useState<MealType>('lunch')
   const [preview, setPreview] = useState<string | null>(null)
   const [dragActive, setDragActive] = useState(false)
@@ -34,7 +38,7 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
   const analyzeMutation = useMutation({
     mutationFn: visionApi.analyzeImage,
     onSuccess: (data) => {
-      setCurrentStep(ANALYSIS_STEPS.length) // Marquer comme terminé
+      setCurrentStep(ANALYSIS_STEP_CONFIG.length) // Mark as complete
       setTimeout(() => onAnalysisComplete({
         result: data,
         imageBase64: lastImageBase64,
@@ -57,12 +61,12 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
     let stepIndex = 1
     const intervals: NodeJS.Timeout[] = []
 
-    ANALYSIS_STEPS.forEach((_, index) => {
+    ANALYSIS_STEP_CONFIG.forEach((_, index) => {
       if (index > 0) {
         const timeout = setTimeout(() => {
           stepIndex = index + 1
           setCurrentStep(stepIndex)
-        }, ANALYSIS_STEPS.slice(0, index).reduce((acc, s) => acc + s.duration, 0))
+        }, ANALYSIS_STEP_CONFIG.slice(0, index).reduce((acc, s) => acc + s.duration, 0))
         intervals.push(timeout)
       }
     })
@@ -72,7 +76,7 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      alert('Veuillez sélectionner une image')
+      alert(t('uploader.invalidFile'))
       return
     }
 
@@ -93,7 +97,7 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
     } catch (error) {
       console.error('Error compressing image:', error)
     }
-  }, [selectedMealType, analyzeMutation])
+  }, [selectedMealType, analyzeMutation, t])
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -145,13 +149,13 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
 
   return (
     <div className="space-y-6">
-      {/* Sélection du type de repas */}
+      {/* Meal type selection */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Type de repas
+          {t('uploader.mealTypeLabel')}
         </label>
         <div className="grid grid-cols-4 gap-2">
-          {(Object.keys(MEAL_TYPE_LABELS) as MealType[]).map((type) => (
+          {MEAL_TYPES.map((type) => (
             <button
               key={type}
               type="button"
@@ -163,7 +167,7 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
               }`}
             >
               <span className="text-2xl">{MEAL_TYPE_ICONS[type]}</span>
-              <span className="text-xs mt-1">{MEAL_TYPE_LABELS[type]}</span>
+              <span className="text-xs mt-1">{t(`mealTypes.${type}`)}</span>
             </button>
           ))}
         </div>
@@ -182,7 +186,7 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
               : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
           }`}
         >
-          {/* Animation de l'icône caméra */}
+          {/* Camera icon animation */}
           <div className="relative inline-block mb-4">
             <div className="text-5xl animate-bounce">📸</div>
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-ping" />
@@ -190,29 +194,29 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
           </div>
 
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
-            Scannez votre repas
+            {t('uploader.scanTitle')}
           </h3>
           <p className="text-gray-600 mb-4">
-            Glissez une photo ici ou utilisez votre appareil
+            {t('uploader.scanDescription')}
           </p>
 
-          {/* Tips pour une bonne photo */}
+          {/* Tips for good photo */}
           <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-3 mb-4 text-left">
             <p className="text-xs font-medium text-gray-700 mb-2">
-              💡 Conseils pour une meilleure analyse :
+              💡 {t('uploader.tipsTitle')}
             </p>
             <ul className="text-xs text-gray-600 space-y-1">
               <li className="flex items-center gap-2">
                 <span className="text-green-500">✓</span>
-                Photo bien éclairée, vue de dessus
+                {t('uploader.tip1')}
               </li>
               <li className="flex items-center gap-2">
                 <span className="text-green-500">✓</span>
-                Tous les aliments visibles dans le cadre
+                {t('uploader.tip2')}
               </li>
               <li className="flex items-center gap-2">
                 <span className="text-green-500">✓</span>
-                Évitez les reflets et les ombres fortes
+                {t('uploader.tip3')}
               </li>
             </ul>
           </div>
@@ -224,11 +228,11 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
               className="gap-2 shadow-lg hover:shadow-xl transition-shadow"
             >
               <span>📷</span>
-              Prendre une photo
+              {t('uploader.takePhoto')}
             </Button>
             <Button type="button" variant="outline" onClick={openGallery} className="gap-2">
               <span>🖼️</span>
-              Galerie
+              {t('uploader.gallery')}
             </Button>
           </div>
         </div>
@@ -261,7 +265,7 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
                       strokeWidth="6"
                       fill="none"
                       strokeLinecap="round"
-                      strokeDasharray={`${(currentStep / ANALYSIS_STEPS.length) * 226} 226`}
+                      strokeDasharray={`${(currentStep / ANALYSIS_STEP_CONFIG.length) * 226} 226`}
                       className="transition-all duration-500 ease-out"
                     />
                     <defs>
@@ -273,14 +277,14 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className="text-3xl animate-pulse">
-                      {ANALYSIS_STEPS[currentStep - 1]?.icon || '📸'}
+                      {ANALYSIS_STEP_CONFIG[currentStep - 1]?.icon || '📸'}
                     </span>
                   </div>
                 </div>
 
-                {/* Étapes de progression */}
+                {/* Progress steps */}
                 <div className="space-y-3">
-                  {ANALYSIS_STEPS.map((step, index) => (
+                  {ANALYSIS_STEP_CONFIG.map((step, index) => (
                     <div
                       key={step.id}
                       className={`flex items-center gap-3 transition-all duration-300 ${
@@ -302,13 +306,13 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
                       >
                         {index + 1 < currentStep ? '✓' : step.icon}
                       </div>
-                      <span className="text-sm font-medium">{step.label}</span>
+                      <span className="text-sm font-medium">{t(`analysisSteps.${step.key}`)}</span>
                     </div>
                   ))}
                 </div>
 
                 <p className="text-xs text-white/60 mt-4">
-                  IA en action... patience !
+                  {t('uploader.aiWorking')}
                 </p>
               </div>
             </div>
@@ -333,10 +337,10 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
         className="hidden"
       />
 
-      {/* Erreur */}
+      {/* Error */}
       {analyzeMutation.error && (
         <div className="p-4 bg-red-50 text-red-600 rounded-lg">
-          Erreur lors de l'analyse. Veuillez réessayer.
+          {t('uploader.error')}
         </div>
       )}
     </div>

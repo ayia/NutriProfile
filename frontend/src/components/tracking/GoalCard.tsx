@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
 import type { Goal } from '@/types/tracking'
@@ -9,6 +10,7 @@ interface GoalCardProps {
 }
 
 export function GoalCard({ goal }: GoalCardProps) {
+  const { t } = useTranslation('tracking')
   const queryClient = useQueryClient()
   const goalInfo = GOAL_TYPES[goal.goal_type] || { name: goal.goal_type, icon: '🎯', unit: '' }
 
@@ -41,16 +43,7 @@ export function GoalCard({ goal }: GoalCardProps) {
   }
 
   const formatPeriod = () => {
-    switch (goal.period) {
-      case 'daily':
-        return 'Quotidien'
-      case 'weekly':
-        return 'Hebdomadaire'
-      case 'monthly':
-        return 'Mensuel'
-      default:
-        return goal.period
-    }
+    return t(`goalCard.periods.${goal.period}`)
   }
 
   return (
@@ -63,7 +56,7 @@ export function GoalCard({ goal }: GoalCardProps) {
         <div className="flex items-center gap-3">
           <span className="text-2xl">{goalInfo.icon}</span>
           <div>
-            <h4 className="font-medium">{goalInfo.name}</h4>
+            <h4 className="font-medium">{t(`goalCard.types.${goal.goal_type}`)}</h4>
             <span className="text-xs text-gray-500">{formatPeriod()}</span>
           </div>
         </div>
@@ -115,7 +108,7 @@ export function GoalCard({ goal }: GoalCardProps) {
             size="sm"
             variant="ghost"
             onClick={() => {
-              if (confirm('Supprimer cet objectif ?')) {
+              if (confirm(t('goalCard.deleteConfirm'))) {
                 deleteMutation.mutate(goal.id)
               }
             }}

@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/hooks/useAuth'
 
 interface QuickAction {
   id: string
-  label: string
+  labelKey: string
   icon: string
   path?: string
   action?: () => void
@@ -18,6 +19,7 @@ export function QuickActionsFAB() {
   const navigate = useNavigate()
   const location = useLocation()
   const { isAuthenticated } = useAuth()
+  const { t } = useTranslation('dashboard')
 
   // Fermer le menu quand on clique ailleurs - DOIT être avant tout return conditionnel
   useEffect(() => {
@@ -45,28 +47,28 @@ export function QuickActionsFAB() {
   const actions: QuickAction[] = [
     {
       id: 'scan',
-      label: 'Scanner un repas',
+      labelKey: 'fab.scanMeal',
       icon: '📸',
       path: '/vision',
       color: 'bg-green-500',
     },
     {
       id: 'water',
-      label: 'Ajouter eau',
+      labelKey: 'fab.addWater',
       icon: '💧',
       path: '/tracking',
       color: 'bg-blue-500',
     },
     {
       id: 'weight',
-      label: 'Nouveau poids',
+      labelKey: 'fab.newWeight',
       icon: '⚖️',
       path: '/tracking',
       color: 'bg-purple-500',
     },
     {
       id: 'recipes',
-      label: 'Chercher recette',
+      labelKey: 'fab.searchRecipe',
       icon: '🍳',
       path: '/recipes',
       color: 'bg-orange-500',
@@ -114,7 +116,7 @@ export function QuickActionsFAB() {
               isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
             }`}
           >
-            <span className="text-sm font-medium whitespace-nowrap">{action.label}</span>
+            <span className="text-sm font-medium whitespace-nowrap">{t(action.labelKey)}</span>
             <span className="text-xl">{action.icon}</span>
           </button>
         ))}

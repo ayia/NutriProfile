@@ -44,7 +44,7 @@ async def analyze_image(
     - Génère un rapport de santé personnalisé basé sur le profil
     - Sauvegarde automatiquement dans le journal (par défaut)
     """
-    agent = get_vision_agent()
+    agent = get_vision_agent(language=current_user.preferred_language)
 
     # Préparer l'input
     vision_input = VisionInput(
@@ -250,6 +250,7 @@ async def analyze_image(
         activities_today=activities_dict,
         weight_trend=weight_trend_dict,
         meal_history=meal_history_dict,
+        language=current_user.preferred_language,
     )
 
     # Préparer la réponse

@@ -1,0 +1,142 @@
+{
+  "title": "创建您的营养档案",
+  "subtitle": "回答几个问题以获取个性化建议。",
+  "error": "发生错误。请重试。",
+  "step1": {
+    "title": "基本信息",
+    "subtitle": "这些信息帮助我们计算您的卡路里需求。",
+    "age": "年龄",
+    "agePlaceholder": "25",
+    "gender": "性别",
+    "genderSelect": "选择",
+    "genders": {
+      "male": "男",
+      "female": "女",
+      "other": "其他"
+    },
+    "height": "身高（厘米）",
+    "heightPlaceholder": "175",
+    "weight": "体重（公斤）",
+    "weightPlaceholder": "70",
+    "bmiEstimate": "预估BMI"
+  },
+  "step2": {
+    "title": "活动与目标",
+    "subtitle": "告诉我们您的活动水平和目标。",
+    "activityLevel": "身体活动水平",
+    "goal": "主要目标",
+    "targetWeight": "目标体重（公斤）- 可选",
+    "targetWeightPlaceholder": "65"
+  },
+  "step3": {
+    "title": "饮食偏好",
+    "subtitle": "根据您的饮食习惯定制建议。",
+    "dietType": "饮食类型",
+    "allergies": "过敏与不耐受",
+    "otherAllergy": "其他过敏...",
+    "add": "添加",
+    "excludedFoods": "要避免的食物（可选）",
+    "excludedFoodsPlaceholder": "例如：蘑菇、橄榄（逗号分隔）",
+    "favoriteFoods": "喜欢的食物（可选）",
+    "favoriteFoodsPlaceholder": "例如：鸡肉、米饭、西兰花（逗号分隔）"
+  },
+  "step4": {
+    "title": "健康信息",
+    "subtitle": "这些信息是可选的，但有助于个性化您的建议。",
+    "note": "注意：",
+    "noteText": "这些信息是保密的并安全存储。它使我们能够调整建议并避免禁忌症。",
+    "medicalConditions": "健康状况（可选）",
+    "otherConditions": "其他状况（逗号分隔）",
+    "medications": "当前药物（可选）",
+    "medicationsPlaceholder": "例如：二甲双胍、他汀类药物（逗号分隔）",
+    "medicationsNote": "某些食物可能与药物相互作用。"
+  },
+  "step5": {
+    "title": "摘要",
+    "subtitle": "在创建档案前查看您的信息。",
+    "incompleteData": "数据不完整。请返回。",
+    "nutritionTitle": "您的预估营养需求",
+    "kcalPerDay": "千卡/天",
+    "protein": "蛋白质",
+    "carbs": "碳水化合物",
+    "fat": "脂肪",
+    "basicInfo": "基本信息",
+    "activityGoal": "活动与目标",
+    "activity": "活动",
+    "goal": "目标",
+    "targetWeight": "目标体重",
+    "dietPreferences": "饮食偏好",
+    "diet": "饮食",
+    "allergies": "过敏",
+    "health": "健康",
+    "conditions": "状况",
+    "noConditions": "未指定状况",
+    "medications": "药物",
+    "createProfile": "创建我的档案"
+  },
+  "conditions": {
+    "diabetes": "糖尿病",
+    "hypertension": "高血压",
+    "cholesterol": "胆固醇",
+    "heartDisease": "心脏病",
+    "kidneyFailure": "肾衰竭",
+    "digestiveDisorders": "消化系统疾病"
+  },
+  "buttons": {
+    "back": "返回",
+    "continue": "继续",
+    "viewSummary": "查看摘要"
+  },
+  "errors": {
+    "ageRequired": "年龄必填",
+    "ageMin": "最小13岁",
+    "ageMax": "最大120岁",
+    "genderRequired": "性别必填",
+    "heightRequired": "身高必填",
+    "heightMin": "最小100厘米",
+    "heightMax": "最大250厘米",
+    "weightRequired": "体重必填",
+    "weightMin": "最小30公斤",
+    "weightMax": "最大300公斤",
+    "activityRequired": "活动水平必填",
+    "goalRequired": "目标必填"
+  },
+  "units": {
+    "years": "岁",
+    "cm": "厘米",
+    "kg": "公斤"
+  },
+  "activityLevels": {
+    "sedentary": "久坐（很少或没有运动）",
+    "light": "轻度活动（每周1-3天）",
+    "moderate": "中度活动（每周3-5天）",
+    "active": "非常活跃（每周6-7天）",
+    "very_active": "极度活跃（运动员）"
+  },
+  "goals": {
+    "lose_weight": "减肥",
+    "maintain": "保持体重",
+    "gain_muscle": "增肌",
+    "improve_health": "改善健康"
+  },
+  "diets": {
+    "omnivore": "杂食",
+    "vegetarian": "素食",
+    "vegan": "纯素",
+    "pescatarian": "鱼素",
+    "keto": "生酮",
+    "paleo": "古法",
+    "mediterranean": "地中海"
+  },
+  "commonAllergies": {
+    "gluten": "麸质",
+    "lactose": "乳糖",
+    "peanuts": "花生",
+    "treeNuts": "坚果",
+    "eggs": "鸡蛋",
+    "fish": "鱼类",
+    "shellfish": "贝类",
+    "soy": "大豆",
+    "sesame": "芝麻"
+  }
+}

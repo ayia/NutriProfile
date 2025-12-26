@@ -1,0 +1,50 @@
+{
+  "loading": "加载中...",
+  "error": "错误",
+  "success": "成功",
+  "cancel": "取消",
+  "confirm": "确认",
+  "save": "保存",
+  "delete": "删除",
+  "edit": "编辑",
+  "back": "返回",
+  "next": "下一步",
+  "close": "关闭",
+  "search": "搜索",
+  "noResults": "无结果",
+  "retry": "重试",
+  "yes": "是",
+  "no": "否",
+  "or": "或",
+  "and": "和",
+  "welcome": "欢迎",
+  "logout": "退出登录",
+  "login": "登录",
+  "register": "注册",
+  "profile": "个人资料",
+  "settings": "设置",
+  "home": "首页",
+  "dashboard": "仪表板",
+  "nav": {
+    "home": "首页",
+    "dashboard": "仪表板",
+    "vision": "视觉分析",
+    "recipes": "食谱",
+    "tracking": "追踪",
+    "settings": "设置",
+    "logout": "退出登录"
+  },
+  "footer": {
+    "copyright": "© 2024 NutriProfile. 保留所有权利。",
+    "privacy": "隐私政策",
+    "terms": "服务条款"
+  },
+  "units": {
+    "g": "克",
+    "kg": "公斤",
+    "kcal": "千卡",
+    "ml": "毫升",
+    "L": "升",
+    "cm": "厘米"
+  }
+}

@@ -230,7 +230,7 @@ async def analyze_profile(
     )
 
     # Lancer l'analyse
-    agent = get_profiling_agent()
+    agent = get_profiling_agent(language=current_user.preferred_language)
     response = await agent.process(profile_input)
 
     return {

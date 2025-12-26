@@ -1,0 +1,119 @@
+{
+  "title": "Analyse Vision",
+  "subtitle": "Prenez en photo vos repas pour un suivi nutritionnel automatique",
+  "tabs": {
+    "scan": "Scanner",
+    "today": "Aujourd'hui",
+    "history": "Historique"
+  },
+  "scan": {
+    "title": "Analyser un repas",
+    "description": "Déposez une photo ici ou utilisez votre appareil"
+  },
+  "today": {
+    "button": "Aujourd'hui",
+    "nutritionSummary": "Résumé nutritionnel",
+    "meals": "Repas",
+    "noMeals": "Aucun repas enregistré",
+    "scanFirst": "Scanner un repas",
+    "calories": "Calories",
+    "protein": "Protéines",
+    "carbs": "Glucides",
+    "fat": "Lipides",
+    "water": "Eau"
+  },
+  "history": {
+    "noHistory": "Aucun historique"
+  },
+  "common": {
+    "loading": "Chargement..."
+  },
+  "mealTypes": {
+    "breakfast": "Petit-déjeuner",
+    "lunch": "Déjeuner",
+    "dinner": "Dîner",
+    "snack": "Collation"
+  },
+  "uploader": {
+    "mealTypeLabel": "Type de repas",
+    "scanTitle": "Scannez votre repas",
+    "scanDescription": "Glissez une photo ici ou utilisez votre appareil",
+    "tipsTitle": "Conseils pour une meilleure analyse :",
+    "tip1": "Photo bien éclairée, vue de dessus",
+    "tip2": "Tous les aliments visibles dans le cadre",
+    "tip3": "Évitez les reflets et les ombres fortes",
+    "takePhoto": "Prendre une photo",
+    "gallery": "Galerie",
+    "invalidFile": "Veuillez sélectionner une image",
+    "error": "Erreur lors de l'analyse. Veuillez réessayer.",
+    "aiWorking": "IA en action... patience !"
+  },
+  "analysisSteps": {
+    "step1": "Réception de l'image",
+    "step2": "Détection des aliments",
+    "step3": "Calcul nutritionnel",
+    "step4": "Analyse santé personnalisée"
+  },
+  "result": {
+    "verdict": {
+      "excellent": "Excellent !",
+      "good": "Bon choix",
+      "moderate": "Correct",
+      "poor": "À améliorer",
+      "excellentDesc": "Ce repas est parfaitement équilibré",
+      "goodDesc": "Un repas équilibré pour vos objectifs",
+      "moderateDesc": "Quelques ajustements recommandés",
+      "poorDesc": "Ce repas nécessite votre attention"
+    },
+    "healthScore": "Score santé",
+    "analysisComplete": "Analyse terminée",
+    "confidence": "Confiance",
+    "macros": {
+      "calories": "Calories",
+      "protein": "Protéines",
+      "carbs": "Glucides",
+      "fat": "Lipides"
+    },
+    "healthReport": "Rapport de santé personnalisé",
+    "calorieRemaining": "Il vous reste {{count}} kcal pour aujourd'hui",
+    "calorieExceeded": "Vous avez dépassé de {{count}} kcal",
+    "positivePoints": "Points positifs",
+    "warnings": "Attention",
+    "suggestions": "Suggestions",
+    "macroBalance": "Équilibre macros",
+    "detectedFoods": "Aliments détectés",
+    "confidenceLabel": {
+      "high": "Haute",
+      "medium": "Moyenne",
+      "low": "Faible"
+    },
+    "edit": {
+      "name": "Nom",
+      "quantity": "Quantité",
+      "unit": "Unité",
+      "cancel": "Annuler",
+      "save": "Enregistrer"
+    },
+    "lowConfidence": "Confiance faible",
+    "lowConfidenceMsg": "Nous vous recommandons de vérifier et corriger les valeurs dans la section \"Aliments détectés\".",
+    "actions": {
+      "newAnalysis": "Nouvelle analyse",
+      "editMeal": "Modifier ce repas",
+      "saveMeal": "Enregistrer le repas",
+      "saving": "Enregistrement...",
+      "done": "Terminé"
+    },
+    "mealSaved": "Repas enregistré avec succès",
+    "saveError": "Erreur lors de l'enregistrement. Réessayez.",
+    "modify": "Modifier",
+    "corrected": "Corrigé"
+  },
+  "foodLog": {
+    "foods": "Aliments",
+    "showDetails": "Voir",
+    "hideDetails": "Masquer",
+    "edit": "Modifier",
+    "deleteConfirm": "Supprimer ce repas ?",
+    "deleteError": "Erreur lors de la suppression. Veuillez réessayer."
+  }
+}

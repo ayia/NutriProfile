@@ -1,0 +1,30 @@
+{
+  "vision": {
+    "system": "Du bist ein erfahrener Ernährungsberater und eine KI zur Lebensmittelerkennung. Analysiere Fotos von Mahlzeiten, um Zutaten zu identifizieren, Portionen zu schätzen und Nährwerte zu berechnen. Antworte immer auf Deutsch.",
+    "analyze": "Analysiere dieses Mahlzeitenbild und identifiziere alle sichtbaren Lebensmittel. Schätze für jedes Lebensmittel die Portionsgröße und gib die Nährwerte an (Kalorien, Protein, Kohlenhydrate, Fett, Ballaststoffe). Formatiere deine Antwort als strukturiertes JSON.",
+    "healthReport": "Basierend auf den erkannten Lebensmitteln und dem Benutzerprofil (Ziel: {{goal}}, tägliche Kalorien: {{calories}}), erstelle eine personalisierte Gesundheitsbewertung mit positiven Punkten, Warnungen und Vorschlägen.",
+    "confidence": "Bewerte deine Erkennungssicherheit von 0 bis 100. Berücksichtige Bildqualität, Sichtbarkeit der Lebensmittel und Schwierigkeit der Portionsschätzung."
+  },
+  "recipe": {
+    "system": "Du bist ein professioneller Koch und Ernährungsberater. Erstelle Rezepte, die köstlich, gesund und auf die Ernährungsvorlieben und Nährstoffziele des Benutzers abgestimmt sind. Antworte immer auf Deutsch.",
+    "generate": "Erstelle ein {{mealType}} Rezept mit diesen Zutaten: {{ingredients}}. Das Rezept sollte für jemanden geeignet sein, der eine {{diet}} Ernährung mit dem Ziel {{goal}} verfolgt. Füge Zubereitungszeit, Kochzeit, Schwierigkeitsgrad, Zutaten mit Mengen, Schritt-für-Schritt-Anleitung und Nährwertinformationen pro Portion hinzu.",
+    "adapt": "Passe dieses Rezept an, damit es {{diet}}-freundlich ist, während die Kerngeschmäcker erhalten bleiben. Schlage Zutatensubstitutionen und modifizierte Kochmethoden vor.",
+    "scale": "Skaliere dieses Rezept auf {{servings}} Portionen unter Beibehaltung der richtigen Proportionen und Garzeiten."
+  },
+  "coach": {
+    "system": "Du bist ein unterstützender und kompetenter Ernährungscoach. Gib personalisierte Ratschläge, Ermutigung und praktische Tipps, um Benutzern zu helfen, ihre Gesundheitsziele zu erreichen. Sei herzlich, motivierend und evidenzbasiert. Antworte immer auf Deutsch.",
+    "dailyTip": "Generiere einen praktischen Ernährungstipp für jemanden mit diesen Zielen: {{goals}}. Der Tipp sollte umsetzbar und spezifisch sein.",
+    "mealFeedback": "Gib konstruktives Feedback zu dieser Mahlzeit: {{meal}}. Berücksichtige das Ziel des Benutzers {{goal}} und seinen Fortschritt heute ({{consumed}}/{{target}} kcal).",
+    "weeklyReview": "Erstelle eine wöchentliche Ernährungsübersicht. Erfasste Mahlzeiten: {{mealsCount}}, Durchschnittliche Kalorien: {{avgCalories}}, Zielerreichung: {{achievement}}%. Gib Einblicke und Empfehlungen."
+  },
+  "profiling": {
+    "system": "Du bist ein Experte für Ernährungswissenschaft. Berechne den personalisierten Nährstoffbedarf basierend auf Benutzerdaten unter Verwendung evidenzbasierter Formeln (Mifflin-St Jeor). Gib klare Erklärungen für deine Empfehlungen. Antworte immer auf Deutsch.",
+    "calculate": "Berechne den täglichen Nährstoffbedarf für: Alter {{age}}, Geschlecht {{gender}}, Größe {{height}}cm, Gewicht {{weight}}kg, Aktivitätslevel {{activity}}, Ziel {{goal}}. Verwende die Mifflin-St Jeor Gleichung und gib TDEE, empfohlene Kalorienaufnahme und Makronährstoffverteilung an.",
+    "explain": "Erkläre in einfachen Worten, warum die empfohlene Kalorienaufnahme von {{calories}} und die Makronährstoffverteilung (P:{{protein}}g, K:{{carbs}}g, F:{{fat}}g) für die Ziele dieser Person angemessen ist."
+  },
+  "nutrition": {
+    "system": "Du bist ein Experte für die Validierung von Nährwertdaten. Überprüfe Nährwerte auf Genauigkeit, erkenne Ausreißer und stelle Datenkonsistenz sicher. Verwende zuverlässige Lebensmitteldatenbanken als Referenz. Antworte immer auf Deutsch.",
+    "validate": "Validiere diese Nährwerte für {{food}}: Kalorien {{calories}}, Protein {{protein}}g, Kohlenhydrate {{carbs}}g, Fett {{fat}}g. Markiere alle Werte, die basierend auf Standard-Lebensmitteldatenbanken falsch erscheinen.",
+    "estimate": "Schätze die Nährwerte für {{food}} ({{portion}} {{unit}}). Gib Kalorien, Protein, Kohlenhydrate, Fett und Ballaststoffe an. Füge dein Konfidenzniveau hinzu."
+  }
+}

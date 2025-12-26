@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { dashboardApi } from '@/services/dashboardApi'
 import { HeroCard } from '@/components/dashboard/HeroCard'
 import { QuickActions } from '@/components/dashboard/QuickActions'
@@ -9,9 +10,16 @@ import { WeeklyChart } from '@/components/dashboard/WeeklyChart'
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton'
 import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
-import { STREAK_LABELS } from '@/types/dashboard'
+
+const STREAK_ICONS: Record<string, string> = {
+  logging: '📝',
+  activity: '🏃',
+  water: '💧',
+  calories: '🎯',
+}
 
 export function MainDashboardPage() {
+  const { t } = useTranslation('dashboard')
   const [showWaterModal, setShowWaterModal] = useState(false)
   const dashboardQuery = useQuery({
     queryKey: ['dashboard'],
@@ -33,12 +41,12 @@ export function MainDashboardPage() {
           <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">❌</span>
           </div>
-          <p className="body-lg text-neutral-600 mb-2">Erreur lors du chargement du dashboard</p>
+          <p className="body-lg text-neutral-600 mb-2">{t('error.loading')}</p>
           <p className="text-error-600 text-sm mb-4">
-            {dashboardQuery.error instanceof Error ? dashboardQuery.error.message : 'Erreur inconnue'}
+            {dashboardQuery.error instanceof Error ? dashboardQuery.error.message : t('error.unknown')}
           </p>
           <Button onClick={() => dashboardQuery.refetch()}>
-            Réessayer
+            {t('error.retry')}
           </Button>
         </div>
       </div>
@@ -52,9 +60,9 @@ export function MainDashboardPage() {
           <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">📊</span>
           </div>
-          <p className="body-lg text-neutral-600 mb-4">Aucune donnée disponible</p>
+          <p className="body-lg text-neutral-600 mb-4">{t('error.noData')}</p>
           <Button onClick={() => dashboardQuery.refetch()}>
-            Réessayer
+            {t('error.retry')}
           </Button>
         </div>
       </div>
@@ -93,34 +101,32 @@ export function MainDashboardPage() {
             <span className="w-8 h-8 bg-accent-100 rounded-lg flex items-center justify-center text-lg">
               🔥
             </span>
-            <h3 className="heading-4">Séries en cours</h3>
+            <h3 className="heading-4">{t('streak.title')}</h3>
           </div>
           {data.active_streaks.length === 0 ? (
             <p className="body-md">
-              Aucune série active. Commence à suivre tes repas !
+              {t('streak.noStreaks')}
             </p>
           ) : (
             <div className="space-y-3">
               {data.active_streaks.map((streak) => {
-                const info = STREAK_LABELS[streak.streak_type] || {
-                  name: streak.streak_type,
-                  icon: '🔥',
-                }
+                const icon = STREAK_ICONS[streak.streak_type] || '🔥'
+                const name = t(`streakTypes.${streak.streak_type}`, { defaultValue: streak.streak_type })
                 return (
                   <div
                     key={streak.id}
                     className="flex items-center justify-between p-3 bg-gradient-to-r from-accent-50 to-warning-50 rounded-xl"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl">{info.icon}</span>
-                      <span className="font-medium text-neutral-700">{info.name}</span>
+                      <span className="text-2xl">{icon}</span>
+                      <span className="font-medium text-neutral-700">{name}</span>
                     </div>
                     <div className="text-right">
                       <div className="font-bold text-accent-600">
-                        {streak.current_count} jours
+                        {streak.current_count} {t('streak.days')}
                       </div>
                       <div className="text-xs text-neutral-500">
-                        Record: {streak.best_count}
+                        {t('streak.record')}: {streak.best_count}
                       </div>
                     </div>
                   </div>
@@ -136,11 +142,11 @@ export function MainDashboardPage() {
             <span className="w-8 h-8 bg-warning-100 rounded-lg flex items-center justify-center text-lg">
               🏆
             </span>
-            <h3 className="heading-4">Succès récents</h3>
+            <h3 className="heading-4">{t('achievements.title')}</h3>
           </div>
           {data.recent_achievements.length === 0 ? (
             <p className="body-md">
-              Aucun succès encore. Continue pour en débloquer !
+              {t('achievements.noAchievements')}
             </p>
           ) : (
             <div className="space-y-3">
@@ -178,15 +184,15 @@ export function MainDashboardPage() {
           <span className="w-8 h-8 bg-secondary-100 rounded-lg flex items-center justify-center text-lg">
             📈
           </span>
-          <h3 className="heading-4">Ton parcours</h3>
+          <h3 className="heading-4">{t('journey.title')}</h3>
         </div>
         <div className="grid grid-cols-5 gap-3">
           {[
-            { value: data.user_stats.total_meals_logged, label: 'Repas', color: 'text-primary-600', bg: 'bg-primary-50' },
-            { value: data.user_stats.total_activities, label: 'Activités', color: 'text-accent-600', bg: 'bg-accent-50' },
-            { value: data.user_stats.total_recipes_generated, label: 'Recettes', color: 'text-secondary-600', bg: 'bg-secondary-50' },
-            { value: data.user_stats.total_photos_analyzed, label: 'Photos', color: 'text-primary-600', bg: 'bg-primary-50' },
-            { value: data.user_stats.achievements_count, label: 'Succès', color: 'text-warning-600', bg: 'bg-warning-50' },
+            { value: data.user_stats.total_meals_logged, label: t('journey.meals'), color: 'text-primary-600', bg: 'bg-primary-50' },
+            { value: data.user_stats.total_activities, label: t('journey.activities'), color: 'text-accent-600', bg: 'bg-accent-50' },
+            { value: data.user_stats.total_recipes_generated, label: t('journey.recipes'), color: 'text-secondary-600', bg: 'bg-secondary-50' },
+            { value: data.user_stats.total_photos_analyzed, label: t('journey.photos'), color: 'text-primary-600', bg: 'bg-primary-50' },
+            { value: data.user_stats.achievements_count, label: t('journey.achievements'), color: 'text-warning-600', bg: 'bg-warning-50' },
           ].map((stat) => (
             <div key={stat.label} className={`${stat.bg} rounded-xl p-3 text-center`}>
               <div className={`text-xl font-bold ${stat.color}`}>{stat.value}</div>
@@ -206,7 +212,7 @@ export function MainDashboardPage() {
                   <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
                     <span className="text-xl">💧</span>
                   </div>
-                  <h3 className="heading-3">Ajouter de l'eau</h3>
+                  <h3 className="heading-3">{t('water.title')}</h3>
                 </div>
                 <button
                   onClick={() => setShowWaterModal(false)}

@@ -1,0 +1,30 @@
+{
+  "vision": {
+    "system": "Tu es un nutritionniste expert et une IA de reconnaissance alimentaire. Analyse les images de nourriture pour identifier les ingrédients, estimer les portions et calculer les valeurs nutritionnelles. Réponds toujours en français.",
+    "analyze": "Analyse cette image de repas et identifie tous les aliments visibles. Pour chaque aliment, estime la taille de la portion et fournis les valeurs nutritionnelles (calories, protéines, glucides, lipides, fibres). Formate ta réponse en JSON structuré.",
+    "healthReport": "Selon les aliments détectés et le profil de l'utilisateur (objectif : {{goal}}, calories quotidiennes : {{calories}}), fournis une évaluation santé personnalisée avec les points positifs, avertissements et suggestions.",
+    "confidence": "Évalue ta confiance dans la détection de 0 à 100. Considère la qualité de l'image, la visibilité des aliments et la difficulté d'estimation des portions."
+  },
+  "recipe": {
+    "system": "Tu es un chef professionnel et nutritionniste. Crée des recettes délicieuses, saines et adaptées aux préférences alimentaires et objectifs nutritionnels de l'utilisateur. Réponds toujours en français.",
+    "generate": "Crée une recette de {{mealType}} avec ces ingrédients : {{ingredients}}. La recette doit convenir à quelqu'un suivant un régime {{diet}} avec pour objectif de {{goal}}. Inclus le temps de préparation, le temps de cuisson, le niveau de difficulté, les ingrédients avec quantités, les instructions étape par étape et les informations nutritionnelles par portion.",
+    "adapt": "Adapte cette recette pour qu'elle soit compatible avec un régime {{diet}} tout en conservant ses saveurs principales. Suggère des substitutions d'ingrédients et des méthodes de cuisson modifiées.",
+    "scale": "Redimensionne cette recette pour {{servings}} portions tout en maintenant les proportions correctes et les temps de cuisson."
+  },
+  "coach": {
+    "system": "Tu es un coach nutritionnel bienveillant et compétent. Fournis des conseils personnalisés, des encouragements et des astuces pratiques pour aider les utilisateurs à atteindre leurs objectifs santé. Sois chaleureux, motivant et basé sur des preuves scientifiques. Réponds toujours en français.",
+    "dailyTip": "Génère un conseil nutritionnel pratique pour quelqu'un avec ces objectifs : {{goals}}. Le conseil doit être actionnable et spécifique.",
+    "mealFeedback": "Fournis un retour constructif sur ce repas : {{meal}}. Considère l'objectif de l'utilisateur ({{goal}}) et sa progression aujourd'hui ({{consumed}}/{{target}} kcal).",
+    "weeklyReview": "Crée un résumé de revue nutritionnelle hebdomadaire. Repas suivis : {{mealsCount}}, Calories moyennes : {{avgCalories}}, Atteinte des objectifs : {{achievement}}%. Fournis des analyses et recommandations."
+  },
+  "profiling": {
+    "system": "Tu es un expert en sciences de la nutrition. Calcule les besoins nutritionnels personnalisés selon les données de l'utilisateur en utilisant des formules basées sur les preuves (Mifflin-St Jeor). Fournis des explications claires pour tes recommandations. Réponds toujours en français.",
+    "calculate": "Calcule les besoins nutritionnels quotidiens pour : Âge {{age}}, Genre {{gender}}, Taille {{height}}cm, Poids {{weight}}kg, Niveau d'activité {{activity}}, Objectif {{goal}}. Utilise l'équation Mifflin-St Jeor et fournis le TDEE, l'apport calorique recommandé et la répartition des macros.",
+    "explain": "Explique simplement pourquoi l'apport calorique recommandé de {{calories}} et la répartition des macros (P:{{protein}}g, G:{{carbs}}g, L:{{fat}}g) sont appropriés pour les objectifs de cette personne."
+  },
+  "nutrition": {
+    "system": "Tu es un expert en validation des données nutritionnelles. Vérifie la précision des valeurs nutritionnelles, détecte les anomalies et assure la cohérence des données. Utilise des bases de données alimentaires fiables comme référence. Réponds toujours en français.",
+    "validate": "Valide ces valeurs nutritionnelles pour {{food}} : Calories {{calories}}, Protéines {{protein}}g, Glucides {{carbs}}g, Lipides {{fat}}g. Signale toute valeur qui semble incorrecte selon les bases de données alimentaires standard.",
+    "estimate": "Estime les valeurs nutritionnelles pour {{food}} ({{portion}} {{unit}}). Fournis calories, protéines, glucides, lipides et fibres. Inclus ton niveau de confiance."
+  }
+}
