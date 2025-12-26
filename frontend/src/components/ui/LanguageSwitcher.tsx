@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ChevronDown, Globe, Check } from 'lucide-react'
 import { SUPPORTED_LANGUAGES, type LanguageCode } from '@/i18n'
 import { useAuthStore } from '@/store/authStore'
+import { tokenStorage } from '@/services/api'
 
 interface LanguageSwitcherProps {
   variant?: 'dropdown' | 'inline' | 'compact'
@@ -12,7 +13,7 @@ interface LanguageSwitcherProps {
 export function LanguageSwitcher({ variant = 'dropdown', className = '' }: LanguageSwitcherProps) {
   const { i18n } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
-  const { token } = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
 
   const currentLang = SUPPORTED_LANGUAGES.find(l => l.code === i18n.language) || SUPPORTED_LANGUAGES[0]
 
@@ -22,10 +23,11 @@ export function LanguageSwitcher({ variant = 'dropdown', className = '' }: Langu
     setIsOpen(false)
 
     // If user is logged in, also update backend preference
-    if (token) {
+    const token = tokenStorage.getAccessToken()
+    if (isAuthenticated && token) {
       try {
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080'
-        await fetch(`${apiUrl}/api/v1/users/me`, {
+        await fetch(`${apiUrl}/users/me`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',

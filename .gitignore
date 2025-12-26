@@ -42,6 +42,9 @@ yarn-error.log*
 .env.*.local
 *.local
 
+# Claude Code local settings (may contain secrets)
+.claude/settings.local.json
+
 # Database
 *.db
 okmaintenat en term de designnutriprofile.db
