@@ -10,7 +10,6 @@ primary_region = 'cdg'
   dockerfile = 'Dockerfile'
 
 [env]
-  DATABASE_URL = 'sqlite+aiosqlite:////data/nutriprofile.db'
   ENVIRONMENT = 'production'
   PORT = '8080'
   DEBUG = 'false'

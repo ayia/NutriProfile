@@ -1,9 +1,10 @@
 import asyncio
 from logging.config import fileConfig
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
-from sqlalchemy.ext.asyncio import async_engine_from_config
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from alembic import context
 
@@ -17,11 +18,33 @@ from app.models import (  # noqa: F401
     Achievement, Streak, Notification, UserStats,
 )
 
+
+def convert_database_url(url: str) -> str:
+    """Convert database URL for asyncpg compatibility."""
+    # Convert postgres:// or postgresql:// to postgresql+asyncpg://
+    if url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql+asyncpg://", 1)
+    elif url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+    # Remove sslmode parameter (asyncpg doesn't support it as a query param)
+    if "sslmode=" in url:
+        parsed = urlparse(url)
+        query_params = parse_qs(parsed.query)
+        query_params.pop("sslmode", None)
+        new_query = urlencode(query_params, doseq=True)
+        url = urlunparse(parsed._replace(query=new_query))
+
+    return url
+
+
 config = context.config
 settings = get_settings()
 
 # Override la database URL avec celle de la config
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+database_url = convert_database_url(settings.DATABASE_URL)
+
+config.set_main_option("sqlalchemy.url", database_url)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
@@ -52,10 +75,16 @@ def do_run_migrations(connection: Connection) -> None:
 
 async def run_async_migrations() -> None:
     """Run migrations in 'online' mode with async engine."""
-    connectable = async_engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
+    # Build connect_args based on database type
+    connect_args = {}
+    if not database_url.startswith("sqlite"):
+        # Disable SSL for Fly.io internal PostgreSQL connections
+        connect_args["ssl"] = False
+
+    connectable = create_async_engine(
+        database_url,
         poolclass=pool.NullPool,
+        connect_args=connect_args,
     )
 
     async with connectable.connect() as connection:
