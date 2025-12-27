@@ -57,6 +57,11 @@
       "swimming": "Schwimmen",
       "gym": "Krafttraining",
       "yoga": "Yoga",
+      "hiking": "Wandern",
+      "dancing": "Tanzen",
+      "tennis": "Tennis",
+      "football": "Fußball",
+      "basketball": "Basketball",
       "other": "Andere"
     },
     "duration": "Dauer (Minuten)",

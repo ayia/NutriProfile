@@ -57,6 +57,11 @@
       "swimming": "游泳",
       "gym": "力量训练",
       "yoga": "瑜伽",
+      "hiking": "徒步",
+      "dancing": "舞蹈",
+      "tennis": "网球",
+      "football": "足球",
+      "basketball": "篮球",
       "other": "其他"
     },
     "duration": "时长（分钟）",
