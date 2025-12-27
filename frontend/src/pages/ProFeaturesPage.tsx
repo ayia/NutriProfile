@@ -10,7 +10,7 @@ import { UpgradeModal } from '@/components/subscription/UpgradeModal'
 type TabType = 'export' | 'meal-plans'
 
 export function ProFeaturesPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('pro')
   const [activeTab, setActiveTab] = useState<TabType>('meal-plans')
   const [isPro, setIsPro] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -34,13 +34,13 @@ export function ProFeaturesPage() {
   const tabs = [
     {
       id: 'meal-plans' as TabType,
-      label: t('pro.tabs.mealPlans', 'Plans Repas IA'),
+      label: t('tabs.mealPlans'),
       icon: Calendar,
       color: 'purple',
     },
     {
       id: 'export' as TabType,
-      label: t('pro.tabs.export', 'Export PDF'),
+      label: t('tabs.export'),
       icon: FileDown,
       color: 'emerald',
     },
@@ -69,7 +69,7 @@ export function ProFeaturesPage() {
             <div className="flex items-center gap-2">
               <Crown className="h-6 w-6" />
               <h1 className="text-xl font-bold">
-                {t('pro.title', 'Fonctionnalités Pro')}
+                {t('title')}
               </h1>
             </div>
           </div>
@@ -77,14 +77,14 @@ export function ProFeaturesPage() {
           {!isPro && (
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-4">
               <p className="text-white/90 mb-3">
-                {t('pro.upgradeMessage', 'Débloquez toutes les fonctionnalités Pro pour optimiser votre parcours nutritionnel.')}
+                {t('upgradeMessage')}
               </p>
               <Link
                 to="/pricing"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-white text-purple-600 font-semibold rounded-xl hover:bg-white/90 transition-colors"
               >
                 <Crown className="h-4 w-4" />
-                {t('pro.upgradeCta', 'Passer à Pro')}
+                {t('upgradeCta')}
               </Link>
             </div>
           )}

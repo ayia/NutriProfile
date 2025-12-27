@@ -9,7 +9,7 @@ interface MealPlanGeneratorProps {
 }
 
 export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorProps) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('pro')
   const [loading, setLoading] = useState(false)
   const [mealPlan, setMealPlan] = useState<MealPlanResponse | null>(null)
   const [showShoppingList, setShowShoppingList] = useState(false)
@@ -49,10 +49,10 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
   }
 
   const mealTypeLabels: Record<string, string> = {
-    breakfast: t('mealPlan.breakfast', 'Petit-déjeuner'),
-    lunch: t('mealPlan.lunch', 'Déjeuner'),
-    dinner: t('mealPlan.dinner', 'Dîner'),
-    snack: t('mealPlan.snack', 'Collation'),
+    breakfast: t('mealPlan.breakfast'),
+    lunch: t('mealPlan.lunch'),
+    dinner: t('mealPlan.dinner'),
+    snack: t('mealPlan.snack'),
   }
 
   return (
@@ -66,10 +66,10 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
             </div>
             <div>
               <h3 className="font-bold text-gray-900">
-                {t('pro.mealPlan.title', 'Plans Repas IA')}
+                {t('mealPlan.title')}
               </h3>
               <p className="text-sm text-gray-500">
-                {t('pro.mealPlan.subtitle', 'Planification hebdomadaire personnalisée')}
+                {t('mealPlan.subtitle')}
               </p>
             </div>
           </div>
@@ -86,33 +86,33 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
           {/* Nombre de jours */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('pro.mealPlan.daysLabel', 'Nombre de jours')}
+              {t('mealPlan.daysLabel')}
             </label>
             <select
               value={config.days}
               onChange={(e) => setConfig({ ...config, days: Number(e.target.value) })}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
-              <option value={3}>3 {t('common.days', 'jours')}</option>
-              <option value={5}>5 {t('common.days', 'jours')}</option>
-              <option value={7}>7 {t('common.days', 'jours')}</option>
-              <option value={14}>14 {t('common.days', 'jours')}</option>
+              <option value={3}>3 {t('common.days')}</option>
+              <option value={5}>5 {t('common.days')}</option>
+              <option value={7}>7 {t('common.days')}</option>
+              <option value={14}>14 {t('common.days')}</option>
             </select>
           </div>
 
           {/* Repas par jour */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('pro.mealPlan.mealsPerDay', 'Repas par jour')}
+              {t('mealPlan.mealsPerDay')}
             </label>
             <select
               value={config.meals_per_day}
               onChange={(e) => setConfig({ ...config, meals_per_day: Number(e.target.value) })}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
-              <option value={2}>2 {t('common.meals', 'repas')}</option>
-              <option value={3}>3 {t('common.meals', 'repas')}</option>
-              <option value={4}>4 {t('common.meals', 'repas')}</option>
+              <option value={2}>2 {t('common.meals')}</option>
+              <option value={3}>3 {t('common.meals')}</option>
+              <option value={4}>4 {t('common.meals')}</option>
             </select>
           </div>
 
@@ -120,7 +120,7 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Clock className="inline h-4 w-4 mr-1" />
-              {t('pro.mealPlan.cookingTime', 'Temps max')}
+              {t('mealPlan.cookingTime')}
             </label>
             <select
               value={config.cooking_time_max}
@@ -137,16 +137,16 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
           {/* Budget */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('pro.mealPlan.budget', 'Budget')}
+              {t('mealPlan.budget')}
             </label>
             <select
               value={config.budget_level}
               onChange={(e) => setConfig({ ...config, budget_level: e.target.value as 'low' | 'medium' | 'high' })}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
-              <option value="low">{t('pro.mealPlan.budgetLow', 'Économique')}</option>
-              <option value="medium">{t('pro.mealPlan.budgetMedium', 'Modéré')}</option>
-              <option value="high">{t('pro.mealPlan.budgetHigh', 'Sans limite')}</option>
+              <option value="low">{t('mealPlan.budgetLow')}</option>
+              <option value="medium">{t('mealPlan.budgetMedium')}</option>
+              <option value="high">{t('mealPlan.budgetHigh')}</option>
             </select>
           </div>
         </div>
@@ -160,7 +160,7 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
             className="w-5 h-5 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
           />
           <span className="text-gray-700">
-            {t('pro.mealPlan.includeSnacks', 'Inclure des collations')}
+            {t('mealPlan.includeSnacks')}
           </span>
         </label>
 
@@ -177,17 +177,17 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
           {loading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
-              {t('pro.mealPlan.generating', 'Génération en cours...')}
+              {t('mealPlan.generating')}
             </>
           ) : !isPro ? (
             <>
               <Lock className="h-5 w-5" />
-              {t('pro.mealPlan.upgradeToPro', 'Passer à Pro pour générer')}
+              {t('mealPlan.upgradeToPro')}
             </>
           ) : (
             <>
               <Sparkles className="h-5 w-5" />
-              {t('pro.mealPlan.generate', 'Générer mon plan repas')}
+              {t('mealPlan.generate')}
             </>
           )}
         </button>
@@ -200,33 +200,33 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
           <div className="glass-card p-4">
             <div className="flex items-center justify-between mb-4">
               <h4 className="font-bold text-gray-900">
-                {t('pro.mealPlan.yourPlan', 'Votre Plan')}
+                {t('mealPlan.yourPlan')}
               </h4>
               <button
                 onClick={() => setShowShoppingList(!showShoppingList)}
                 className="flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-xl hover:bg-primary-100 transition-colors"
               >
                 <ShoppingCart className="h-4 w-4" />
-                {t('pro.mealPlan.shoppingList', 'Liste de courses')}
+                {t('mealPlan.shoppingList')}
               </button>
             </div>
 
             <div className="grid grid-cols-4 gap-4 text-center">
               <div>
                 <p className="text-2xl font-bold text-primary-600">{mealPlan.avg_daily_calories}</p>
-                <p className="text-xs text-gray-500">{t('common.calories', 'Calories')}/j</p>
+                <p className="text-xs text-gray-500">{t('common.calories')}/j</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-blue-600">{mealPlan.avg_daily_protein}g</p>
-                <p className="text-xs text-gray-500">{t('common.protein', 'Protéines')}/j</p>
+                <p className="text-xs text-gray-500">{t('common.protein')}/j</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-amber-600">{mealPlan.avg_daily_carbs}g</p>
-                <p className="text-xs text-gray-500">{t('common.carbs', 'Glucides')}/j</p>
+                <p className="text-xs text-gray-500">{t('common.carbs')}/j</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-rose-600">{mealPlan.avg_daily_fat}g</p>
-                <p className="text-xs text-gray-500">{t('common.fat', 'Lipides')}/j</p>
+                <p className="text-xs text-gray-500">{t('common.fat')}/j</p>
               </div>
             </div>
           </div>
@@ -236,7 +236,7 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
             <div className="glass-card p-4">
               <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5" />
-                {t('pro.mealPlan.shoppingListTitle', 'Liste de courses')}
+                {t('mealPlan.shoppingListTitle')}
               </h4>
 
               <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -320,8 +320,8 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
 
           {/* Méta info */}
           <div className="text-center text-xs text-gray-400">
-            {t('pro.mealPlan.generatedIn', 'Généré en')} {(mealPlan.generation_time_ms / 1000).toFixed(1)}s •
-            {t('pro.mealPlan.confidence', 'Confiance')}: {(mealPlan.confidence * 100).toFixed(0)}%
+            {t('mealPlan.generatedIn')} {(mealPlan.generation_time_ms / 1000).toFixed(1)}s •
+            {t('mealPlan.confidence')}: {(mealPlan.confidence * 100).toFixed(0)}%
           </div>
         </div>
       )}

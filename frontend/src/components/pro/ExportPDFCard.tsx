@@ -9,7 +9,7 @@ interface ExportPDFCardProps {
 }
 
 export function ExportPDFCard({ isPro, onUpgradeClick }: ExportPDFCardProps) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('pro')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [reportType, setReportType] = useState<'weekly' | 'monthly'>('weekly')
@@ -66,10 +66,10 @@ export function ExportPDFCard({ isPro, onUpgradeClick }: ExportPDFCardProps) {
           </div>
           <div>
             <h3 className="font-bold text-gray-900">
-              {t('pro.exportPdf.title', 'Export PDF')}
+              {t('exportPdf.title')}
             </h3>
             <p className="text-sm text-gray-500">
-              {t('pro.exportPdf.subtitle', 'Téléchargez votre rapport nutritionnel')}
+              {t('exportPdf.subtitle')}
             </p>
           </div>
         </div>
@@ -84,7 +84,7 @@ export function ExportPDFCard({ isPro, onUpgradeClick }: ExportPDFCardProps) {
       {/* Type de rapport */}
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          {t('pro.exportPdf.reportType', 'Période du rapport')}
+          {t('exportPdf.reportType')}
         </label>
         <div className="flex gap-3">
           <button
@@ -95,7 +95,7 @@ export function ExportPDFCard({ isPro, onUpgradeClick }: ExportPDFCardProps) {
                 : 'border-gray-200 hover:border-gray-300'
             }`}
           >
-            <span className="font-medium">{t('pro.exportPdf.weekly', '7 jours')}</span>
+            <span className="font-medium">{t('exportPdf.weekly')}</span>
           </button>
           <button
             onClick={() => setReportType('monthly')}
@@ -105,7 +105,7 @@ export function ExportPDFCard({ isPro, onUpgradeClick }: ExportPDFCardProps) {
                 : 'border-gray-200 hover:border-gray-300'
             }`}
           >
-            <span className="font-medium">{t('pro.exportPdf.monthly', '30 jours')}</span>
+            <span className="font-medium">{t('exportPdf.monthly')}</span>
           </button>
         </div>
       </div>
@@ -113,14 +113,14 @@ export function ExportPDFCard({ isPro, onUpgradeClick }: ExportPDFCardProps) {
       {/* Options */}
       <div className="mb-6 space-y-3">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          {t('pro.exportPdf.includeOptions', 'Inclure dans le rapport')}
+          {t('exportPdf.includeOptions')}
         </label>
 
         {[
-          { key: 'include_meals', label: t('pro.exportPdf.meals', 'Repas et nutrition') },
-          { key: 'include_activities', label: t('pro.exportPdf.activities', 'Activités physiques') },
-          { key: 'include_weight', label: t('pro.exportPdf.weight', 'Évolution du poids') },
-          { key: 'include_recommendations', label: t('pro.exportPdf.recommendations', 'Recommandations') },
+          { key: 'include_meals', label: t('exportPdf.meals') },
+          { key: 'include_activities', label: t('exportPdf.activities') },
+          { key: 'include_weight', label: t('exportPdf.weight') },
+          { key: 'include_recommendations', label: t('exportPdf.recommendations') },
         ].map((option) => (
           <label
             key={option.key}
@@ -157,22 +157,22 @@ export function ExportPDFCard({ isPro, onUpgradeClick }: ExportPDFCardProps) {
         {loading ? (
           <>
             <Loader2 className="h-5 w-5 animate-spin" />
-            {t('pro.exportPdf.generating', 'Génération en cours...')}
+            {t('exportPdf.generating')}
           </>
         ) : success ? (
           <>
             <CheckCircle className="h-5 w-5" />
-            {t('pro.exportPdf.downloaded', 'Téléchargé !')}
+            {t('exportPdf.downloaded')}
           </>
         ) : !isPro ? (
           <>
             <Lock className="h-5 w-5" />
-            {t('pro.exportPdf.upgradeToPro', 'Passer à Pro pour exporter')}
+            {t('exportPdf.upgradeToPro')}
           </>
         ) : (
           <>
             <FileDown className="h-5 w-5" />
-            {t('pro.exportPdf.download', 'Télécharger le rapport')}
+            {t('exportPdf.download')}
           </>
         )}
       </button>
