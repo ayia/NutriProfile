@@ -9,7 +9,7 @@ import { GoalForm } from '@/components/tracking/GoalForm'
 import { GoalCard } from '@/components/tracking/GoalCard'
 import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
-import { ACTIVITY_TYPES, INTENSITY_LABELS } from '@/types/tracking'
+import { ACTIVITY_TYPES } from '@/types/tracking'
 
 type Tab = 'overview' | 'activities' | 'weight' | 'goals'
 type Modal = 'activity' | 'weight' | 'goal' | 'water' | null
@@ -195,12 +195,14 @@ export function TrackingPage() {
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h3 className="font-semibold mb-4">{t('activities.title')}</h3>
               <div className="space-y-3">
-                {summary.activity_breakdown.map((activity) => (
+                {summary.activity_breakdown.map((activity) => {
+                  const activityName = t(`activityForm.types.${activity.activity_type}`, { defaultValue: activity.name })
+                  return (
                   <div key={activity.activity_type} className="flex items-center gap-3">
                     <span className="text-2xl">{activity.icon}</span>
                     <div className="flex-1">
                       <div className="flex justify-between text-sm">
-                        <span className="font-medium">{activity.name}</span>
+                        <span className="font-medium">{activityName}</span>
                         <span className="text-gray-500">{activity.total_duration} {t('common.min')}</span>
                       </div>
                       <div className="h-2 bg-gray-200 rounded-full mt-1">
@@ -214,7 +216,7 @@ export function TrackingPage() {
                     </div>
                     <span className="text-sm text-gray-500">{activity.count}x</span>
                   </div>
-                ))}
+                )})}
               </div>
             </div>
           )}
@@ -261,19 +263,21 @@ export function TrackingPage() {
 
           {activitiesQuery.data?.map((activity) => {
             const activityInfo = ACTIVITY_TYPES[activity.activity_type] || ACTIVITY_TYPES.other
+            const activityName = t(`activityForm.types.${activity.activity_type}`, { defaultValue: activityInfo.name })
+            const intensityLabel = t(`activityForm.intensities.${activity.intensity}`, { defaultValue: activity.intensity })
             return (
               <div key={activity.id} className="bg-white rounded-xl shadow-sm p-4">
                 <div className="flex items-center gap-4">
                   <span className="text-3xl">{activityInfo.icon}</span>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">{activityInfo.name}</span>
+                      <span className="font-medium">{activityName}</span>
                       <span className="text-xs px-2 py-0.5 bg-gray-100 rounded-full">
-                        {INTENSITY_LABELS[activity.intensity]}
+                        {intensityLabel}
                       </span>
                     </div>
                     <div className="text-sm text-gray-500 mt-1">
-                      {new Date(activity.activity_date).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
+                      {new Date(activity.activity_date).toLocaleDateString(i18n.language, {
                         weekday: 'long',
                         day: 'numeric',
                         month: 'long',
@@ -339,7 +343,7 @@ export function TrackingPage() {
                 <div key={log.id} className="bg-white rounded-lg shadow-sm p-4 flex items-center justify-between">
                   <div>
                     <div className="text-sm text-gray-500">
-                      {new Date(log.log_date).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
+                      {new Date(log.log_date).toLocaleDateString(i18n.language, {
                         weekday: 'long',
                         day: 'numeric',
                         month: 'long',

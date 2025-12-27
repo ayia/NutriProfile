@@ -222,6 +222,30 @@
       "salmonDesc": "Una cena saludable y sabrosa",
       "greekYogurt": "Yogur griego con nueces",
       "greekYogurtDesc": "Un snack rico en proteínas y saciante"
+    },
+    "prompt": {
+      "systemRole": "Eres un chef experto especializado en nutrición personalizada. Genera una receta para un {{mealType}}.",
+      "userContextHeader": "CONTEXTO DEL USUARIO (personalización importante):",
+      "currentWeight": "Peso actual: {{weight}} kg",
+      "targetWeight": "Peso objetivo: {{target}} kg",
+      "age": "Edad: {{age}} años",
+      "goal": "Objetivo: {{goal}}",
+      "dietType": "Dieta: {{diet}}",
+      "allergies": "Alergias: {{allergies}}",
+      "excludedFoods": "Alimentos excluidos: {{foods}}",
+      "medicalConditions": "Condiciones médicas: {{conditions}}",
+      "activityLevel": "Nivel de actividad: {{level}}",
+      "dailyCalorieTarget": "Objetivo calórico diario: {{calories}} kcal",
+      "constraintsHeader": "RESTRICCIONES ESTRICTAS:",
+      "portionsInstruction": "- Porciones: {{portions}} porciones",
+      "prepTimeInstruction": "- Tiempo de preparación máximo: {{time}} minutos",
+      "availableIngredientsInstruction": "- Usa principalmente estos ingredientes disponibles: {{ingredients}}",
+      "mustUseIngredientsInstruction": "- DEBES usar estos ingredientes: {{ingredients}}",
+      "noAvailableIngredients": "elección del chef",
+      "outputFormatHeader": "FORMATO DE RESPUESTA (JSON estricto):",
+      "outputFormatJson": "{\n  \"name\": \"Nombre de la receta\",\n  \"description\": \"Breve descripción de la receta\",\n  \"prep_time\": número en minutos,\n  \"cook_time\": número en minutos,\n  \"servings\": número de porciones,\n  \"difficulty\": \"fácil\" | \"intermedio\" | \"avanzado\",\n  \"ingredients\": [\"cantidad unidad ingrediente\", ...],\n  \"instructions\": [\"Paso 1...\", \"Paso 2...\", ...],\n  \"nutrition\": {\n    \"calories\": número por porción,\n    \"protein\": gramos por porción,\n    \"carbs\": gramos por porción,\n    \"fat\": gramos por porción\n  },\n  \"tips\": [\"consejo opcional\", ...]\n}",
+      "finalInstruction": "Sé creativo pero realista. La receta debe ser fácil de seguir y PERFECTAMENTE adaptada al contexto del usuario.",
+      "noChoice": "elección del chef"
     }
   },
   "profiling": {

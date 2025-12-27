@@ -211,7 +211,7 @@ async def _build_user_context(
 
     return UserContext(
         age=profile.age,
-        gender=profile.gender.value if profile.gender else None,
+        gender=profile.gender,
         weight_kg=profile.weight_kg,
         height_cm=profile.height_cm,
         target_weight_kg=profile.target_weight_kg,
@@ -299,7 +299,7 @@ async def generate_recipe(
         fiber_g=recipe_data["nutrition"].get("fiber"),
         tags=recipe_data["tags"],
         meal_type=request.meal_type,
-        diet_types=[profile.diet_type.value] if profile and profile.diet_type else [],
+        diet_types=[profile.diet_type] if profile and profile.diet_type else [],
         is_generated=True,
         confidence_score=response.confidence,
         model_used=response.model_used,

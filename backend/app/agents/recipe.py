@@ -330,15 +330,28 @@ class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
             Goal.IMPROVE_HEALTH: self.t("agents.recipe.goalInstructions.improveHealth"),
         }
 
-        ingredients_text = ", ".join(input_data.ingredients) if input_data.ingredients else "au choix"
-        allergies_text = ", ".join(input_data.allergies) if input_data.allergies else "aucune"
-        excluded_text = ", ".join(input_data.excluded_foods) if input_data.excluded_foods else "aucun"
+        # Use translation for "no choice" text
+        no_choice = self.t("agents.recipe.prompt.noChoice")
+        none_text = self.t("agents.common.none")
 
-        # Gérer les valeurs None pour diet_type et goal
+        ingredients_text = ", ".join(input_data.ingredients) if input_data.ingredients else no_choice
+        allergies_text = ", ".join(input_data.allergies) if input_data.allergies else none_text
+        excluded_text = ", ".join(input_data.excluded_foods) if input_data.excluded_foods else none_text
+
+        # Gérer les valeurs None et les types string/enum pour diet_type et goal
         diet_type = input_data.diet_type or DietType.OMNIVORE
         goal = input_data.goal or Goal.MAINTAIN
-        diet_text = f"{diet_type.value} - {diet_instructions.get(diet_type, '')}"
-        goal_text = goal_instructions.get(goal, "Équilibre les macronutriments.")
+
+        # Handle both string and enum types
+        diet_type_value = diet_type.value if hasattr(diet_type, 'value') else diet_type
+        goal_value = goal.value if hasattr(goal, 'value') else goal
+
+        # Convert string to enum for dict lookup if needed
+        diet_type_enum = diet_type if hasattr(diet_type, 'value') else DietType(diet_type) if diet_type in [e.value for e in DietType] else DietType.OMNIVORE
+        goal_enum = goal if hasattr(goal, 'value') else Goal(goal) if goal in [e.value for e in Goal] else Goal.MAINTAIN
+
+        diet_text = f"{diet_type_value} - {diet_instructions.get(diet_type_enum, '')}"
+        goal_text = goal_instructions.get(goal_enum, self.t("agents.recipe.goalInstructions.maintain"))
 
         # Construire le contexte utilisateur si disponible
         user_context_text = ""
@@ -374,41 +387,45 @@ class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
             context_parts = []
 
             if ctx.weight_kg:
-                weight_info = f"Poids actuel: {ctx.weight_kg} kg"
+                weight_info = self.t("agents.recipe.prompt.currentWeight", weight=ctx.weight_kg)
                 if ctx.target_weight_kg:
                     diff = ctx.weight_kg - ctx.target_weight_kg
                     if diff > 0:
-                        weight_info += f" (objectif: perdre {diff:.1f} kg)"
+                        weight_info += " " + self.t("agents.recipe.prompt.goalLose", diff=f"{diff:.1f}")
                     elif diff < 0:
-                        weight_info += f" (objectif: prendre {abs(diff):.1f} kg)"
+                        weight_info += " " + self.t("agents.recipe.prompt.goalGain", diff=f"{abs(diff):.1f}")
                 context_parts.append(weight_info)
 
             if ctx.weight_trend is not None:
-                trend = "stable"
+                trend = self.t("agents.recipe.prompt.weightTrendStable")
                 if ctx.weight_trend > 0.2:
-                    trend = f"en hausse (+{ctx.weight_trend:.1f} kg cette semaine)"
+                    trend = self.t("agents.recipe.prompt.weightTrendUp", trend=f"{ctx.weight_trend:.1f}")
                 elif ctx.weight_trend < -0.2:
-                    trend = f"en baisse ({ctx.weight_trend:.1f} kg cette semaine)"
-                context_parts.append(f"Tendance poids: {trend}")
+                    trend = self.t("agents.recipe.prompt.weightTrendDown", trend=f"{ctx.weight_trend:.1f}")
+                context_parts.append(self.t("agents.recipe.prompt.weightTrend", trend=trend))
 
             if ctx.calories_consumed_today > 0 or ctx.calories_burned_today > 0:
-                today_info = f"Aujourd'hui: {ctx.calories_consumed_today} kcal consommées"
+                today_info = self.t("agents.recipe.prompt.todayStats", consumed=ctx.calories_consumed_today)
                 if ctx.calories_burned_today > 0:
-                    today_info += f", {ctx.calories_burned_today} kcal brûlées (activité: {ctx.activity_minutes_today} min)"
+                    today_info += self.t("agents.recipe.prompt.todayBurned",
+                                        burned=ctx.calories_burned_today,
+                                        minutes=ctx.activity_minutes_today)
                 context_parts.append(today_info)
 
             if remaining_calories > 0:
-                context_parts.append(f"Budget calorique restant: {remaining_calories} kcal")
+                context_parts.append(self.t("agents.recipe.prompt.remainingBudget", calories=remaining_calories))
 
             if ctx.protein_consumed_today > 0 and ctx.protein_g:
-                context_parts.append(f"Protéines: {ctx.protein_consumed_today}g / {ctx.protein_g}g objectif")
+                context_parts.append(self.t("agents.recipe.prompt.proteinProgress",
+                                           consumed=ctx.protein_consumed_today,
+                                           target=ctx.protein_g))
 
             # Recommandation d'ajustement
             adjustment_text = {
-                "reduce_calories": "IMPORTANT: L'utilisateur prend du poids mais veut en perdre. Propose une recette LÉGÈRE.",
-                "slight_reduction": "Privilégie une recette modérément calorique pour favoriser la perte de poids.",
-                "increase_calories": "IMPORTANT: L'utilisateur perd du poids mais veut en prendre. Propose une recette CALORIQUE.",
-                "slight_increase": "Privilégie une recette assez calorique pour favoriser la prise de poids.",
+                "reduce_calories": self.t("agents.recipe.prompt.adjustReduce"),
+                "slight_reduction": self.t("agents.recipe.prompt.adjustSlightReduce"),
+                "increase_calories": self.t("agents.recipe.prompt.adjustIncrease"),
+                "slight_increase": self.t("agents.recipe.prompt.adjustSlightIncrease"),
                 "normal": "",
             }
             if calorie_adjustment != "normal":
@@ -461,48 +478,78 @@ class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
                     context_parts.extend(time_recommendations)
 
             if context_parts:
-                user_context_text = "\n\nCONTEXTE UTILISATEUR (personnalisation importante):\n" + "\n".join(f"- {p}" for p in context_parts)
+                user_context_text = f"\n\n{self.t('agents.recipe.prompt.userContextHeader')}\n" + "\n".join(f"- {p}" for p in context_parts)
 
         # Construire les cibles nutritionnelles
         nutrition_targets = ""
         if target_calories:
-            nutrition_targets = f"\n- Calories cibles par portion: {target_calories} kcal (±10%)"
+            nutrition_targets = f"\n- {self.t('agents.recipe.prompt.targetCalories', calories=target_calories)}"
         if target_protein:
-            nutrition_targets += f"\n- Protéines cibles: {target_protein}g minimum"
+            nutrition_targets += f"\n- {self.t('agents.recipe.prompt.targetProtein', protein=target_protein)}"
 
-        return f"""Tu es un chef cuisinier expert en nutrition personnalisée. Génère une recette pour un {input_data.meal_type}.
+        # Build the full prompt using translations
+        system_role = self.t("agents.recipe.prompt.systemRole", mealType=input_data.meal_type)
+        dietary_constraints = self.t("agents.recipe.prompt.dietaryConstraints")
+        diet_label = self.t("agents.recipe.prompt.diet", diet=diet_text)
+        goal_label = self.t("agents.recipe.prompt.nutritionalGoal", goal=goal_text)
+        allergies_label = self.t("agents.recipe.prompt.allergies", allergies=allergies_text)
+        excluded_label = self.t("agents.recipe.prompt.excludedFoods", excluded=excluded_text)
+        practical_constraints = self.t("agents.recipe.prompt.practicalConstraints")
+        max_prep = self.t("agents.recipe.prompt.maxPrepTime", time=input_data.max_prep_time)
+        servings_label = self.t("agents.recipe.prompt.servingsCount", servings=input_data.servings)
+        ingredients_label = self.t("agents.recipe.prompt.availableIngredients", ingredients=ingredients_text)
+        important_instructions = self.t("agents.recipe.prompt.importantInstructions")
+        instruction1 = self.t("agents.recipe.prompt.instruction1")
+        instruction2 = self.t("agents.recipe.prompt.instruction2")
+        instruction3 = self.t("agents.recipe.prompt.instruction3")
+        instruction4 = self.t("agents.recipe.prompt.instruction4")
+        json_format = self.t("agents.recipe.prompt.jsonFormat")
+        json_title = self.t("agents.recipe.prompt.jsonTitle")
+        json_desc = self.t("agents.recipe.prompt.jsonDescription")
+        json_ing1 = self.t("agents.recipe.prompt.jsonIngredient1")
+        json_qty1 = self.t("agents.recipe.prompt.jsonQuantity1")
+        json_ing2 = self.t("agents.recipe.prompt.jsonIngredient2")
+        json_qty2 = self.t("agents.recipe.prompt.jsonQuantity2")
+        json_step1 = self.t("agents.recipe.prompt.jsonStep1")
+        json_step2 = self.t("agents.recipe.prompt.jsonStep2")
+        json_step3 = self.t("agents.recipe.prompt.jsonStep3")
+        json_tags = self.t("agents.recipe.prompt.jsonTags")
+        json_personalization = self.t("agents.recipe.prompt.jsonPersonalization")
+        final_instruction = self.t("agents.recipe.prompt.finalInstruction")
+
+        return f"""{system_role}
 {user_context_text}
 
-CONTRAINTES ALIMENTAIRES:
-- Régime: {diet_text}
-- Objectif nutritionnel: {goal_text}
-- Allergies à éviter: {allergies_text}
-- Aliments exclus: {excluded_text}
+{dietary_constraints}
+- {diet_label}
+- {goal_label}
+- {allergies_label}
+- {excluded_label}
 
-CONTRAINTES PRATIQUES:
-- Temps de préparation max: {input_data.max_prep_time} minutes
-- Nombre de portions: {input_data.servings}{nutrition_targets}
+{practical_constraints}
+- {max_prep}
+- {servings_label}{nutrition_targets}
 
-INGRÉDIENTS DISPONIBLES: {ingredients_text}
+{ingredients_label}
 
-INSTRUCTIONS IMPORTANTES:
-1. Adapte la recette au contexte utilisateur ci-dessus
-2. Respecte strictement les contraintes caloriques si spécifiées
-3. Privilégie des ingrédients frais et peu transformés
-4. Assure un bon équilibre protéines/glucides/lipides selon l'objectif
+{important_instructions}
+{instruction1}
+{instruction2}
+{instruction3}
+{instruction4}
 
-Réponds en JSON avec ce format exact:
+{json_format}
 {{
-    "title": "Nom de la recette",
-    "description": "Description courte expliquant pourquoi cette recette est adaptée au profil",
+    "title": "{json_title}",
+    "description": "{json_desc}",
     "ingredients": [
-        {{"name": "ingrédient 1", "quantity": "quantité précise"}},
-        {{"name": "ingrédient 2", "quantity": "quantité précise"}}
+        {{"name": "{json_ing1}", "quantity": "{json_qty1}"}},
+        {{"name": "{json_ing2}", "quantity": "{json_qty2}"}}
     ],
     "instructions": [
-        "Étape 1: ...",
-        "Étape 2: ...",
-        "Étape 3: ..."
+        "{json_step1}",
+        "{json_step2}",
+        "{json_step3}"
     ],
     "prep_time": 15,
     "cook_time": 20,
@@ -514,11 +561,11 @@ Réponds en JSON avec ce format exact:
         "fat": 15,
         "fiber": 8
     }},
-    "tags": ["rapide", "healthy", "protéiné"],
-    "personalization_note": "Explication de comment cette recette est adaptée au profil utilisateur"
+    "tags": ["{json_tags.split(', ')[0] if ', ' in json_tags else json_tags}"],
+    "personalization_note": "{json_personalization}"
 }}
 
-Sois créatif mais réaliste. La recette doit être facile à suivre et PARFAITEMENT adaptée au contexte de l'utilisateur."""
+{final_instruction}"""
 
     def parse_response(self, raw_response: str, input_data: RecipeInput) -> Recipe:
         """Parse la réponse LLM en objet Recipe."""
@@ -528,13 +575,29 @@ Sois créatif mais réaliste. La recette doit être facile à suivre et PARFAITE
             if json_match:
                 data = json.loads(json_match.group())
 
+                # Extraire les temps avec valeurs par défaut raisonnables
+                prep_time = data.get("prep_time", 15)
+                cook_time = data.get("cook_time", 15)
+                instructions = data.get("instructions", [])
+
+                # Si les temps sont 0 ou invalides, estimer basé sur les instructions
+                if (prep_time == 0 and cook_time == 0) or (prep_time + cook_time == 0):
+                    # Estimer: ~2 min par étape de préparation, ~3 min par étape de cuisson
+                    num_steps = len(instructions)
+                    if num_steps > 0:
+                        prep_time = max(5, num_steps * 2)  # Minimum 5 min de préparation
+                        cook_time = max(5, num_steps * 2)  # Minimum 5 min de cuisson
+                    else:
+                        prep_time = 10
+                        cook_time = 15
+
                 return Recipe(
                     title=data.get("title", "Recette sans nom"),
                     description=data.get("description", ""),
                     ingredients=data.get("ingredients", []),
-                    instructions=data.get("instructions", []),
-                    prep_time=data.get("prep_time", 15),
-                    cook_time=data.get("cook_time", 15),
+                    instructions=instructions,
+                    prep_time=prep_time,
+                    cook_time=cook_time,
                     servings=data.get("servings", input_data.servings),
                     nutrition=data.get("nutrition", {}),
                     tags=data.get("tags", []),

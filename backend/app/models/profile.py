@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from sqlalchemy import String, DateTime, Integer, Float, Enum as SQLEnum, ForeignKey, JSON, func
+from sqlalchemy import String, DateTime, Integer, Float, ForeignKey, JSON, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -45,19 +45,19 @@ class Profile(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), unique=True, nullable=False)
 
-    # Informations personnelles
+    # Informations personnelles - Using String instead of SQLEnum for PostgreSQL/SQLite compatibility
     age: Mapped[int] = mapped_column(Integer, nullable=False)
-    gender: Mapped[Gender] = mapped_column(SQLEnum(Gender), nullable=False)
+    gender: Mapped[str] = mapped_column(String(20), nullable=False)
     height_cm: Mapped[float] = mapped_column(Float, nullable=False)  # Taille en cm
     weight_kg: Mapped[float] = mapped_column(Float, nullable=False)  # Poids en kg
 
     # Niveau d'activité et objectifs
-    activity_level: Mapped[ActivityLevel] = mapped_column(SQLEnum(ActivityLevel), nullable=False)
-    goal: Mapped[Goal] = mapped_column(SQLEnum(Goal), nullable=False)
+    activity_level: Mapped[str] = mapped_column(String(20), nullable=False)
+    goal: Mapped[str] = mapped_column(String(20), nullable=False)
     target_weight_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
 
     # Préférences alimentaires
-    diet_type: Mapped[DietType] = mapped_column(SQLEnum(DietType), default=DietType.OMNIVORE)
+    diet_type: Mapped[str] = mapped_column(String(20), default="omnivore")
     allergies: Mapped[list] = mapped_column(JSON, default=list)  # Liste des allergies
     excluded_foods: Mapped[list] = mapped_column(JSON, default=list)  # Aliments exclus
     favorite_foods: Mapped[list] = mapped_column(JSON, default=list)  # Aliments préférés

@@ -17,8 +17,8 @@ class CoachInput:
         # Profil utilisateur
         name: str,
         age: int,
-        goal: ProfileGoal,
-        diet_type: DietType,
+        goal: str | ProfileGoal | None,  # Accept both string and enum
+        diet_type: str | DietType | None,  # Accept both string and enum
         target_calories: int,
         target_protein: float,
         target_carbs: float,
@@ -196,12 +196,15 @@ class CoachAgent(BaseAgent[CoachInput, CoachResponse]):
 
     def build_prompt(self, input_data: CoachInput) -> str:
         """Construit le prompt pour le coach."""
-        goal_text = {
-            ProfileGoal.LOSE_WEIGHT: self.t("agents.coach.goals.loseWeight"),
-            ProfileGoal.GAIN_MUSCLE: self.t("agents.coach.goals.gainMuscle"),
-            ProfileGoal.MAINTAIN: self.t("agents.coach.goals.maintain"),
-            ProfileGoal.IMPROVE_HEALTH: self.t("agents.coach.goals.improveHealth"),
-        }.get(input_data.goal, self.t("agents.coach.goals.maintain"))
+        # Handle both string and enum for goal
+        goal_value = input_data.goal.value if hasattr(input_data.goal, 'value') else input_data.goal
+        goal_mapping = {
+            "lose_weight": self.t("agents.coach.goals.loseWeight"),
+            "gain_muscle": self.t("agents.coach.goals.gainMuscle"),
+            "maintain": self.t("agents.coach.goals.maintain"),
+            "improve_health": self.t("agents.coach.goals.improveHealth"),
+        }
+        goal_text = goal_mapping.get(goal_value, self.t("agents.coach.goals.maintain"))
 
         time_context = {
             "morning": self.t("agents.coach.timeContext.morning"),
@@ -213,12 +216,15 @@ class CoachAgent(BaseAgent[CoachInput, CoachResponse]):
         calories_remaining = input_data.target_calories - input_data.calories_today
         protein_remaining = input_data.target_protein - input_data.protein_today
 
+        # Handle both string and enum for diet_type
+        diet_type_value = input_data.diet_type.value if hasattr(input_data.diet_type, 'value') else (input_data.diet_type or "omnivore")
+
         return f"""Tu es un coach nutritionnel bienveillant et motivant pour {input_data.name}.
 
 PROFIL:
 - Âge: {input_data.age} ans
 - Objectif: {goal_text}
-- Régime: {input_data.diet_type.value}
+- Régime: {diet_type_value}
 - Objectifs journaliers: {input_data.target_calories} kcal, {input_data.target_protein}g protéines
 
 STATS AUJOURD'HUI:

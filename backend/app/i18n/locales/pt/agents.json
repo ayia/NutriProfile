@@ -222,6 +222,30 @@
       "salmonDesc": "Um jantar saudável e saboroso",
       "greekYogurt": "Iogurte grego com nozes",
       "greekYogurtDesc": "Um lanche rico em proteína e saciante"
+    },
+    "prompt": {
+      "systemRole": "Você é um chef especialista em nutrição personalizada. Gere uma receita para um {{mealType}}.",
+      "userContextHeader": "CONTEXTO DO USUÁRIO (personalização importante):",
+      "currentWeight": "Peso atual: {{weight}} kg",
+      "targetWeight": "Peso alvo: {{target}} kg",
+      "age": "Idade: {{age}} anos",
+      "goal": "Objetivo: {{goal}}",
+      "dietType": "Dieta: {{diet}}",
+      "allergies": "Alergias: {{allergies}}",
+      "excludedFoods": "Alimentos excluídos: {{foods}}",
+      "medicalConditions": "Condições médicas: {{conditions}}",
+      "activityLevel": "Nível de atividade: {{level}}",
+      "dailyCalorieTarget": "Meta calórica diária: {{calories}} kcal",
+      "constraintsHeader": "RESTRIÇÕES ESTRITAS:",
+      "portionsInstruction": "- Porções: {{portions}} porções",
+      "prepTimeInstruction": "- Tempo máximo de preparação: {{time}} minutos",
+      "availableIngredientsInstruction": "- Use principalmente estes ingredientes disponíveis: {{ingredients}}",
+      "mustUseIngredientsInstruction": "- VOCÊ DEVE usar estes ingredientes: {{ingredients}}",
+      "noAvailableIngredients": "escolha do chef",
+      "outputFormatHeader": "FORMATO DE SAÍDA (JSON estrito):",
+      "outputFormatJson": "{\n  \"name\": \"Nome da receita\",\n  \"description\": \"Breve descrição da receita\",\n  \"prep_time\": número em minutos,\n  \"cook_time\": número em minutos,\n  \"servings\": número de porções,\n  \"difficulty\": \"fácil\" | \"intermediário\" | \"avançado\",\n  \"ingredients\": [\"quantidade unidade ingrediente\", ...],\n  \"instructions\": [\"Passo 1...\", \"Passo 2...\", ...],\n  \"nutrition\": {\n    \"calories\": número por porção,\n    \"protein\": gramas por porção,\n    \"carbs\": gramas por porção,\n    \"fat\": gramas por porção\n  },\n  \"tips\": [\"dica opcional\", ...]\n}",
+      "finalInstruction": "Seja criativo mas realista. A receita deve ser fácil de seguir e PERFEITAMENTE adaptada ao contexto do usuário.",
+      "noChoice": "escolha do chef"
     }
   },
   "profiling": {

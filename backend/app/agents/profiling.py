@@ -16,12 +16,12 @@ class ProfileInput:
     def __init__(
         self,
         age: int,
-        gender: Gender,
+        gender: str | Gender,  # Accept both string and enum
         height_cm: float,
         weight_kg: float,
-        activity_level: ActivityLevel,
-        goal: Goal,
-        diet_type: DietType,
+        activity_level: str | ActivityLevel,  # Accept both string and enum
+        goal: str | Goal,  # Accept both string and enum
+        diet_type: str | DietType,  # Accept both string and enum
         allergies: list[str],
         medical_conditions: list[str],
     ):
@@ -152,17 +152,23 @@ class ProfilingAgent(BaseAgent[ProfileInput, ProfileAnalysis]):
         allergies_text = ', '.join(input_data.allergies) if input_data.allergies else none_text
         conditions_text = ', '.join(input_data.medical_conditions) if input_data.medical_conditions else none_text
 
+        # Handle both string and enum types
+        gender_value = input_data.gender.value if hasattr(input_data.gender, 'value') else input_data.gender
+        activity_value = input_data.activity_level.value if hasattr(input_data.activity_level, 'value') else input_data.activity_level
+        goal_value = input_data.goal.value if hasattr(input_data.goal, 'value') else input_data.goal
+        diet_type_value = input_data.diet_type.value if hasattr(input_data.diet_type, 'value') else input_data.diet_type
+
         return self.t_prompt(
             "calculate",
             age=input_data.age,
-            gender=input_data.gender.value,
+            gender=gender_value,
             height=input_data.height_cm,
             weight=input_data.weight_kg,
-            activity=input_data.activity_level.value,
-            goal=input_data.goal.value
+            activity=activity_value,
+            goal=goal_value
         ) + f"""
 
-Diet: {input_data.diet_type.value}
+Diet: {diet_type_value}
 Allergies: {allergies_text}
 Medical conditions: {conditions_text}
 
@@ -253,11 +259,15 @@ Be concise and practical. Maximum 3 recommendations, 2 warnings, 2 deficiencies.
         warnings = []
         deficiencies = []
 
+        # Get string value for comparisons (handle both enum and string)
+        goal_value = input_data.goal.value if hasattr(input_data.goal, 'value') else input_data.goal
+        diet_type_value = input_data.diet_type.value if hasattr(input_data.diet_type, 'value') else input_data.diet_type
+
         # Recommandations selon l'objectif
-        if input_data.goal == Goal.LOSE_WEIGHT:
+        if goal_value == "lose_weight":
             recommendations.append(self.t("agents.profiling.recommendations.loseWeight.leanProtein"))
             recommendations.append(self.t("agents.profiling.recommendations.loseWeight.drinkWater"))
-        elif input_data.goal == Goal.GAIN_MUSCLE:
+        elif goal_value == "gain_muscle":
             recommendations.append(self.t("agents.profiling.recommendations.gainMuscle.proteinEveryMeal"))
             recommendations.append(self.t("agents.profiling.recommendations.gainMuscle.postWorkout"))
         else:
@@ -267,10 +277,10 @@ Be concise and practical. Maximum 3 recommendations, 2 warnings, 2 deficiencies.
         recommendations.append(self.t("agents.profiling.recommendations.general.limitProcessed"))
 
         # Carences selon le régime
-        if input_data.diet_type == DietType.VEGAN:
+        if diet_type_value == "vegan":
             deficiencies.append(self.t("agents.profiling.deficiencies.vegan.b12"))
             deficiencies.append(self.t("agents.profiling.deficiencies.vegan.iron"))
-        elif input_data.diet_type == DietType.VEGETARIAN:
+        elif diet_type_value == "vegetarian":
             deficiencies.append(self.t("agents.profiling.deficiencies.vegetarian.iron"))
 
         # Warnings selon les conditions médicales

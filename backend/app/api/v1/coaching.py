@@ -107,7 +107,7 @@ async def get_tips(
 
     # Conseil basé sur les objectifs
     if profile:
-        if profile.goal and profile.goal.value == "lose_weight":
+        if profile.goal == "lose_weight":
             tips.append(TipResponse(
                 category="nutrition",
                 message="Privilégiez les légumes et protéines maigres pour vous sentir rassasié plus longtemps.",
@@ -115,7 +115,7 @@ async def get_tips(
                 emoji="🥗",
                 action="Ajouter des légumes"
             ))
-        elif profile.goal and profile.goal.value == "gain_muscle":
+        elif profile.goal == "gain_muscle":
             tips.append(TipResponse(
                 category="nutrition",
                 message="Assurez-vous de consommer suffisamment de protéines après l'entraînement.",

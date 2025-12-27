@@ -94,17 +94,17 @@ async def create_profile(
         goal=profile_data.goal,
     )
 
-    # Créer le profil
+    # Créer le profil - convert enums to their string values for database storage
     profile = Profile(
         user_id=current_user.id,
         age=profile_data.age,
-        gender=profile_data.gender,
+        gender=profile_data.gender.value,
         height_cm=profile_data.height_cm,
         weight_kg=profile_data.weight_kg,
-        activity_level=profile_data.activity_level,
-        goal=profile_data.goal,
+        activity_level=profile_data.activity_level.value,
+        goal=profile_data.goal.value,
         target_weight_kg=profile_data.target_weight_kg,
-        diet_type=profile_data.diet_type,
+        diet_type=profile_data.diet_type.value,
         allergies=profile_data.allergies,
         excluded_foods=profile_data.excluded_foods,
         favorite_foods=profile_data.favorite_foods,
@@ -144,10 +144,14 @@ async def update_profile(
             detail="Profil non trouvé.",
         )
 
-    # Mettre à jour les champs fournis
+    # Mettre à jour les champs fournis - convert enums to string values
     update_data = profile_data.model_dump(exclude_unset=True)
+    enum_fields = {'gender', 'activity_level', 'goal', 'diet_type'}
     for field, value in update_data.items():
-        setattr(profile, field, value)
+        if field in enum_fields and hasattr(value, 'value'):
+            setattr(profile, field, value.value)
+        else:
+            setattr(profile, field, value)
 
     # Recalculer si les données de base changent
     recalculate_fields = {'age', 'gender', 'height_cm', 'weight_kg', 'activity_level', 'goal'}
