@@ -570,7 +570,7 @@ async def get_activities_breakdown(
         activity_info = ACTIVITY_TYPES.get(row.activity_type, ACTIVITY_TYPES["other"])
         breakdown.append(ActivityTypeSummary(
             activity_type=row.activity_type,
-            name=activity_info["name"],
+            name=row.activity_type,  # Return the key for frontend i18n translation
             icon=activity_info["icon"],
             total_duration=row.total_duration or 0,
             total_calories=row.total_calories or 0,
