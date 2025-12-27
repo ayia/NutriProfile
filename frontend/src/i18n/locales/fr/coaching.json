@@ -1,0 +1,60 @@
+{
+  "title": "Coach IA",
+  "subtitle": "Votre coach nutritionnel personnel",
+  "aiActive": "Coach IA Actif",
+  "tabs": {
+    "tips": "Conseils",
+    "challenges": "Défis",
+    "summary": "Résumé"
+  },
+  "tips": {
+    "title": "Conseils du jour",
+    "subtitle": "Recommandations personnalisées pour aujourd'hui",
+    "loading": "Chargement des conseils...",
+    "error": "Impossible de charger les conseils",
+    "retry": "Réessayer",
+    "noTips": "Aucun conseil pour le moment",
+    "refresh": "Actualiser"
+  },
+  "challenges": {
+    "title": "Vos défis",
+    "subtitle": "Relevez des défis quotidiens",
+    "loading": "Chargement des défis...",
+    "error": "Impossible de charger les défis",
+    "retry": "Réessayer",
+    "noChallenges": "Aucun défi disponible",
+    "completed": "Complété !",
+    "points": "pts",
+    "progress": "{{current}}/{{target}}"
+  },
+  "summary": {
+    "title": "Résumé hebdomadaire",
+    "subtitle": "Votre progression cette semaine",
+    "loading": "Chargement du résumé...",
+    "error": "Impossible de charger le résumé",
+    "retry": "Réessayer",
+    "avgCalories": "Moy. Calories",
+    "avgProtein": "Moy. Protéines",
+    "avgCarbs": "Moy. Glucides",
+    "avgFat": "Moy. Lipides",
+    "activities": "Activités",
+    "activityMinutes": "min d'activité",
+    "mealsLogged": "Repas enregistrés",
+    "streakDays": "Jours de suite"
+  },
+  "priority": {
+    "high": "Priorité haute",
+    "medium": "Priorité moyenne",
+    "low": "Priorité basse"
+  },
+  "difficulty": {
+    "easy": "Facile",
+    "medium": "Moyen",
+    "hard": "Difficile"
+  },
+  "usage": {
+    "remaining": "{{count}} conseils restants aujourd'hui",
+    "limitReached": "Limite atteinte",
+    "upgrade": "Passez à Premium pour plus de conseils"
+  }
+}

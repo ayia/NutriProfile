@@ -144,7 +144,19 @@ class ConsensusValidator:
             results = [r[0] if r else {} for r in results]
 
         # Fusionner les ingrédients (intersection)
-        all_ingredients = [set(r.get("ingredients", [])) for r in results if isinstance(r, dict)]
+        # Les ingrédients peuvent être des dicts ou des strings
+        def extract_ingredient_names(ingredients_list: list) -> set:
+            names = set()
+            for ing in ingredients_list:
+                if isinstance(ing, dict):
+                    name = ing.get("name", "") or ing.get("ingredient", "")
+                    if name:
+                        names.add(name.lower().strip())
+                elif isinstance(ing, str):
+                    names.add(ing.lower().strip())
+            return names
+
+        all_ingredients = [extract_ingredient_names(r.get("ingredients", [])) for r in results if isinstance(r, dict)]
         common_ingredients = list(set.intersection(*all_ingredients)) if all_ingredients else []
 
         # Moyenne des temps de préparation
@@ -159,8 +171,8 @@ class ConsensusValidator:
         title = max(set(titles), key=titles.count) if titles else ""
 
         # Détecter les désaccords sur les ingrédients
-        if all_ingredients:
-            all_unique = set.union(*all_ingredients)
+        if all_ingredients and len(all_ingredients) > 0:
+            all_unique = set.union(*all_ingredients) if all_ingredients else set()
             if len(all_unique) > len(common_ingredients) * 1.5:
                 disagreements.append(self.t("agents.consensus.ingredientDisagreement"))
 

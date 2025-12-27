@@ -32,11 +32,12 @@ class ModelInfo(BaseModel):
 
 
 # Registre des modèles disponibles
+# Updated 2025-12-27: Using models available on HuggingFace Router
 MODEL_REGISTRY: dict[str, ModelInfo] = {
-    # Modèles de texte principaux
-    "mistral-7b": ModelInfo(
-        id="mistralai/Mistral-7B-Instruct-v0.2",
-        name="Mistral 7B Instruct",
+    # Modèles de texte principaux - Using Qwen and Llama models available on HF Router
+    "qwen-2.5-72b": ModelInfo(
+        id="Qwen/Qwen2.5-72B-Instruct",
+        name="Qwen 2.5 72B Instruct",
         type=ModelType.TEXT,
         capabilities=[
             ModelCapability.RECIPE_GENERATION,
@@ -48,9 +49,9 @@ MODEL_REGISTRY: dict[str, ModelInfo] = {
         temperature=0.7,
         priority=1,
     ),
-    "llama-3-70b": ModelInfo(
-        id="meta-llama/Meta-Llama-3-70B-Instruct",
-        name="Llama 3 70B Instruct",
+    "llama-3.1-70b": ModelInfo(
+        id="meta-llama/Llama-3.1-70B-Instruct",
+        name="Llama 3.1 70B Instruct",
         type=ModelType.TEXT,
         capabilities=[
             ModelCapability.RECIPE_GENERATION,
@@ -62,9 +63,9 @@ MODEL_REGISTRY: dict[str, ModelInfo] = {
         temperature=0.7,
         priority=1,
     ),
-    "mixtral-8x7b": ModelInfo(
-        id="mistralai/Mixtral-8x7B-Instruct-v0.1",
-        name="Mixtral 8x7B",
+    "mistral-nemo": ModelInfo(
+        id="mistralai/Mistral-Nemo-Instruct-2407",
+        name="Mistral Nemo 12B",
         type=ModelType.TEXT,
         capabilities=[
             ModelCapability.RECIPE_GENERATION,
@@ -76,9 +77,9 @@ MODEL_REGISTRY: dict[str, ModelInfo] = {
         priority=2,
     ),
     # Modèle de fallback texte
-    "zephyr-7b": ModelInfo(
-        id="HuggingFaceH4/zephyr-7b-beta",
-        name="Zephyr 7B",
+    "phi-3-mini": ModelInfo(
+        id="microsoft/Phi-3-mini-4k-instruct",
+        name="Phi-3 Mini",
         type=ModelType.TEXT,
         capabilities=[
             ModelCapability.RECIPE_GENERATION,

@@ -17,6 +17,7 @@ import enTerms from './locales/en/terms.json'
 import enPrivacy from './locales/en/privacy.json'
 import enPro from './locales/en/pro.json'
 import enRefund from './locales/en/refund.json'
+import enCoaching from './locales/en/coaching.json'
 
 import frCommon from './locales/fr/common.json'
 import frAuth from './locales/fr/auth.json'
@@ -32,6 +33,7 @@ import frTerms from './locales/fr/terms.json'
 import frPrivacy from './locales/fr/privacy.json'
 import frPro from './locales/fr/pro.json'
 import frRefund from './locales/fr/refund.json'
+import frCoaching from './locales/fr/coaching.json'
 
 import deCommon from './locales/de/common.json'
 import deAuth from './locales/de/auth.json'
@@ -47,6 +49,7 @@ import deTerms from './locales/de/terms.json'
 import dePrivacy from './locales/de/privacy.json'
 import dePro from './locales/de/pro.json'
 import deRefund from './locales/de/refund.json'
+import deCoaching from './locales/de/coaching.json'
 
 import esCommon from './locales/es/common.json'
 import esAuth from './locales/es/auth.json'
@@ -62,6 +65,7 @@ import esTerms from './locales/es/terms.json'
 import esPrivacy from './locales/es/privacy.json'
 import esPro from './locales/es/pro.json'
 import esRefund from './locales/es/refund.json'
+import esCoaching from './locales/es/coaching.json'
 
 import ptCommon from './locales/pt/common.json'
 import ptAuth from './locales/pt/auth.json'
@@ -77,6 +81,7 @@ import ptTerms from './locales/pt/terms.json'
 import ptPrivacy from './locales/pt/privacy.json'
 import ptPro from './locales/pt/pro.json'
 import ptRefund from './locales/pt/refund.json'
+import ptCoaching from './locales/pt/coaching.json'
 
 import zhCommon from './locales/zh/common.json'
 import zhAuth from './locales/zh/auth.json'
@@ -92,6 +97,7 @@ import zhTerms from './locales/zh/terms.json'
 import zhPrivacy from './locales/zh/privacy.json'
 import zhPro from './locales/zh/pro.json'
 import zhRefund from './locales/zh/refund.json'
+import zhCoaching from './locales/zh/coaching.json'
 
 import arCommon from './locales/ar/common.json'
 import arAuth from './locales/ar/auth.json'
@@ -107,6 +113,7 @@ import arTerms from './locales/ar/terms.json'
 import arPrivacy from './locales/ar/privacy.json'
 import arPro from './locales/ar/pro.json'
 import arRefund from './locales/ar/refund.json'
+import arCoaching from './locales/ar/coaching.json'
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧', dir: 'ltr' },
@@ -136,6 +143,7 @@ const resources = {
     privacy: enPrivacy,
     pro: enPro,
     refund: enRefund,
+    coaching: enCoaching,
   },
   fr: {
     common: frCommon,
@@ -152,6 +160,7 @@ const resources = {
     privacy: frPrivacy,
     pro: frPro,
     refund: frRefund,
+    coaching: frCoaching,
   },
   de: {
     common: deCommon,
@@ -168,6 +177,7 @@ const resources = {
     privacy: dePrivacy,
     pro: dePro,
     refund: deRefund,
+    coaching: deCoaching,
   },
   es: {
     common: esCommon,
@@ -184,6 +194,7 @@ const resources = {
     privacy: esPrivacy,
     pro: esPro,
     refund: esRefund,
+    coaching: esCoaching,
   },
   pt: {
     common: ptCommon,
@@ -200,6 +211,7 @@ const resources = {
     privacy: ptPrivacy,
     pro: ptPro,
     refund: ptRefund,
+    coaching: ptCoaching,
   },
   zh: {
     common: zhCommon,
@@ -216,6 +228,7 @@ const resources = {
     privacy: zhPrivacy,
     pro: zhPro,
     refund: zhRefund,
+    coaching: zhCoaching,
   },
   ar: {
     common: arCommon,
@@ -232,6 +245,7 @@ const resources = {
     privacy: arPrivacy,
     pro: arPro,
     refund: arRefund,
+    coaching: arCoaching,
   },
 }
 
@@ -253,7 +267,7 @@ i18n
       lookupLocalStorage: 'i18nextLng',
     },
 
-    ns: ['common', 'auth', 'dashboard', 'tracking', 'vision', 'recipes', 'onboarding', 'settings', 'home', 'pricing', 'terms', 'privacy', 'pro', 'refund'],
+    ns: ['common', 'auth', 'dashboard', 'tracking', 'vision', 'recipes', 'onboarding', 'settings', 'home', 'pricing', 'terms', 'privacy', 'pro', 'refund', 'coaching'],
     defaultNS: 'common',
   })
 

@@ -1,0 +1,60 @@
+{
+  "title": "KI-Coach",
+  "subtitle": "Ihr persönlicher Ernährungscoach",
+  "aiActive": "KI-Coach Aktiv",
+  "tabs": {
+    "tips": "Tipps",
+    "challenges": "Herausforderungen",
+    "summary": "Zusammenfassung"
+  },
+  "tips": {
+    "title": "Tipps des Tages",
+    "subtitle": "Personalisierte Empfehlungen für heute",
+    "loading": "Tipps werden geladen...",
+    "error": "Tipps können nicht geladen werden",
+    "retry": "Erneut versuchen",
+    "noTips": "Momentan keine Tipps",
+    "refresh": "Aktualisieren"
+  },
+  "challenges": {
+    "title": "Ihre Herausforderungen",
+    "subtitle": "Tägliche Herausforderungen annehmen",
+    "loading": "Herausforderungen werden geladen...",
+    "error": "Herausforderungen können nicht geladen werden",
+    "retry": "Erneut versuchen",
+    "noChallenges": "Keine Herausforderungen verfügbar",
+    "completed": "Abgeschlossen!",
+    "points": "Pkt",
+    "progress": "{{current}}/{{target}}"
+  },
+  "summary": {
+    "title": "Wochenzusammenfassung",
+    "subtitle": "Ihr Fortschritt diese Woche",
+    "loading": "Zusammenfassung wird geladen...",
+    "error": "Zusammenfassung kann nicht geladen werden",
+    "retry": "Erneut versuchen",
+    "avgCalories": "Durchschn. Kalorien",
+    "avgProtein": "Durchschn. Protein",
+    "avgCarbs": "Durchschn. Kohlenhydrate",
+    "avgFat": "Durchschn. Fett",
+    "activities": "Aktivitäten",
+    "activityMinutes": "Min. Aktivität",
+    "mealsLogged": "Mahlzeiten protokolliert",
+    "streakDays": "Tage Serie"
+  },
+  "priority": {
+    "high": "Hohe Priorität",
+    "medium": "Mittlere Priorität",
+    "low": "Niedrige Priorität"
+  },
+  "difficulty": {
+    "easy": "Einfach",
+    "medium": "Mittel",
+    "hard": "Schwer"
+  },
+  "usage": {
+    "remaining": "{{count}} Tipps heute übrig",
+    "limitReached": "Limit erreicht",
+    "upgrade": "Upgraden Sie auf Premium für mehr Tipps"
+  }
+}

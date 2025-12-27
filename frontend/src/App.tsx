@@ -15,6 +15,7 @@ import { ProFeaturesPage } from '@/pages/ProFeaturesPage'
 import { TermsPage } from '@/pages/TermsPage'
 import { PrivacyPage } from '@/pages/PrivacyPage'
 import { RefundPage } from '@/pages/RefundPage'
+import { CoachingPage } from '@/pages/CoachingPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import { ProfileRequiredRoute } from '@/components/auth/ProfileRequiredRoute'
 
@@ -87,6 +88,14 @@ function App() {
           element={
             <ProfileRequiredRoute>
               <ProFeaturesPage />
+            </ProfileRequiredRoute>
+          }
+        />
+        <Route
+          path="coaching"
+          element={
+            <ProfileRequiredRoute>
+              <CoachingPage />
             </ProfileRequiredRoute>
           }
         />

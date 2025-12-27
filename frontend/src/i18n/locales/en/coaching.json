@@ -1,0 +1,60 @@
+{
+  "title": "AI Coach",
+  "subtitle": "Your personal nutrition coach",
+  "aiActive": "AI Coach Active",
+  "tabs": {
+    "tips": "Tips",
+    "challenges": "Challenges",
+    "summary": "Summary"
+  },
+  "tips": {
+    "title": "Today's Tips",
+    "subtitle": "Personalized recommendations for today",
+    "loading": "Loading tips...",
+    "error": "Unable to load tips",
+    "retry": "Retry",
+    "noTips": "No tips at the moment",
+    "refresh": "Refresh"
+  },
+  "challenges": {
+    "title": "Your Challenges",
+    "subtitle": "Take on daily challenges",
+    "loading": "Loading challenges...",
+    "error": "Unable to load challenges",
+    "retry": "Retry",
+    "noChallenges": "No challenges available",
+    "completed": "Completed!",
+    "points": "pts",
+    "progress": "{{current}}/{{target}}"
+  },
+  "summary": {
+    "title": "Weekly Summary",
+    "subtitle": "Your progress this week",
+    "loading": "Loading summary...",
+    "error": "Unable to load summary",
+    "retry": "Retry",
+    "avgCalories": "Avg. Calories",
+    "avgProtein": "Avg. Protein",
+    "avgCarbs": "Avg. Carbs",
+    "avgFat": "Avg. Fat",
+    "activities": "Activities",
+    "activityMinutes": "min of activity",
+    "mealsLogged": "Meals logged",
+    "streakDays": "Days streak"
+  },
+  "priority": {
+    "high": "High priority",
+    "medium": "Medium priority",
+    "low": "Low priority"
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
+  "usage": {
+    "remaining": "{{count}} tips remaining today",
+    "limitReached": "Limit reached",
+    "upgrade": "Upgrade to Premium for more tips"
+  }
+}

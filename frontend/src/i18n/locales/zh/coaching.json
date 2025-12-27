@@ -1,0 +1,60 @@
+{
+  "title": "AI教练",
+  "subtitle": "您的个人营养教练",
+  "aiActive": "AI教练在线",
+  "tabs": {
+    "tips": "建议",
+    "challenges": "挑战",
+    "summary": "总结"
+  },
+  "tips": {
+    "title": "今日建议",
+    "subtitle": "为您定制的个性化建议",
+    "loading": "加载建议中...",
+    "error": "无法加载建议",
+    "retry": "重试",
+    "noTips": "暂无建议",
+    "refresh": "刷新"
+  },
+  "challenges": {
+    "title": "您的挑战",
+    "subtitle": "接受每日挑战",
+    "loading": "加载挑战中...",
+    "error": "无法加载挑战",
+    "retry": "重试",
+    "noChallenges": "暂无挑战",
+    "completed": "已完成！",
+    "points": "分",
+    "progress": "{{current}}/{{target}}"
+  },
+  "summary": {
+    "title": "周总结",
+    "subtitle": "本周进展",
+    "loading": "加载总结中...",
+    "error": "无法加载总结",
+    "retry": "重试",
+    "avgCalories": "平均卡路里",
+    "avgProtein": "平均蛋白质",
+    "avgCarbs": "平均碳水",
+    "avgFat": "平均脂肪",
+    "activities": "活动",
+    "activityMinutes": "分钟活动",
+    "mealsLogged": "已记录餐食",
+    "streakDays": "连续天数"
+  },
+  "priority": {
+    "high": "高优先级",
+    "medium": "中优先级",
+    "low": "低优先级"
+  },
+  "difficulty": {
+    "easy": "简单",
+    "medium": "中等",
+    "hard": "困难"
+  },
+  "usage": {
+    "remaining": "今日剩余{{count}}条建议",
+    "limitReached": "已达限制",
+    "upgrade": "升级到高级版获取更多建议"
+  }
+}
