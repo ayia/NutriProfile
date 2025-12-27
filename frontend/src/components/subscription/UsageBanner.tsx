@@ -11,14 +11,14 @@ interface UsageBannerProps {
   compact?: boolean
 }
 
-const featureConfig = {
-  vision_analyses: { icon: '📸', label: 'analyses photo', color: 'primary' },
-  recipe_generations: { icon: '🍳', label: 'recettes', color: 'secondary' },
-  coach_messages: { icon: '💬', label: 'conseils coach', color: 'emerald' },
+const featureIcons = {
+  vision_analyses: '📸',
+  recipe_generations: '🍳',
+  coach_messages: '💬',
 }
 
 export function UsageBanner({ action = 'vision_analyses', showAlways = false, compact = false }: UsageBannerProps) {
-  useTranslation() // Keep for potential future translations
+  const { t } = useTranslation('common')
   const [usage, setUsage] = useState<UsageStatusResponse | null>(null)
   const [dismissed, setDismissed] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -41,7 +41,8 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
 
   const used = usage.usage[action]
   const limit = usage.limits[action]
-  const config = featureConfig[action]
+  const icon = featureIcons[action]
+  const label = t(`usage.features.${action}`)
   const remaining = limit === -1 ? -1 : limit - used
   const percentage = limit === -1 ? 0 : (used / limit) * 100
 
@@ -50,9 +51,9 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
     if (!showAlways) return null
     return (
       <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-50 to-emerald-50 rounded-xl border border-primary-100">
-        <span className="text-lg">{config.icon}</span>
+        <span className="text-lg">{icon}</span>
         <span className="text-sm font-medium text-primary-700">
-          {config.label} illimitées
+          {label} {t('usage.unlimited')}
         </span>
         <span className="ml-auto px-2 py-0.5 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-xs font-bold rounded-full">
           PRO
@@ -75,11 +76,11 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
         isLow ? 'bg-warning-100 text-warning-700' :
         'bg-gray-100 text-gray-700'
       }`}>
-        <span>{config.icon}</span>
+        <span>{icon}</span>
         <span>{used}/{limit}</span>
         {(isLow || isZero) && (
           <Link to="/pricing" className="ml-1 underline">
-            Upgrade
+            {t('usage.upgrade')}
           </Link>
         )}
       </div>
@@ -101,10 +102,10 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-xl">{config.icon}</span>
+            <span className="text-xl">{icon}</span>
             <div>
               <span className="text-sm font-semibold text-gray-800">
-                {config.label.charAt(0).toUpperCase() + config.label.slice(1)}
+                {label.charAt(0).toUpperCase() + label.slice(1)}
               </span>
               <span className={`ml-2 text-xs font-bold px-2 py-0.5 rounded-full ${
                 isZero ? 'bg-red-100 text-red-700' :
@@ -145,12 +146,12 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
           }`}>
             {isZero ? (
               <>
-                <span className="font-semibold">Limite atteinte !</span> Revenez demain ou passez à Premium.
+                <span className="font-semibold">{t('usage.limitReached')}</span> {t('usage.comeBackTomorrow')}
               </>
             ) : isLow ? (
-              <>Plus que <span className="font-semibold">{remaining}</span> {config.label} restante{remaining > 1 ? 's' : ''}</>
+              <>{t('usage.remaining')} <span className="font-semibold">{remaining}</span> {label} {t('usage.remaining', { count: remaining })}</>
             ) : (
-              <>{remaining} {config.label} restantes aujourd'hui</>
+              <>{remaining} {label} {t('usage.remainingToday')}</>
             )}
           </p>
 
@@ -160,7 +161,7 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
               className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-primary-500/30 hover:-translate-y-0.5 transition-all"
             >
               <span>⚡</span>
-              <span>Passer à Premium</span>
+              <span>{t('usage.upgradeToPremium')}</span>
             </Link>
           )}
         </div>

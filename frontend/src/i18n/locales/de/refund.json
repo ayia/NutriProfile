@@ -1,0 +1,65 @@
+{
+  "title": "Ruckerstattungsrichtlinie",
+  "lastUpdated": "Zuletzt aktualisiert",
+  "intro": "Bei NutriProfile mochten wir, dass Sie mit Ihrem Kauf vollkommen zufrieden sind. Diese Ruckerstattungsrichtlinie erlautert Ihre Rechte und die Bedingungen fur Ruckerstattungen.",
+  "sections": {
+    "guarantee": {
+      "title": "1. Geld-zuruck-Garantie",
+      "content": "Wir bieten eine 14-tagige Geld-zuruck-Garantie fur alle neuen Premium- und Pro-Abonnements. Wenn Sie aus irgendeinem Grund mit unserem Service nicht zufrieden sind, konnen Sie innerhalb von 14 Tagen nach Ihrem ersten Kauf eine vollstandige Ruckerstattung beantragen.",
+      "conditions": "Diese Garantie gilt nur fur den ersten Abonnementkauf. Verlangerungen sind von dieser Garantie ausgeschlossen."
+    },
+    "eligibility": {
+      "title": "2. Anspruchsvoraussetzungen",
+      "content": "Um fur eine Ruckerstattung berechtigt zu sein, mussen Sie:",
+      "items": {
+        "timeframe": "Ihre Anfrage innerhalb von 14 Tagen nach dem Kauf stellen",
+        "firstPurchase": "Es muss Ihr erster Abonnementkauf sein",
+        "noAbuse": "Das Ruckerstattungssystem nicht zuvor missbraucht haben",
+        "validAccount": "Ein gultiges und aktives Konto haben"
+      }
+    },
+    "process": {
+      "title": "3. Ruckerstattungsprozess",
+      "content": "Um eine Ruckerstattung zu beantragen:",
+      "steps": {
+        "contact": "Kontaktieren Sie unseren Support unter support@nutriprofile.app",
+        "provide": "Geben Sie Ihre Konto-E-Mail-Adresse und den Grund fur Ihre Anfrage an",
+        "review": "Unser Team wird Ihre Anfrage innerhalb von 2-3 Werktagen prufen",
+        "refund": "Bei Genehmigung wird die Ruckerstattung innerhalb von 5-10 Werktagen bearbeitet"
+      }
+    },
+    "method": {
+      "title": "4. Ruckerstattungsmethode",
+      "content": "Ruckerstattungen werden uber Paddle, unseren Zahlungsabwickler, verarbeitet. Die Ruckerstattung wird der ursprunglichen Zahlungsmethode gutgeschrieben.",
+      "note": "Der genaue Zeitrahmen hangt von Ihrer Bank oder Ihrem Kreditkartenanbieter ab."
+    },
+    "exceptions": {
+      "title": "5. Ausnahmen",
+      "content": "Ruckerstattungen werden in folgenden Fallen nicht gewahrt:",
+      "items": {
+        "afterPeriod": "Anfragen nach Ablauf der 14-tagigen Garantiezeit",
+        "renewals": "Automatische Abonnementverlangerungen",
+        "abuse": "Wiederholter Missbrauch des Dienstes oder der Ruckerstattungen",
+        "violation": "Verstoss gegen die Nutzungsbedingungen"
+      }
+    },
+    "cancellation": {
+      "title": "6. Abonnementkundigung",
+      "content": "Sie konnen Ihr Abonnement jederzeit in Ihren Kontoeinstellungen kundigen. Die Kundigung wird am Ende des aktuellen Abrechnungszeitraums wirksam.",
+      "note": "Eine Kundigung berechtigt nicht zu einer anteiligen Ruckerstattung fur den verbleibenden Zeitraum."
+    },
+    "prorated": {
+      "title": "7. Anteilige Ruckerstattungen",
+      "content": "Anteilige Ruckerstattungen fur ungenutzte Zeitraume werden in der Regel nicht angeboten. In Ausnahmefallen konnen jedoch nach unserem Ermessen Ausnahmen gemacht werden."
+    },
+    "contact": {
+      "title": "8. Kontakt",
+      "content": "Bei Fragen zu unserer Ruckerstattungsrichtlinie oder fur eine Ruckerstattungsanfrage kontaktieren Sie uns bitte unter:"
+    }
+  },
+  "footer": {
+    "operator": "NutriProfile wird betrieben von",
+    "companyName": "Badre Zouiri",
+    "paddle": "Zahlungen werden sicher von Paddle.com als Merchant of Record verarbeitet."
+  }
+}

@@ -46,5 +46,21 @@
     "ml": "毫升",
     "L": "升",
     "cm": "厘米"
+  },
+  "usage": {
+    "features": {
+      "vision_analyses": "照片分析",
+      "recipe_generations": "食谱",
+      "coach_messages": "教练建议"
+    },
+    "unlimited": "无限",
+    "upgrade": "升级",
+    "limitReached": "已达限制！",
+    "comeBackTomorrow": "明天再来或升级到高级版。",
+    "remaining": "仅剩",
+    "remainingToday": "今日剩余",
+    "remaining_one": "剩余",
+    "remaining_other": "剩余",
+    "upgradeToPremium": "升级到高级版"
   }
 }

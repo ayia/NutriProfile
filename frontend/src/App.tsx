@@ -14,6 +14,7 @@ import PricingPage from '@/pages/PricingPage'
 import { ProFeaturesPage } from '@/pages/ProFeaturesPage'
 import { TermsPage } from '@/pages/TermsPage'
 import { PrivacyPage } from '@/pages/PrivacyPage'
+import { RefundPage } from '@/pages/RefundPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import { ProfileRequiredRoute } from '@/components/auth/ProfileRequiredRoute'
 
@@ -91,6 +92,7 @@ function App() {
         />
         <Route path="terms" element={<TermsPage />} />
         <Route path="privacy" element={<PrivacyPage />} />
+        <Route path="refund" element={<RefundPage />} />
       </Route>
     </Routes>
   )

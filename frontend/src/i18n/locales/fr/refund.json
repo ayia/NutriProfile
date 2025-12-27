@@ -1,0 +1,65 @@
+{
+  "title": "Politique de Remboursement",
+  "lastUpdated": "Derniere mise a jour",
+  "intro": "Chez NutriProfile, nous voulons que vous soyez entierement satisfait de votre achat. Cette politique de remboursement explique vos droits et les conditions de remboursement.",
+  "sections": {
+    "guarantee": {
+      "title": "1. Garantie Satisfait ou Rembourse",
+      "content": "Nous offrons une garantie de remboursement de 14 jours pour tous les nouveaux abonnements Premium et Pro. Si vous n'etes pas satisfait de notre service pour quelque raison que ce soit, vous pouvez demander un remboursement complet dans les 14 jours suivant votre achat initial.",
+      "conditions": "Cette garantie s'applique uniquement au premier achat d'un abonnement. Les renouvellements ne sont pas eligibles a cette garantie."
+    },
+    "eligibility": {
+      "title": "2. Conditions d'Eligibilite",
+      "content": "Pour etre eligible a un remboursement, vous devez :",
+      "items": {
+        "timeframe": "Faire votre demande dans les 14 jours suivant l'achat",
+        "firstPurchase": "Il doit s'agir de votre premier achat d'abonnement",
+        "noAbuse": "Ne pas avoir abuse du systeme de remboursement precedemment",
+        "validAccount": "Avoir un compte valide et actif"
+      }
+    },
+    "process": {
+      "title": "3. Processus de Remboursement",
+      "content": "Pour demander un remboursement :",
+      "steps": {
+        "contact": "Contactez notre support a support@nutriprofile.app",
+        "provide": "Fournissez votre adresse email de compte et la raison de votre demande",
+        "review": "Notre equipe examinera votre demande sous 2-3 jours ouvrables",
+        "refund": "Si approuve, le remboursement sera effectue sous 5-10 jours ouvrables"
+      }
+    },
+    "method": {
+      "title": "4. Methode de Remboursement",
+      "content": "Les remboursements sont traites via Paddle, notre processeur de paiement. Le remboursement sera credite sur le mode de paiement original utilise lors de l'achat.",
+      "note": "Le delai exact depend de votre banque ou fournisseur de carte de credit."
+    },
+    "exceptions": {
+      "title": "5. Exceptions",
+      "content": "Les remboursements ne seront pas accordes dans les cas suivants :",
+      "items": {
+        "afterPeriod": "Demandes faites apres la periode de garantie de 14 jours",
+        "renewals": "Renouvellements automatiques d'abonnement",
+        "abuse": "Utilisation abusive repetee du service ou des remboursements",
+        "violation": "Violation des conditions d'utilisation"
+      }
+    },
+    "cancellation": {
+      "title": "6. Annulation d'Abonnement",
+      "content": "Vous pouvez annuler votre abonnement a tout moment depuis les parametres de votre compte. L'annulation prend effet a la fin de la periode de facturation en cours.",
+      "note": "L'annulation ne donne pas droit a un remboursement prorata pour la periode restante."
+    },
+    "prorated": {
+      "title": "7. Remboursements au Prorata",
+      "content": "Les remboursements au prorata pour les periodes non utilisees ne sont generalement pas offerts. Cependant, des exceptions peuvent etre faites dans des circonstances exceptionnelles a notre discretion."
+    },
+    "contact": {
+      "title": "8. Nous Contacter",
+      "content": "Pour toute question concernant notre politique de remboursement ou pour faire une demande de remboursement, veuillez nous contacter a :"
+    }
+  },
+  "footer": {
+    "operator": "NutriProfile est opere par",
+    "companyName": "Badre Zouiri",
+    "paddle": "Les paiements sont traites de maniere securisee par Paddle.com en tant que Merchant of Record."
+  }
+}

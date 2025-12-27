@@ -46,5 +46,21 @@
     "ml": "ml",
     "L": "L",
     "cm": "cm"
+  },
+  "usage": {
+    "features": {
+      "vision_analyses": "Fotoanalysen",
+      "recipe_generations": "Rezepte",
+      "coach_messages": "Coach-Tipps"
+    },
+    "unlimited": "unbegrenzt",
+    "upgrade": "Upgrade",
+    "limitReached": "Limit erreicht!",
+    "comeBackTomorrow": "Kommen Sie morgen wieder oder upgraden Sie auf Premium.",
+    "remaining": "Nur noch",
+    "remainingToday": "heute übrig",
+    "remaining_one": "übrig",
+    "remaining_other": "übrig",
+    "upgradeToPremium": "Auf Premium upgraden"
   }
 }

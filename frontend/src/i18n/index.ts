@@ -16,6 +16,7 @@ import enPricing from './locales/en/pricing.json'
 import enTerms from './locales/en/terms.json'
 import enPrivacy from './locales/en/privacy.json'
 import enPro from './locales/en/pro.json'
+import enRefund from './locales/en/refund.json'
 
 import frCommon from './locales/fr/common.json'
 import frAuth from './locales/fr/auth.json'
@@ -30,6 +31,7 @@ import frPricing from './locales/fr/pricing.json'
 import frTerms from './locales/fr/terms.json'
 import frPrivacy from './locales/fr/privacy.json'
 import frPro from './locales/fr/pro.json'
+import frRefund from './locales/fr/refund.json'
 
 import deCommon from './locales/de/common.json'
 import deAuth from './locales/de/auth.json'
@@ -44,6 +46,7 @@ import dePricing from './locales/de/pricing.json'
 import deTerms from './locales/de/terms.json'
 import dePrivacy from './locales/de/privacy.json'
 import dePro from './locales/de/pro.json'
+import deRefund from './locales/de/refund.json'
 
 import esCommon from './locales/es/common.json'
 import esAuth from './locales/es/auth.json'
@@ -58,6 +61,7 @@ import esPricing from './locales/es/pricing.json'
 import esTerms from './locales/es/terms.json'
 import esPrivacy from './locales/es/privacy.json'
 import esPro from './locales/es/pro.json'
+import esRefund from './locales/es/refund.json'
 
 import ptCommon from './locales/pt/common.json'
 import ptAuth from './locales/pt/auth.json'
@@ -72,6 +76,7 @@ import ptPricing from './locales/pt/pricing.json'
 import ptTerms from './locales/pt/terms.json'
 import ptPrivacy from './locales/pt/privacy.json'
 import ptPro from './locales/pt/pro.json'
+import ptRefund from './locales/pt/refund.json'
 
 import zhCommon from './locales/zh/common.json'
 import zhAuth from './locales/zh/auth.json'
@@ -86,6 +91,7 @@ import zhPricing from './locales/zh/pricing.json'
 import zhTerms from './locales/zh/terms.json'
 import zhPrivacy from './locales/zh/privacy.json'
 import zhPro from './locales/zh/pro.json'
+import zhRefund from './locales/zh/refund.json'
 
 import arCommon from './locales/ar/common.json'
 import arAuth from './locales/ar/auth.json'
@@ -100,6 +106,7 @@ import arPricing from './locales/ar/pricing.json'
 import arTerms from './locales/ar/terms.json'
 import arPrivacy from './locales/ar/privacy.json'
 import arPro from './locales/ar/pro.json'
+import arRefund from './locales/ar/refund.json'
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧', dir: 'ltr' },
@@ -128,6 +135,7 @@ const resources = {
     terms: enTerms,
     privacy: enPrivacy,
     pro: enPro,
+    refund: enRefund,
   },
   fr: {
     common: frCommon,
@@ -143,6 +151,7 @@ const resources = {
     terms: frTerms,
     privacy: frPrivacy,
     pro: frPro,
+    refund: frRefund,
   },
   de: {
     common: deCommon,
@@ -158,6 +167,7 @@ const resources = {
     terms: deTerms,
     privacy: dePrivacy,
     pro: dePro,
+    refund: deRefund,
   },
   es: {
     common: esCommon,
@@ -173,6 +183,7 @@ const resources = {
     terms: esTerms,
     privacy: esPrivacy,
     pro: esPro,
+    refund: esRefund,
   },
   pt: {
     common: ptCommon,
@@ -188,6 +199,7 @@ const resources = {
     terms: ptTerms,
     privacy: ptPrivacy,
     pro: ptPro,
+    refund: ptRefund,
   },
   zh: {
     common: zhCommon,
@@ -203,6 +215,7 @@ const resources = {
     terms: zhTerms,
     privacy: zhPrivacy,
     pro: zhPro,
+    refund: zhRefund,
   },
   ar: {
     common: arCommon,
@@ -218,6 +231,7 @@ const resources = {
     terms: arTerms,
     privacy: arPrivacy,
     pro: arPro,
+    refund: arRefund,
   },
 }
 
@@ -239,7 +253,7 @@ i18n
       lookupLocalStorage: 'i18nextLng',
     },
 
-    ns: ['common', 'auth', 'dashboard', 'tracking', 'vision', 'recipes', 'onboarding', 'settings', 'home', 'pricing', 'terms', 'privacy', 'pro'],
+    ns: ['common', 'auth', 'dashboard', 'tracking', 'vision', 'recipes', 'onboarding', 'settings', 'home', 'pricing', 'terms', 'privacy', 'pro', 'refund'],
     defaultNS: 'common',
   })
 

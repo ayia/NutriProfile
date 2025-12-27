@@ -442,6 +442,7 @@ export function HomePage() {
               <ul className="space-y-3 text-gray-400">
                 <li><Link to="/privacy" className="hover:text-white transition-colors">{t('footer.privacy')}</Link></li>
                 <li><Link to="/terms" className="hover:text-white transition-colors">{t('footer.terms')}</Link></li>
+                <li><Link to="/refund" className="hover:text-white transition-colors">{t('footer.refund')}</Link></li>
                 <li><Link to="/privacy#cookies" className="hover:text-white transition-colors">{t('footer.cookies')}</Link></li>
               </ul>
             </div>

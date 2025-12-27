@@ -76,5 +76,21 @@
     "afternoon": "afternoon",
     "evening": "evening",
     "night": "night"
+  },
+  "usage": {
+    "features": {
+      "vision_analyses": "photo analyses",
+      "recipe_generations": "recipes",
+      "coach_messages": "coach tips"
+    },
+    "unlimited": "unlimited",
+    "upgrade": "Upgrade",
+    "limitReached": "Limit reached!",
+    "comeBackTomorrow": "Come back tomorrow or upgrade to Premium.",
+    "remaining": "Only",
+    "remainingToday": "remaining today",
+    "remaining_one": "remaining",
+    "remaining_other": "remaining",
+    "upgradeToPremium": "Upgrade to Premium"
   }
 }

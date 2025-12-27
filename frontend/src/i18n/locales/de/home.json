@@ -46,5 +46,20 @@
     "title": "Bereit anzufangen?",
     "subtitle": "Schließen Sie sich Tausenden von Nutzern an, die ihre Ernährung mit NutriProfile verbessert haben.",
     "button": "Kostenlos starten"
+  },
+  "footer": {
+    "tagline": "Ihr intelligenter Ernährungsbegleiter powered by AI",
+    "product": "Produkt",
+    "features": "Funktionen",
+    "pricing": "Preise",
+    "faq": "FAQ",
+    "legal": "Rechtliches",
+    "privacy": "Datenschutz",
+    "terms": "AGB",
+    "refund": "Rückerstattung",
+    "cookies": "Cookies",
+    "contact": "Kontakt",
+    "support": "Support",
+    "copyright": "© 2024 NutriProfile. Alle Rechte vorbehalten."
   }
 }

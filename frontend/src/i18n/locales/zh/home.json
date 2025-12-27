@@ -46,5 +46,20 @@
     "title": "准备好开始了吗？",
     "subtitle": "加入数千名通过NutriProfile改善营养的用户。",
     "button": "免费开始"
+  },
+  "footer": {
+    "tagline": "您的智能营养伙伴，由AI驱动",
+    "product": "产品",
+    "features": "功能",
+    "pricing": "价格",
+    "faq": "常见问题",
+    "legal": "法律",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "refund": "退款政策",
+    "cookies": "Cookies",
+    "contact": "联系我们",
+    "support": "支持",
+    "copyright": "© 2024 NutriProfile. 保留所有权利。"
   }
 }

@@ -1,0 +1,65 @@
+{
+  "title": "Politica de Reembolso",
+  "lastUpdated": "Ultima atualizacao",
+  "intro": "Na NutriProfile, queremos que voce esteja completamente satisfeito com sua compra. Esta politica de reembolso explica seus direitos e as condicoes para reembolsos.",
+  "sections": {
+    "guarantee": {
+      "title": "1. Garantia de Devolucao",
+      "content": "Oferecemos uma garantia de devolucao de 14 dias para todas as novas assinaturas Premium e Pro. Se voce nao estiver satisfeito com nosso servico por qualquer motivo, pode solicitar um reembolso total dentro de 14 dias apos sua compra inicial.",
+      "conditions": "Esta garantia aplica-se apenas a primeira compra de assinatura. Renovacoes nao sao elegiveis para esta garantia."
+    },
+    "eligibility": {
+      "title": "2. Condicoes de Elegibilidade",
+      "content": "Para ser elegivel para um reembolso, voce deve:",
+      "items": {
+        "timeframe": "Fazer sua solicitacao dentro de 14 dias apos a compra",
+        "firstPurchase": "Deve ser sua primeira compra de assinatura",
+        "noAbuse": "Nao ter abusado do sistema de reembolsos anteriormente",
+        "validAccount": "Ter uma conta valida e ativa"
+      }
+    },
+    "process": {
+      "title": "3. Processo de Reembolso",
+      "content": "Para solicitar um reembolso:",
+      "steps": {
+        "contact": "Entre em contato com nosso suporte em support@nutriprofile.app",
+        "provide": "Forneca seu endereco de email da conta e o motivo da sua solicitacao",
+        "review": "Nossa equipe analisara sua solicitacao em 2-3 dias uteis",
+        "refund": "Se aprovado, o reembolso sera processado em 5-10 dias uteis"
+      }
+    },
+    "method": {
+      "title": "4. Metodo de Reembolso",
+      "content": "Os reembolsos sao processados atraves do Paddle, nosso processador de pagamentos. O reembolso sera creditado ao metodo de pagamento original usado na compra.",
+      "note": "O prazo exato depende do seu banco ou provedor de cartao de credito."
+    },
+    "exceptions": {
+      "title": "5. Excecoes",
+      "content": "Os reembolsos nao serao concedidos nos seguintes casos:",
+      "items": {
+        "afterPeriod": "Solicitacoes feitas apos o periodo de garantia de 14 dias",
+        "renewals": "Renovacoes automaticas de assinatura",
+        "abuse": "Abuso repetido do servico ou reembolsos",
+        "violation": "Violacao dos termos de servico"
+      }
+    },
+    "cancellation": {
+      "title": "6. Cancelamento de Assinatura",
+      "content": "Voce pode cancelar sua assinatura a qualquer momento nas configuracoes da sua conta. O cancelamento entra em vigor no final do periodo de faturamento atual.",
+      "note": "O cancelamento nao da direito a um reembolso proporcional pelo periodo restante."
+    },
+    "prorated": {
+      "title": "7. Reembolsos Proporcionais",
+      "content": "Reembolsos proporcionais para periodos nao utilizados geralmente nao sao oferecidos. No entanto, excecoes podem ser feitas em circunstancias excepcionais a nosso criterio."
+    },
+    "contact": {
+      "title": "8. Entre em Contato",
+      "content": "Para qualquer duvida sobre nossa politica de reembolso ou para fazer uma solicitacao de reembolso, entre em contato conosco em:"
+    }
+  },
+  "footer": {
+    "operator": "NutriProfile e operado por",
+    "companyName": "Badre Zouiri",
+    "paddle": "Os pagamentos sao processados de forma segura pela Paddle.com como Merchant of Record."
+  }
+}

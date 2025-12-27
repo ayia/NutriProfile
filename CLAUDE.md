@@ -43,6 +43,65 @@ Application web de profilage nutritionnel avec architecture multi-agents LLM.
 - Chaque agent LLM doit avoir un fallback et un score de confiance
 - Les limites freemium doivent être vérifiées côté backend
 
+## Règles d'Internationalisation (i18n)
+
+**IMPORTANT**: Toute chaîne de texte visible par l'utilisateur DOIT être internationalisée.
+
+### Règles obligatoires
+- JAMAIS de texte codé en dur dans les composants React
+- TOUJOURS utiliser `useTranslation()` avec le namespace approprié
+- TOUJOURS ajouter les traductions dans TOUTES les 7 langues: fr, en, de, es, pt, zh, ar
+- TOUJOURS vérifier les fichiers i18n existants avant de créer de nouvelles clés
+
+### Langues supportées
+| Code | Langue | Direction |
+|------|--------|-----------|
+| fr | Français | LTR |
+| en | Anglais | LTR |
+| de | Allemand | LTR |
+| es | Espagnol | LTR |
+| pt | Portugais | LTR |
+| zh | Chinois | LTR |
+| ar | Arabe | RTL |
+
+### Namespaces i18n
+- `common` - Actions, navigation, unités, erreurs génériques
+- `auth` - Authentification (login, register, forgot password)
+- `dashboard` - Tableau de bord
+- `tracking` - Suivi activité/poids
+- `vision` - Analyse photo IA
+- `recipes` - Génération de recettes
+- `onboarding` - Onboarding utilisateur
+- `settings` - Paramètres
+- `home` - Page d'accueil publique
+- `pricing` - Tarification
+- `terms` - Conditions d'utilisation
+- `privacy` - Politique de confidentialité
+- `refund` - Politique de remboursement
+- `pro` - Fonctionnalités Pro
+
+### Exemple d'utilisation
+```tsx
+// Bon exemple
+import { useTranslation } from 'react-i18next'
+
+function MyComponent() {
+  const { t } = useTranslation('recipes')
+  return <h1>{t('title')}</h1>
+}
+
+// Mauvais exemple - NE JAMAIS FAIRE
+function BadComponent() {
+  return <h1>Recettes</h1> // Texte codé en dur!
+}
+```
+
+### Checklist avant commit
+- [ ] Aucune chaîne de texte codée en dur
+- [ ] Traductions ajoutées pour les 7 langues
+- [ ] Namespace approprié utilisé
+- [ ] Clés de traduction cohérentes avec les fichiers existants
+
 ## Commandes
 
 ```bash

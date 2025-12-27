@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
-export function TermsPage() {
-  const { t } = useTranslation('terms')
+export function RefundPage() {
+  const { t } = useTranslation('refund')
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -14,90 +14,84 @@ export function TermsPage() {
               <strong>{t('lastUpdated')}:</strong> December 27, 2024
             </p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
-              {t('sections.acceptance.title')}
-            </h2>
-            <p className="text-gray-600 mb-4">
-              {t('sections.acceptance.content')}
+            <p className="text-gray-600 mb-6">
+              {t('intro')}
             </p>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
-              {t('sections.description.title')}
+              {t('sections.guarantee.title')}
             </h2>
             <p className="text-gray-600 mb-4">
-              {t('sections.description.content')}
+              {t('sections.guarantee.content')}
+            </p>
+            <p className="text-gray-600 mb-4 italic">
+              {t('sections.guarantee.conditions')}
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
+              {t('sections.eligibility.title')}
+            </h2>
+            <p className="text-gray-600 mb-4">
+              {t('sections.eligibility.content')}
             </p>
             <ul className="list-disc pl-6 text-gray-600 mb-4">
-              <li>{t('sections.description.features.vision')}</li>
-              <li>{t('sections.description.features.recipes')}</li>
-              <li>{t('sections.description.features.coaching')}</li>
-              <li>{t('sections.description.features.tracking')}</li>
+              <li>{t('sections.eligibility.items.timeframe')}</li>
+              <li>{t('sections.eligibility.items.firstPurchase')}</li>
+              <li>{t('sections.eligibility.items.noAbuse')}</li>
+              <li>{t('sections.eligibility.items.validAccount')}</li>
             </ul>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
-              {t('sections.subscriptions.title')}
+              {t('sections.process.title')}
             </h2>
             <p className="text-gray-600 mb-4">
-              {t('sections.subscriptions.content')}
+              {t('sections.process.content')}
+            </p>
+            <ol className="list-decimal pl-6 text-gray-600 mb-4">
+              <li>{t('sections.process.steps.contact')}</li>
+              <li>{t('sections.process.steps.provide')}</li>
+              <li>{t('sections.process.steps.review')}</li>
+              <li>{t('sections.process.steps.refund')}</li>
+            </ol>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
+              {t('sections.method.title')}
+            </h2>
+            <p className="text-gray-600 mb-4">
+              {t('sections.method.content')}
+            </p>
+            <p className="text-gray-600 mb-4 italic">
+              {t('sections.method.note')}
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
+              {t('sections.exceptions.title')}
+            </h2>
+            <p className="text-gray-600 mb-4">
+              {t('sections.exceptions.content')}
             </p>
             <ul className="list-disc pl-6 text-gray-600 mb-4">
-              <li>{t('sections.subscriptions.free')}</li>
-              <li>{t('sections.subscriptions.premium')}</li>
-              <li>{t('sections.subscriptions.pro')}</li>
+              <li>{t('sections.exceptions.items.afterPeriod')}</li>
+              <li>{t('sections.exceptions.items.renewals')}</li>
+              <li>{t('sections.exceptions.items.abuse')}</li>
+              <li>{t('sections.exceptions.items.violation')}</li>
             </ul>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
-              {t('sections.billing.title')}
+              {t('sections.cancellation.title')}
             </h2>
             <p className="text-gray-600 mb-4">
-              {t('sections.billing.content')}
+              {t('sections.cancellation.content')}
             </p>
-            <p className="text-gray-600 mb-4">
-              {t('sections.billing.renewal')}
+            <p className="text-gray-600 mb-4 italic">
+              {t('sections.cancellation.note')}
             </p>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
-              {t('sections.refund.title')}
+              {t('sections.prorated.title')}
             </h2>
             <p className="text-gray-600 mb-4">
-              {t('sections.refund.content')}
-            </p>
-            <p className="text-gray-600 mb-4">
-              {t('sections.refund.afterPeriod')}
-            </p>
-
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
-              {t('sections.userResponsibilities.title')}
-            </h2>
-            <p className="text-gray-600 mb-4">
-              {t('sections.userResponsibilities.content')}
-            </p>
-            <ul className="list-disc pl-6 text-gray-600 mb-4">
-              <li>{t('sections.userResponsibilities.items.accurate')}</li>
-              <li>{t('sections.userResponsibilities.items.security')}</li>
-              <li>{t('sections.userResponsibilities.items.personal')}</li>
-              <li>{t('sections.userResponsibilities.items.noReverse')}</li>
-            </ul>
-
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
-              {t('sections.healthDisclaimer.title')}
-            </h2>
-            <p className="text-gray-600 mb-4">
-              {t('sections.healthDisclaimer.content')}
-            </p>
-
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
-              {t('sections.liability.title')}
-            </h2>
-            <p className="text-gray-600 mb-4">
-              {t('sections.liability.content')}
-            </p>
-
-            <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
-              {t('sections.modifications.title')}
-            </h2>
-            <p className="text-gray-600 mb-4">
-              {t('sections.modifications.content')}
+              {t('sections.prorated.content')}
             </p>
 
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
@@ -127,4 +121,4 @@ export function TermsPage() {
   )
 }
 
-export default TermsPage
+export default RefundPage

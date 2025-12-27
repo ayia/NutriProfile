@@ -1,0 +1,65 @@
+{
+  "title": "退款政策",
+  "lastUpdated": "最后更新",
+  "intro": "在NutriProfile，我们希望您对购买完全满意。本退款政策说明您的权利和退款条件。",
+  "sections": {
+    "guarantee": {
+      "title": "1. 退款保证",
+      "content": "我们为所有新的Premium和Pro订阅提供14天退款保证。如果您因任何原因对我们的服务不满意，可以在首次购买后14天内申请全额退款。",
+      "conditions": "此保证仅适用于首次订阅购买。续订不享受此保证。"
+    },
+    "eligibility": {
+      "title": "2. 资格条件",
+      "content": "要获得退款资格，您必须：",
+      "items": {
+        "timeframe": "在购买后14天内提出申请",
+        "firstPurchase": "必须是您的首次订阅购买",
+        "noAbuse": "之前未滥用退款系统",
+        "validAccount": "拥有有效且活跃的账户"
+      }
+    },
+    "process": {
+      "title": "3. 退款流程",
+      "content": "申请退款：",
+      "steps": {
+        "contact": "通过support@nutriprofile.app联系我们的客服",
+        "provide": "提供您的账户邮箱地址和申请原因",
+        "review": "我们的团队将在2-3个工作日内审核您的申请",
+        "refund": "如获批准，退款将在5-10个工作日内处理"
+      }
+    },
+    "method": {
+      "title": "4. 退款方式",
+      "content": "退款通过我们的支付处理商Paddle处理。退款将退还到购买时使用的原始支付方式。",
+      "note": "确切时间取决于您的银行或信用卡提供商。"
+    },
+    "exceptions": {
+      "title": "5. 例外情况",
+      "content": "以下情况不予退款：",
+      "items": {
+        "afterPeriod": "在14天保证期后提出的申请",
+        "renewals": "自动订阅续订",
+        "abuse": "重复滥用服务或退款",
+        "violation": "违反服务条款"
+      }
+    },
+    "cancellation": {
+      "title": "6. 取消订阅",
+      "content": "您可以随时在账户设置中取消订阅。取消将在当前计费周期结束时生效。",
+      "note": "取消不享有剩余期间的按比例退款。"
+    },
+    "prorated": {
+      "title": "7. 按比例退款",
+      "content": "通常不提供未使用期间的按比例退款。但是，在特殊情况下，我们可能会酌情例外处理。"
+    },
+    "contact": {
+      "title": "8. 联系我们",
+      "content": "如有关于退款政策的任何问题或申请退款，请通过以下方式联系我们："
+    }
+  },
+  "footer": {
+    "operator": "NutriProfile由以下运营",
+    "companyName": "Badre Zouiri",
+    "paddle": "付款由Paddle.com作为Merchant of Record安全处理。"
+  }
+}

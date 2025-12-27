@@ -46,5 +46,20 @@
     "title": "¿Listo para comenzar?",
     "subtitle": "Únete a miles de usuarios que mejoraron su nutrición con NutriProfile.",
     "button": "Comenzar gratis"
+  },
+  "footer": {
+    "tagline": "Tu compañero de nutrición inteligente impulsado por IA",
+    "product": "Producto",
+    "features": "Características",
+    "pricing": "Precios",
+    "faq": "FAQ",
+    "legal": "Legal",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "refund": "Reembolso",
+    "cookies": "Cookies",
+    "contact": "Contacto",
+    "support": "Soporte",
+    "copyright": "© 2024 NutriProfile. Todos los derechos reservados."
   }
 }

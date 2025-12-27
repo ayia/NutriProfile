@@ -1,0 +1,65 @@
+{
+  "title": "Refund Policy",
+  "lastUpdated": "Last updated",
+  "intro": "At NutriProfile, we want you to be completely satisfied with your purchase. This refund policy explains your rights and the conditions for refunds.",
+  "sections": {
+    "guarantee": {
+      "title": "1. Money-Back Guarantee",
+      "content": "We offer a 14-day money-back guarantee for all new Premium and Pro subscriptions. If you are not satisfied with our service for any reason, you can request a full refund within 14 days of your initial purchase.",
+      "conditions": "This guarantee applies only to the first subscription purchase. Renewals are not eligible for this guarantee."
+    },
+    "eligibility": {
+      "title": "2. Eligibility Conditions",
+      "content": "To be eligible for a refund, you must:",
+      "items": {
+        "timeframe": "Make your request within 14 days of purchase",
+        "firstPurchase": "It must be your first subscription purchase",
+        "noAbuse": "Not have previously abused the refund system",
+        "validAccount": "Have a valid and active account"
+      }
+    },
+    "process": {
+      "title": "3. Refund Process",
+      "content": "To request a refund:",
+      "steps": {
+        "contact": "Contact our support at support@nutriprofile.app",
+        "provide": "Provide your account email address and the reason for your request",
+        "review": "Our team will review your request within 2-3 business days",
+        "refund": "If approved, the refund will be processed within 5-10 business days"
+      }
+    },
+    "method": {
+      "title": "4. Refund Method",
+      "content": "Refunds are processed through Paddle, our payment processor. The refund will be credited to the original payment method used for the purchase.",
+      "note": "The exact timing depends on your bank or credit card provider."
+    },
+    "exceptions": {
+      "title": "5. Exceptions",
+      "content": "Refunds will not be granted in the following cases:",
+      "items": {
+        "afterPeriod": "Requests made after the 14-day guarantee period",
+        "renewals": "Automatic subscription renewals",
+        "abuse": "Repeated abuse of the service or refunds",
+        "violation": "Violation of terms of service"
+      }
+    },
+    "cancellation": {
+      "title": "6. Subscription Cancellation",
+      "content": "You can cancel your subscription at any time from your account settings. Cancellation takes effect at the end of the current billing period.",
+      "note": "Cancellation does not entitle you to a prorated refund for the remaining period."
+    },
+    "prorated": {
+      "title": "7. Prorated Refunds",
+      "content": "Prorated refunds for unused periods are generally not offered. However, exceptions may be made in exceptional circumstances at our discretion."
+    },
+    "contact": {
+      "title": "8. Contact Us",
+      "content": "For any questions regarding our refund policy or to make a refund request, please contact us at:"
+    }
+  },
+  "footer": {
+    "operator": "NutriProfile is operated by",
+    "companyName": "Badre Zouiri",
+    "paddle": "Payments are securely processed by Paddle.com as Merchant of Record."
+  }
+}

@@ -65,5 +65,21 @@
     "saved": "Enregistré avec succès",
     "deleted": "Supprimé avec succès",
     "updated": "Mis à jour avec succès"
+  },
+  "usage": {
+    "features": {
+      "vision_analyses": "analyses photo",
+      "recipe_generations": "recettes",
+      "coach_messages": "conseils coach"
+    },
+    "unlimited": "illimitées",
+    "upgrade": "Upgrade",
+    "limitReached": "Limite atteinte !",
+    "comeBackTomorrow": "Revenez demain ou passez à Premium.",
+    "remaining": "Plus que",
+    "remainingToday": "restantes aujourd'hui",
+    "remaining_one": "restante",
+    "remaining_other": "restantes",
+    "upgradeToPremium": "Passer à Premium"
   }
 }
