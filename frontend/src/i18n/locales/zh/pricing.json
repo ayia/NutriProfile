@@ -45,8 +45,8 @@
     "advancedStats": "高级统计",
     "prioritySupport": "优先支持",
     "dedicatedSupport": "专属支持",
-    "exportPdf": "PDF导出（即将推出）",
-    "mealPlans": "AI餐食计划（即将推出）",
+    "exportPdf": "PDF导出",
+    "mealPlans": "AI餐食计划",
     "apiAccess": "API访问（即将推出）"
   }
 }

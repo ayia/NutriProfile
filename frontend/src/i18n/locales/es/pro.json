@@ -1,0 +1,57 @@
+{
+  "title": "Funciones Pro",
+  "upgradeMessage": "Desbloquea todas las funciones Pro para optimizar tu viaje nutricional.",
+  "upgradeCta": "Actualizar a Pro",
+  "tabs": {
+    "mealPlans": "Planes de Comidas IA",
+    "export": "Exportar PDF"
+  },
+  "exportPdf": {
+    "title": "Exportar PDF",
+    "subtitle": "Descarga tu informe nutricional",
+    "reportType": "Periodo del informe",
+    "weekly": "7 dias",
+    "monthly": "30 dias",
+    "includeOptions": "Incluir en el informe",
+    "meals": "Comidas y nutricion",
+    "activities": "Actividades fisicas",
+    "weight": "Evolucion del peso",
+    "recommendations": "Recomendaciones",
+    "generating": "Generando...",
+    "downloaded": "Descargado!",
+    "upgradeToPro": "Actualiza a Pro para exportar",
+    "download": "Descargar informe"
+  },
+  "mealPlan": {
+    "title": "Planes de Comidas IA",
+    "subtitle": "Planificacion semanal personalizada",
+    "daysLabel": "Numero de dias",
+    "mealsPerDay": "Comidas por dia",
+    "cookingTime": "Tiempo max",
+    "budget": "Presupuesto",
+    "budgetLow": "Economico",
+    "budgetMedium": "Moderado",
+    "budgetHigh": "Sin limite",
+    "includeSnacks": "Incluir snacks",
+    "generating": "Generando...",
+    "upgradeToPro": "Actualiza a Pro para generar",
+    "generate": "Generar mi plan de comidas",
+    "yourPlan": "Tu Plan",
+    "shoppingList": "Lista de compras",
+    "shoppingListTitle": "Lista de compras",
+    "generatedIn": "Generado en",
+    "confidence": "Confianza",
+    "breakfast": "Desayuno",
+    "lunch": "Almuerzo",
+    "dinner": "Cena",
+    "snack": "Snack"
+  },
+  "common": {
+    "days": "dias",
+    "meals": "comidas",
+    "calories": "Calorias",
+    "protein": "Proteinas",
+    "carbs": "Carbohidratos",
+    "fat": "Grasas"
+  }
+}

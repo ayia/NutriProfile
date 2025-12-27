@@ -1,0 +1,57 @@
+{
+  "title": "ميزات Pro",
+  "upgradeMessage": "افتح جميع ميزات Pro لتحسين رحلتك الغذائية.",
+  "upgradeCta": "الترقية إلى Pro",
+  "tabs": {
+    "mealPlans": "خطط الوجبات بالذكاء الاصطناعي",
+    "export": "تصدير PDF"
+  },
+  "exportPdf": {
+    "title": "تصدير PDF",
+    "subtitle": "قم بتحميل تقريرك الغذائي",
+    "reportType": "فترة التقرير",
+    "weekly": "7 أيام",
+    "monthly": "30 يوم",
+    "includeOptions": "تضمين في التقرير",
+    "meals": "الوجبات والتغذية",
+    "activities": "الأنشطة البدنية",
+    "weight": "تطور الوزن",
+    "recommendations": "التوصيات",
+    "generating": "جاري التوليد...",
+    "downloaded": "تم التحميل!",
+    "upgradeToPro": "الترقية إلى Pro للتصدير",
+    "download": "تحميل التقرير"
+  },
+  "mealPlan": {
+    "title": "خطط الوجبات بالذكاء الاصطناعي",
+    "subtitle": "تخطيط أسبوعي مخصص",
+    "daysLabel": "عدد الأيام",
+    "mealsPerDay": "الوجبات في اليوم",
+    "cookingTime": "الوقت الأقصى",
+    "budget": "الميزانية",
+    "budgetLow": "اقتصادي",
+    "budgetMedium": "معتدل",
+    "budgetHigh": "بدون حدود",
+    "includeSnacks": "تضمين الوجبات الخفيفة",
+    "generating": "جاري التوليد...",
+    "upgradeToPro": "الترقية إلى Pro للتوليد",
+    "generate": "توليد خطة وجباتي",
+    "yourPlan": "خطتك",
+    "shoppingList": "قائمة التسوق",
+    "shoppingListTitle": "قائمة التسوق",
+    "generatedIn": "تم التوليد في",
+    "confidence": "الثقة",
+    "breakfast": "الفطور",
+    "lunch": "الغداء",
+    "dinner": "العشاء",
+    "snack": "وجبة خفيفة"
+  },
+  "common": {
+    "days": "أيام",
+    "meals": "وجبات",
+    "calories": "السعرات الحرارية",
+    "protein": "البروتين",
+    "carbs": "الكربوهيدرات",
+    "fat": "الدهون"
+  }
+}

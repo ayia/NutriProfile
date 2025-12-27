@@ -15,6 +15,7 @@ import enHome from './locales/en/home.json'
 import enPricing from './locales/en/pricing.json'
 import enTerms from './locales/en/terms.json'
 import enPrivacy from './locales/en/privacy.json'
+import enPro from './locales/en/pro.json'
 
 import frCommon from './locales/fr/common.json'
 import frAuth from './locales/fr/auth.json'
@@ -28,6 +29,7 @@ import frHome from './locales/fr/home.json'
 import frPricing from './locales/fr/pricing.json'
 import frTerms from './locales/fr/terms.json'
 import frPrivacy from './locales/fr/privacy.json'
+import frPro from './locales/fr/pro.json'
 
 import deCommon from './locales/de/common.json'
 import deAuth from './locales/de/auth.json'
@@ -41,6 +43,7 @@ import deHome from './locales/de/home.json'
 import dePricing from './locales/de/pricing.json'
 import deTerms from './locales/de/terms.json'
 import dePrivacy from './locales/de/privacy.json'
+import dePro from './locales/de/pro.json'
 
 import esCommon from './locales/es/common.json'
 import esAuth from './locales/es/auth.json'
@@ -54,6 +57,7 @@ import esHome from './locales/es/home.json'
 import esPricing from './locales/es/pricing.json'
 import esTerms from './locales/es/terms.json'
 import esPrivacy from './locales/es/privacy.json'
+import esPro from './locales/es/pro.json'
 
 import ptCommon from './locales/pt/common.json'
 import ptAuth from './locales/pt/auth.json'
@@ -67,6 +71,7 @@ import ptHome from './locales/pt/home.json'
 import ptPricing from './locales/pt/pricing.json'
 import ptTerms from './locales/pt/terms.json'
 import ptPrivacy from './locales/pt/privacy.json'
+import ptPro from './locales/pt/pro.json'
 
 import zhCommon from './locales/zh/common.json'
 import zhAuth from './locales/zh/auth.json'
@@ -80,6 +85,7 @@ import zhHome from './locales/zh/home.json'
 import zhPricing from './locales/zh/pricing.json'
 import zhTerms from './locales/zh/terms.json'
 import zhPrivacy from './locales/zh/privacy.json'
+import zhPro from './locales/zh/pro.json'
 
 import arCommon from './locales/ar/common.json'
 import arAuth from './locales/ar/auth.json'
@@ -93,6 +99,7 @@ import arHome from './locales/ar/home.json'
 import arPricing from './locales/ar/pricing.json'
 import arTerms from './locales/ar/terms.json'
 import arPrivacy from './locales/ar/privacy.json'
+import arPro from './locales/ar/pro.json'
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧', dir: 'ltr' },
@@ -120,6 +127,7 @@ const resources = {
     pricing: enPricing,
     terms: enTerms,
     privacy: enPrivacy,
+    pro: enPro,
   },
   fr: {
     common: frCommon,
@@ -134,6 +142,7 @@ const resources = {
     pricing: frPricing,
     terms: frTerms,
     privacy: frPrivacy,
+    pro: frPro,
   },
   de: {
     common: deCommon,
@@ -148,6 +157,7 @@ const resources = {
     pricing: dePricing,
     terms: deTerms,
     privacy: dePrivacy,
+    pro: dePro,
   },
   es: {
     common: esCommon,
@@ -162,6 +172,7 @@ const resources = {
     pricing: esPricing,
     terms: esTerms,
     privacy: esPrivacy,
+    pro: esPro,
   },
   pt: {
     common: ptCommon,
@@ -176,6 +187,7 @@ const resources = {
     pricing: ptPricing,
     terms: ptTerms,
     privacy: ptPrivacy,
+    pro: ptPro,
   },
   zh: {
     common: zhCommon,
@@ -190,6 +202,7 @@ const resources = {
     pricing: zhPricing,
     terms: zhTerms,
     privacy: zhPrivacy,
+    pro: zhPro,
   },
   ar: {
     common: arCommon,
@@ -204,6 +217,7 @@ const resources = {
     pricing: arPricing,
     terms: arTerms,
     privacy: arPrivacy,
+    pro: arPro,
   },
 }
 
@@ -225,7 +239,7 @@ i18n
       lookupLocalStorage: 'i18nextLng',
     },
 
-    ns: ['common', 'auth', 'dashboard', 'tracking', 'vision', 'recipes', 'onboarding', 'settings', 'home', 'pricing', 'terms', 'privacy'],
+    ns: ['common', 'auth', 'dashboard', 'tracking', 'vision', 'recipes', 'onboarding', 'settings', 'home', 'pricing', 'terms', 'privacy', 'pro'],
     defaultNS: 'common',
   })
 

@@ -216,3 +216,102 @@ export const subscriptionApi = {
     return response.data
   },
 }
+
+// Export PDF API
+export interface ExportPDFRequest {
+  report_type: 'weekly' | 'monthly' | 'custom'
+  start_date?: string
+  end_date?: string
+  include_meals?: boolean
+  include_activities?: boolean
+  include_weight?: boolean
+  include_recommendations?: boolean
+}
+
+export interface ExportPDFResponse {
+  filename: string
+  content_type: string
+  size_bytes: number
+}
+
+export const exportApi = {
+  generatePDF: async (request: ExportPDFRequest): Promise<ExportPDFResponse> => {
+    const response = await api.post<ExportPDFResponse>('/export/pdf', request)
+    return response.data
+  },
+
+  downloadPDF: async (request: ExportPDFRequest): Promise<Blob> => {
+    const response = await api.post('/export/pdf/download', request, {
+      responseType: 'blob',
+    })
+    return response.data
+  },
+}
+
+// Meal Plans API
+export interface MealPlanRequest {
+  days?: number
+  start_date?: string
+  meals_per_day?: number
+  include_snacks?: boolean
+  budget_level?: 'low' | 'medium' | 'high'
+  cooking_time_max?: number
+  variety_level?: 'low' | 'medium' | 'high'
+}
+
+export interface MealPlanMeal {
+  meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+  name: string
+  description: string
+  ingredients: { name: string; quantity: string }[]
+  prep_time: number
+  cook_time: number
+  calories: number
+  protein: number
+  carbs: number
+  fat: number
+  tags: string[]
+}
+
+export interface MealPlanDay {
+  date: string
+  day_name: string
+  meals: MealPlanMeal[]
+  total_calories: number
+  total_protein: number
+  total_carbs: number
+  total_fat: number
+}
+
+export interface MealPlanResponse {
+  id?: number
+  user_id: number
+  start_date: string
+  end_date: string
+  days: MealPlanDay[]
+  avg_daily_calories: number
+  avg_daily_protein: number
+  avg_daily_carbs: number
+  avg_daily_fat: number
+  confidence: number
+  generation_time_ms: number
+  models_used: string[]
+  shopping_list?: { name: string; quantity: string; category: string }[]
+}
+
+export const mealPlansApi = {
+  generate: async (request: MealPlanRequest): Promise<MealPlanResponse> => {
+    const response = await api.post<MealPlanResponse>('/meal-plans/generate', request)
+    return response.data
+  },
+
+  preview: async (request: MealPlanRequest): Promise<MealPlanResponse> => {
+    const response = await api.post<MealPlanResponse>('/meal-plans/preview', request)
+    return response.data
+  },
+
+  getCurrent: async (): Promise<MealPlanResponse | null> => {
+    const response = await api.get<MealPlanResponse | null>('/meal-plans/current')
+    return response.data
+  },
+}

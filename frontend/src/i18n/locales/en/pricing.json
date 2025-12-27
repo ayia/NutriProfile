@@ -45,8 +45,8 @@
     "advancedStats": "Advanced statistics",
     "prioritySupport": "Priority support",
     "dedicatedSupport": "Dedicated support",
-    "exportPdf": "PDF export (coming soon)",
-    "mealPlans": "AI meal plans (coming soon)",
+    "exportPdf": "PDF export",
+    "mealPlans": "AI meal plans",
     "apiAccess": "API access (coming soon)"
   }
 }

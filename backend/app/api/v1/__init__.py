@@ -12,6 +12,8 @@ from app.api.v1 import (
     coaching,
     subscriptions,
     webhooks,
+    export,
+    meal_plans,
 )
 
 api_router = APIRouter(prefix="/api/v1")
@@ -27,3 +29,5 @@ api_router.include_router(dashboard.router, prefix="/dashboard", tags=["dashboar
 api_router.include_router(coaching.router, prefix="/coaching", tags=["coaching"])
 api_router.include_router(subscriptions.router)
 api_router.include_router(webhooks.router)
+api_router.include_router(export.router, prefix="/export", tags=["export"])
+api_router.include_router(meal_plans.router, prefix="/meal-plans", tags=["meal-plans"])

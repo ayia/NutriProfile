@@ -45,8 +45,8 @@
     "advancedStats": "Erweiterte Statistiken",
     "prioritySupport": "Prioritats-Support",
     "dedicatedSupport": "Dedizierter Support",
-    "exportPdf": "PDF-Export (bald verfugbar)",
-    "mealPlans": "KI-Speiseplane (bald verfugbar)",
+    "exportPdf": "PDF-Export",
+    "mealPlans": "KI-Speiseplane",
     "apiAccess": "API-Zugang (bald verfugbar)"
   }
 }

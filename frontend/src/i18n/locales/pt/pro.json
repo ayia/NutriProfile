@@ -1,0 +1,57 @@
+{
+  "title": "Recursos Pro",
+  "upgradeMessage": "Desbloqueie todos os recursos Pro para otimizar sua jornada nutricional.",
+  "upgradeCta": "Atualizar para Pro",
+  "tabs": {
+    "mealPlans": "Planos de Refeicoes IA",
+    "export": "Exportar PDF"
+  },
+  "exportPdf": {
+    "title": "Exportar PDF",
+    "subtitle": "Baixe seu relatorio nutricional",
+    "reportType": "Periodo do relatorio",
+    "weekly": "7 dias",
+    "monthly": "30 dias",
+    "includeOptions": "Incluir no relatorio",
+    "meals": "Refeicoes e nutricao",
+    "activities": "Atividades fisicas",
+    "weight": "Evolucao do peso",
+    "recommendations": "Recomendacoes",
+    "generating": "Gerando...",
+    "downloaded": "Baixado!",
+    "upgradeToPro": "Atualize para Pro para exportar",
+    "download": "Baixar relatorio"
+  },
+  "mealPlan": {
+    "title": "Planos de Refeicoes IA",
+    "subtitle": "Planejamento semanal personalizado",
+    "daysLabel": "Numero de dias",
+    "mealsPerDay": "Refeicoes por dia",
+    "cookingTime": "Tempo max",
+    "budget": "Orcamento",
+    "budgetLow": "Economico",
+    "budgetMedium": "Moderado",
+    "budgetHigh": "Sem limite",
+    "includeSnacks": "Incluir lanches",
+    "generating": "Gerando...",
+    "upgradeToPro": "Atualize para Pro para gerar",
+    "generate": "Gerar meu plano de refeicoes",
+    "yourPlan": "Seu Plano",
+    "shoppingList": "Lista de compras",
+    "shoppingListTitle": "Lista de compras",
+    "generatedIn": "Gerado em",
+    "confidence": "Confianca",
+    "breakfast": "Cafe da manha",
+    "lunch": "Almoco",
+    "dinner": "Jantar",
+    "snack": "Lanche"
+  },
+  "common": {
+    "days": "dias",
+    "meals": "refeicoes",
+    "calories": "Calorias",
+    "protein": "Proteina",
+    "carbs": "Carboidratos",
+    "fat": "Gordura"
+  }
+}

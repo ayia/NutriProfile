@@ -1,0 +1,57 @@
+{
+  "title": "Pro Features",
+  "upgradeMessage": "Unlock all Pro features to optimize your nutritional journey.",
+  "upgradeCta": "Upgrade to Pro",
+  "tabs": {
+    "mealPlans": "AI Meal Plans",
+    "export": "PDF Export"
+  },
+  "exportPdf": {
+    "title": "PDF Export",
+    "subtitle": "Download your nutritional report",
+    "reportType": "Report period",
+    "weekly": "7 days",
+    "monthly": "30 days",
+    "includeOptions": "Include in report",
+    "meals": "Meals and nutrition",
+    "activities": "Physical activities",
+    "weight": "Weight evolution",
+    "recommendations": "Recommendations",
+    "generating": "Generating...",
+    "downloaded": "Downloaded!",
+    "upgradeToPro": "Upgrade to Pro to export",
+    "download": "Download report"
+  },
+  "mealPlan": {
+    "title": "AI Meal Plans",
+    "subtitle": "Personalized weekly planning",
+    "daysLabel": "Number of days",
+    "mealsPerDay": "Meals per day",
+    "cookingTime": "Max time",
+    "budget": "Budget",
+    "budgetLow": "Economic",
+    "budgetMedium": "Moderate",
+    "budgetHigh": "No limit",
+    "includeSnacks": "Include snacks",
+    "generating": "Generating...",
+    "upgradeToPro": "Upgrade to Pro to generate",
+    "generate": "Generate my meal plan",
+    "yourPlan": "Your Plan",
+    "shoppingList": "Shopping list",
+    "shoppingListTitle": "Shopping list",
+    "generatedIn": "Generated in",
+    "confidence": "Confidence",
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "snack": "Snack"
+  },
+  "common": {
+    "days": "days",
+    "meals": "meals",
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "title": "Pro-Funktionen",
+  "upgradeMessage": "Schalten Sie alle Pro-Funktionen frei, um Ihre Ernahrungsreise zu optimieren.",
+  "upgradeCta": "Auf Pro upgraden",
+  "tabs": {
+    "mealPlans": "KI-Mahlzeitenplane",
+    "export": "PDF-Export"
+  },
+  "exportPdf": {
+    "title": "PDF-Export",
+    "subtitle": "Laden Sie Ihren Ernahrungsbericht herunter",
+    "reportType": "Berichtszeitraum",
+    "weekly": "7 Tage",
+    "monthly": "30 Tage",
+    "includeOptions": "Im Bericht enthalten",
+    "meals": "Mahlzeiten und Ernahrung",
+    "activities": "Korperliche Aktivitaten",
+    "weight": "Gewichtsentwicklung",
+    "recommendations": "Empfehlungen",
+    "generating": "Wird generiert...",
+    "downloaded": "Heruntergeladen!",
+    "upgradeToPro": "Auf Pro upgraden zum Exportieren",
+    "download": "Bericht herunterladen"
+  },
+  "mealPlan": {
+    "title": "KI-Mahlzeitenplane",
+    "subtitle": "Personalisierte Wochenplanung",
+    "daysLabel": "Anzahl der Tage",
+    "mealsPerDay": "Mahlzeiten pro Tag",
+    "cookingTime": "Max. Zeit",
+    "budget": "Budget",
+    "budgetLow": "Wirtschaftlich",
+    "budgetMedium": "Moderat",
+    "budgetHigh": "Keine Grenzen",
+    "includeSnacks": "Snacks einbeziehen",
+    "generating": "Wird generiert...",
+    "upgradeToPro": "Auf Pro upgraden zum Generieren",
+    "generate": "Meinen Mahlzeitenplan generieren",
+    "yourPlan": "Ihr Plan",
+    "shoppingList": "Einkaufsliste",
+    "shoppingListTitle": "Einkaufsliste",
+    "generatedIn": "Generiert in",
+    "confidence": "Vertrauen",
+    "breakfast": "Fruhstuck",
+    "lunch": "Mittagessen",
+    "dinner": "Abendessen",
+    "snack": "Snack"
+  },
+  "common": {
+    "days": "Tage",
+    "meals": "Mahlzeiten",
+    "calories": "Kalorien",
+    "protein": "Protein",
+    "carbs": "Kohlenhydrate",
+    "fat": "Fett"
+  }
+}

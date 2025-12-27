@@ -45,8 +45,8 @@
     "advancedStats": "Statistiques avancees",
     "prioritySupport": "Support prioritaire",
     "dedicatedSupport": "Support dedie",
-    "exportPdf": "Export PDF (bientot)",
-    "mealPlans": "Plans repas IA (bientot)",
+    "exportPdf": "Export PDF",
+    "mealPlans": "Plans repas IA",
     "apiAccess": "Acces API (bientot)"
   }
 }

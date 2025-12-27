@@ -1,0 +1,57 @@
+{
+  "title": "Fonctionnalites Pro",
+  "upgradeMessage": "Debloquez toutes les fonctionnalites Pro pour optimiser votre parcours nutritionnel.",
+  "upgradeCta": "Passer a Pro",
+  "tabs": {
+    "mealPlans": "Plans Repas IA",
+    "export": "Export PDF"
+  },
+  "exportPdf": {
+    "title": "Export PDF",
+    "subtitle": "Telechargez votre rapport nutritionnel",
+    "reportType": "Periode du rapport",
+    "weekly": "7 jours",
+    "monthly": "30 jours",
+    "includeOptions": "Inclure dans le rapport",
+    "meals": "Repas et nutrition",
+    "activities": "Activites physiques",
+    "weight": "Evolution du poids",
+    "recommendations": "Recommandations",
+    "generating": "Generation en cours...",
+    "downloaded": "Telecharge !",
+    "upgradeToPro": "Passer a Pro pour exporter",
+    "download": "Telecharger le rapport"
+  },
+  "mealPlan": {
+    "title": "Plans Repas IA",
+    "subtitle": "Planification hebdomadaire personnalisee",
+    "daysLabel": "Nombre de jours",
+    "mealsPerDay": "Repas par jour",
+    "cookingTime": "Temps max",
+    "budget": "Budget",
+    "budgetLow": "Economique",
+    "budgetMedium": "Modere",
+    "budgetHigh": "Sans limite",
+    "includeSnacks": "Inclure des collations",
+    "generating": "Generation en cours...",
+    "upgradeToPro": "Passer a Pro pour generer",
+    "generate": "Generer mon plan repas",
+    "yourPlan": "Votre Plan",
+    "shoppingList": "Liste de courses",
+    "shoppingListTitle": "Liste de courses",
+    "generatedIn": "Genere en",
+    "confidence": "Confiance",
+    "breakfast": "Petit-dejeuner",
+    "lunch": "Dejeuner",
+    "dinner": "Diner",
+    "snack": "Collation"
+  },
+  "common": {
+    "days": "jours",
+    "meals": "repas",
+    "calories": "Calories",
+    "protein": "Proteines",
+    "carbs": "Glucides",
+    "fat": "Lipides"
+  }
+}

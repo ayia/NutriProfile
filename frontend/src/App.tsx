@@ -11,6 +11,7 @@ import { VisionPage } from '@/pages/VisionPage'
 import { TrackingPage } from '@/pages/TrackingPage'
 import { SettingsPage } from '@/pages/SettingsPage'
 import PricingPage from '@/pages/PricingPage'
+import { ProFeaturesPage } from '@/pages/ProFeaturesPage'
 import { TermsPage } from '@/pages/TermsPage'
 import { PrivacyPage } from '@/pages/PrivacyPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
@@ -78,6 +79,14 @@ function App() {
             <ProtectedRoute>
               <PricingPage />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="pro"
+          element={
+            <ProfileRequiredRoute>
+              <ProFeaturesPage />
+            </ProfileRequiredRoute>
           }
         />
         <Route path="terms" element={<TermsPage />} />

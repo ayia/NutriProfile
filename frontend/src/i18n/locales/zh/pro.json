@@ -1,0 +1,57 @@
+{
+  "title": "Pro功能",
+  "upgradeMessage": "解锁所有Pro功能，优化您的营养之旅。",
+  "upgradeCta": "升级到Pro",
+  "tabs": {
+    "mealPlans": "AI餐饮计划",
+    "export": "导出PDF"
+  },
+  "exportPdf": {
+    "title": "导出PDF",
+    "subtitle": "下载您的营养报告",
+    "reportType": "报告周期",
+    "weekly": "7天",
+    "monthly": "30天",
+    "includeOptions": "报告包含",
+    "meals": "餐饮和营养",
+    "activities": "体育活动",
+    "weight": "体重变化",
+    "recommendations": "建议",
+    "generating": "生成中...",
+    "downloaded": "已下载！",
+    "upgradeToPro": "升级到Pro以导出",
+    "download": "下载报告"
+  },
+  "mealPlan": {
+    "title": "AI餐饮计划",
+    "subtitle": "个性化每周计划",
+    "daysLabel": "天数",
+    "mealsPerDay": "每日餐数",
+    "cookingTime": "最长时间",
+    "budget": "预算",
+    "budgetLow": "经济型",
+    "budgetMedium": "适中",
+    "budgetHigh": "无限制",
+    "includeSnacks": "包含零食",
+    "generating": "生成中...",
+    "upgradeToPro": "升级到Pro以生成",
+    "generate": "生成我的餐饮计划",
+    "yourPlan": "您的计划",
+    "shoppingList": "购物清单",
+    "shoppingListTitle": "购物清单",
+    "generatedIn": "生成时间",
+    "confidence": "置信度",
+    "breakfast": "早餐",
+    "lunch": "午餐",
+    "dinner": "晚餐",
+    "snack": "零食"
+  },
+  "common": {
+    "days": "天",
+    "meals": "餐",
+    "calories": "卡路里",
+    "protein": "蛋白质",
+    "carbs": "碳水化合物",
+    "fat": "脂肪"
+  }
+}
