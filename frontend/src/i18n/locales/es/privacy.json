@@ -1,0 +1,81 @@
+{
+  "title": "Politica de Privacidad",
+  "lastUpdated": "Ultima actualizacion",
+  "sections": {
+    "collection": {
+      "title": "1. Informacion que Recopilamos",
+      "content": "Recopilamos la informacion que nos proporciona directamente:",
+      "items": {
+        "account": "Informacion de cuenta: Direccion de correo electronico, nombre y contrasena",
+        "profile": "Datos de perfil: Edad, peso, altura, nivel de actividad y objetivos nutricionales",
+        "usage": "Datos de uso: Fotos de alimentos, registros de comidas y datos de seguimiento nutricional",
+        "payment": "Informacion de pago: Procesada de forma segura por Paddle (no almacenamos datos de tarjetas)"
+      }
+    },
+    "use": {
+      "title": "2. Como Usamos Su Informacion",
+      "content": "Usamos su informacion para:",
+      "items": {
+        "service": "Proporcionar y mejorar nuestro servicio de seguimiento nutricional",
+        "recipes": "Generar recetas y recomendaciones personalizadas",
+        "payment": "Procesar su suscripcion y pagos",
+        "communication": "Enviar comunicaciones relacionadas con el servicio",
+        "analytics": "Analizar el uso para mejorar nuestros modelos de IA"
+      }
+    },
+    "storage": {
+      "title": "3. Almacenamiento y Seguridad de Datos",
+      "content": "Sus datos se almacenan de forma segura en servidores alojados por Fly.io. Implementamos medidas de seguridad estandar de la industria:",
+      "items": {
+        "encryption": "Transmision de datos encriptada (HTTPS/TLS)",
+        "hashing": "Hash seguro de contrasenas",
+        "audits": "Auditorias de seguridad regulares",
+        "access": "Controles de acceso y monitoreo"
+      }
+    },
+    "sharing": {
+      "title": "4. Compartir Datos",
+      "content": "No vendemos sus datos personales. Podemos compartir datos con:",
+      "items": {
+        "paddle": "Paddle: Nuestro procesador de pagos (Merchant of Record)",
+        "huggingface": "Hugging Face: Para inferencia de modelos de IA (imagenes de alimentos anonimizadas)",
+        "legal": "Fuerzas del orden: Cuando lo requiera la ley"
+      }
+    },
+    "rights": {
+      "title": "5. Sus Derechos",
+      "content": "Usted tiene derecho a:",
+      "items": {
+        "access": "Acceder a sus datos personales",
+        "correct": "Corregir datos inexactos",
+        "delete": "Eliminar su cuenta y datos",
+        "export": "Exportar sus datos",
+        "optout": "Cancelar las comunicaciones de marketing"
+      }
+    },
+    "cookies": {
+      "title": "6. Cookies",
+      "content": "Usamos cookies esenciales para autenticacion y gestion de sesiones. No usamos cookies de seguimiento de terceros con fines publicitarios."
+    },
+    "retention": {
+      "title": "7. Retencion de Datos",
+      "content": "Conservamos sus datos mientras su cuenta este activa. Despues de la eliminacion de la cuenta, podemos retener datos anonimizados con fines analiticos. Los registros de pago se conservan segun lo requiera la ley."
+    },
+    "children": {
+      "title": "8. Privacidad de los Ninos",
+      "content": "NutriProfile no esta destinado a ninos menores de 16 anos. No recopilamos conscientemente informacion personal de ninos."
+    },
+    "international": {
+      "title": "9. Transferencias Internacionales",
+      "content": "Sus datos pueden procesarse en paises fuera de su residencia. Nos aseguramos de que existan las salvaguardas adecuadas para las transferencias internacionales de datos."
+    },
+    "changes": {
+      "title": "10. Cambios a Esta Politica",
+      "content": "Podemos actualizar esta politica de privacidad de vez en cuando. Le notificaremos los cambios significativos por correo electronico o a traves del servicio."
+    },
+    "contact": {
+      "title": "11. Contactenos",
+      "content": "Para preguntas relacionadas con la privacidad o para ejercer sus derechos, contactenos en:"
+    }
+  }
+}

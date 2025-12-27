@@ -30,3 +30,15 @@ Chaque agent doit implémenter :
 ## Règle de confiance
 
 Retourner toujours un score de confiance entre 0 et 1. Si confiance < 0.7, déclencher fallback ou demander clarification utilisateur.
+
+## Intégration Freemium
+
+Les agents doivent respecter les limites par tier :
+
+| Action | Gratuit | Premium | Pro |
+|--------|---------|---------|-----|
+| Vision (analyses/jour) | 3 | Illimité | Illimité |
+| Recettes (générations/semaine) | 2 | 10 | Illimité |
+| Coach (messages/jour) | 1 | 5 | Illimité |
+
+**Important**: La vérification des limites se fait au niveau des endpoints API, pas dans les agents. Les agents traitent les requêtes sans se soucier du tier.

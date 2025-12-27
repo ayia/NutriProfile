@@ -1,6 +1,18 @@
 from fastapi import APIRouter
 
-from app.api.v1 import auth, users, health, profiles, recipes, vision, tracking, dashboard, coaching
+from app.api.v1 import (
+    auth,
+    users,
+    health,
+    profiles,
+    recipes,
+    vision,
+    tracking,
+    dashboard,
+    coaching,
+    subscriptions,
+    webhooks,
+)
 
 api_router = APIRouter(prefix="/api/v1")
 
@@ -13,3 +25,5 @@ api_router.include_router(vision.router, prefix="/vision", tags=["vision"])
 api_router.include_router(tracking.router, prefix="/tracking", tags=["tracking"])
 api_router.include_router(dashboard.router, prefix="/dashboard", tags=["dashboard"])
 api_router.include_router(coaching.router, prefix="/coaching", tags=["coaching"])
+api_router.include_router(subscriptions.router)
+api_router.include_router(webhooks.router)

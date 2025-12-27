@@ -26,6 +26,7 @@ from app.schemas.food_log import (
     HealthReportResponse,
 )
 from app.agents.vision import get_vision_agent, VisionInput, validate_nutrition, calculate_health_report, FoodAnalysis
+from app.services.subscription import SubscriptionService
 
 router = APIRouter()
 
@@ -44,6 +45,22 @@ async def analyze_image(
     - Génère un rapport de santé personnalisé basé sur le profil
     - Sauvegarde automatiquement dans le journal (par défaut)
     """
+    # Vérifier les limites d'utilisation
+    sub_service = SubscriptionService(db)
+    allowed, used, limit = await sub_service.check_limit(current_user.id, "vision_analyses")
+
+    if not allowed:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail={
+                "error": "limit_reached",
+                "message": "Limite d'analyses photo atteinte pour aujourd'hui",
+                "used": used,
+                "limit": limit,
+                "upgrade_url": "/pricing"
+            }
+        )
+
     agent = get_vision_agent(language=current_user.preferred_language)
 
     # Préparer l'input
@@ -60,6 +77,9 @@ async def analyze_image(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Erreur lors de l'analyse: {str(e)}"
         )
+
+    # Incrémenter l'usage après analyse réussie
+    await sub_service.increment_usage(current_user.id, "vision_analyses")
 
     analysis = result.result
     confidence = result.confidence

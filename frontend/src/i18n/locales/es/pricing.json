@@ -1,0 +1,52 @@
+{
+  "title": "Elige tu plan",
+  "subtitle": "Desbloquea todo el potencial de NutriProfile con nuestros planes premium. Cancela en cualquier momento.",
+  "monthly": "Mensual",
+  "yearly": "Anual",
+  "faq": "Preguntas frecuentes",
+  "faq1q": "Puedo cancelar en cualquier momento?",
+  "faq1a": "Si, puedes cancelar tu suscripcion en cualquier momento. Mantendras el acceso hasta el final del periodo pagado.",
+  "faq2q": "Como funciona el pago?",
+  "faq2a": "Usamos Paddle para pagos seguros. Puedes pagar con tarjeta de credito. Los impuestos se calculan automaticamente.",
+  "faq3q": "Puedo cambiar de plan?",
+  "faq3a": "Si, puedes actualizar a un plan superior en cualquier momento. La diferencia se prorrateara.",
+  "questions": "Preguntas?",
+  "contact": "Contactanos",
+  "currentPlan": "Plan actual",
+  "subscribe": "Suscribirse",
+  "upgrade": "Mejorar",
+  "popular": "Mas popular",
+  "perMonth": "/mes",
+  "perYear": "/ano",
+  "billedYearly": "Facturado anualmente",
+  "billedMonthly": "Facturado mensualmente",
+  "free": {
+    "name": "Gratis",
+    "description": "Para descubrir NutriProfile"
+  },
+  "premium": {
+    "name": "Premium",
+    "description": "Para usuarios regulares"
+  },
+  "pro": {
+    "name": "Pro",
+    "description": "Para entusiastas de la nutricion"
+  },
+  "features": {
+    "visionAnalyses": "{{count}} analisis de fotos por dia",
+    "visionAnalysesUnlimited": "Analisis de fotos ilimitados",
+    "recipeGenerations": "{{count}} recetas por semana",
+    "recipeGenerationsUnlimited": "Recetas ilimitadas",
+    "coachMessages": "{{count}} consejos de coach por dia",
+    "coachMessagesUnlimited": "Consejos de coach ilimitados",
+    "historyDays": "{{count}} dias de historial",
+    "historyUnlimited": "Historial completo",
+    "basicTracking": "Seguimiento basico de calorias",
+    "advancedStats": "Estadisticas avanzadas",
+    "prioritySupport": "Soporte prioritario",
+    "dedicatedSupport": "Soporte dedicado",
+    "exportPdf": "Exportar PDF (proximamente)",
+    "mealPlans": "Planes de comidas IA (proximamente)",
+    "apiAccess": "Acceso API (proximamente)"
+  }
+}

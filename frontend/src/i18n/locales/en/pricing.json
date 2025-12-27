@@ -1,0 +1,52 @@
+{
+  "title": "Choose your plan",
+  "subtitle": "Unlock the full potential of NutriProfile with our premium plans. Cancel anytime.",
+  "monthly": "Monthly",
+  "yearly": "Yearly",
+  "faq": "Frequently Asked Questions",
+  "faq1q": "Can I cancel anytime?",
+  "faq1a": "Yes, you can cancel your subscription anytime. You'll keep access until the end of your paid period.",
+  "faq2q": "How does payment work?",
+  "faq2a": "We use Paddle for secure payments. You can pay by credit card. All taxes are handled automatically.",
+  "faq3q": "Can I change plans?",
+  "faq3a": "Yes, you can upgrade to a higher plan anytime. The difference will be prorated.",
+  "questions": "Questions?",
+  "contact": "Contact us",
+  "currentPlan": "Current plan",
+  "subscribe": "Subscribe",
+  "upgrade": "Upgrade",
+  "popular": "Most popular",
+  "perMonth": "/month",
+  "perYear": "/year",
+  "billedYearly": "Billed yearly",
+  "billedMonthly": "Billed monthly",
+  "free": {
+    "name": "Free",
+    "description": "To discover NutriProfile"
+  },
+  "premium": {
+    "name": "Premium",
+    "description": "For regular users"
+  },
+  "pro": {
+    "name": "Pro",
+    "description": "For nutrition enthusiasts"
+  },
+  "features": {
+    "visionAnalyses": "{{count}} photo analyses per day",
+    "visionAnalysesUnlimited": "Unlimited photo analyses",
+    "recipeGenerations": "{{count}} recipes per week",
+    "recipeGenerationsUnlimited": "Unlimited recipes",
+    "coachMessages": "{{count}} coach advice per day",
+    "coachMessagesUnlimited": "Unlimited coach advice",
+    "historyDays": "{{count}} days history",
+    "historyUnlimited": "Complete history",
+    "basicTracking": "Basic calorie tracking",
+    "advancedStats": "Advanced statistics",
+    "prioritySupport": "Priority support",
+    "dedicatedSupport": "Dedicated support",
+    "exportPdf": "PDF export (coming soon)",
+    "mealPlans": "AI meal plans (coming soon)",
+    "apiAccess": "API access (coming soon)"
+  }
+}

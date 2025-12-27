@@ -1,0 +1,52 @@
+{
+  "title": "Escolha seu plano",
+  "subtitle": "Desbloqueie todo o potencial do NutriProfile com nossos planos premium. Cancele a qualquer momento.",
+  "monthly": "Mensal",
+  "yearly": "Anual",
+  "faq": "Perguntas frequentes",
+  "faq1q": "Posso cancelar a qualquer momento?",
+  "faq1a": "Sim, voce pode cancelar sua assinatura a qualquer momento. Voce mantera o acesso ate o final do periodo pago.",
+  "faq2q": "Como funciona o pagamento?",
+  "faq2a": "Usamos Paddle para pagamentos seguros. Voce pode pagar com cartao de credito. Os impostos sao calculados automaticamente.",
+  "faq3q": "Posso mudar de plano?",
+  "faq3a": "Sim, voce pode fazer upgrade para um plano superior a qualquer momento. A diferenca sera calculada proporcionalmente.",
+  "questions": "Perguntas?",
+  "contact": "Entre em contato",
+  "currentPlan": "Plano atual",
+  "subscribe": "Assinar",
+  "upgrade": "Atualizar",
+  "popular": "Mais popular",
+  "perMonth": "/mes",
+  "perYear": "/ano",
+  "billedYearly": "Cobrado anualmente",
+  "billedMonthly": "Cobrado mensalmente",
+  "free": {
+    "name": "Gratis",
+    "description": "Para descobrir o NutriProfile"
+  },
+  "premium": {
+    "name": "Premium",
+    "description": "Para usuarios regulares"
+  },
+  "pro": {
+    "name": "Pro",
+    "description": "Para entusiastas de nutricao"
+  },
+  "features": {
+    "visionAnalyses": "{{count}} analises de fotos por dia",
+    "visionAnalysesUnlimited": "Analises de fotos ilimitadas",
+    "recipeGenerations": "{{count}} receitas por semana",
+    "recipeGenerationsUnlimited": "Receitas ilimitadas",
+    "coachMessages": "{{count}} conselhos de coach por dia",
+    "coachMessagesUnlimited": "Conselhos de coach ilimitados",
+    "historyDays": "{{count}} dias de historico",
+    "historyUnlimited": "Historico completo",
+    "basicTracking": "Rastreamento basico de calorias",
+    "advancedStats": "Estatisticas avancadas",
+    "prioritySupport": "Suporte prioritario",
+    "dedicatedSupport": "Suporte dedicado",
+    "exportPdf": "Exportar PDF (em breve)",
+    "mealPlans": "Planos de refeicoes IA (em breve)",
+    "apiAccess": "Acesso API (em breve)"
+  }
+}

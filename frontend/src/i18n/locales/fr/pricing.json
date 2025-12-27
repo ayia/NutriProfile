@@ -1,0 +1,52 @@
+{
+  "title": "Choisissez votre plan",
+  "subtitle": "Debloquez tout le potentiel de NutriProfile avec nos plans premium. Annulez a tout moment.",
+  "monthly": "Mensuel",
+  "yearly": "Annuel",
+  "faq": "Questions frequentes",
+  "faq1q": "Puis-je annuler a tout moment ?",
+  "faq1a": "Oui, vous pouvez annuler votre abonnement a tout moment. Vous conserverez l'acces jusqu'a la fin de la periode payee.",
+  "faq2q": "Comment fonctionne le paiement ?",
+  "faq2a": "Nous utilisons Paddle pour un paiement securise. Vous pouvez payer par carte bancaire. Les taxes sont gerees automatiquement.",
+  "faq3q": "Puis-je changer de plan ?",
+  "faq3a": "Oui, vous pouvez passer a un plan superieur a tout moment. La difference sera calculee au prorata.",
+  "questions": "Des questions ?",
+  "contact": "Contactez-nous",
+  "currentPlan": "Plan actuel",
+  "subscribe": "S'abonner",
+  "upgrade": "Passer au plan",
+  "popular": "Le plus populaire",
+  "perMonth": "/mois",
+  "perYear": "/an",
+  "billedYearly": "Facture annuellement",
+  "billedMonthly": "Facture mensuellement",
+  "free": {
+    "name": "Gratuit",
+    "description": "Pour decouvrir NutriProfile"
+  },
+  "premium": {
+    "name": "Premium",
+    "description": "Pour les utilisateurs reguliers"
+  },
+  "pro": {
+    "name": "Pro",
+    "description": "Pour les passionnes de nutrition"
+  },
+  "features": {
+    "visionAnalyses": "{{count}} analyses photo par jour",
+    "visionAnalysesUnlimited": "Analyses photo illimitees",
+    "recipeGenerations": "{{count}} recettes par semaine",
+    "recipeGenerationsUnlimited": "Recettes illimitees",
+    "coachMessages": "{{count}} conseil coach par jour",
+    "coachMessagesUnlimited": "Conseils coach illimites",
+    "historyDays": "Historique {{count}} jours",
+    "historyUnlimited": "Historique complet",
+    "basicTracking": "Suivi calories de base",
+    "advancedStats": "Statistiques avancees",
+    "prioritySupport": "Support prioritaire",
+    "dedicatedSupport": "Support dedie",
+    "exportPdf": "Export PDF (bientot)",
+    "mealPlans": "Plans repas IA (bientot)",
+    "apiAccess": "Acces API (bientot)"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "title": "选择您的计划",
+  "subtitle": "通过我们的高级计划解锁NutriProfile的全部潜力。随时取消。",
+  "monthly": "月付",
+  "yearly": "年付",
+  "faq": "常见问题",
+  "faq1q": "我可以随时取消吗？",
+  "faq1a": "是的，您可以随时取消订阅。您将保留访问权限直到付费期结束。",
+  "faq2q": "付款如何运作？",
+  "faq2a": "我们使用Paddle进行安全支付。您可以使用信用卡支付。税费自动计算。",
+  "faq3q": "我可以更改计划吗？",
+  "faq3a": "是的，您可以随时升级到更高的计划。差额将按比例计算。",
+  "questions": "有问题？",
+  "contact": "联系我们",
+  "currentPlan": "当前计划",
+  "subscribe": "订阅",
+  "upgrade": "升级",
+  "popular": "最受欢迎",
+  "perMonth": "/月",
+  "perYear": "/年",
+  "billedYearly": "按年计费",
+  "billedMonthly": "按月计费",
+  "free": {
+    "name": "免费",
+    "description": "探索NutriProfile"
+  },
+  "premium": {
+    "name": "高级版",
+    "description": "适合日常用户"
+  },
+  "pro": {
+    "name": "专业版",
+    "description": "适合营养爱好者"
+  },
+  "features": {
+    "visionAnalyses": "每天{{count}}次照片分析",
+    "visionAnalysesUnlimited": "无限照片分析",
+    "recipeGenerations": "每周{{count}}个食谱",
+    "recipeGenerationsUnlimited": "无限食谱",
+    "coachMessages": "每天{{count}}条教练建议",
+    "coachMessagesUnlimited": "无限教练建议",
+    "historyDays": "{{count}}天历史记录",
+    "historyUnlimited": "完整历史记录",
+    "basicTracking": "基本卡路里追踪",
+    "advancedStats": "高级统计",
+    "prioritySupport": "优先支持",
+    "dedicatedSupport": "专属支持",
+    "exportPdf": "PDF导出（即将推出）",
+    "mealPlans": "AI餐食计划（即将推出）",
+    "apiAccess": "API访问（即将推出）"
+  }
+}

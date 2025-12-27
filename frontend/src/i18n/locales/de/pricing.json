@@ -1,0 +1,52 @@
+{
+  "title": "Wahlen Sie Ihren Plan",
+  "subtitle": "Nutzen Sie das volle Potenzial von NutriProfile mit unseren Premium-Planen. Jederzeit kundbar.",
+  "monthly": "Monatlich",
+  "yearly": "Jahrlich",
+  "faq": "Haufig gestellte Fragen",
+  "faq1q": "Kann ich jederzeit kundigen?",
+  "faq1a": "Ja, Sie konnen Ihr Abonnement jederzeit kundigen. Sie behalten den Zugang bis zum Ende Ihrer bezahlten Periode.",
+  "faq2q": "Wie funktioniert die Zahlung?",
+  "faq2a": "Wir verwenden Paddle fur sichere Zahlungen. Sie konnen mit Kreditkarte bezahlen. Steuern werden automatisch berechnet.",
+  "faq3q": "Kann ich den Plan wechseln?",
+  "faq3a": "Ja, Sie konnen jederzeit auf einen hoheren Plan upgraden. Die Differenz wird anteilig berechnet.",
+  "questions": "Fragen?",
+  "contact": "Kontaktieren Sie uns",
+  "currentPlan": "Aktueller Plan",
+  "subscribe": "Abonnieren",
+  "upgrade": "Upgrade",
+  "popular": "Am beliebtesten",
+  "perMonth": "/Monat",
+  "perYear": "/Jahr",
+  "billedYearly": "Jahrlich abgerechnet",
+  "billedMonthly": "Monatlich abgerechnet",
+  "free": {
+    "name": "Kostenlos",
+    "description": "Um NutriProfile zu entdecken"
+  },
+  "premium": {
+    "name": "Premium",
+    "description": "Fur regelmasige Benutzer"
+  },
+  "pro": {
+    "name": "Pro",
+    "description": "Fur Ernahrungs-Enthusiasten"
+  },
+  "features": {
+    "visionAnalyses": "{{count}} Fotoanalysen pro Tag",
+    "visionAnalysesUnlimited": "Unbegrenzte Fotoanalysen",
+    "recipeGenerations": "{{count}} Rezepte pro Woche",
+    "recipeGenerationsUnlimited": "Unbegrenzte Rezepte",
+    "coachMessages": "{{count}} Coach-Ratschlage pro Tag",
+    "coachMessagesUnlimited": "Unbegrenzte Coach-Ratschlage",
+    "historyDays": "{{count}} Tage Verlauf",
+    "historyUnlimited": "Vollstandiger Verlauf",
+    "basicTracking": "Einfache Kalorienverfolgung",
+    "advancedStats": "Erweiterte Statistiken",
+    "prioritySupport": "Prioritats-Support",
+    "dedicatedSupport": "Dedizierter Support",
+    "exportPdf": "PDF-Export (bald verfugbar)",
+    "mealPlans": "KI-Speiseplane (bald verfugbar)",
+    "apiAccess": "API-Zugang (bald verfugbar)"
+  }
+}

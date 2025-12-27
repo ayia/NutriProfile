@@ -1,5 +1,14 @@
 import axios, { AxiosError } from 'axios'
-import type { AuthToken, LoginCredentials, RegisterData, User } from '@/types'
+import type {
+  AuthToken,
+  LoginCredentials,
+  RegisterData,
+  User,
+  SubscriptionStatusResponse,
+  UsageStatusResponse,
+  LimitCheckResult,
+  PricingResponse,
+} from '@/types'
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1'
 
@@ -164,6 +173,46 @@ export const authApi = {
 export const userApi = {
   getMe: async (): Promise<User> => {
     const response = await api.get<User>('/users/me')
+    return response.data
+  },
+}
+
+// Subscription API
+export const subscriptionApi = {
+  getStatus: async (): Promise<SubscriptionStatusResponse> => {
+    const response = await api.get<SubscriptionStatusResponse>('/subscriptions/status')
+    return response.data
+  },
+
+  getUsage: async (): Promise<UsageStatusResponse> => {
+    const response = await api.get<UsageStatusResponse>('/subscriptions/usage')
+    return response.data
+  },
+
+  checkLimit: async (action: string): Promise<LimitCheckResult> => {
+    const response = await api.get<LimitCheckResult>(`/subscriptions/check-limit/${action}`)
+    return response.data
+  },
+
+  getPricing: async (): Promise<PricingResponse> => {
+    const response = await api.get<PricingResponse>('/subscriptions/pricing')
+    return response.data
+  },
+
+  createCheckout: async (variantId: string): Promise<{ checkout_url: string }> => {
+    const response = await api.post<{ checkout_url: string }>('/subscriptions/checkout', {
+      variant_id: variantId,
+    })
+    return response.data
+  },
+
+  getPortal: async (): Promise<{ portal_url: string }> => {
+    const response = await api.post<{ portal_url: string }>('/subscriptions/portal')
+    return response.data
+  },
+
+  cancel: async (): Promise<{ message: string; ends_at: string }> => {
+    const response = await api.post<{ message: string; ends_at: string }>('/subscriptions/cancel')
     return response.data
   },
 }

@@ -1,0 +1,81 @@
+{
+  "title": "Politique de confidentialite",
+  "lastUpdated": "Derniere mise a jour",
+  "sections": {
+    "collection": {
+      "title": "1. Informations que nous collectons",
+      "content": "Nous collectons les informations que vous nous fournissez directement :",
+      "items": {
+        "account": "Informations de compte : Adresse email, nom et mot de passe",
+        "profile": "Donnees de profil : Age, poids, taille, niveau d'activite et objectifs nutritionnels",
+        "usage": "Donnees d'utilisation : Photos de nourriture, journaux de repas et donnees de suivi nutritionnel",
+        "payment": "Informations de paiement : Traitees de maniere securisee par Paddle (nous ne stockons pas les details de carte)"
+      }
+    },
+    "use": {
+      "title": "2. Comment nous utilisons vos informations",
+      "content": "Nous utilisons vos informations pour :",
+      "items": {
+        "service": "Fournir et ameliorer notre service de suivi nutritionnel",
+        "recipes": "Generer des recettes et recommandations personnalisees",
+        "payment": "Traiter votre abonnement et vos paiements",
+        "communication": "Envoyer des communications liees au service",
+        "analytics": "Analyser l'utilisation pour ameliorer nos modeles IA"
+      }
+    },
+    "storage": {
+      "title": "3. Stockage et securite des donnees",
+      "content": "Vos donnees sont stockees de maniere securisee sur des serveurs heberges par Fly.io. Nous implementons des mesures de securite standard :",
+      "items": {
+        "encryption": "Transmission de donnees chiffree (HTTPS/TLS)",
+        "hashing": "Hachage securise des mots de passe",
+        "audits": "Audits de securite reguliers",
+        "access": "Controles d'acces et surveillance"
+      }
+    },
+    "sharing": {
+      "title": "4. Partage des donnees",
+      "content": "Nous ne vendons pas vos donnees personnelles. Nous pouvons partager des donnees avec :",
+      "items": {
+        "paddle": "Paddle : Notre processeur de paiement (Merchant of Record)",
+        "huggingface": "Hugging Face : Pour l'inference des modeles IA (images alimentaires anonymisees)",
+        "legal": "Forces de l'ordre : Lorsque requis par la loi"
+      }
+    },
+    "rights": {
+      "title": "5. Vos droits",
+      "content": "Vous avez le droit de :",
+      "items": {
+        "access": "Acceder a vos donnees personnelles",
+        "correct": "Corriger les donnees inexactes",
+        "delete": "Supprimer votre compte et vos donnees",
+        "export": "Exporter vos donnees",
+        "optout": "Vous desinscrire des communications marketing"
+      }
+    },
+    "cookies": {
+      "title": "6. Cookies",
+      "content": "Nous utilisons des cookies essentiels pour l'authentification et la gestion de session. Nous n'utilisons pas de cookies de suivi tiers a des fins publicitaires."
+    },
+    "retention": {
+      "title": "7. Conservation des donnees",
+      "content": "Nous conservons vos donnees tant que votre compte est actif. Apres la suppression du compte, nous pouvons conserver des donnees anonymisees a des fins d'analyse. Les enregistrements de paiement sont conserves comme requis par la loi."
+    },
+    "children": {
+      "title": "8. Confidentialite des enfants",
+      "content": "NutriProfile n'est pas destine aux enfants de moins de 16 ans. Nous ne collectons pas sciemment d'informations personnelles aupres d'enfants."
+    },
+    "international": {
+      "title": "9. Transferts internationaux",
+      "content": "Vos donnees peuvent etre traitees dans des pays autres que votre residence. Nous veillons a ce que des garanties appropriees soient en place pour les transferts internationaux de donnees."
+    },
+    "changes": {
+      "title": "10. Modifications de cette politique",
+      "content": "Nous pouvons mettre a jour cette politique de confidentialite de temps en temps. Nous vous informerons des changements importants par email ou via le service."
+    },
+    "contact": {
+      "title": "11. Nous contacter",
+      "content": "Pour les questions liees a la confidentialite ou pour exercer vos droits, contactez-nous a :"
+    }
+  }
+}

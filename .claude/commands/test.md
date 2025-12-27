@@ -76,6 +76,20 @@ tests/
 4. **Mocks**: Mocker les dépendances externes
 5. **Fixtures**: Réutiliser les données de test
 
+## Tests Monétisation
+
+```bash
+# Tests subscription service
+pytest tests/test_subscription.py -v
+
+# Tests webhooks Lemon Squeezy
+pytest tests/test_webhooks.py -v
+
+# Tests limites par tier
+pytest tests/test_subscription.py::test_free_user_has_limits
+pytest tests/test_subscription.py::test_premium_user_unlimited_vision
+```
+
 ## Checklist Tests
 
 - [ ] Tests unitaires passent
@@ -83,3 +97,5 @@ tests/
 - [ ] Couverture > 80%
 - [ ] Pas de tests flaky
 - [ ] Agents testés avec mocks
+- [ ] Tests subscription/limites passent
+- [ ] Tests webhooks avec mocks passent

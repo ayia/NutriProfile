@@ -5,6 +5,17 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 
 
+# Import SubscriptionTier pour éviter les imports circulaires
+from enum import Enum as PyEnum
+
+
+class SubscriptionTierEnum(str, PyEnum):
+    """Niveaux d'abonnement (copie locale pour éviter import circulaire)."""
+    FREE = "free"
+    PREMIUM = "premium"
+    PRO = "pro"
+
+
 class User(Base):
     """Modèle utilisateur."""
 
@@ -16,6 +27,14 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     is_active: Mapped[bool] = mapped_column(default=True)
     preferred_language: Mapped[str] = mapped_column(String(5), default="en", nullable=False)
+
+    # Subscription tier (cached for quick access)
+    subscription_tier: Mapped[str] = mapped_column(
+        String(20),
+        default="free",
+        nullable=False
+    )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -37,3 +56,7 @@ class User(Base):
     streaks = relationship("Streak", back_populates="user", cascade="all, delete-orphan")
     notifications = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
     stats = relationship("UserStats", back_populates="user", uselist=False, cascade="all, delete-orphan")
+
+    # Subscription relations
+    subscription = relationship("Subscription", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    usage_tracking = relationship("UsageTracking", back_populates="user", cascade="all, delete-orphan")

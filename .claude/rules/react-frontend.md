@@ -153,3 +153,36 @@ describe('UserCard', () => {
   });
 });
 ```
+
+## Monétisation & Abonnements
+
+### Gestion des Limites
+```typescript
+// Toujours vérifier l'usage avant actions limitées
+const { data: usage } = useQuery({
+  queryKey: ['subscription', 'usage'],
+  queryFn: () => api.get('/subscriptions/usage'),
+});
+
+// Afficher bannière si proche de la limite
+if (usage?.tier === 'free' && usage.usage.vision_analyses >= 2) {
+  // Afficher UsageBanner ou UpgradePrompt
+}
+```
+
+### Checkout Lemon Squeezy
+```typescript
+// Redirection vers checkout externe
+const handleSubscribe = async (variantId: string) => {
+  const { checkout_url } = await api.post('/subscriptions/checkout', {
+    variant_id: variantId
+  });
+  window.location.href = checkout_url; // Redirection externe
+};
+```
+
+### Composants Requis
+- `PricingPage` : Page des tarifs avec grille
+- `PricingCard` : Carte individuelle par tier
+- `UsageBanner` : Alerte usage proche limite
+- `SubscriptionStatus` : Badge statut dans header/settings

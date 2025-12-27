@@ -1,0 +1,63 @@
+{
+  "title": "服务条款",
+  "lastUpdated": "最后更新",
+  "sections": {
+    "acceptance": {
+      "title": "1. 条款接受",
+      "content": "通过访问和使用NutriProfile（服务），您同意受这些服务条款的约束。如果您不同意这些条款，请不要使用我们的服务。"
+    },
+    "description": {
+      "title": "2. 服务描述",
+      "content": "NutriProfile是一款营养追踪应用程序，提供：",
+      "features": {
+        "vision": "AI驱动的食物照片分析",
+        "recipes": "个性化食谱生成",
+        "coaching": "营养指导和建议",
+        "tracking": "卡路里和宏量营养素追踪"
+      }
+    },
+    "subscriptions": {
+      "title": "3. 订阅计划",
+      "content": "NutriProfile提供免费和付费订阅计划：",
+      "free": "免费：有限的每日分析和功能",
+      "premium": "高级版：增强的限制，4.99€/月或39.99€/年",
+      "pro": "专业版：无限访问，9.99€/月或79.99€/年"
+    },
+    "billing": {
+      "title": "4. 计费和付款",
+      "content": "付款通过我们的商户记录Paddle安全处理。Paddle代表我们处理所有付款处理、发票和税务合规。",
+      "renewal": "订阅将自动续订，除非在当前计费周期结束前取消。"
+    },
+    "refund": {
+      "title": "5. 退款政策",
+      "content": "我们为所有新订阅提供14天退款保证。如果您对我们的服务不满意，请在购买后14天内联系我们以获得全额退款。",
+      "afterPeriod": "14天后的退款请求将逐案审查。"
+    },
+    "userResponsibilities": {
+      "title": "6. 用户责任",
+      "content": "您同意：",
+      "items": {
+        "accurate": "提供准确的账户信息",
+        "security": "维护您账户凭据的安全",
+        "personal": "将服务用于个人、非商业目的",
+        "noReverse": "不尝试逆向工程或利用服务"
+      }
+    },
+    "healthDisclaimer": {
+      "title": "7. 健康免责声明",
+      "content": "NutriProfile仅出于教育目的提供营养信息。我们的服务不能替代专业医疗建议、诊断或治疗。在改变饮食之前，请始终咨询合格的医疗保健提供者。"
+    },
+    "liability": {
+      "title": "8. 责任限制",
+      "content": "NutriProfile按原样提供，不提供任何形式的保证。我们对因使用我们服务而产生的任何损害不承担责任，包括但不限于直接、间接、附带或后果性损害。"
+    },
+    "modifications": {
+      "title": "9. 修改",
+      "content": "我们保留随时修改这些条款的权利。更改后继续使用服务即表示接受新条款。"
+    },
+    "contact": {
+      "title": "10. 联系方式",
+      "content": "如对这些服务条款有疑问，请通过以下方式联系我们："
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "title": "隐私政策",
+  "lastUpdated": "最后更新",
+  "sections": {
+    "collection": {
+      "title": "1. 我们收集的信息",
+      "content": "我们收集您直接提供给我们的信息：",
+      "items": {
+        "account": "账户信息：电子邮件地址、姓名和密码",
+        "profile": "个人资料数据：年龄、体重、身高、活动水平和营养目标",
+        "usage": "使用数据：食物照片、餐食记录和营养追踪数据",
+        "payment": "支付信息：由Paddle安全处理（我们不存储卡片详情）"
+      }
+    },
+    "use": {
+      "title": "2. 我们如何使用您的信息",
+      "content": "我们使用您的信息来：",
+      "items": {
+        "service": "提供和改进我们的营养追踪服务",
+        "recipes": "生成个性化食谱和建议",
+        "payment": "处理您的订阅和付款",
+        "communication": "发送服务相关通信",
+        "analytics": "分析使用情况以改进我们的AI模型"
+      }
+    },
+    "storage": {
+      "title": "3. 数据存储和安全",
+      "content": "您的数据安全存储在Fly.io托管的服务器上。我们实施行业标准安全措施：",
+      "items": {
+        "encryption": "加密数据传输（HTTPS/TLS）",
+        "hashing": "安全密码哈希",
+        "audits": "定期安全审计",
+        "access": "访问控制和监控"
+      }
+    },
+    "sharing": {
+      "title": "4. 数据共享",
+      "content": "我们不出售您的个人数据。我们可能与以下方共享数据：",
+      "items": {
+        "paddle": "Paddle：我们的支付处理商（商户记录）",
+        "huggingface": "Hugging Face：用于AI模型推理（匿名化的食物图像）",
+        "legal": "执法机构：法律要求时"
+      }
+    },
+    "rights": {
+      "title": "5. 您的权利",
+      "content": "您有权：",
+      "items": {
+        "access": "访问您的个人数据",
+        "correct": "更正不准确的数据",
+        "delete": "删除您的账户和数据",
+        "export": "导出您的数据",
+        "optout": "选择退出营销通信"
+      }
+    },
+    "cookies": {
+      "title": "6. Cookie",
+      "content": "我们使用必要的cookie进行身份验证和会话管理。我们不使用第三方跟踪cookie进行广告目的。"
+    },
+    "retention": {
+      "title": "7. 数据保留",
+      "content": "只要您的账户处于活跃状态，我们就会保留您的数据。账户删除后，我们可能会保留匿名化数据用于分析目的。付款记录按法律要求保留。"
+    },
+    "children": {
+      "title": "8. 儿童隐私",
+      "content": "NutriProfile不适用于16岁以下的儿童。我们不会故意收集儿童的个人信息。"
+    },
+    "international": {
+      "title": "9. 国际传输",
+      "content": "您的数据可能在您居住地以外的国家处理。我们确保对国际数据传输有适当的保障措施。"
+    },
+    "changes": {
+      "title": "10. 本政策的变更",
+      "content": "我们可能会不时更新此隐私政策。我们将通过电子邮件或服务通知您重大变更。"
+    },
+    "contact": {
+      "title": "11. 联系我们",
+      "content": "如有隐私相关问题或行使您的权利，请通过以下方式联系我们："
+    }
+  }
+}

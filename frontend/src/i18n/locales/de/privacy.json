@@ -1,0 +1,81 @@
+{
+  "title": "Datenschutzrichtlinie",
+  "lastUpdated": "Zuletzt aktualisiert",
+  "sections": {
+    "collection": {
+      "title": "1. Informationen, die wir sammeln",
+      "content": "Wir sammeln Informationen, die Sie uns direkt zur Verfugung stellen:",
+      "items": {
+        "account": "Kontoinformationen: E-Mail-Adresse, Name und Passwort",
+        "profile": "Profildaten: Alter, Gewicht, Grosse, Aktivitatsniveau und Ernahrungsziele",
+        "usage": "Nutzungsdaten: Lebensmittelfotos, Mahlzeitenprotokolle und Ernahrungs-Tracking-Daten",
+        "payment": "Zahlungsinformationen: Sicher verarbeitet durch Paddle (wir speichern keine Kartendaten)"
+      }
+    },
+    "use": {
+      "title": "2. Wie wir Ihre Informationen verwenden",
+      "content": "Wir verwenden Ihre Informationen um:",
+      "items": {
+        "service": "Unseren Ernahrungs-Tracking-Service bereitzustellen und zu verbessern",
+        "recipes": "Personalisierte Rezepte und Empfehlungen zu generieren",
+        "payment": "Ihr Abonnement und Zahlungen zu verarbeiten",
+        "communication": "Servicebezogene Mitteilungen zu senden",
+        "analytics": "Die Nutzung zu analysieren, um unsere KI-Modelle zu verbessern"
+      }
+    },
+    "storage": {
+      "title": "3. Datenspeicherung und Sicherheit",
+      "content": "Ihre Daten werden sicher auf Servern gespeichert, die von Fly.io gehostet werden. Wir implementieren branchenuubliche Sicherheitsmassnahmen:",
+      "items": {
+        "encryption": "Verschlusselte Datenubertragung (HTTPS/TLS)",
+        "hashing": "Sicheres Passwort-Hashing",
+        "audits": "Regelmasige Sicherheitsaudits",
+        "access": "Zugriffskontrollen und Uberwachung"
+      }
+    },
+    "sharing": {
+      "title": "4. Datenweitergabe",
+      "content": "Wir verkaufen Ihre personlichen Daten nicht. Wir konnen Daten teilen mit:",
+      "items": {
+        "paddle": "Paddle: Unser Zahlungsabwickler (Merchant of Record)",
+        "huggingface": "Hugging Face: Fur KI-Modell-Inferenz (anonymisierte Lebensmittelbilder)",
+        "legal": "Strafverfolgungsbehorden: Wenn gesetzlich vorgeschrieben"
+      }
+    },
+    "rights": {
+      "title": "5. Ihre Rechte",
+      "content": "Sie haben das Recht:",
+      "items": {
+        "access": "Auf Ihre personlichen Daten zuzugreifen",
+        "correct": "Ungenaue Daten zu korrigieren",
+        "delete": "Ihr Konto und Ihre Daten zu loschen",
+        "export": "Ihre Daten zu exportieren",
+        "optout": "Marketing-Kommunikation abzubestellen"
+      }
+    },
+    "cookies": {
+      "title": "6. Cookies",
+      "content": "Wir verwenden wesentliche Cookies fur Authentifizierung und Sitzungsverwaltung. Wir verwenden keine Drittanbieter-Tracking-Cookies zu Werbezwecken."
+    },
+    "retention": {
+      "title": "7. Datenaufbewahrung",
+      "content": "Wir bewahren Ihre Daten so lange auf, wie Ihr Konto aktiv ist. Nach der Kontoloschung konnen wir anonymisierte Daten fur Analysezwecke aufbewahren. Zahlungsaufzeichnungen werden wie gesetzlich vorgeschrieben aufbewahrt."
+    },
+    "children": {
+      "title": "8. Datenschutz fur Kinder",
+      "content": "NutriProfile ist nicht fur Kinder unter 16 Jahren bestimmt. Wir sammeln wissentlich keine personlichen Informationen von Kindern."
+    },
+    "international": {
+      "title": "9. Internationale Ubertragungen",
+      "content": "Ihre Daten konnen in Landern ausserhalb Ihres Wohnsitzes verarbeitet werden. Wir stellen sicher, dass angemessene Schutzmassnahmen fur internationale Datenubertragungen vorhanden sind."
+    },
+    "changes": {
+      "title": "10. Anderungen dieser Richtlinie",
+      "content": "Wir konnen diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Wir werden Sie uber wesentliche Anderungen per E-Mail oder uber den Service informieren."
+    },
+    "contact": {
+      "title": "11. Kontaktieren Sie uns",
+      "content": "Fur datenschutzbezogene Fragen oder um Ihre Rechte auszuuben, kontaktieren Sie uns unter:"
+    }
+  }
+}

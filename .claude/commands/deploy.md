@@ -68,6 +68,21 @@ fly secrets set KEY=value
 fly secrets unset KEY
 ```
 
+## Secrets Monétisation (Lemon Squeezy)
+
+```bash
+# Configuration paiement
+fly secrets set LEMONSQUEEZY_API_KEY=xxx
+fly secrets set LEMONSQUEEZY_WEBHOOK_SECRET=xxx
+fly secrets set LEMONSQUEEZY_STORE_ID=xxx
+
+# Variant IDs produits
+fly secrets set LEMONSQUEEZY_PREMIUM_MONTHLY_VARIANT_ID=xxx
+fly secrets set LEMONSQUEEZY_PREMIUM_YEARLY_VARIANT_ID=xxx
+fly secrets set LEMONSQUEEZY_PRO_MONTHLY_VARIANT_ID=xxx
+fly secrets set LEMONSQUEEZY_PRO_YEARLY_VARIANT_ID=xxx
+```
+
 ## Rollback
 
 ```bash
@@ -86,3 +101,5 @@ fly deploy --image registry.fly.io/nutriprofile:v{N}
 - [ ] Health check OK
 - [ ] Monitoring configuré
 - [ ] SSL/TLS actif
+- [ ] Secrets Lemon Squeezy configurés (si monétisation)
+- [ ] Webhook URL configuré dans dashboard Lemon Squeezy

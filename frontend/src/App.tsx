@@ -10,6 +10,9 @@ import { RecipesPage } from '@/pages/RecipesPage'
 import { VisionPage } from '@/pages/VisionPage'
 import { TrackingPage } from '@/pages/TrackingPage'
 import { SettingsPage } from '@/pages/SettingsPage'
+import PricingPage from '@/pages/PricingPage'
+import { TermsPage } from '@/pages/TermsPage'
+import { PrivacyPage } from '@/pages/PrivacyPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import { ProfileRequiredRoute } from '@/components/auth/ProfileRequiredRoute'
 
@@ -69,6 +72,16 @@ function App() {
             </ProfileRequiredRoute>
           }
         />
+        <Route
+          path="pricing"
+          element={
+            <ProtectedRoute>
+              <PricingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="terms" element={<TermsPage />} />
+        <Route path="privacy" element={<PrivacyPage />} />
       </Route>
     </Routes>
   )

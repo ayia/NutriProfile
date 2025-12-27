@@ -21,6 +21,7 @@ from app.schemas.recipe import (
 )
 from app.api.v1.auth import get_current_user
 from app.agents.recipe import get_recipe_agent, RecipeInput, UserContext, MealHistoryAnalysis
+from app.services.subscription import SubscriptionService
 
 router = APIRouter()
 
@@ -248,6 +249,22 @@ async def generate_recipe(
     - Les repas déjà consommés aujourd'hui
     - La tendance de poids sur la semaine
     """
+    # Vérifier les limites d'utilisation
+    sub_service = SubscriptionService(db)
+    allowed, used, limit = await sub_service.check_limit(current_user.id, "recipe_generations")
+
+    if not allowed:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail={
+                "error": "limit_reached",
+                "message": "Limite de génération de recettes atteinte pour cette semaine",
+                "used": used,
+                "limit": limit,
+                "upgrade_url": "/pricing"
+            }
+        )
+
     # Récupérer le profil pour personnalisation
     result = await db.execute(
         select(Profile).where(Profile.user_id == current_user.id)
@@ -280,6 +297,9 @@ async def generate_recipe(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Échec de la génération de recette",
         )
+
+    # Incrémenter l'usage après génération réussie
+    await sub_service.increment_usage(current_user.id, "recipe_generations")
 
     recipe_data = response.result.to_dict()
 

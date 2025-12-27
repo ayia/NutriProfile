@@ -1,0 +1,63 @@
+{
+  "title": "Nutzungsbedingungen",
+  "lastUpdated": "Zuletzt aktualisiert",
+  "sections": {
+    "acceptance": {
+      "title": "1. Annahme der Bedingungen",
+      "content": "Durch den Zugriff auf und die Nutzung von NutriProfile (\"der Dienst\") erklaren Sie sich mit diesen Nutzungsbedingungen einverstanden. Wenn Sie diesen Bedingungen nicht zustimmen, nutzen Sie bitte unseren Dienst nicht."
+    },
+    "description": {
+      "title": "2. Beschreibung des Dienstes",
+      "content": "NutriProfile ist eine Ernahrungs-Tracking-App, die Folgendes bietet:",
+      "features": {
+        "vision": "KI-gestutzte Analyse von Lebensmittelfotos",
+        "recipes": "Personalisierte Rezeptgenerierung",
+        "coaching": "Ernahrungscoaching und Empfehlungen",
+        "tracking": "Kalorien- und Makro-Tracking"
+      }
+    },
+    "subscriptions": {
+      "title": "3. Abonnementplane",
+      "content": "NutriProfile bietet kostenlose und kostenpflichtige Abonnementplane:",
+      "free": "Kostenlos: Begrenzte tagliche Analysen und Funktionen",
+      "premium": "Premium: Erweiterte Limits fur 4,99€/Monat oder 39,99€/Jahr",
+      "pro": "Pro: Unbegrenzter Zugang fur 9,99€/Monat oder 79,99€/Jahr"
+    },
+    "billing": {
+      "title": "4. Abrechnung und Zahlungen",
+      "content": "Zahlungen werden sicher uber Paddle, unseren Merchant of Record, abgewickelt. Paddle ubernimmt alle Zahlungsabwicklungen, Rechnungsstellung und Steuerkonformitat in unserem Namen.",
+      "renewal": "Abonnements verlangern sich automatisch, sofern sie nicht vor Ende der aktuellen Abrechnungsperiode gekundigt werden."
+    },
+    "refund": {
+      "title": "5. Ruckerstattungsrichtlinie",
+      "content": "Wir bieten eine 14-tagige Geld-zuruck-Garantie fur alle neuen Abonnements. Wenn Sie mit unserem Service nicht zufrieden sind, kontaktieren Sie uns innerhalb von 14 Tagen nach Ihrem Kauf fur eine vollstandige Ruckerstattung.",
+      "afterPeriod": "Ruckerstattungsanfragen nach 14 Tagen werden von Fall zu Fall gepruft."
+    },
+    "userResponsibilities": {
+      "title": "6. Benutzerverantwortlichkeiten",
+      "content": "Sie stimmen zu:",
+      "items": {
+        "accurate": "Genaue Kontoinformationen bereitzustellen",
+        "security": "Die Sicherheit Ihrer Kontodaten zu wahren",
+        "personal": "Den Dienst fur personliche, nicht-kommerzielle Zwecke zu nutzen",
+        "noReverse": "Nicht zu versuchen, den Dienst zu reverse-engineeren oder auszunutzen"
+      }
+    },
+    "healthDisclaimer": {
+      "title": "7. Gesundheitshinweis",
+      "content": "NutriProfile bietet Ernahrungsinformationen nur zu Bildungszwecken. Unser Service ersetzt keine professionelle medizinische Beratung, Diagnose oder Behandlung. Konsultieren Sie immer einen qualifizierten Gesundheitsdienstleister, bevor Sie Ihre Ernahrung andern."
+    },
+    "liability": {
+      "title": "8. Haftungsbeschrankung",
+      "content": "NutriProfile wird \"wie besehen\" ohne jegliche Garantien bereitgestellt. Wir haften nicht fur Schaden, die aus der Nutzung unseres Dienstes entstehen, einschliesslich, aber nicht beschrankt auf direkte, indirekte, zufallige oder Folgeschaden."
+    },
+    "modifications": {
+      "title": "9. Anderungen",
+      "content": "Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu andern. Die weitere Nutzung des Dienstes nach Anderungen stellt die Annahme der neuen Bedingungen dar."
+    },
+    "contact": {
+      "title": "10. Kontakt",
+      "content": "Bei Fragen zu diesen Nutzungsbedingungen kontaktieren Sie uns bitte unter:"
+    }
+  }
+}

@@ -12,6 +12,9 @@ import enRecipes from './locales/en/recipes.json'
 import enOnboarding from './locales/en/onboarding.json'
 import enSettings from './locales/en/settings.json'
 import enHome from './locales/en/home.json'
+import enPricing from './locales/en/pricing.json'
+import enTerms from './locales/en/terms.json'
+import enPrivacy from './locales/en/privacy.json'
 
 import frCommon from './locales/fr/common.json'
 import frAuth from './locales/fr/auth.json'
@@ -22,6 +25,9 @@ import frRecipes from './locales/fr/recipes.json'
 import frOnboarding from './locales/fr/onboarding.json'
 import frSettings from './locales/fr/settings.json'
 import frHome from './locales/fr/home.json'
+import frPricing from './locales/fr/pricing.json'
+import frTerms from './locales/fr/terms.json'
+import frPrivacy from './locales/fr/privacy.json'
 
 import deCommon from './locales/de/common.json'
 import deAuth from './locales/de/auth.json'
@@ -32,6 +38,9 @@ import deRecipes from './locales/de/recipes.json'
 import deOnboarding from './locales/de/onboarding.json'
 import deSettings from './locales/de/settings.json'
 import deHome from './locales/de/home.json'
+import dePricing from './locales/de/pricing.json'
+import deTerms from './locales/de/terms.json'
+import dePrivacy from './locales/de/privacy.json'
 
 import esCommon from './locales/es/common.json'
 import esAuth from './locales/es/auth.json'
@@ -42,6 +51,9 @@ import esRecipes from './locales/es/recipes.json'
 import esOnboarding from './locales/es/onboarding.json'
 import esSettings from './locales/es/settings.json'
 import esHome from './locales/es/home.json'
+import esPricing from './locales/es/pricing.json'
+import esTerms from './locales/es/terms.json'
+import esPrivacy from './locales/es/privacy.json'
 
 import ptCommon from './locales/pt/common.json'
 import ptAuth from './locales/pt/auth.json'
@@ -52,6 +64,9 @@ import ptRecipes from './locales/pt/recipes.json'
 import ptOnboarding from './locales/pt/onboarding.json'
 import ptSettings from './locales/pt/settings.json'
 import ptHome from './locales/pt/home.json'
+import ptPricing from './locales/pt/pricing.json'
+import ptTerms from './locales/pt/terms.json'
+import ptPrivacy from './locales/pt/privacy.json'
 
 import zhCommon from './locales/zh/common.json'
 import zhAuth from './locales/zh/auth.json'
@@ -62,6 +77,9 @@ import zhRecipes from './locales/zh/recipes.json'
 import zhOnboarding from './locales/zh/onboarding.json'
 import zhSettings from './locales/zh/settings.json'
 import zhHome from './locales/zh/home.json'
+import zhPricing from './locales/zh/pricing.json'
+import zhTerms from './locales/zh/terms.json'
+import zhPrivacy from './locales/zh/privacy.json'
 
 import arCommon from './locales/ar/common.json'
 import arAuth from './locales/ar/auth.json'
@@ -72,6 +90,9 @@ import arRecipes from './locales/ar/recipes.json'
 import arOnboarding from './locales/ar/onboarding.json'
 import arSettings from './locales/ar/settings.json'
 import arHome from './locales/ar/home.json'
+import arPricing from './locales/ar/pricing.json'
+import arTerms from './locales/ar/terms.json'
+import arPrivacy from './locales/ar/privacy.json'
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧', dir: 'ltr' },
@@ -96,6 +117,9 @@ const resources = {
     onboarding: enOnboarding,
     settings: enSettings,
     home: enHome,
+    pricing: enPricing,
+    terms: enTerms,
+    privacy: enPrivacy,
   },
   fr: {
     common: frCommon,
@@ -107,6 +131,9 @@ const resources = {
     onboarding: frOnboarding,
     settings: frSettings,
     home: frHome,
+    pricing: frPricing,
+    terms: frTerms,
+    privacy: frPrivacy,
   },
   de: {
     common: deCommon,
@@ -118,6 +145,9 @@ const resources = {
     onboarding: deOnboarding,
     settings: deSettings,
     home: deHome,
+    pricing: dePricing,
+    terms: deTerms,
+    privacy: dePrivacy,
   },
   es: {
     common: esCommon,
@@ -129,6 +159,9 @@ const resources = {
     onboarding: esOnboarding,
     settings: esSettings,
     home: esHome,
+    pricing: esPricing,
+    terms: esTerms,
+    privacy: esPrivacy,
   },
   pt: {
     common: ptCommon,
@@ -140,6 +173,9 @@ const resources = {
     onboarding: ptOnboarding,
     settings: ptSettings,
     home: ptHome,
+    pricing: ptPricing,
+    terms: ptTerms,
+    privacy: ptPrivacy,
   },
   zh: {
     common: zhCommon,
@@ -151,6 +187,9 @@ const resources = {
     onboarding: zhOnboarding,
     settings: zhSettings,
     home: zhHome,
+    pricing: zhPricing,
+    terms: zhTerms,
+    privacy: zhPrivacy,
   },
   ar: {
     common: arCommon,
@@ -162,6 +201,9 @@ const resources = {
     onboarding: arOnboarding,
     settings: arSettings,
     home: arHome,
+    pricing: arPricing,
+    terms: arTerms,
+    privacy: arPrivacy,
   },
 }
 
@@ -183,7 +225,7 @@ i18n
       lookupLocalStorage: 'i18nextLng',
     },
 
-    ns: ['common', 'auth', 'dashboard', 'tracking', 'vision', 'recipes', 'onboarding', 'settings', 'home'],
+    ns: ['common', 'auth', 'dashboard', 'tracking', 'vision', 'recipes', 'onboarding', 'settings', 'home', 'pricing', 'terms', 'privacy'],
     defaultNS: 'common',
   })
 

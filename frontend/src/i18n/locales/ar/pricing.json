@@ -1,0 +1,52 @@
+{
+  "title": "اختر خطتك",
+  "subtitle": "افتح الإمكانات الكاملة لـ NutriProfile مع خططنا المميزة. إلغاء في أي وقت.",
+  "monthly": "شهري",
+  "yearly": "سنوي",
+  "faq": "الأسئلة الشائعة",
+  "faq1q": "هل يمكنني الإلغاء في أي وقت؟",
+  "faq1a": "نعم، يمكنك إلغاء اشتراكك في أي وقت. ستحتفظ بالوصول حتى نهاية الفترة المدفوعة.",
+  "faq2q": "كيف يعمل الدفع؟",
+  "faq2a": "نستخدم Paddle للدفع الآمن. يمكنك الدفع ببطاقة الائتمان. يتم حساب الضرائب تلقائياً.",
+  "faq3q": "هل يمكنني تغيير الخطة؟",
+  "faq3a": "نعم، يمكنك الترقية إلى خطة أعلى في أي وقت. سيتم حساب الفرق بالتناسب.",
+  "questions": "أسئلة؟",
+  "contact": "اتصل بنا",
+  "currentPlan": "الخطة الحالية",
+  "subscribe": "اشترك",
+  "upgrade": "ترقية",
+  "popular": "الأكثر شعبية",
+  "perMonth": "/شهر",
+  "perYear": "/سنة",
+  "billedYearly": "يُفوتر سنوياً",
+  "billedMonthly": "يُفوتر شهرياً",
+  "free": {
+    "name": "مجاني",
+    "description": "لاكتشاف NutriProfile"
+  },
+  "premium": {
+    "name": "مميز",
+    "description": "للمستخدمين المنتظمين"
+  },
+  "pro": {
+    "name": "احترافي",
+    "description": "لعشاق التغذية"
+  },
+  "features": {
+    "visionAnalyses": "{{count}} تحليل صور يومياً",
+    "visionAnalysesUnlimited": "تحليل صور غير محدود",
+    "recipeGenerations": "{{count}} وصفات أسبوعياً",
+    "recipeGenerationsUnlimited": "وصفات غير محدودة",
+    "coachMessages": "{{count}} نصيحة مدرب يومياً",
+    "coachMessagesUnlimited": "نصائح مدرب غير محدودة",
+    "historyDays": "سجل {{count}} يوم",
+    "historyUnlimited": "سجل كامل",
+    "basicTracking": "تتبع السعرات الأساسي",
+    "advancedStats": "إحصائيات متقدمة",
+    "prioritySupport": "دعم أولوية",
+    "dedicatedSupport": "دعم مخصص",
+    "exportPdf": "تصدير PDF (قريباً)",
+    "mealPlans": "خطط وجبات ذكاء اصطناعي (قريباً)",
+    "apiAccess": "وصول API (قريباً)"
+  }
+}

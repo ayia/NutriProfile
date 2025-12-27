@@ -1,0 +1,63 @@
+{
+  "title": "Termos de Servico",
+  "lastUpdated": "Ultima atualizacao",
+  "sections": {
+    "acceptance": {
+      "title": "1. Aceitacao dos Termos",
+      "content": "Ao acessar e usar o NutriProfile (\"o Servico\"), voce concorda em ficar vinculado a estes Termos de Servico. Se voce nao concordar com estes termos, por favor nao use nosso servico."
+    },
+    "description": {
+      "title": "2. Descricao do Servico",
+      "content": "NutriProfile e um aplicativo de rastreamento nutricional que fornece:",
+      "features": {
+        "vision": "Analise de fotos de alimentos com IA",
+        "recipes": "Geracao de receitas personalizadas",
+        "coaching": "Coaching nutricional e recomendacoes",
+        "tracking": "Rastreamento de calorias e macros"
+      }
+    },
+    "subscriptions": {
+      "title": "3. Planos de Assinatura",
+      "content": "NutriProfile oferece planos gratuitos e pagos:",
+      "free": "Gratis: Analises diarias e recursos limitados",
+      "premium": "Premium: Limites aprimorados por 4.99€/mes ou 39.99€/ano",
+      "pro": "Pro: Acesso ilimitado por 9.99€/mes ou 79.99€/ano"
+    },
+    "billing": {
+      "title": "4. Cobranca e Pagamentos",
+      "content": "Os pagamentos sao processados de forma segura atraves do Paddle, nosso Merchant of Record. O Paddle lida com todo o processamento de pagamentos, faturamento e conformidade fiscal em nosso nome.",
+      "renewal": "As assinaturas sao renovadas automaticamente, a menos que sejam canceladas antes do final do periodo de cobranca atual."
+    },
+    "refund": {
+      "title": "5. Politica de Reembolso",
+      "content": "Oferecemos uma garantia de devolucao do dinheiro de 14 dias para todas as novas assinaturas. Se voce nao estiver satisfeito com nosso servico, entre em contato conosco dentro de 14 dias da sua compra para um reembolso total.",
+      "afterPeriod": "Solicitacoes de reembolso apos 14 dias serao analisadas caso a caso."
+    },
+    "userResponsibilities": {
+      "title": "6. Responsabilidades do Usuario",
+      "content": "Voce concorda em:",
+      "items": {
+        "accurate": "Fornecer informacoes de conta precisas",
+        "security": "Manter a seguranca de suas credenciais de conta",
+        "personal": "Usar o servico para fins pessoais e nao comerciais",
+        "noReverse": "Nao tentar fazer engenharia reversa ou explorar o servico"
+      }
+    },
+    "healthDisclaimer": {
+      "title": "7. Aviso de Saude",
+      "content": "NutriProfile fornece informacoes nutricionais apenas para fins educacionais. Nosso servico nao substitui aconselhamento medico profissional, diagnostico ou tratamento. Sempre consulte um profissional de saude qualificado antes de fazer mudancas na sua dieta."
+    },
+    "liability": {
+      "title": "8. Limitacao de Responsabilidade",
+      "content": "NutriProfile e fornecido \"como esta\" sem garantias de qualquer tipo. Nao somos responsaveis por quaisquer danos decorrentes do uso de nosso servico, incluindo, mas nao se limitando a, danos diretos, indiretos, incidentais ou consequenciais."
+    },
+    "modifications": {
+      "title": "9. Modificacoes",
+      "content": "Reservamos o direito de modificar estes termos a qualquer momento. O uso continuado do servico apos as alteracoes constitui aceitacao dos novos termos."
+    },
+    "contact": {
+      "title": "10. Contato",
+      "content": "Para perguntas sobre estes Termos de Servico, entre em contato conosco em:"
+    }
+  }
+}

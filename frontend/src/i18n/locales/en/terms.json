@@ -1,0 +1,63 @@
+{
+  "title": "Terms of Service",
+  "lastUpdated": "Last updated",
+  "sections": {
+    "acceptance": {
+      "title": "1. Acceptance of Terms",
+      "content": "By accessing and using NutriProfile (\"the Service\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our service."
+    },
+    "description": {
+      "title": "2. Description of Service",
+      "content": "NutriProfile is a nutrition tracking application that provides:",
+      "features": {
+        "vision": "AI-powered food photo analysis",
+        "recipes": "Personalized recipe generation",
+        "coaching": "Nutrition coaching and recommendations",
+        "tracking": "Calorie and macro tracking"
+      }
+    },
+    "subscriptions": {
+      "title": "3. Subscription Plans",
+      "content": "NutriProfile offers free and paid subscription plans:",
+      "free": "Free: Limited daily analyses and features",
+      "premium": "Premium: Enhanced limits and features at 4.99/month or 39.99/year",
+      "pro": "Pro: Unlimited access at 9.99/month or 79.99/year"
+    },
+    "billing": {
+      "title": "4. Billing and Payments",
+      "content": "Payments are processed securely through Paddle, our Merchant of Record. Paddle handles all payment processing, invoicing, and tax compliance on our behalf.",
+      "renewal": "Subscriptions automatically renew unless cancelled before the end of the current billing period."
+    },
+    "refund": {
+      "title": "5. Refund Policy",
+      "content": "We offer a 14-day money-back guarantee for all new subscriptions. If you're not satisfied with our service, contact us within 14 days of your purchase for a full refund.",
+      "afterPeriod": "Refund requests after 14 days will be reviewed on a case-by-case basis."
+    },
+    "userResponsibilities": {
+      "title": "6. User Responsibilities",
+      "content": "You agree to:",
+      "items": {
+        "accurate": "Provide accurate account information",
+        "security": "Maintain the security of your account credentials",
+        "personal": "Use the service for personal, non-commercial purposes",
+        "noReverse": "Not attempt to reverse engineer or exploit the service"
+      }
+    },
+    "healthDisclaimer": {
+      "title": "7. Health Disclaimer",
+      "content": "NutriProfile provides nutritional information for educational purposes only. Our service is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider before making dietary changes."
+    },
+    "liability": {
+      "title": "8. Limitation of Liability",
+      "content": "NutriProfile is provided \"as is\" without warranties of any kind. We are not liable for any damages arising from the use of our service, including but not limited to direct, indirect, incidental, or consequential damages."
+    },
+    "modifications": {
+      "title": "9. Modifications",
+      "content": "We reserve the right to modify these terms at any time. Continued use of the service after changes constitutes acceptance of the new terms."
+    },
+    "contact": {
+      "title": "10. Contact",
+      "content": "For questions about these Terms of Service, please contact us at:"
+    }
+  }
+}
