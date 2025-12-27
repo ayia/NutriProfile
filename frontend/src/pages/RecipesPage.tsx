@@ -6,6 +6,7 @@ import { RecipeGenerator } from '@/components/recipes/RecipeGenerator'
 import { RecipeCard } from '@/components/recipes/RecipeCard'
 import { Button } from '@/components/ui/Button'
 import { SkeletonRecipeCard } from '@/components/ui/SkeletonLoader'
+import { UsageBanner } from '@/components/subscription/UsageBanner'
 
 type Tab = 'generate' | 'history' | 'favorites'
 
@@ -187,7 +188,10 @@ export function RecipesPage() {
 
         {/* Content */}
         {activeTab === 'generate' && (
-          <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+          <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            {/* Usage Banner */}
+            <UsageBanner action="recipe_generations" showAlways />
+
             <RecipeGenerator initialTags={selectedTags} onTagsCleared={() => setSelectedTags([])} />
           </div>
         )}

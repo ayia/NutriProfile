@@ -385,8 +385,22 @@ async def get_food_logs(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Récupère les logs de repas de l'utilisateur."""
+    """Récupère les logs de repas de l'utilisateur (limité par tier)."""
+    # Appliquer le filtre d'historique basé sur le tier
+    sub_service = SubscriptionService(db)
+    tier = await sub_service.get_user_tier(current_user.id)
+    tier_limits = await sub_service.get_tier_limits(tier)
+    history_days = tier_limits.get("history_days", 7)
+
     query = select(FoodLog).where(FoodLog.user_id == current_user.id)
+
+    # Appliquer la limite d'historique si pas illimité (-1)
+    if history_days != -1:
+        min_date = datetime.combine(
+            date.today() - timedelta(days=history_days),
+            datetime.min.time()
+        )
+        query = query.where(FoodLog.meal_date >= min_date)
 
     if date:
         start = datetime.combine(date, datetime.min.time())
@@ -676,14 +690,33 @@ async def delete_food_item(
 
 @router.get("/daily/{date}", response_model=DailyMealsResponse)
 async def get_daily_meals(
-    date: date,
+    target_date: date,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Récupère les repas et le résumé nutritionnel d'une journée."""
+    """Récupère les repas et le résumé nutritionnel d'une journée (limité par tier)."""
+    # Vérifier si la date est dans la limite d'historique du tier
+    sub_service = SubscriptionService(db)
+    tier = await sub_service.get_user_tier(current_user.id)
+    tier_limits = await sub_service.get_tier_limits(tier)
+    history_days = tier_limits.get("history_days", 7)
+
+    # Vérifier si la date demandée est accessible
+    if history_days != -1:
+        min_allowed_date = date.today() - timedelta(days=history_days)
+        if target_date < min_allowed_date:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail={
+                    "error": "history_limit",
+                    "message": f"Votre abonnement limite l'historique à {history_days} jours",
+                    "upgrade_url": "/pricing"
+                }
+            )
+
     # Récupérer les repas
-    start = datetime.combine(date, datetime.min.time())
-    end = datetime.combine(date, datetime.max.time())
+    start = datetime.combine(target_date, datetime.min.time())
+    end = datetime.combine(target_date, datetime.max.time())
 
     meals_query = (
         select(FoodLog)
@@ -708,7 +741,7 @@ async def get_daily_meals(
     nutrition = nutrition_result.scalar_one_or_none()
 
     return DailyMealsResponse(
-        date=datetime.combine(date, datetime.min.time()),
+        date=datetime.combine(target_date, datetime.min.time()),
         meals=meals,
         nutrition=nutrition,
     )

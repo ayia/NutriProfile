@@ -1,6 +1,6 @@
 """API endpoints pour le coaching nutritionnel."""
 from datetime import datetime, date, timedelta
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
 from pydantic import BaseModel
@@ -13,6 +13,7 @@ from app.models.food_log import DailyNutrition
 from app.models.activity import ActivityLog
 from app.models.gamification import Streak, UserStats
 from app.agents.coach import get_coach_agent, CoachInput, get_time_of_day
+from app.services.subscription import SubscriptionService
 
 router = APIRouter()
 
@@ -64,6 +65,25 @@ async def get_tips(
     """
     Récupère les conseils personnalisés du jour.
     """
+    # Vérifier les limites d'utilisation
+    sub_service = SubscriptionService(db)
+    allowed, used, limit = await sub_service.check_limit(current_user.id, "coach_messages")
+
+    if not allowed:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail={
+                "error": "limit_reached",
+                "message": "Limite de conseils coach atteinte pour aujourd'hui",
+                "used": used,
+                "limit": limit,
+                "upgrade_url": "/pricing"
+            }
+        )
+
+    # Incrémenter l'usage
+    await sub_service.increment_usage(current_user.id, "coach_messages")
+
     # Récupérer le profil
     profile_query = select(Profile).where(Profile.user_id == current_user.id)
     profile_result = await db.execute(profile_query)

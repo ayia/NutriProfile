@@ -1,11 +1,28 @@
+"""Agent de génération de recettes avec multi-modèles et consensus."""
+import asyncio
 import json
 import re
 from typing import Any
 
+import structlog
+
 from app.agents.base import BaseAgent, AgentResponse
+from app.agents.consensus import ConsensusValidator
 from app.llm.models import ModelCapability
 from app.models.profile import DietType, Goal
 from app.i18n import DEFAULT_LANGUAGE
+
+logger = structlog.get_logger()
+
+# Modèles utilisés pour la génération de recettes (2-3 modèles pour consensus)
+RECIPE_MODELS = [
+    "Qwen/Qwen2.5-72B-Instruct",            # Modèle principal
+    "mistralai/Mistral-7B-Instruct-v0.2",   # Modèle secondaire
+    "meta-llama/Meta-Llama-3-70B-Instruct", # Modèle tertiaire
+]
+
+# Modèle de validation nutritionnelle
+NUTRITION_VALIDATION_MODEL = "HuggingFaceH4/zephyr-7b-beta"
 
 
 class MealHistoryAnalysis:
@@ -231,85 +248,288 @@ class Recipe:
 
 class RecipeAgent(BaseAgent[RecipeInput, Recipe]):
     """
-    Agent de génération de recettes.
+    Agent de génération de recettes avec multi-modèles.
 
-    Génère des recettes personnalisées basées sur:
-    - Ingrédients disponibles
-    - Préférences alimentaires
-    - Objectifs nutritionnels
-    - Temps de préparation
+    Utilise 2-3 modèles en parallèle pour générer des recettes,
+    puis valide le consensus avec un modèle de validation nutritionnelle.
     """
 
     name = "RecipeAgent"
     capability = ModelCapability.RECIPE_GENERATION
     confidence_threshold = 0.6
-    text_model = "Qwen/Qwen2.5-72B-Instruct"
 
     async def process(self, input_data: RecipeInput, model=None) -> AgentResponse:
         """
-        Traitement spécifique utilisant l'API Chat Completions.
-        Override la méthode de base pour utiliser text_chat.
+        Traitement multi-modèles avec consensus.
         """
-        import structlog
-
-        logger = structlog.get_logger()
-
         prompt = self.build_prompt(input_data)
 
         logger.info(
-            "recipe_agent_processing",
+            "recipe_agent_multi_model_processing",
             agent=self.name,
-            model=self.text_model,
+            models=RECIPE_MODELS[:3],
         )
 
+        # Étape 1: Appeler 2-3 modèles en parallèle
+        responses = await self._call_multiple_models(prompt, input_data)
+
+        if not responses:
+            logger.warning("recipe_no_valid_responses")
+            return await self.fallback(input_data)
+
+        # Étape 2: Valider avec le consensus
+        consensus_validator = ConsensusValidator(
+            min_confidence=0.5,
+            language=self.language
+        )
+
+        # Convertir les réponses pour le consensus
+        agent_responses = []
+        for resp in responses:
+            if resp["result"]:
+                agent_responses.append(AgentResponse(
+                    result=resp["result"].to_dict(),
+                    confidence=resp["confidence"],
+                    model_used=resp["model"],
+                    reasoning=resp["result"].description,
+                    used_fallback=False,
+                ))
+
+        if len(agent_responses) < 2:
+            # Pas assez de réponses pour consensus, utiliser la meilleure
+            if agent_responses:
+                best = agent_responses[0]
+                return AgentResponse(
+                    result=self._dict_to_recipe(best.result),
+                    confidence=best.confidence,
+                    model_used=best.model_used,
+                    reasoning=best.reasoning,
+                    used_fallback=False,
+                )
+            return await self.fallback(input_data)
+
+        # Étape 3: Fusion par consensus
+        consensus = consensus_validator.validate(
+            agent_responses,
+            task_type="recipe_generation",
+            min_agreement=2,
+        )
+
+        logger.info(
+            "recipe_consensus_result",
+            is_valid=consensus.is_valid,
+            confidence=consensus.confidence,
+            agreement=consensus.agreement_score,
+            models_count=len(agent_responses),
+        )
+
+        if not consensus.is_valid:
+            # Prendre la meilleure réponse si pas de consensus
+            best = max(agent_responses, key=lambda r: r.confidence)
+            return AgentResponse(
+                result=self._dict_to_recipe(best.result),
+                confidence=best.confidence * 0.9,
+                model_used=best.model_used,
+                reasoning=best.reasoning,
+                used_fallback=False,
+                metadata={"consensus_warnings": consensus.warnings},
+            )
+
+        # Étape 4: Validation nutritionnelle avec modèle de validation
+        validated_result = await self._validate_nutrition(
+            consensus.merged_result,
+            input_data
+        )
+
+        if validated_result:
+            return AgentResponse(
+                result=validated_result,
+                confidence=consensus.confidence,
+                model_used=f"consensus({len(agent_responses)} models)",
+                reasoning=validated_result.description,
+                used_fallback=False,
+                metadata={
+                    "agreement_score": consensus.agreement_score,
+                    "individual_scores": consensus.individual_scores,
+                    "validated": True,
+                },
+            )
+
+        # Fallback si validation échoue
+        merged = self._merge_recipes(agent_responses)
+        return AgentResponse(
+            result=merged,
+            confidence=consensus.confidence,
+            model_used=f"consensus({len(agent_responses)} models)",
+            reasoning=merged.description,
+            used_fallback=False,
+        )
+
+    async def _call_multiple_models(
+        self,
+        prompt: str,
+        input_data: RecipeInput
+    ) -> list[dict[str, Any]]:
+        """Appelle plusieurs modèles en parallèle."""
+        async def call_model(model_id: str) -> dict[str, Any] | None:
+            try:
+                raw_response = await self.client.text_chat(
+                    prompt=prompt,
+                    model_id=model_id,
+                    max_tokens=1000,
+                    temperature=0.7,
+                )
+
+                if not raw_response:
+                    return None
+
+                result = self.parse_response(raw_response, input_data)
+                confidence = self.calculate_confidence(result, raw_response)
+
+                logger.info(
+                    "recipe_model_response",
+                    model=model_id,
+                    confidence=confidence,
+                    recipe_title=result.title,
+                )
+
+                return {
+                    "model": model_id,
+                    "result": result,
+                    "confidence": confidence,
+                    "raw": raw_response,
+                }
+
+            except Exception as e:
+                logger.error(
+                    "recipe_model_error",
+                    model=model_id,
+                    error=str(e),
+                )
+                return None
+
+        # Appeler les 3 modèles en parallèle
+        tasks = [call_model(model) for model in RECIPE_MODELS[:3]]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Filtrer les réponses valides
+        valid_responses = []
+        for result in results:
+            if isinstance(result, dict) and result is not None:
+                valid_responses.append(result)
+
+        return valid_responses
+
+    async def _validate_nutrition(
+        self,
+        merged_result: dict[str, Any],
+        input_data: RecipeInput
+    ) -> Recipe | None:
+        """Valide les valeurs nutritionnelles avec un modèle de validation."""
         try:
+            nutrition = merged_result.get("nutrition", {})
+            validation_prompt = f"""Tu es un expert en nutrition. Valide cette recette et ses valeurs nutritionnelles:
+
+RECETTE: {merged_result.get('title', 'Recette')}
+
+INGRÉDIENTS:
+{json.dumps(merged_result.get('ingredients', []), ensure_ascii=False, indent=2)}
+
+VALEURS NUTRITIONNELLES ACTUELLES:
+- Calories: {nutrition.get('calories', 0)} kcal
+- Protéines: {nutrition.get('protein', 0)}g
+- Glucides: {nutrition.get('carbs', 0)}g
+- Lipides: {nutrition.get('fat', 0)}g
+
+CONTRAINTES DE L'UTILISATEUR:
+- Régime: {input_data.diet_type.value if hasattr(input_data.diet_type, 'value') else input_data.diet_type}
+- Objectif: {input_data.goal.value if hasattr(input_data.goal, 'value') else input_data.goal}
+- Allergies: {', '.join(input_data.allergies) if input_data.allergies else 'Aucune'}
+
+Vérifie:
+1. Les valeurs nutritionnelles sont-elles réalistes pour ces ingrédients?
+2. La recette respecte-t-elle le régime alimentaire?
+3. Aucun allergène n'est présent?
+
+Si les valeurs sont aberrantes, corrige-les.
+Réponds en JSON avec le même format que l'entrée, avec les valeurs corrigées si nécessaire."""
+
             raw_response = await self.client.text_chat(
-                prompt=prompt,
-                model_id=self.text_model,
-                max_tokens=1000,
-                temperature=0.7,
+                prompt=validation_prompt,
+                model_id=NUTRITION_VALIDATION_MODEL,
+                max_tokens=800,
+                temperature=0.3,
             )
 
             if not raw_response:
-                logger.warning("recipe_empty_response")
-                return await self.fallback(input_data)
+                return None
 
-            result = self.parse_response(raw_response, input_data)
-            confidence = self.calculate_confidence(result, raw_response)
-
-            logger.info(
-                "recipe_agent_response",
-                agent=self.name,
-                model=self.text_model,
-                confidence=confidence,
-                recipe_title=result.title,
-            )
-
-            if confidence < self.confidence_threshold:
-                logger.warning(
-                    "low_confidence_fallback",
-                    agent=self.name,
-                    confidence=confidence,
-                    threshold=self.confidence_threshold,
-                )
-                return await self.fallback(input_data)
-
-            return AgentResponse(
-                result=result,
-                confidence=confidence,
-                model_used=self.text_model,
-                reasoning=result.description,
-                used_fallback=False,
-            )
+            # Parser et retourner la recette validée
+            return self.parse_response(raw_response, input_data)
 
         except Exception as e:
-            logger.error(
-                "recipe_agent_error",
-                agent=self.name,
-                model=self.text_model,
-                error=str(e),
-            )
-            return await self.fallback(input_data)
+            logger.error("recipe_nutrition_validation_error", error=str(e))
+            return None
+
+    def _merge_recipes(self, responses: list[AgentResponse]) -> Recipe:
+        """Fusionne plusieurs recettes."""
+        if not responses:
+            return self.deterministic_fallback(RecipeInput())
+
+        # Prendre la recette de la meilleure réponse comme base
+        best = max(responses, key=lambda r: r.confidence)
+        best_result = best.result
+
+        # Fusionner les ingrédients communs
+        all_ingredients = []
+        for resp in responses:
+            if isinstance(resp.result, dict):
+                all_ingredients.extend(resp.result.get("ingredients", []))
+
+        # Compter les ingrédients par nom
+        ingredient_counts: dict[str, list[dict]] = {}
+        for ing in all_ingredients:
+            name = ing.get("name", "").lower()
+            if name:
+                if name not in ingredient_counts:
+                    ingredient_counts[name] = []
+                ingredient_counts[name].append(ing)
+
+        # Garder les ingrédients présents dans au moins 2 recettes
+        common_ingredients = []
+        for name, ings in ingredient_counts.items():
+            if len(ings) >= 2:
+                common_ingredients.append(ings[0])
+
+        # Si pas assez d'ingrédients communs, utiliser ceux de la meilleure recette
+        if len(common_ingredients) < 3:
+            common_ingredients = best_result.get("ingredients", [])
+
+        return Recipe(
+            title=best_result.get("title", "Recette"),
+            description=best_result.get("description", ""),
+            ingredients=common_ingredients,
+            instructions=best_result.get("instructions", []),
+            prep_time=best_result.get("prep_time", 15),
+            cook_time=best_result.get("cook_time", 15),
+            servings=best_result.get("servings", 2),
+            nutrition=best_result.get("nutrition", {}),
+            tags=best_result.get("tags", []),
+        )
+
+    def _dict_to_recipe(self, data: dict[str, Any]) -> Recipe:
+        """Convertit un dict en Recipe."""
+        return Recipe(
+            title=data.get("title", "Recette"),
+            description=data.get("description", ""),
+            ingredients=data.get("ingredients", []),
+            instructions=data.get("instructions", []),
+            prep_time=data.get("prep_time", 15),
+            cook_time=data.get("cook_time", 15),
+            servings=data.get("servings", 2),
+            nutrition=data.get("nutrition", {}),
+            tags=data.get("tags", []),
+        )
 
     def build_prompt(self, input_data: RecipeInput) -> str:
         """Construit le prompt pour générer une recette personnalisée."""

@@ -1,12 +1,29 @@
+"""Agent coach nutritionnel avec multi-modèles et consensus."""
+import asyncio
 import json
 import re
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any
 
+import structlog
+
 from app.agents.base import BaseAgent, AgentResponse
+from app.agents.consensus import ConsensusValidator
 from app.llm.models import ModelCapability
 from app.models.profile import DietType, Goal as ProfileGoal
 from app.i18n import DEFAULT_LANGUAGE
+
+logger = structlog.get_logger()
+
+# Modèles utilisés pour le coaching (2-3 modèles pour consensus)
+COACH_MODELS = [
+    "Qwen/Qwen2.5-72B-Instruct",       # Modèle principal
+    "mistralai/Mistral-7B-Instruct-v0.2",  # Modèle secondaire
+    "meta-llama/Meta-Llama-3-70B-Instruct",  # Modèle tertiaire
+]
+
+# Modèle de validation (pour valider le consensus)
+VALIDATION_MODEL = "HuggingFaceH4/zephyr-7b-beta"
 
 
 class CoachInput:
@@ -17,8 +34,8 @@ class CoachInput:
         # Profil utilisateur
         name: str,
         age: int,
-        goal: str | ProfileGoal | None,  # Accept both string and enum
-        diet_type: str | DietType | None,  # Accept both string and enum
+        goal: str | ProfileGoal | None,
+        diet_type: str | DietType | None,
         target_calories: int,
         target_protein: float,
         target_carbs: float,
@@ -36,7 +53,7 @@ class CoachInput:
         weight_change_week: float | None = None,
         days_logged_week: int = 0,
         # Contexte
-        time_of_day: str = "afternoon",  # morning, afternoon, evening, night
+        time_of_day: str = "afternoon",
         meals_today: int = 0,
         last_meal_type: str | None = None,
     ):
@@ -69,9 +86,9 @@ class CoachAdvice:
     def __init__(
         self,
         message: str,
-        category: str,  # nutrition, activity, hydration, motivation, tip
-        priority: str = "medium",  # low, medium, high
-        action: str | None = None,  # action suggérée
+        category: str,
+        priority: str = "medium",
+        action: str | None = None,
         emoji: str = "💡",
     ):
         self.message = message
@@ -116,87 +133,296 @@ class CoachResponse:
 
 class CoachAgent(BaseAgent[CoachInput, CoachResponse]):
     """
-    Agent coach nutritionnel personnalisé.
+    Agent coach nutritionnel personnalisé avec multi-modèles.
 
-    Fournit des conseils basés sur:
-    - Le profil et les objectifs de l'utilisateur
-    - Les statistiques actuelles
-    - Le moment de la journée
+    Utilise 2-3 modèles en parallèle pour générer des conseils,
+    puis valide le consensus avec un modèle de validation.
     """
 
     name = "CoachAgent"
     capability = ModelCapability.COACHING
     confidence_threshold = 0.5
-    text_model = "Qwen/Qwen2.5-72B-Instruct"
 
     async def process(self, input_data: CoachInput, model=None) -> AgentResponse:
         """
-        Traitement spécifique utilisant l'API Chat Completions.
-        Override la méthode de base pour utiliser text_chat.
+        Traitement multi-modèles avec consensus.
         """
-        import structlog
-
-        logger = structlog.get_logger()
-
         prompt = self.build_prompt(input_data)
 
         logger.info(
-            "coach_agent_processing",
+            "coach_agent_multi_model_processing",
             agent=self.name,
-            model=self.text_model,
+            models=COACH_MODELS[:3],
         )
 
+        # Étape 1: Appeler 2-3 modèles en parallèle
+        responses = await self._call_multiple_models(prompt, input_data)
+
+        if not responses:
+            logger.warning("coach_no_valid_responses")
+            return await self.fallback(input_data)
+
+        # Étape 2: Valider avec le consensus
+        consensus_validator = ConsensusValidator(
+            min_confidence=0.5,
+            language=self.language
+        )
+
+        # Convertir les réponses pour le consensus
+        agent_responses = []
+        for resp in responses:
+            if resp["result"]:
+                agent_responses.append(AgentResponse(
+                    result=resp["result"].to_dict(),
+                    confidence=resp["confidence"],
+                    model_used=resp["model"],
+                    reasoning=resp["result"].summary,
+                    used_fallback=False,
+                ))
+
+        if len(agent_responses) < 2:
+            # Pas assez de réponses pour consensus, utiliser la meilleure
+            if agent_responses:
+                best = agent_responses[0]
+                return AgentResponse(
+                    result=self._dict_to_coach_response(best.result),
+                    confidence=best.confidence,
+                    model_used=best.model_used,
+                    reasoning=best.reasoning,
+                    used_fallback=False,
+                )
+            return await self.fallback(input_data)
+
+        # Étape 3: Fusion par consensus
+        consensus = consensus_validator.validate(
+            agent_responses,
+            task_type="coaching",
+            min_agreement=2,
+        )
+
+        logger.info(
+            "coach_consensus_result",
+            is_valid=consensus.is_valid,
+            confidence=consensus.confidence,
+            agreement=consensus.agreement_score,
+            models_count=len(agent_responses),
+        )
+
+        if not consensus.is_valid:
+            # Prendre la meilleure réponse si pas de consensus
+            best = max(agent_responses, key=lambda r: r.confidence)
+            return AgentResponse(
+                result=self._dict_to_coach_response(best.result),
+                confidence=best.confidence * 0.9,  # Pénalité pour manque de consensus
+                model_used=best.model_used,
+                reasoning=best.reasoning,
+                used_fallback=False,
+                metadata={"consensus_warnings": consensus.warnings},
+            )
+
+        # Étape 4: Validation finale avec le modèle de validation
+        validated_result = await self._validate_with_model(
+            consensus.merged_result,
+            input_data
+        )
+
+        if validated_result:
+            return AgentResponse(
+                result=validated_result,
+                confidence=consensus.confidence,
+                model_used=f"consensus({len(agent_responses)} models)",
+                reasoning=validated_result.summary,
+                used_fallback=False,
+                metadata={
+                    "agreement_score": consensus.agreement_score,
+                    "individual_scores": consensus.individual_scores,
+                    "validated": True,
+                },
+            )
+
+        # Fallback si validation échoue
+        merged = self._merge_coach_responses(agent_responses)
+        return AgentResponse(
+            result=merged,
+            confidence=consensus.confidence,
+            model_used=f"consensus({len(agent_responses)} models)",
+            reasoning=merged.summary,
+            used_fallback=False,
+        )
+
+    async def _call_multiple_models(
+        self,
+        prompt: str,
+        input_data: CoachInput
+    ) -> list[dict[str, Any]]:
+        """Appelle plusieurs modèles en parallèle."""
+        async def call_model(model_id: str) -> dict[str, Any] | None:
+            try:
+                raw_response = await self.client.text_chat(
+                    prompt=prompt,
+                    model_id=model_id,
+                    max_tokens=800,
+                    temperature=0.7,
+                )
+
+                if not raw_response:
+                    return None
+
+                result = self.parse_response(raw_response, input_data)
+                confidence = self.calculate_confidence(result, raw_response)
+
+                logger.info(
+                    "coach_model_response",
+                    model=model_id,
+                    confidence=confidence,
+                )
+
+                return {
+                    "model": model_id,
+                    "result": result,
+                    "confidence": confidence,
+                    "raw": raw_response,
+                }
+
+            except Exception as e:
+                logger.error(
+                    "coach_model_error",
+                    model=model_id,
+                    error=str(e),
+                )
+                return None
+
+        # Appeler les 3 modèles en parallèle
+        tasks = [call_model(model) for model in COACH_MODELS[:3]]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Filtrer les réponses valides
+        valid_responses = []
+        for result in results:
+            if isinstance(result, dict) and result is not None:
+                valid_responses.append(result)
+
+        return valid_responses
+
+    async def _validate_with_model(
+        self,
+        merged_result: dict[str, Any],
+        input_data: CoachInput
+    ) -> CoachResponse | None:
+        """Valide le résultat fusionné avec un modèle de validation."""
         try:
+            validation_prompt = f"""Tu es un expert en nutrition. Valide et améliore ces conseils:
+
+CONSEILS À VALIDER:
+{json.dumps(merged_result, ensure_ascii=False, indent=2)}
+
+CONTEXTE UTILISATEUR:
+- Objectif calories: {input_data.target_calories} kcal
+- Calories consommées: {input_data.calories_today} kcal
+- Moment: {input_data.time_of_day}
+
+Retourne le JSON amélioré avec le même format. Garde uniquement les conseils pertinents et cohérents.
+Assure-toi que:
+1. Les conseils sont spécifiques au contexte
+2. Les priorités sont correctes (high pour urgent)
+3. Les catégories sont appropriées
+
+Réponds UNIQUEMENT avec le JSON, sans commentaires."""
+
             raw_response = await self.client.text_chat(
-                prompt=prompt,
-                model_id=self.text_model,
-                max_tokens=800,
-                temperature=0.7,
+                prompt=validation_prompt,
+                model_id=VALIDATION_MODEL,
+                max_tokens=600,
+                temperature=0.3,  # Plus déterministe pour validation
             )
 
             if not raw_response:
-                logger.warning("coach_empty_response")
-                return await self.fallback(input_data)
+                return None
 
-            result = self.parse_response(raw_response, input_data)
-            confidence = self.calculate_confidence(result, raw_response)
-
-            logger.info(
-                "coach_agent_response",
-                agent=self.name,
-                model=self.text_model,
-                confidence=confidence,
-            )
-
-            if confidence < self.confidence_threshold:
-                logger.warning(
-                    "low_confidence_fallback",
-                    agent=self.name,
-                    confidence=confidence,
-                    threshold=self.confidence_threshold,
-                )
-                return await self.fallback(input_data)
-
-            return AgentResponse(
-                result=result,
-                confidence=confidence,
-                model_used=self.text_model,
-                reasoning=result.summary,
-                used_fallback=False,
-            )
+            return self.parse_response(raw_response, input_data)
 
         except Exception as e:
-            logger.error(
-                "coach_agent_error",
-                agent=self.name,
-                model=self.text_model,
-                error=str(e),
+            logger.error("coach_validation_error", error=str(e))
+            return None
+
+    def _merge_coach_responses(
+        self,
+        responses: list[AgentResponse]
+    ) -> CoachResponse:
+        """Fusionne plusieurs réponses de coaching."""
+        if not responses:
+            return self.deterministic_fallback(CoachInput(
+                name="",
+                age=30,
+                goal="maintain",
+                diet_type="omnivore",
+                target_calories=2000,
+                target_protein=100,
+                target_carbs=250,
+                target_fat=65,
+            ))
+
+        # Prendre le greeting de la meilleure réponse
+        best = max(responses, key=lambda r: r.confidence)
+        best_result = best.result
+
+        # Collecter tous les conseils uniques par catégorie
+        all_advices: dict[str, list[dict]] = {}
+        for resp in responses:
+            result = resp.result
+            if isinstance(result, dict):
+                for advice in result.get("advices", []):
+                    cat = advice.get("category", "tip")
+                    if cat not in all_advices:
+                        all_advices[cat] = []
+                    all_advices[cat].append(advice)
+
+        # Garder le meilleur conseil par catégorie (par priorité)
+        priority_order = {"high": 3, "medium": 2, "low": 1}
+        merged_advices = []
+        for cat, advices in all_advices.items():
+            sorted_advices = sorted(
+                advices,
+                key=lambda a: priority_order.get(a.get("priority", "low"), 0),
+                reverse=True
             )
-            return await self.fallback(input_data)
+            if sorted_advices:
+                merged_advices.append(CoachAdvice(
+                    message=sorted_advices[0].get("message", ""),
+                    category=cat,
+                    priority=sorted_advices[0].get("priority", "medium"),
+                    action=sorted_advices[0].get("action"),
+                    emoji=sorted_advices[0].get("emoji", "💡"),
+                ))
+
+        return CoachResponse(
+            greeting=best_result.get("greeting", "Bonjour !"),
+            summary=best_result.get("summary", ""),
+            advices=merged_advices[:4],  # Max 4 conseils
+            motivation_quote=best_result.get("motivation_quote"),
+        )
+
+    def _dict_to_coach_response(self, data: dict[str, Any]) -> CoachResponse:
+        """Convertit un dict en CoachResponse."""
+        advices = []
+        for advice_data in data.get("advices", []):
+            advices.append(CoachAdvice(
+                message=advice_data.get("message", ""),
+                category=advice_data.get("category", "tip"),
+                priority=advice_data.get("priority", "medium"),
+                action=advice_data.get("action"),
+                emoji=advice_data.get("emoji", "💡"),
+            ))
+
+        return CoachResponse(
+            greeting=data.get("greeting", "Bonjour !"),
+            summary=data.get("summary", ""),
+            advices=advices,
+            motivation_quote=data.get("motivation_quote"),
+        )
 
     def build_prompt(self, input_data: CoachInput) -> str:
         """Construit le prompt pour le coach."""
-        # Handle both string and enum for goal
         goal_value = input_data.goal.value if hasattr(input_data.goal, 'value') else input_data.goal
         goal_mapping = {
             "lose_weight": self.t("agents.coach.goals.loseWeight"),
@@ -216,7 +442,6 @@ class CoachAgent(BaseAgent[CoachInput, CoachResponse]):
         calories_remaining = input_data.target_calories - input_data.calories_today
         protein_remaining = input_data.target_protein - input_data.protein_today
 
-        # Handle both string and enum for diet_type
         diet_type_value = input_data.diet_type.value if hasattr(input_data.diet_type, 'value') else (input_data.diet_type or "omnivore")
 
         return f"""Tu es un coach nutritionnel bienveillant et motivant pour {input_data.name}.
@@ -370,10 +595,7 @@ Donne 2-4 conseils pertinents selon le contexte. Sois positif et encourageant !"
                 emoji="✨",
             ))
 
-        # Greeting
         greeting = self.t("agents.coach.greeting", name=input_data.name)
-
-        # Summary
         summary = self.t("agents.coach.caloriesSummary",
                          consumed=input_data.calories_today,
                          target=input_data.target_calories)
