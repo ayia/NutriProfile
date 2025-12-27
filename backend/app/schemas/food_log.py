@@ -138,6 +138,21 @@ class ImageAnalyzeResponse(BaseModel):
     health_report: HealthReportResponse | None = None
 
 
+# Save Analysis (without re-analyzing) Schemas
+
+class AnalysisSaveRequest(BaseModel):
+    """Requête pour sauvegarder une analyse déjà effectuée (sans reconsommer de crédit)."""
+    meal_type: str = Field(..., description="Type de repas: breakfast, lunch, dinner, snack")
+    description: str | None = None
+    items: list[DetectedItem] = Field(..., description="Liste des aliments détectés")
+    total_calories: int
+    total_protein: float
+    total_carbs: float
+    total_fat: float
+    confidence: float
+    model_used: str
+
+
 # Daily Nutrition Schemas
 
 class DailyNutritionResponse(BaseModel):

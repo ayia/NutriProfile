@@ -8,7 +8,7 @@ import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate, MealType } fro
 
 interface AnalysisResultProps {
   result: ImageAnalyzeResponse
-  imageBase64: string
+  imageBase64?: string  // Kept for backwards compatibility but no longer used
   mealType: MealType
   onClose: () => void
 }
@@ -37,7 +37,7 @@ const VERDICT_STYLE = {
   },
 }
 
-export function AnalysisResult({ result, imageBase64, mealType, onClose }: AnalysisResultProps) {
+export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProps) {
   const { t } = useTranslation('vision')
   const [editingItem, setEditingItem] = useState<number | null>(null)
   const [editForm, setEditForm] = useState<FoodItemUpdate>({})
@@ -46,12 +46,18 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
   const [isSaved, setIsSaved] = useState(!!result.food_log_id)
   const queryClient = useQueryClient()
 
-  // Mutation pour sauvegarder le repas
+  // Mutation pour sauvegarder le repas (utilise le nouvel endpoint sans reconsommer de crédit)
   const saveMutation = useMutation({
     mutationFn: () => visionApi.saveMeal({
-      image_base64: imageBase64,
       meal_type: mealType,
-      save_to_log: true,
+      description: result.description,
+      items: result.items,
+      total_calories: result.total_calories,
+      total_protein: result.total_protein,
+      total_carbs: result.total_carbs,
+      total_fat: result.total_fat,
+      confidence: result.confidence,
+      model_used: result.model_used,
     }),
     onSuccess: (data) => {
       setIsSaved(true)
@@ -59,7 +65,7 @@ export function AnalysisResult({ result, imageBase64, mealType, onClose }: Analy
       queryClient.invalidateQueries({ queryKey: ['foodLogs'] })
       queryClient.invalidateQueries({ queryKey: ['dailyMeals'] })
       // Mettre à jour le result avec le food_log_id
-      result.food_log_id = data.food_log_id
+      result.food_log_id = data.id
     },
   })
 

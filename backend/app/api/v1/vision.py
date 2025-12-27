@@ -24,6 +24,7 @@ from app.schemas.food_log import (
     DailyMealsResponse,
     WaterLogRequest,
     HealthReportResponse,
+    AnalysisSaveRequest,
 )
 from app.agents.vision import get_vision_agent, VisionInput, validate_nutrition, calculate_health_report, FoodAnalysis
 from app.services.subscription import SubscriptionService
@@ -375,6 +376,90 @@ async def analyze_image(
         food_log_id=food_log_id,
         health_report=health_report_response,
     )
+
+
+@router.post("/logs/save", response_model=FoodLogResponse)
+async def save_analysis(
+    request: AnalysisSaveRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Sauvegarde une analyse déjà effectuée dans le journal.
+
+    - Ne reconsomme PAS de crédit (le scan a déjà été compté)
+    - Sauvegarde les items détectés dans la base de données
+    - Met à jour le résumé nutritionnel journalier
+    """
+    # Protection anti-doublons: vérifier si un repas similaire existe dans les 5 dernières minutes
+    five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
+    duplicate_check = select(FoodLog).where(and_(
+        FoodLog.user_id == current_user.id,
+        FoodLog.meal_type == request.meal_type,
+        FoodLog.total_calories == request.total_calories,
+        FoodLog.created_at >= five_minutes_ago,
+    ))
+    duplicate_result = await db.execute(duplicate_check)
+    existing_duplicate = duplicate_result.scalar_one_or_none()
+
+    if existing_duplicate:
+        # Retourner le repas existant sans créer de doublon
+        query = (
+            select(FoodLog)
+            .where(FoodLog.id == existing_duplicate.id)
+            .options(selectinload(FoodLog.items))
+        )
+        result = await db.execute(query)
+        return result.scalar_one()
+
+    # Créer le food log
+    food_log = FoodLog(
+        user_id=current_user.id,
+        meal_type=request.meal_type,
+        meal_date=datetime.utcnow(),
+        description=request.description,
+        image_analyzed=True,
+        detected_items=[item.model_dump() for item in request.items],
+        confidence_score=request.confidence,
+        model_used=request.model_used,
+        total_calories=request.total_calories,
+        total_protein=request.total_protein,
+        total_carbs=request.total_carbs,
+        total_fat=request.total_fat,
+    )
+    db.add(food_log)
+    await db.flush()
+
+    # Créer les items individuels
+    for item in request.items:
+        food_item = FoodItemModel(
+            food_log_id=food_log.id,
+            name=item.name,
+            quantity=item.quantity,
+            unit=item.unit,
+            calories=item.calories,
+            protein=item.protein,
+            carbs=item.carbs,
+            fat=item.fat,
+            source="ai",
+            confidence=item.confidence,
+        )
+        db.add(food_item)
+
+    await db.commit()
+    await db.refresh(food_log)
+
+    # Mettre à jour le résumé journalier
+    await update_daily_nutrition(db, current_user.id, datetime.utcnow().date())
+
+    # Recharger avec les items
+    query = (
+        select(FoodLog)
+        .where(FoodLog.id == food_log.id)
+        .options(selectinload(FoodLog.items))
+    )
+    result = await db.execute(query)
+    return result.scalar_one()
 
 
 @router.get("/logs", response_model=list[FoodLogResponse])

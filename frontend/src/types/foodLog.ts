@@ -141,6 +141,18 @@ export interface FoodItemUpdate {
   is_verified?: boolean
 }
 
+export interface AnalysisSaveRequest {
+  meal_type: MealType
+  description?: string
+  items: DetectedItem[]
+  total_calories: number
+  total_protein: number
+  total_carbs: number
+  total_fat: number
+  confidence: number
+  model_used: string
+}
+
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack'
 
 export const MEAL_TYPE_LABELS: Record<MealType, string> = {

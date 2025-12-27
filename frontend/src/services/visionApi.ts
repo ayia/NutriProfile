@@ -8,6 +8,7 @@ import type {
   FoodItem,
   FoodItemUpdate,
   DailyMeals,
+  AnalysisSaveRequest,
 } from '@/types/foodLog'
 
 export const visionApi = {
@@ -18,8 +19,9 @@ export const visionApi = {
   },
 
   // Sauvegarder un repas analysé (après confirmation utilisateur)
-  saveMeal: async (data: ImageAnalyzeRequest): Promise<ImageAnalyzeResponse> => {
-    const response = await api.post('/vision/analyze', { ...data, save_to_log: true })
+  // Utilise le nouvel endpoint qui ne reconsomme pas de crédit
+  saveMeal: async (data: AnalysisSaveRequest): Promise<FoodLog> => {
+    const response = await api.post('/vision/logs/save', data)
     return response.data
   },
 
