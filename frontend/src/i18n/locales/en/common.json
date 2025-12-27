@@ -24,6 +24,21 @@
   "hours": "hours",
   "minutes": "minutes",
   "seconds": "seconds",
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "retry": "Retry",
+    "logout": "Logout"
+  },
   "nav": {
     "dashboard": "Dashboard",
     "vision": "Vision",

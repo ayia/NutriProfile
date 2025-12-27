@@ -1,5 +1,6 @@
 {
   "appName": "NutriProfile",
+  "logout": "Déconnexion",
   "nav": {
     "dashboard": "Tableau de bord",
     "vision": "Vision IA",
@@ -20,7 +21,8 @@
     "next": "Suivant",
     "submit": "Soumettre",
     "loading": "Chargement...",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "logout": "Déconnexion"
   },
   "units": {
     "kcal": "kcal",

@@ -143,7 +143,7 @@ export function Header() {
                       className="flex items-center gap-3 px-4 py-2 w-full text-left text-red-600 hover:bg-red-50 transition-colors"
                     >
                       <span>🚪</span>
-                      <span>{t('actions.logout', { ns: 'settings' })}</span>
+                      <span>{t('logout')}</span>
                     </button>
                   </div>
                 </div>
