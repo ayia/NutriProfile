@@ -17,8 +17,8 @@ settings = get_settings()
 TIER_LIMITS = {
     "free": {
         "vision_analyses": 3,       # par jour
-        "recipe_generations": 2,    # par semaine
-        "coach_messages": 1,        # par jour
+        "recipe_generations": 2,    # par jour
+        "coach_messages": 5,        # par jour
         "history_days": 7,          # jours d'historique
     },
     "premium": {
