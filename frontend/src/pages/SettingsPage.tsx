@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { profileApi } from '@/services/profileApi'
 import { useAuth } from '@/hooks/useAuth'
-import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import type { Profile, ProfileCreate, ActivityLevel, Goal, DietType } from '@/types/profile'
@@ -19,6 +19,7 @@ export function SettingsPage() {
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const { user, logout } = useAuth()
   const queryClient = useQueryClient()
+  const observerRef = useRef<IntersectionObserver | null>(null)
 
   const profileQuery = useQuery({
     queryKey: ['profile'],
@@ -39,11 +40,31 @@ export function SettingsPage() {
     },
   })
 
-  const tabs: { id: SettingsTab; label: string; icon: string }[] = [
-    { id: 'profile', label: t('tabs.profile'), icon: '👤' },
-    { id: 'account', label: t('tabs.account'), icon: '🔐' },
-    { id: 'notifications', label: t('tabs.notifications'), icon: '🔔' },
-    { id: 'privacy', label: t('tabs.privacy'), icon: '🛡️' },
+  // Scroll reveal animation
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible')
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    document.querySelectorAll('.reveal').forEach((el) => {
+      observerRef.current?.observe(el)
+    })
+
+    return () => observerRef.current?.disconnect()
+  }, [activeTab])
+
+  const tabs: { id: SettingsTab; label: string; icon: string; color: string }[] = [
+    { id: 'profile', label: t('tabs.profile'), icon: '👤', color: 'from-primary-500 to-emerald-500' },
+    { id: 'account', label: t('tabs.account'), icon: '🔐', color: 'from-secondary-500 to-cyan-500' },
+    { id: 'notifications', label: t('tabs.notifications'), icon: '🔔', color: 'from-warning-500 to-amber-500' },
+    { id: 'privacy', label: t('tabs.privacy'), icon: '🛡️', color: 'from-indigo-500 to-purple-500' },
   ]
 
   const handleDeleteAccount = () => {
@@ -53,124 +74,139 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* En-tête avec avatar */}
-      <div className="card-elevated p-6 mb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-20 h-20 gradient-vitality rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-elevated">
-            {user?.name?.charAt(0).toUpperCase() || '?'}
-          </div>
-          <div>
-            <h1 className="heading-2">{user?.name}</h1>
-            <p className="body-md">{user?.email}</p>
-            {profileQuery.data?.goal && (
-              <span className="badge-primary mt-2">
-                {GOAL_LABELS[profileQuery.data.goal]}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-primary-100/40 to-emerald-100/40 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-br from-secondary-100/40 to-cyan-100/40 rounded-full blur-3xl -z-10" />
 
-      {/* Navigation par onglets */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap transition-all font-medium ${
-              activeTab === tab.id
-                ? 'bg-primary-500 text-white shadow-card'
-                : 'bg-white text-neutral-600 hover:bg-neutral-100'
-            }`}
-          >
-            <span>{tab.icon}</span>
-            <span>{tab.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Contenu des onglets */}
-      <div className="card-elevated overflow-hidden">
-        {activeTab === 'profile' && (
-          <ProfileSettings
-            profile={profileQuery.data}
-            isLoading={profileQuery.isLoading}
-            onUpdate={(data) => updateProfileMutation.mutate(data)}
-            isUpdating={updateProfileMutation.isPending}
-          />
-        )}
-
-        {activeTab === 'account' && (
-          <AccountSettings
-            user={user}
-            onDeleteClick={() => setShowDeleteModal(true)}
-          />
-        )}
-
-        {activeTab === 'notifications' && <NotificationSettings />}
-
-        {activeTab === 'privacy' && <PrivacySettings />}
-      </div>
-
-      {/* Modal de suppression de compte */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 bg-neutral-900/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 animate-fade-in shadow-elevated">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">⚠️</span>
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* En-tête avec avatar - Enhanced */}
+        <div className="glass-card p-8 mb-8 animate-fade-in">
+          <div className="flex items-center gap-6">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-emerald-400 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
+              <div className="relative w-24 h-24 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-2xl flex items-center justify-center text-white text-4xl font-bold shadow-xl transform group-hover:scale-105 transition-transform">
+                {user?.name?.charAt(0).toUpperCase() || '?'}
               </div>
-              <h3 className="heading-3 mb-2">
-                {t('account.deleteTitle')}
-              </h3>
-              <p className="body-md">
-                {t('account.deleteConfirm')}
-              </p>
             </div>
-
-            <div className="mb-6">
-              <label className="label mb-2 block">
-                {t('account.typeDelete')} <span className="font-bold text-error-600">{t('account.deletePlaceholder')}</span> {t('account.toConfirm')}
-              </label>
-              <input
-                type="text"
-                value={deleteConfirmText}
-                onChange={(e) => setDeleteConfirmText(e.target.value)}
-                className="input focus:ring-error-500"
-                placeholder={t('account.deletePlaceholder')}
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => {
-                  setShowDeleteModal(false)
-                  setDeleteConfirmText('')
-                }}
-              >
-                {t('profile.cancel')}
-              </Button>
-              <Button
-                variant="primary"
-                className="flex-1 !bg-error-500 hover:!bg-error-600"
-                onClick={handleDeleteAccount}
-                disabled={deleteConfirmText !== t('account.deletePlaceholder')}
-                isLoading={deleteProfileMutation.isPending}
-              >
-                {t('account.deleteAccount')}
-              </Button>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">{user?.name}</h1>
+              <p className="text-gray-500 mt-1">{user?.email}</p>
+              {profileQuery.data?.goal && (
+                <span className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-medium rounded-full shadow-lg">
+                  <span>🎯</span>
+                  {GOAL_LABELS[profileQuery.data.goal]}
+                </span>
+              )}
             </div>
           </div>
         </div>
-      )}
+
+        {/* Navigation par onglets - Enhanced */}
+        <div className="flex gap-3 mb-8 overflow-x-auto pb-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          {tabs.map((tab, index) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-medium transition-all duration-300 whitespace-nowrap ${
+                activeTab === tab.id
+                  ? `bg-gradient-to-r ${tab.color} text-white shadow-lg scale-105`
+                  : 'glass-card text-gray-600 hover:text-gray-900 hover:shadow-md hover:-translate-y-0.5'
+              }`}
+              style={{ animationDelay: `${0.1 * (index + 1)}s` }}
+            >
+              <span className={`text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Contenu des onglets - Enhanced */}
+        <div className="glass-card overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          {activeTab === 'profile' && (
+            <ProfileSettings
+              profile={profileQuery.data}
+              isLoading={profileQuery.isLoading}
+              onUpdate={(data) => updateProfileMutation.mutate(data)}
+              isUpdating={updateProfileMutation.isPending}
+            />
+          )}
+
+          {activeTab === 'account' && (
+            <AccountSettings
+              user={user}
+              onDeleteClick={() => setShowDeleteModal(true)}
+            />
+          )}
+
+          {activeTab === 'notifications' && <NotificationSettings />}
+
+          {activeTab === 'privacy' && <PrivacySettings />}
+        </div>
+
+        {/* Modal de suppression de compte - Enhanced */}
+        {showDeleteModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl max-w-md w-full p-8 shadow-2xl border border-white/50 animate-scale-in">
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 bg-gradient-to-br from-error-100 to-rose-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <span className="text-4xl">⚠️</span>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  {t('account.deleteTitle')}
+                </h3>
+                <p className="text-gray-500">
+                  {t('account.deleteConfirm')}
+                </p>
+              </div>
+
+              <div className="mb-8">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  {t('account.typeDelete')} <span className="font-bold text-error-600">"{t('account.deletePlaceholder')}"</span> {t('account.toConfirm')}
+                </label>
+                <input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-error-500 focus:border-error-500 transition-all"
+                  placeholder={t('account.deletePlaceholder')}
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false)
+                    setDeleteConfirmText('')
+                  }}
+                  className="flex-1 px-6 py-4 glass-card text-gray-700 font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                >
+                  {t('profile.cancel')}
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleteConfirmText !== t('account.deletePlaceholder') || deleteProfileMutation.isPending}
+                  className="flex-1 px-6 py-4 bg-gradient-to-r from-error-500 to-rose-500 text-white rounded-2xl font-semibold shadow-lg shadow-error-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2"
+                >
+                  {deleteProfileMutation.isPending ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>Suppression...</span>
+                    </>
+                  ) : (
+                    t('account.deleteAccount')
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
 
-// Composant Paramètres du Profil
+// Composant Paramètres du Profil - Enhanced
 interface ProfileSettingsProps {
   profile: Profile | undefined
   isLoading: boolean
@@ -185,11 +221,11 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
 
   if (isLoading) {
     return (
-      <div className="p-6 space-y-6">
-        <SkeletonLoader className="h-8 w-48 rounded-xl" />
-        <SkeletonLoader className="h-24 rounded-xl" />
-        <SkeletonLoader className="h-24 rounded-xl" />
-        <SkeletonLoader className="h-24 rounded-xl" />
+      <div className="p-8 space-y-8">
+        <SkeletonLoader className="h-10 w-56 rounded-xl" />
+        <SkeletonLoader className="h-32 rounded-2xl" />
+        <SkeletonLoader className="h-32 rounded-2xl" />
+        <SkeletonLoader className="h-32 rounded-2xl" />
       </div>
     )
   }
@@ -205,6 +241,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
       id: 'physical',
       title: t('profile.physicalInfo'),
       icon: '📏',
+      color: 'from-secondary-500 to-cyan-500',
       fields: [
         { key: 'age', label: t('profile.age'), value: profile?.age, suffix: t('profile.ageUnit') },
         { key: 'height_cm', label: t('profile.height'), value: profile?.height_cm, suffix: t('profile.heightUnit') },
@@ -215,6 +252,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
       id: 'goals',
       title: t('profile.goals'),
       icon: '🎯',
+      color: 'from-accent-500 to-amber-500',
       fields: [
         { key: 'goal', label: t('profile.goal'), value: profile?.goal ? GOAL_LABELS[profile.goal] : '-' },
         { key: 'target_weight_kg', label: t('profile.targetWeight'), value: profile?.target_weight_kg, suffix: t('profile.weightUnit') },
@@ -225,6 +263,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
       id: 'diet',
       title: t('profile.diet'),
       icon: '🥗',
+      color: 'from-primary-500 to-emerald-500',
       fields: [
         { key: 'diet_type', label: t('profile.dietType'), value: profile?.diet_type ? DIET_LABELS[profile.diet_type] : '-' },
         { key: 'allergies', label: t('profile.allergies'), value: profile?.allergies?.join(', ') || t('profile.noAllergies') },
@@ -233,24 +272,30 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
   ]
 
   return (
-    <div className="divide-y divide-neutral-100">
-      {sections.map((section) => (
-        <div key={section.id} className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">{section.icon}</span>
-              <h3 className="heading-4">{section.title}</h3>
+    <div className="divide-y divide-gray-100">
+      {sections.map((section, index) => (
+        <div key={section.id} className="p-6 reveal" style={{ animationDelay: `${0.1 * (index + 1)}s` }}>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className={`w-12 h-12 bg-gradient-to-br ${section.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                <span className="text-2xl">{section.icon}</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">{section.title}</h3>
             </div>
             <button
               onClick={() => setEditSection(editSection === section.id ? null : section.id)}
-              className="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors"
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                editSection === section.id
+                  ? 'bg-gray-100 text-gray-600'
+                  : 'text-primary-600 hover:bg-primary-50'
+              }`}
             >
               {editSection === section.id ? t('profile.cancel') : t('profile.modify')}
             </button>
           </div>
 
           {editSection === section.id ? (
-            <form onSubmit={handleSubmit(handleSave)} className="space-y-4">
+            <form onSubmit={handleSubmit(handleSave)} className="space-y-4 animate-fade-in">
               {section.id === 'physical' && (
                 <div className="grid grid-cols-3 gap-4">
                   <Input
@@ -281,9 +326,9 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
               {section.id === 'goals' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="label mb-2 block">{t('profile.goal')}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('profile.goal')}</label>
                     <select
-                      className="input"
+                      className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                       defaultValue={profile?.goal}
                       {...register('goal')}
                     >
@@ -293,9 +338,9 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                     </select>
                   </div>
                   <div>
-                    <label className="label mb-2 block">{t('profile.activityLevel')}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('profile.activityLevel')}</label>
                     <select
-                      className="input"
+                      className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                       defaultValue={profile?.activity_level}
                       {...register('activity_level')}
                     >
@@ -318,9 +363,9 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
               {section.id === 'diet' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="label mb-2 block">{t('profile.dietType')}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('profile.dietType')}</label>
                     <select
-                      className="input"
+                      className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                       defaultValue={profile?.diet_type}
                       {...register('diet_type')}
                     >
@@ -330,16 +375,16 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                     </select>
                   </div>
                   <div>
-                    <label className="label mb-2 block">{t('profile.allergies')}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">{t('profile.allergies')}</label>
                     <div className="flex flex-wrap gap-2">
                       {COMMON_ALLERGIES.map((allergy) => (
-                        <label key={allergy} className="flex items-center gap-2 px-3 py-1.5 bg-neutral-100 rounded-full text-sm cursor-pointer hover:bg-neutral-200 transition-colors">
+                        <label key={allergy} className="flex items-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm cursor-pointer transition-colors group">
                           <input
                             type="checkbox"
                             defaultChecked={profile?.allergies?.includes(allergy)}
-                            className="rounded text-primary-500"
+                            className="w-4 h-4 rounded text-primary-500 focus:ring-primary-500"
                           />
-                          {allergy}
+                          <span className="group-hover:text-gray-900">{allergy}</span>
                         </label>
                       ))}
                     </div>
@@ -348,17 +393,28 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
               )}
 
               <div className="flex justify-end pt-4">
-                <Button type="submit" isLoading={isUpdating}>
-                  {t('profile.save')}
-                </Button>
+                <button
+                  type="submit"
+                  disabled={isUpdating}
+                  className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
+                >
+                  {isUpdating ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>Enregistrement...</span>
+                    </>
+                  ) : (
+                    t('profile.save')
+                  )}
+                </button>
               </div>
             </form>
           ) : (
             <div className="grid gap-4">
               {section.fields.map((field) => (
-                <div key={field.key} className="flex justify-between items-center py-2">
-                  <span className="body-md">{field.label}</span>
-                  <span className="font-medium text-neutral-800">
+                <div key={field.key} className="flex justify-between items-center py-3 px-4 rounded-xl bg-gray-50/80 hover:bg-gray-100/80 transition-colors">
+                  <span className="text-gray-600">{field.label}</span>
+                  <span className="font-semibold text-gray-900">
                     {field.value || '-'} {field.suffix && field.value ? field.suffix : ''}
                   </span>
                 </div>
@@ -368,36 +424,42 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
         </div>
       ))}
 
-      {/* Besoins nutritionnels calculés */}
-      <div className="p-6 bg-gradient-to-r from-primary-50 to-secondary-50">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl">📊</span>
-          <h3 className="heading-4">{t('profile.nutritionalNeeds')}</h3>
+      {/* Besoins nutritionnels calculés - Enhanced */}
+      <div className="p-6 bg-gradient-to-r from-primary-50 via-emerald-50 to-cyan-50">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-2xl">📊</span>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">{t('profile.nutritionalNeeds')}</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <NutritionCard
             label={t('profile.calories')}
             value={profile?.daily_calories}
             unit="kcal"
-            color="bg-accent-100 text-accent-700"
+            icon="🔥"
+            color="from-accent-500 to-amber-500"
           />
           <NutritionCard
             label={t('profile.protein')}
             value={profile?.protein_g}
             unit="g"
-            color="bg-secondary-100 text-secondary-700"
+            icon="💪"
+            color="from-secondary-500 to-cyan-500"
           />
           <NutritionCard
             label={t('profile.carbs')}
             value={profile?.carbs_g}
             unit="g"
-            color="bg-warning-100 text-warning-700"
+            icon="🌾"
+            color="from-warning-500 to-amber-500"
           />
           <NutritionCard
             label={t('profile.fat')}
             value={profile?.fat_g}
             unit="g"
-            color="bg-error-100 text-error-700"
+            icon="🥑"
+            color="from-error-500 to-rose-500"
           />
         </div>
       </div>
@@ -405,17 +467,20 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
   )
 }
 
-function NutritionCard({ label, value, unit, color }: { label: string; value: number | null | undefined; unit: string; color: string }) {
+function NutritionCard({ label, value, unit, icon, color }: { label: string; value: number | null | undefined; unit: string; icon: string; color: string }) {
   return (
-    <div className={`${color} rounded-2xl p-4 text-center`}>
-      <div className="text-2xl font-bold">{value || '-'}</div>
-      <div className="text-sm font-medium">{unit}</div>
-      <div className="text-xs mt-1 opacity-75">{label}</div>
+    <div className="glass-card p-5 text-center hover-lift group">
+      <div className={`w-12 h-12 mx-auto mb-3 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+        <span className="text-xl">{icon}</span>
+      </div>
+      <div className="text-3xl font-bold text-gray-900">{value || '-'}</div>
+      <div className="text-sm font-medium text-gray-500">{unit}</div>
+      <div className="text-xs text-gray-400 mt-1">{label}</div>
     </div>
   )
 }
 
-// Composant Paramètres du Compte
+// Composant Paramètres du Compte - Enhanced
 interface AccountSettingsProps {
   user: { name?: string; email?: string } | null | undefined
   onDeleteClick: () => void
@@ -426,36 +491,46 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
   const [showPasswordForm, setShowPasswordForm] = useState(false)
 
   return (
-    <div className="divide-y divide-neutral-100">
+    <div className="divide-y divide-gray-100">
       {/* Email */}
-      <div className="p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl">✉️</span>
-          <h3 className="heading-4">{t('account.email')}</h3>
+      <div className="p-6 reveal">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-2xl">✉️</span>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">{t('account.email')}</h3>
         </div>
-        <p className="body-md">{user?.email}</p>
-        <p className="body-sm mt-2">
-          {t('account.emailNote')}
-        </p>
+        <div className="p-4 rounded-xl bg-gray-50/80">
+          <p className="text-lg font-medium text-gray-900">{user?.email}</p>
+          <p className="text-sm text-gray-500 mt-2">
+            {t('account.emailNote')}
+          </p>
+        </div>
       </div>
 
       {/* Mot de passe */}
-      <div className="p-6">
+      <div className="p-6 reveal" style={{ animationDelay: '0.1s' }}>
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xl">🔒</span>
-            <h3 className="heading-4">{t('account.password')}</h3>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-warning-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
+              <span className="text-2xl">🔒</span>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">{t('account.password')}</h3>
           </div>
           <button
             onClick={() => setShowPasswordForm(!showPasswordForm)}
-            className="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors"
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              showPasswordForm
+                ? 'bg-gray-100 text-gray-600'
+                : 'text-primary-600 hover:bg-primary-50'
+            }`}
           >
             {showPasswordForm ? t('profile.cancel') : t('profile.modify')}
           </button>
         </div>
 
         {showPasswordForm ? (
-          <form className="space-y-4 max-w-md">
+          <form className="space-y-4 max-w-md animate-fade-in">
             <Input
               id="current_password"
               type="password"
@@ -474,39 +549,45 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
               label={t('account.confirmPassword')}
               placeholder="••••••••"
             />
-            <div className="flex justify-end">
-              <Button type="submit">
+            <div className="flex justify-end pt-2">
+              <button
+                type="submit"
+                className="px-6 py-3 bg-gradient-to-r from-warning-500 to-amber-500 text-white rounded-xl font-semibold shadow-lg shadow-warning-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+              >
                 {t('account.changePassword')}
-              </Button>
+              </button>
             </div>
           </form>
         ) : (
-          <p className="body-md">••••••••••••</p>
+          <div className="p-4 rounded-xl bg-gray-50/80">
+            <p className="text-lg text-gray-400">••••••••••••</p>
+          </div>
         )}
       </div>
 
       {/* Suppression du compte */}
-      <div className="p-6 bg-error-50">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl">⚠️</span>
-          <h3 className="font-semibold text-error-700">{t('account.dangerZone')}</h3>
+      <div className="p-6 bg-gradient-to-r from-error-50 to-rose-50 reveal" style={{ animationDelay: '0.2s' }}>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-error-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-2xl">⚠️</span>
+          </div>
+          <h3 className="text-xl font-bold text-error-700">{t('account.dangerZone')}</h3>
         </div>
-        <p className="body-md mb-4">
+        <p className="text-gray-600 mb-6">
           {t('account.deleteWarning')}
         </p>
-        <Button
-          variant="outline"
-          className="!border-error-500 !text-error-600 hover:!bg-error-100"
+        <button
           onClick={onDeleteClick}
+          className="px-6 py-3 border-2 border-error-300 text-error-600 rounded-xl font-semibold hover:bg-error-100 transition-all"
         >
           {t('account.deleteAccount')}
-        </Button>
+        </button>
       </div>
     </div>
   )
 }
 
-// Composant Paramètres des Notifications
+// Composant Paramètres des Notifications - Enhanced
 function NotificationSettings() {
   const { t } = useTranslation('settings')
   const [settings, setSettings] = useState({
@@ -522,32 +603,36 @@ function NotificationSettings() {
   }
 
   const notificationOptions = [
-    { key: 'dailyReminder' as const, label: t('notifications.dailyReminder'), description: t('notifications.dailyReminderDesc'), icon: '⏰' },
-    { key: 'weeklyReport' as const, label: t('notifications.weeklyReport'), description: t('notifications.weeklyReportDesc'), icon: '📈' },
-    { key: 'newRecipes' as const, label: t('notifications.newRecipes'), description: t('notifications.newRecipesDesc'), icon: '🍽️' },
-    { key: 'achievements' as const, label: t('notifications.achievements'), description: t('notifications.achievementsDesc'), icon: '🏆' },
-    { key: 'tips' as const, label: t('notifications.tips'), description: t('notifications.tipsDesc'), icon: '💡' },
+    { key: 'dailyReminder' as const, label: t('notifications.dailyReminder'), description: t('notifications.dailyReminderDesc'), icon: '⏰', color: 'from-secondary-500 to-cyan-500' },
+    { key: 'weeklyReport' as const, label: t('notifications.weeklyReport'), description: t('notifications.weeklyReportDesc'), icon: '📈', color: 'from-primary-500 to-emerald-500' },
+    { key: 'newRecipes' as const, label: t('notifications.newRecipes'), description: t('notifications.newRecipesDesc'), icon: '🍽️', color: 'from-accent-500 to-amber-500' },
+    { key: 'achievements' as const, label: t('notifications.achievements'), description: t('notifications.achievementsDesc'), icon: '🏆', color: 'from-warning-500 to-amber-500' },
+    { key: 'tips' as const, label: t('notifications.tips'), description: t('notifications.tipsDesc'), icon: '💡', color: 'from-indigo-500 to-purple-500' },
   ]
 
   return (
-    <div className="divide-y divide-neutral-100">
-      {notificationOptions.map((option) => (
-        <div key={option.key} className="p-6 flex items-center justify-between">
+    <div className="divide-y divide-gray-100">
+      {notificationOptions.map((option, index) => (
+        <div key={option.key} className="p-6 flex items-center justify-between reveal" style={{ animationDelay: `${0.05 * (index + 1)}s` }}>
           <div className="flex items-center gap-4">
-            <span className="text-2xl">{option.icon}</span>
+            <div className={`w-12 h-12 bg-gradient-to-br ${option.color} rounded-xl flex items-center justify-center shadow-lg`}>
+              <span className="text-2xl">{option.icon}</span>
+            </div>
             <div>
-              <h4 className="font-medium text-neutral-800">{option.label}</h4>
-              <p className="body-sm">{option.description}</p>
+              <h4 className="font-semibold text-gray-900">{option.label}</h4>
+              <p className="text-sm text-gray-500 mt-0.5">{option.description}</p>
             </div>
           </div>
           <button
             onClick={() => toggleSetting(option.key)}
-            className={`relative w-12 h-6 rounded-full transition-colors ${
-              settings[option.key] ? 'bg-primary-500' : 'bg-neutral-300'
+            className={`relative w-14 h-8 rounded-full transition-all duration-300 ${
+              settings[option.key]
+                ? 'bg-gradient-to-r from-primary-500 to-emerald-500 shadow-lg shadow-primary-500/30'
+                : 'bg-gray-200'
             }`}
           >
             <span
-              className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
+              className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
                 settings[option.key] ? 'translate-x-6' : ''
               }`}
             />
@@ -555,66 +640,85 @@ function NotificationSettings() {
         </div>
       ))}
 
-      <div className="p-6">
-        <Button className="w-full md:w-auto">
+      <div className="p-6 reveal" style={{ animationDelay: '0.3s' }}>
+        <button className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all">
           {t('notifications.savePreferences')}
-        </Button>
+        </button>
       </div>
     </div>
   )
 }
 
-// Composant Paramètres de Confidentialité
+// Composant Paramètres de Confidentialité - Enhanced
 function PrivacySettings() {
   const { t } = useTranslation('settings')
 
   return (
-    <div className="divide-y divide-neutral-100">
-      <div className="p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl">📋</span>
-          <h3 className="heading-4">{t('privacy.yourData')}</h3>
+    <div className="divide-y divide-gray-100">
+      <div className="p-6 reveal">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-2xl">📋</span>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">{t('privacy.yourData')}</h3>
         </div>
-        <p className="body-md mb-4">
+        <p className="text-gray-600 mb-6">
           {t('privacy.gdprNote')}
         </p>
-        <Button variant="outline">
+        <button className="px-6 py-3 glass-card text-gray-700 font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2">
+          <span>📥</span>
           {t('privacy.downloadData')}
-        </Button>
+        </button>
       </div>
 
-      <div className="p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl">🔐</span>
-          <h3 className="heading-4">{t('privacy.dataSharing')}</h3>
+      <div className="p-6 reveal" style={{ animationDelay: '0.1s' }}>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-2xl">🔐</span>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">{t('privacy.dataSharing')}</h3>
         </div>
         <div className="space-y-4">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-5 h-5 rounded text-primary-500" />
+          <label className="flex items-start gap-4 p-4 rounded-xl bg-gray-50/80 hover:bg-gray-100/80 cursor-pointer transition-colors group">
+            <input type="checkbox" className="w-5 h-5 mt-0.5 rounded text-primary-500 focus:ring-primary-500" />
             <div>
-              <p className="font-medium text-neutral-800">{t('privacy.serviceImprovement')}</p>
-              <p className="body-sm">{t('privacy.serviceImprovementDesc')}</p>
+              <p className="font-medium text-gray-900 group-hover:text-primary-600 transition-colors">{t('privacy.serviceImprovement')}</p>
+              <p className="text-sm text-gray-500 mt-1">{t('privacy.serviceImprovementDesc')}</p>
             </div>
           </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-5 h-5 rounded text-primary-500" />
+          <label className="flex items-start gap-4 p-4 rounded-xl bg-gray-50/80 hover:bg-gray-100/80 cursor-pointer transition-colors group">
+            <input type="checkbox" className="w-5 h-5 mt-0.5 rounded text-primary-500 focus:ring-primary-500" />
             <div>
-              <p className="font-medium text-neutral-800">{t('privacy.anonymousStats')}</p>
-              <p className="body-sm">{t('privacy.anonymousStatsDesc')}</p>
+              <p className="font-medium text-gray-900 group-hover:text-primary-600 transition-colors">{t('privacy.anonymousStats')}</p>
+              <p className="text-sm text-gray-500 mt-1">{t('privacy.anonymousStatsDesc')}</p>
             </div>
           </label>
         </div>
       </div>
 
-      <div className="p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl">📄</span>
-          <h3 className="heading-4">{t('privacy.legalDocs')}</h3>
+      <div className="p-6 reveal" style={{ animationDelay: '0.2s' }}>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-2xl">📄</span>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">{t('privacy.legalDocs')}</h3>
         </div>
-        <div className="space-y-2">
-          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">{t('privacy.privacyPolicy')}</a>
-          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">{t('privacy.termsOfService')}</a>
-          <a href="#" className="block text-primary-500 hover:text-primary-600 transition-colors">{t('privacy.cookiePolicy')}</a>
+        <div className="space-y-3">
+          <Link to="/privacy" className="flex items-center gap-3 p-4 rounded-xl bg-gray-50/80 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition-all group">
+            <span className="text-xl group-hover:scale-110 transition-transform">🔒</span>
+            <span className="font-medium">{t('privacy.privacyPolicy')}</span>
+            <span className="ml-auto text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
+          <Link to="/terms" className="flex items-center gap-3 p-4 rounded-xl bg-gray-50/80 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition-all group">
+            <span className="text-xl group-hover:scale-110 transition-transform">📜</span>
+            <span className="font-medium">{t('privacy.termsOfService')}</span>
+            <span className="ml-auto text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
+          <a href="#" className="flex items-center gap-3 p-4 rounded-xl bg-gray-50/80 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition-all group">
+            <span className="text-xl group-hover:scale-110 transition-transform">🍪</span>
+            <span className="font-medium">{t('privacy.cookiePolicy')}</span>
+            <span className="ml-auto text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
+          </a>
         </div>
       </div>
     </div>

@@ -12,6 +12,9 @@ import { Step5Summary } from './Step5Summary'
 
 const TOTAL_STEPS = 5
 
+const stepIcons = ['👤', '🏃', '🥗', '❤️', '✨']
+const stepLabels = ['Info', 'Activité', 'Régime', 'Santé', 'Résumé']
+
 export function OnboardingWizard() {
   const { t } = useTranslation('onboarding')
   const navigate = useNavigate()
@@ -35,50 +38,90 @@ export function OnboardingWizard() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Progress bar */}
-      <div className="mb-8">
-        <div className="flex justify-between mb-2">
-          {Array.from({ length: TOTAL_STEPS }, (_, i) => (
-            <div
-              key={i}
-              className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-                i + 1 <= currentStep
-                  ? 'bg-primary-600 border-primary-600 text-white'
-                  : 'border-gray-300 text-gray-400'
-              }`}
-            >
-              {i + 1}
-            </div>
-          ))}
-        </div>
-        <div className="h-2 bg-gray-200 rounded-full">
+    <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+      {/* Progress bar - Enhanced */}
+      <div className="mb-10">
+        {/* Steps indicators */}
+        <div className="flex justify-between mb-4 relative">
+          {/* Background line */}
+          <div className="absolute top-5 left-0 right-0 h-1 bg-gray-200 rounded-full" />
+          {/* Progress line */}
           <div
-            className="h-2 bg-primary-600 rounded-full transition-all duration-300"
-            style={{ width: `${(currentStep / TOTAL_STEPS) * 100}%` }}
+            className="absolute top-5 left-0 h-1 bg-gradient-to-r from-primary-500 to-emerald-500 rounded-full transition-all duration-500 ease-out"
+            style={{ width: `${((currentStep - 1) / (TOTAL_STEPS - 1)) * 100}%` }}
           />
+
+          {Array.from({ length: TOTAL_STEPS }, (_, i) => {
+            const stepNumber = i + 1
+            const isCompleted = stepNumber < currentStep
+            const isCurrent = stepNumber === currentStep
+
+            return (
+              <div key={i} className="relative z-10 flex flex-col items-center">
+                <div
+                  className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${
+                    isCompleted
+                      ? 'bg-gradient-to-br from-primary-500 to-emerald-500 text-white shadow-lg shadow-primary-500/30'
+                      : isCurrent
+                      ? 'bg-gradient-to-br from-primary-500 to-emerald-500 text-white shadow-xl shadow-primary-500/40 scale-110'
+                      : 'bg-white border-2 border-gray-200 text-gray-400'
+                  }`}
+                >
+                  {isCompleted ? (
+                    <span className="text-lg">✓</span>
+                  ) : (
+                    <span className="text-lg">{stepIcons[i]}</span>
+                  )}
+                </div>
+                <span className={`mt-2 text-xs font-medium transition-colors ${
+                  isCurrent ? 'text-primary-600' : isCompleted ? 'text-gray-700' : 'text-gray-400'
+                }`}>
+                  {stepLabels[i]}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Progress percentage */}
+        <div className="text-center mt-4">
+          <span className="text-sm font-medium text-gray-500">
+            Étape <span className="text-primary-600 font-bold">{currentStep}</span> sur {TOTAL_STEPS}
+          </span>
         </div>
       </div>
 
-      {/* Error message */}
+      {/* Error message - Enhanced */}
       {createProfile.error && (
-        <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
-          {t('error')}
+        <div className="mb-6 p-4 bg-gradient-to-r from-error-50 to-rose-50 border border-error-200 text-error-600 rounded-2xl flex items-center gap-3 animate-fade-in">
+          <div className="w-10 h-10 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span className="text-xl">⚠️</span>
+          </div>
+          <span className="font-medium">{t('error')}</span>
         </div>
       )}
 
-      {/* Steps */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        {currentStep === 1 && <Step1BasicInfo />}
-        {currentStep === 2 && <Step2Activity />}
-        {currentStep === 3 && <Step3Diet />}
-        {currentStep === 4 && <Step4Health />}
-        {currentStep === 5 && (
-          <Step5Summary
-            onSubmit={handleSubmit}
-            isLoading={createProfile.isPending}
-          />
-        )}
+      {/* Steps content - Enhanced */}
+      <div className="glass-card p-8 shadow-xl">
+        <div className="animate-fade-in" key={currentStep}>
+          {currentStep === 1 && <Step1BasicInfo />}
+          {currentStep === 2 && <Step2Activity />}
+          {currentStep === 3 && <Step3Diet />}
+          {currentStep === 4 && <Step4Health />}
+          {currentStep === 5 && (
+            <Step5Summary
+              onSubmit={handleSubmit}
+              isLoading={createProfile.isPending}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Help text */}
+      <div className="mt-8 text-center">
+        <p className="text-sm text-gray-400">
+          💡 Toutes vos informations sont sécurisées et utilisées uniquement pour personnaliser votre expérience
+        </p>
       </div>
     </div>
   )
