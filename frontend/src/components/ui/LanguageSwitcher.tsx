@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
 import { ChevronDown, Globe, Check } from 'lucide-react'
 import { SUPPORTED_LANGUAGES, type LanguageCode } from '@/i18n'
 import { useAuthStore } from '@/store/authStore'
@@ -14,6 +15,7 @@ export function LanguageSwitcher({ variant = 'dropdown', className = '' }: Langu
   const { i18n } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const { isAuthenticated } = useAuthStore()
+  const queryClient = useQueryClient()
 
   const currentLang = SUPPORTED_LANGUAGES.find(l => l.code === i18n.language) || SUPPORTED_LANGUAGES[0]
 
@@ -35,6 +37,8 @@ export function LanguageSwitcher({ variant = 'dropdown', className = '' }: Langu
           },
           body: JSON.stringify({ preferred_language: code }),
         })
+        // Invalidate dashboard cache to refresh coach text with new language
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       } catch (error) {
         console.error('Failed to update language preference:', error)
       }
