@@ -74,6 +74,10 @@ class Profile(Base):
     carbs_g: Mapped[int | None] = mapped_column(Integer, nullable=True)
     fat_g: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
+    # Objectifs personnalisables (avec valeurs par défaut)
+    water_target_ml: Mapped[int] = mapped_column(Integer, default=2000, nullable=False, server_default="2000")
+    activity_target_min: Mapped[int] = mapped_column(Integer, default=30, nullable=False, server_default="30")
+
     # Métadonnées
     is_complete: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[datetime] = mapped_column(

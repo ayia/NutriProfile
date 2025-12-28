@@ -100,6 +100,10 @@ async def get_dashboard(
     # Fix 2023-12-23: calories_from_food - calories_burned = net calories
     calories_net = max(0, calories_from_food - calories_burned)
 
+    # Objectifs personnalisables depuis le profil (avec valeurs par défaut)
+    water_target = profile.water_target_ml if profile and hasattr(profile, 'water_target_ml') else 2000
+    activity_target = profile.activity_target_min if profile and hasattr(profile, 'activity_target_min') else 30
+
     quick_stats = QuickStats(
         calories_today=calories_net,
         calories_target=target_calories,
@@ -108,11 +112,11 @@ async def get_dashboard(
         protein_target=target_protein,
         protein_percent=round((protein_from_food / target_protein) * 100, 1) if target_protein else 0,
         water_today=water_today,
-        water_target=2000,
-        water_percent=round((water_today / 2000) * 100, 1),
+        water_target=water_target,
+        water_percent=round((water_today / water_target) * 100, 1) if water_target else 0,
         activity_today=activity_minutes,
-        activity_target=30,
-        activity_percent=round((activity_minutes / 30) * 100, 1),
+        activity_target=activity_target,
+        activity_percent=round((activity_minutes / activity_target) * 100, 1) if activity_target else 0,
         meals_today=meals_count,
         streak_days=logging_streak.current_count if logging_streak else 0,
     )
@@ -231,6 +235,10 @@ async def get_coach(
     if not profile:
         raise HTTPException(status_code=400, detail="Profil non configuré")
 
+    # Objectifs personnalisables depuis le profil (avec valeurs par défaut)
+    water_target = profile.water_target_ml if hasattr(profile, 'water_target_ml') else 2000
+    activity_target = profile.activity_target_min if hasattr(profile, 'activity_target_min') else 30
+
     quick_stats = QuickStats(
         calories_today=nutrition.total_calories if nutrition else 0,
         calories_target=profile.daily_calories or 2000,
@@ -239,10 +247,10 @@ async def get_coach(
         protein_target=profile.protein_g or 100,
         protein_percent=0,
         water_today=nutrition.water_ml if nutrition else 0,
-        water_target=2000,
+        water_target=water_target,
         water_percent=0,
         activity_today=0,
-        activity_target=30,
+        activity_target=activity_target,
         activity_percent=0,
         meals_today=nutrition.meals_count if nutrition else 0,
         streak_days=0,
