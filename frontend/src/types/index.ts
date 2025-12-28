@@ -3,6 +3,7 @@ export interface User {
   email: string
   name: string
   is_active: boolean
+  preferred_language: string
   created_at: string
   updated_at: string
 }
@@ -16,6 +17,7 @@ export interface RegisterData {
   email: string
   password: string
   name: string
+  preferred_language?: string
 }
 
 export interface AuthToken {

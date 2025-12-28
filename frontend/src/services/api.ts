@@ -175,6 +175,11 @@ export const userApi = {
     const response = await api.get<User>('/users/me')
     return response.data
   },
+
+  updateMe: async (data: { name?: string; preferred_language?: string }): Promise<User> => {
+    const response = await api.patch<User>('/users/me', data)
+    return response.data
+  },
 }
 
 // Subscription API

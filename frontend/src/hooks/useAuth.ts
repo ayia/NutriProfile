@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { authApi, userApi, tokenStorage } from '@/services/api'
 import { profileApi } from '@/services/profileApi'
 import { useAuthStore } from '@/store/authStore'
@@ -8,6 +9,7 @@ import type { LoginCredentials, RegisterData } from '@/types'
 export function useAuth() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { i18n } = useTranslation()
   const { setAuth, setProfileStatus, logout: storeLogout, isAuthenticated, checkAuthState } = useAuthStore()
 
   // Vérifier l'état d'authentification au chargement
@@ -31,9 +33,20 @@ export function useAuth() {
       const profileSummary = await profileApi.getSummary()
       return { tokenData, userData, hasProfile: profileSummary.has_profile }
     },
-    onSuccess: ({ userData, hasProfile }) => {
+    onSuccess: async ({ userData, hasProfile }) => {
       setAuth(userData)
       setProfileStatus(hasProfile)
+
+      // Synchroniser la langue backend avec la langue frontend si différentes
+      const frontendLang = i18n.language
+      if (userData.preferred_language !== frontendLang) {
+        try {
+          await userApi.updateMe({ preferred_language: frontendLang })
+        } catch (error) {
+          console.error('Failed to sync language preference:', error)
+        }
+      }
+
       // Invalider les queries pour forcer le rechargement des données
       queryClient.invalidateQueries()
       // Rediriger vers onboarding si pas de profil, sinon dashboard
@@ -47,7 +60,8 @@ export function useAuth() {
 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterData) => {
-      await authApi.register(data)
+      // Inclure la langue frontend lors de l'inscription
+      await authApi.register({ ...data, preferred_language: i18n.language })
       // Auto-login après inscription
       const tokenData = await authApi.login({ email: data.email, password: data.password })
       tokenStorage.setTokens(tokenData)
