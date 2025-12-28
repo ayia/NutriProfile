@@ -148,6 +148,11 @@
     "kcal": "kcal",
     "kg": "kg"
   },
+  "error": {
+    "title": "Loading error",
+    "loadFailed": "Unable to load data. Please try again.",
+    "retry": "Retry"
+  },
   "errors": {
     "sessionExpired": "Session expired - please log in again",
     "saveFailed": "Error saving",

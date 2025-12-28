@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
+import { useAuthStore } from '@/store/authStore'
+import { tokenStorage } from '@/services/api'
 import { ProgressChart } from '@/components/tracking/ProgressChart'
 import { ActivityForm } from '@/components/tracking/ActivityForm'
 import { WeightForm } from '@/components/tracking/WeightForm'
@@ -21,25 +23,47 @@ export function TrackingPage() {
   const [chartPeriod, setChartPeriod] = useState<7 | 14 | 30>(30)
   const observerRef = useRef<IntersectionObserver | null>(null)
 
+  // Auth state - only fetch if authenticated with valid tokens
+  const { isAuthenticated } = useAuthStore()
+  const hasToken = !!tokenStorage.getAccessToken()
+  const canFetch = isAuthenticated && hasToken
+
   const summaryQuery = useQuery({
     queryKey: ['tracking', 'summary'],
     queryFn: trackingApi.getSummary,
+    retry: 1,
+    enabled: canFetch,
   })
+
+  // Debug: log query state
+  useEffect(() => {
+    console.log('summaryQuery state:', {
+      status: summaryQuery.status,
+      isLoading: summaryQuery.isLoading,
+      isFetching: summaryQuery.isFetching,
+      isError: summaryQuery.isError,
+      isSuccess: summaryQuery.isSuccess,
+      data: summaryQuery.data,
+      error: summaryQuery.error,
+    })
+  }, [summaryQuery.status, summaryQuery.data, summaryQuery.error])
 
   const progressQuery = useQuery({
     queryKey: ['tracking', 'progress', chartPeriod],
     queryFn: () => trackingApi.getProgressData(chartPeriod),
+    enabled: canFetch,
   })
 
   const activitiesQuery = useQuery({
     queryKey: ['activities'],
     queryFn: () => trackingApi.getActivities(),
-    enabled: activeTab === 'activities',
+    enabled: canFetch && activeTab === 'activities',
   })
 
   const weightsQuery = useQuery({
     queryKey: ['weight'],
     queryFn: () => trackingApi.getWeightLogs(),
+    enabled: canFetch,
   })
 
   // Scroll reveal animation
@@ -109,7 +133,68 @@ export function TrackingPage() {
           ))}
         </div>
 
-        {/* Overview */}
+        {/* Overview - Loading (isPending covers initial load, isFetching covers refetch) */}
+        {activeTab === 'overview' && (summaryQuery.isPending || (summaryQuery.isFetching && !summaryQuery.data)) && (
+          <div className="space-y-6 animate-pulse">
+            {/* Skeleton for Today stats */}
+            <div className="glass-card p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-gray-200 rounded-xl"></div>
+                <div className="h-6 w-32 bg-gray-200 rounded"></div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="p-4 bg-gray-100 rounded-2xl">
+                    <div className="h-8 w-16 bg-gray-200 rounded mx-auto mb-2"></div>
+                    <div className="h-4 w-24 bg-gray-200 rounded mx-auto"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Skeleton for Progress */}
+            <div className="glass-card p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-gray-200 rounded-xl"></div>
+                <div className="h-6 w-32 bg-gray-200 rounded"></div>
+              </div>
+              <div className="h-64 bg-gray-100 rounded-2xl"></div>
+            </div>
+            {/* Skeleton for Week stats */}
+            <div className="glass-card p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-gray-200 rounded-xl"></div>
+                <div className="h-6 w-32 bg-gray-200 rounded"></div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="p-4 bg-gray-100 rounded-2xl">
+                    <div className="h-4 w-20 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-6 w-16 bg-gray-200 rounded"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Overview - Error */}
+        {activeTab === 'overview' && summaryQuery.isError && (
+          <div className="glass-card p-12 text-center animate-fade-in">
+            <div className="w-20 h-20 bg-gradient-to-br from-error-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-4xl">⚠️</span>
+            </div>
+            <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('error.title', 'Erreur de chargement')}</h4>
+            <p className="text-gray-500 mb-6">{t('error.loadFailed', 'Impossible de charger les données. Veuillez réessayer.')}</p>
+            <button
+              onClick={() => summaryQuery.refetch()}
+              className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2 mx-auto"
+            >
+              <span>🔄</span> {t('error.retry', 'Réessayer')}
+            </button>
+          </div>
+        )}
+
+        {/* Overview - Data */}
         {activeTab === 'overview' && summary && (
           <div className="space-y-6">
             {/* Stats du jour - Enhanced */}
@@ -499,7 +584,42 @@ export function TrackingPage() {
           </div>
         )}
 
-        {/* Objectifs */}
+        {/* Objectifs - Loading */}
+        {activeTab === 'goals' && summaryQuery.isLoading && (
+          <div className="space-y-4 animate-pulse">
+            <div className="flex justify-end">
+              <div className="w-40 h-12 bg-gray-200 rounded-2xl"></div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="glass-card p-6">
+                  <div className="h-6 w-32 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-4 w-full bg-gray-100 rounded mb-2"></div>
+                  <div className="h-8 w-24 bg-gray-200 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Objectifs - Error */}
+        {activeTab === 'goals' && summaryQuery.isError && (
+          <div className="glass-card p-12 text-center animate-fade-in">
+            <div className="w-20 h-20 bg-gradient-to-br from-error-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-4xl">⚠️</span>
+            </div>
+            <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('error.title', 'Erreur de chargement')}</h4>
+            <p className="text-gray-500 mb-6">{t('error.loadFailed', 'Impossible de charger les objectifs.')}</p>
+            <button
+              onClick={() => summaryQuery.refetch()}
+              className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2 mx-auto"
+            >
+              <span>🔄</span> {t('error.retry', 'Réessayer')}
+            </button>
+          </div>
+        )}
+
+        {/* Objectifs - Data */}
         {activeTab === 'goals' && summary && (
           <div className="space-y-4">
             <div className="flex justify-end animate-fade-in">
@@ -599,13 +719,6 @@ export function TrackingPage() {
           </div>
         )}
 
-        {/* Loading global */}
-        {summaryQuery.isLoading && (
-          <div className="glass-card p-12 text-center animate-fade-in">
-            <div className="w-16 h-16 border-4 border-accent-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <p className="text-gray-500 mt-4 animate-pulse">{t('common.loading')}</p>
-          </div>
-        )}
       </div>
     </div>
   )

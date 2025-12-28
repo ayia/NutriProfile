@@ -101,6 +101,9 @@ api.interceptors.request.use((config) => {
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
+    console.log('API Request with token:', config.url)
+  } else {
+    console.log('API Request WITHOUT token:', config.url)
   }
 
   return config
@@ -112,9 +115,12 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config
 
+    console.log('API Error:', error.response?.status, error.config?.url, error.message)
+
     // Si erreur 401 et pas déjà en train de rafraîchir
     if (error.response?.status === 401 && originalRequest && !originalRequest.url?.includes('/auth/')) {
       const refreshToken = tokenStorage.getRefreshToken()
+      console.log('401 Error - Refresh token exists:', !!refreshToken, 'isRefreshing:', isRefreshing)
 
       if (refreshToken && !isRefreshing) {
         isRefreshing = true
@@ -122,6 +128,7 @@ api.interceptors.response.use(
         isRefreshing = false
 
         if (newToken) {
+          console.log('Token refreshed successfully')
           onTokenRefreshed(newToken)
           originalRequest.headers.Authorization = `Bearer ${newToken}`
           return api(originalRequest)
@@ -129,6 +136,7 @@ api.interceptors.response.use(
       }
 
       // Si le rafraîchissement échoue, déconnecter
+      console.log('Token refresh failed, redirecting to login')
       tokenStorage.clearTokens()
       window.location.href = '/login'
     }

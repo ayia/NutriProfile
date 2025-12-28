@@ -40,6 +40,11 @@ if not database_url.startswith("sqlite"):
     engine_kwargs["pool_pre_ping"] = True
     # Disable SSL for Fly.io internal connections (asyncpg uses ssl=False)
     engine_kwargs["connect_args"] = {"ssl": False}
+    # Pool configuration for PostgreSQL
+    engine_kwargs["pool_size"] = 5
+    engine_kwargs["max_overflow"] = 10
+    engine_kwargs["pool_timeout"] = 30
+    engine_kwargs["pool_recycle"] = 1800  # Recycle connections after 30 minutes
 else:
     # SQLite nécessite check_same_thread=False pour async
     engine_kwargs["connect_args"] = {"check_same_thread": False}
@@ -48,6 +53,9 @@ engine = create_async_engine(
     database_url,
     **engine_kwargs,
 )
+
+# Expose engine for external use (needed for async engine in some cases)
+async_engine = engine
 
 async_session_maker = async_sessionmaker(
     engine,

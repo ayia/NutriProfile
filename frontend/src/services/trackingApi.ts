@@ -113,8 +113,15 @@ export const trackingApi = {
   },
 
   getSummary: async (): Promise<TrackingSummary> => {
-    const response = await api.get('/tracking/summary')
-    return response.data
+    console.log('trackingApi.getSummary called')
+    try {
+      const response = await api.get('/tracking/summary')
+      console.log('trackingApi.getSummary success:', response.data)
+      return response.data
+    } catch (error) {
+      console.error('trackingApi.getSummary error:', error)
+      throw error
+    }
   },
 
   getWeeklyChartData: async (): Promise<WeeklyChartData> => {

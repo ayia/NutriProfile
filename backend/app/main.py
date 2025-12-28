@@ -54,9 +54,12 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Gestion du cycle de vie de l'application."""
+    from app.database import async_engine
     logger.info("Starting NutriProfile API", version=settings.APP_VERSION)
     yield
     logger.info("Shutting down NutriProfile API")
+    # Fermer proprement le pool de connexions
+    await async_engine.dispose()
 
 
 app = FastAPI(
