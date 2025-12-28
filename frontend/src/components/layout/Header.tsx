@@ -64,7 +64,7 @@ export function Header() {
       <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2">
-          <span className="text-2xl">🥗</span>
+          <img src="/logo.png" alt="NutriProfile" className="h-9 w-9" />
           <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-green-600 bg-clip-text text-transparent">
             NutriProfile
           </span>
