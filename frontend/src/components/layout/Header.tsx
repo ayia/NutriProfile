@@ -63,9 +63,18 @@ export function Header() {
     <header className="bg-white shadow-sm sticky top-0 z-40">
       <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2">
-          <img src="/logo.png" alt="NutriProfile" className="h-9 w-9" />
-          <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-green-600 bg-clip-text text-transparent">
+        <Link
+          to={isAuthenticated ? '/dashboard' : '/'}
+          className="flex items-center gap-2.5 group"
+        >
+          <div className="relative">
+            <img
+              src="/logo.png"
+              alt="NutriProfile"
+              className="h-10 w-10 drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
+            />
+          </div>
+          <span className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent tracking-tight">
             NutriProfile
           </span>
         </Link>
