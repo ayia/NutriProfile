@@ -158,5 +158,19 @@
     "saveFailed": "Error saving",
     "activityFailed": "Error adding activity",
     "goalFailed": "Error creating goal"
+  },
+  "water": {
+    "today": "Today",
+    "goal": "Goal",
+    "quickAdd": "Quick add",
+    "custom": "Custom amount",
+    "add": "Add",
+    "glass": "Glass",
+    "bottle": "Bottle",
+    "largeBottle": "Large bottle",
+    "errors": {
+      "invalidAmount": "Please enter a valid amount",
+      "maxAmount": "Maximum 5000 ml per entry"
+    }
   }
 }

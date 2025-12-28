@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
 from sqlalchemy.orm import selectinload
 
-from app.database import get_db
+from app.database import get_db, async_session_maker
 from app.api.deps import get_current_user
 from app.models.user import User
 from app.models.profile import Profile
@@ -35,7 +35,6 @@ router = APIRouter()
 @router.post("/analyze", response_model=ImageAnalyzeResponse)
 async def analyze_image(
     request: ImageAnalyzeRequest,
-    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
@@ -46,31 +45,31 @@ async def analyze_image(
     - Génère un rapport de santé personnalisé basé sur le profil
     - Sauvegarde automatiquement dans le journal (par défaut)
     """
-    # Vérifier les limites d'utilisation
-    sub_service = SubscriptionService(db)
-    allowed, used, limit = await sub_service.check_limit(current_user.id, "vision_analyses")
+    # Phase 1: Vérifier les limites (nouvelle session courte)
+    async with async_session_maker() as db:
+        sub_service = SubscriptionService(db)
+        allowed, used, limit = await sub_service.check_limit(current_user.id, "vision_analyses")
 
-    if not allowed:
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail={
-                "error": "limit_reached",
-                "message": "Limite d'analyses photo atteinte pour aujourd'hui",
-                "used": used,
-                "limit": limit,
-                "upgrade_url": "/pricing"
-            }
-        )
+        if not allowed:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail={
+                    "error": "limit_reached",
+                    "message": "Limite d'analyses photo atteinte pour aujourd'hui",
+                    "used": used,
+                    "limit": limit,
+                    "upgrade_url": "/pricing"
+                }
+            )
 
+    # Phase 2: Analyse IA (peut prendre du temps - pas de DB ici)
     agent = get_vision_agent(language=current_user.preferred_language)
 
-    # Préparer l'input
     vision_input = VisionInput(
         image_base64=request.image_base64,
         context=request.meal_type,
     )
 
-    # Analyser l'image
     try:
         result = await agent.process(vision_input)
     except Exception as e:
@@ -78,9 +77,6 @@ async def analyze_image(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Erreur lors de l'analyse: {str(e)}"
         )
-
-    # Incrémenter l'usage après analyse réussie
-    await sub_service.increment_usage(current_user.id, "vision_analyses")
 
     analysis = result.result
     confidence = result.confidence
@@ -95,162 +91,228 @@ async def analyze_image(
     total_carbs = sum(item.carbs for item in validated_items)
     total_fat = sum(item.fat for item in validated_items)
 
-    # Récupérer le profil utilisateur pour le rapport de santé
-    profile_query = select(Profile).where(Profile.user_id == current_user.id)
-    profile_result = await db.execute(profile_query)
-    profile = profile_result.scalar_one_or_none()
+    # Phase 3: Opérations DB post-analyse (nouvelle session fraîche)
+    async with async_session_maker() as db:
+        # Incrémenter l'usage après analyse réussie
+        sub_service = SubscriptionService(db)
+        await sub_service.increment_usage(current_user.id, "vision_analyses")
+        # Commit immédiat pour l'usage (même si save_to_log est false)
+        await db.commit()
 
-    # Récupérer ce qui a été consommé aujourd'hui
-    today = datetime.utcnow().date()
-    start_of_day = datetime.combine(today, datetime.min.time())
-    end_of_day = datetime.combine(today, datetime.max.time())
+        # Récupérer le profil utilisateur pour le rapport de santé
+        profile_query = select(Profile).where(Profile.user_id == current_user.id)
+        profile_result = await db.execute(profile_query)
+        profile = profile_result.scalar_one_or_none()
 
-    daily_query = select(DailyNutrition).where(and_(
-        DailyNutrition.user_id == current_user.id,
-        DailyNutrition.date >= start_of_day,
-        DailyNutrition.date <= end_of_day,
-    ))
-    daily_result = await db.execute(daily_query)
-    daily_nutrition = daily_result.scalar_one_or_none()
+        # Récupérer ce qui a été consommé aujourd'hui
+        today = datetime.utcnow().date()
+        start_of_day = datetime.combine(today, datetime.min.time())
+        end_of_day = datetime.combine(today, datetime.max.time())
 
-    # === RÉCUPÉRER LES ACTIVITÉS DU JOUR ===
-    activities_query = select(ActivityLog).where(and_(
-        ActivityLog.user_id == current_user.id,
-        ActivityLog.activity_date >= start_of_day,
-        ActivityLog.activity_date <= end_of_day,
-    ))
-    activities_result = await db.execute(activities_query)
-    activities_today = activities_result.scalars().all()
-
-    activities_dict = None
-    if activities_today:
-        activities_dict = {
-            "calories_burned": sum(a.calories_burned or 0 for a in activities_today),
-            "duration_minutes": sum(a.duration_minutes for a in activities_today),
-            "activity_types": list(set(a.activity_type for a in activities_today)),
-        }
-
-    # === RÉCUPÉRER LA TENDANCE DE POIDS (7 derniers jours) ===
-    week_ago = today - timedelta(days=7)
-    weight_query = (
-        select(WeightLog)
-        .where(and_(
-            WeightLog.user_id == current_user.id,
-            WeightLog.log_date >= datetime.combine(week_ago, datetime.min.time()),
+        daily_query = select(DailyNutrition).where(and_(
+            DailyNutrition.user_id == current_user.id,
+            DailyNutrition.date >= start_of_day,
+            DailyNutrition.date <= end_of_day,
         ))
-        .order_by(WeightLog.log_date)
-    )
-    weight_result = await db.execute(weight_query)
-    weight_logs = weight_result.scalars().all()
+        daily_result = await db.execute(daily_query)
+        daily_nutrition = daily_result.scalar_one_or_none()
 
-    weight_trend_dict = None
-    if len(weight_logs) >= 2:
-        first_weight = weight_logs[0].weight_kg
-        last_weight = weight_logs[-1].weight_kg
-        change = last_weight - first_weight
-
-        direction = "stable"
-        if change < -0.3:
-            direction = "losing"
-        elif change > 0.3:
-            direction = "gaining"
-
-        # Calculer les jours restants pour atteindre l'objectif
-        days_to_goal = None
-        if profile and profile.target_weight_kg and change != 0:
-            remaining = abs(last_weight - profile.target_weight_kg)
-            weekly_rate = abs(change)
-            if weekly_rate > 0:
-                days_to_goal = int((remaining / weekly_rate) * 7)
-
-        weight_trend_dict = {
-            "change_7d": round(change, 2),
-            "direction": direction,
-            "days_to_goal": days_to_goal,
-            "current_weight": last_weight,
-        }
-
-    # === RÉCUPÉRER L'HISTORIQUE ALIMENTAIRE (7 derniers jours) ===
-    meal_history_query = (
-        select(FoodLog)
-        .where(and_(
-            FoodLog.user_id == current_user.id,
-            FoodLog.meal_date >= datetime.combine(week_ago, datetime.min.time()),
+        # === RÉCUPÉRER LES ACTIVITÉS DU JOUR ===
+        activities_query = select(ActivityLog).where(and_(
+            ActivityLog.user_id == current_user.id,
+            ActivityLog.activity_date >= start_of_day,
+            ActivityLog.activity_date <= end_of_day,
         ))
-        .options(selectinload(FoodLog.items))
-    )
-    meal_history_result = await db.execute(meal_history_query)
-    recent_meals = meal_history_result.scalars().all()
+        activities_result = await db.execute(activities_query)
+        activities_today = activities_result.scalars().all()
 
-    meal_history_dict = None
-    if recent_meals:
-        # Extraire les aliments récents
-        recent_foods = []
-        for meal in recent_meals:
-            for item in meal.items:
-                if item.name not in recent_foods:
-                    recent_foods.append(item.name)
+        activities_dict = None
+        if activities_today:
+            activities_dict = {
+                "calories_burned": sum(a.calories_burned or 0 for a in activities_today),
+                "duration_minutes": sum(a.duration_minutes for a in activities_today),
+                "activity_types": list(set(a.activity_type for a in activities_today)),
+            }
 
-        # Calculer le score de variété
-        unique_foods = len(set(recent_foods))
-        total_items = len(recent_foods)
-        variety_score = min(100, int((unique_foods / max(total_items, 1)) * 100 * 2))
+        # === RÉCUPÉRER LA TENDANCE DE POIDS (7 derniers jours) ===
+        week_ago = today - timedelta(days=7)
+        weight_query = (
+            select(WeightLog)
+            .where(and_(
+                WeightLog.user_id == current_user.id,
+                WeightLog.log_date >= datetime.combine(week_ago, datetime.min.time()),
+            ))
+            .order_by(WeightLog.log_date)
+        )
+        weight_result = await db.execute(weight_query)
+        weight_logs = weight_result.scalars().all()
 
-        # Moyenne des calories sur 7 jours
-        daily_calories_map = {}
-        for meal in recent_meals:
-            meal_date = meal.meal_date.date()
-            if meal_date not in daily_calories_map:
-                daily_calories_map[meal_date] = 0
-            daily_calories_map[meal_date] += meal.total_calories or 0
+        weight_trend_dict = None
+        if len(weight_logs) >= 2:
+            first_weight = weight_logs[0].weight_kg
+            last_weight = weight_logs[-1].weight_kg
+            change = last_weight - first_weight
 
-        avg_calories = sum(daily_calories_map.values()) / max(len(daily_calories_map), 1)
+            direction = "stable"
+            if change < -0.3:
+                direction = "losing"
+            elif change > 0.3:
+                direction = "gaining"
 
-        meal_history_dict = {
-            "recent_foods": recent_foods[-20:],  # 20 derniers aliments
-            "variety_score": variety_score,
-            "avg_calories_7d": round(avg_calories),
-        }
+            # Calculer les jours restants pour atteindre l'objectif
+            days_to_goal = None
+            if profile and profile.target_weight_kg and change != 0:
+                remaining = abs(last_weight - profile.target_weight_kg)
+                weekly_rate = abs(change)
+                if weekly_rate > 0:
+                    days_to_goal = int((remaining / weekly_rate) * 7)
 
-    # === PRÉPARER LES DONNÉES DU PROFIL COMPLET ===
-    user_profile_dict = None
-    if profile:
-        user_profile_dict = {
-            # Objectifs nutritionnels
-            "daily_calories": profile.daily_calories,
-            "protein_g": profile.protein_g,
-            "carbs_g": profile.carbs_g,
-            "fat_g": profile.fat_g,
-            "goal": profile.goal or "maintain",
-            "diet_type": profile.diet_type or "omnivore",
-            "allergies": profile.allergies or [],
-            "excluded_foods": profile.excluded_foods or [],
-            # Données physiques
-            "age": profile.age,
-            "gender": profile.gender,
-            "weight_kg": profile.weight_kg,
-            "height_cm": profile.height_cm,
-            "target_weight_kg": profile.target_weight_kg,
-            "activity_level": profile.activity_level or "moderate",
-            # Données métaboliques
-            "bmr": profile.bmr,
-            "tdee": profile.tdee,
-            # Données de santé
-            "medical_conditions": profile.medical_conditions or [],
-            "medications": profile.medications or [],
-        }
+            weight_trend_dict = {
+                "change_7d": round(change, 2),
+                "direction": direction,
+                "days_to_goal": days_to_goal,
+                "current_weight": last_weight,
+            }
 
-    # === PRÉPARER LES DONNÉES DE CONSOMMATION DU JOUR ===
-    daily_consumed_dict = None
-    if daily_nutrition:
-        daily_consumed_dict = {
-            "calories": daily_nutrition.total_calories or 0,
-            "protein": daily_nutrition.total_protein or 0,
-            "carbs": daily_nutrition.total_carbs or 0,
-            "fat": daily_nutrition.total_fat or 0,
-            "water_ml": daily_nutrition.water_ml or 0,
-            "meals_count": daily_nutrition.meals_count or 0,
-        }
+        # === RÉCUPÉRER L'HISTORIQUE ALIMENTAIRE (7 derniers jours) ===
+        meal_history_query = (
+            select(FoodLog)
+            .where(and_(
+                FoodLog.user_id == current_user.id,
+                FoodLog.meal_date >= datetime.combine(week_ago, datetime.min.time()),
+            ))
+            .options(selectinload(FoodLog.items))
+        )
+        meal_history_result = await db.execute(meal_history_query)
+        recent_meals = meal_history_result.scalars().all()
+
+        meal_history_dict = None
+        if recent_meals:
+            # Extraire les aliments récents
+            recent_foods = []
+            for meal in recent_meals:
+                for item in meal.items:
+                    if item.name not in recent_foods:
+                        recent_foods.append(item.name)
+
+            # Calculer le score de variété
+            unique_foods = len(set(recent_foods))
+            total_items = len(recent_foods)
+            variety_score = min(100, int((unique_foods / max(total_items, 1)) * 100 * 2))
+
+            # Moyenne des calories sur 7 jours
+            daily_calories_map = {}
+            for meal in recent_meals:
+                meal_date = meal.meal_date.date()
+                if meal_date not in daily_calories_map:
+                    daily_calories_map[meal_date] = 0
+                daily_calories_map[meal_date] += meal.total_calories or 0
+
+            avg_calories = sum(daily_calories_map.values()) / max(len(daily_calories_map), 1)
+
+            meal_history_dict = {
+                "recent_foods": recent_foods[-20:],  # 20 derniers aliments
+                "variety_score": variety_score,
+                "avg_calories_7d": round(avg_calories),
+            }
+
+        # === PRÉPARER LES DONNÉES DU PROFIL COMPLET ===
+        user_profile_dict = None
+        if profile:
+            user_profile_dict = {
+                # Objectifs nutritionnels
+                "daily_calories": profile.daily_calories,
+                "protein_g": profile.protein_g,
+                "carbs_g": profile.carbs_g,
+                "fat_g": profile.fat_g,
+                "goal": profile.goal or "maintain",
+                "diet_type": profile.diet_type or "omnivore",
+                "allergies": profile.allergies or [],
+                "excluded_foods": profile.excluded_foods or [],
+                # Données physiques
+                "age": profile.age,
+                "gender": profile.gender,
+                "weight_kg": profile.weight_kg,
+                "height_cm": profile.height_cm,
+                "target_weight_kg": profile.target_weight_kg,
+                "activity_level": profile.activity_level or "moderate",
+                # Données métaboliques
+                "bmr": profile.bmr,
+                "tdee": profile.tdee,
+                # Données de santé
+                "medical_conditions": profile.medical_conditions or [],
+                "medications": profile.medications or [],
+            }
+
+        # === PRÉPARER LES DONNÉES DE CONSOMMATION DU JOUR ===
+        daily_consumed_dict = None
+        if daily_nutrition:
+            daily_consumed_dict = {
+                "calories": daily_nutrition.total_calories or 0,
+                "protein": daily_nutrition.total_protein or 0,
+                "carbs": daily_nutrition.total_carbs or 0,
+                "fat": daily_nutrition.total_fat or 0,
+                "water_ml": daily_nutrition.water_ml or 0,
+                "meals_count": daily_nutrition.meals_count or 0,
+            }
+
+        food_log_id = None
+
+        # Sauvegarder si demandé (par défaut: True)
+        if request.save_to_log:
+            # Protection anti-doublons: vérifier si un repas similaire existe dans les 5 dernières minutes
+            five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
+            duplicate_check = select(FoodLog).where(and_(
+                FoodLog.user_id == current_user.id,
+                FoodLog.meal_type == request.meal_type,
+                FoodLog.total_calories == total_calories,
+                FoodLog.created_at >= five_minutes_ago,
+            ))
+            duplicate_result = await db.execute(duplicate_check)
+            existing_duplicate = duplicate_result.scalar_one_or_none()
+
+            if existing_duplicate:
+                # Retourner l'ID du repas existant sans créer de doublon
+                food_log_id = existing_duplicate.id
+            else:
+                food_log = FoodLog(
+                    user_id=current_user.id,
+                    meal_type=request.meal_type,
+                    meal_date=datetime.utcnow(),
+                    description=analysis.description,
+                    image_analyzed=True,
+                    detected_items=[item.to_dict() for item in validated_items],
+                    confidence_score=confidence,
+                    model_used=model_used,
+                    total_calories=total_calories,
+                    total_protein=total_protein,
+                    total_carbs=total_carbs,
+                    total_fat=total_fat,
+                )
+                db.add(food_log)
+                await db.flush()
+
+                # Créer les items individuels
+                for item in validated_items:
+                    food_item = FoodItemModel(
+                        food_log_id=food_log.id,
+                        name=item.name,
+                        quantity=item.quantity,
+                        unit=item.unit,
+                        calories=item.calories,
+                        protein=item.protein,
+                        carbs=item.carbs,
+                        fat=item.fat,
+                        source="ai",
+                        confidence=item.confidence,
+                    )
+                    db.add(food_item)
+
+                await db.commit()
+                food_log_id = food_log.id
+
+                # Mettre à jour le résumé journalier
+                await update_daily_nutrition(db, current_user.id, datetime.utcnow().date())
 
     # Créer un objet FoodAnalysis pour le calcul du rapport
     analysis_for_report = FoodAnalysis(
@@ -289,64 +351,6 @@ async def analyze_image(
         for item in validated_items
     ]
 
-    food_log_id = None
-
-    # Sauvegarder si demandé (par défaut: True)
-    if request.save_to_log:
-        # Protection anti-doublons: vérifier si un repas similaire existe dans les 5 dernières minutes
-        five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
-        duplicate_check = select(FoodLog).where(and_(
-            FoodLog.user_id == current_user.id,
-            FoodLog.meal_type == request.meal_type,
-            FoodLog.total_calories == total_calories,
-            FoodLog.created_at >= five_minutes_ago,
-        ))
-        duplicate_result = await db.execute(duplicate_check)
-        existing_duplicate = duplicate_result.scalar_one_or_none()
-
-        if existing_duplicate:
-            # Retourner l'ID du repas existant sans créer de doublon
-            food_log_id = existing_duplicate.id
-        else:
-            food_log = FoodLog(
-                user_id=current_user.id,
-                meal_type=request.meal_type,
-                meal_date=datetime.utcnow(),
-                description=analysis.description,
-                image_analyzed=True,
-                detected_items=[item.to_dict() for item in validated_items],
-                confidence_score=confidence,
-                model_used=model_used,
-                total_calories=total_calories,
-                total_protein=total_protein,
-                total_carbs=total_carbs,
-                total_fat=total_fat,
-            )
-            db.add(food_log)
-            await db.flush()
-
-            # Créer les items individuels
-            for item in validated_items:
-                food_item = FoodItemModel(
-                    food_log_id=food_log.id,
-                    name=item.name,
-                    quantity=item.quantity,
-                    unit=item.unit,
-                    calories=item.calories,
-                    protein=item.protein,
-                    carbs=item.carbs,
-                    fat=item.fat,
-                    source="ai",
-                    confidence=item.confidence,
-                )
-                db.add(food_item)
-
-            await db.commit()
-            food_log_id = food_log.id
-
-            # Mettre à jour le résumé journalier
-            await update_daily_nutrition(db, current_user.id, datetime.utcnow().date())
-
     # Construire la réponse du rapport de santé
     health_report_response = HealthReportResponse(
         health_score=health_report.health_score,
@@ -381,7 +385,6 @@ async def analyze_image(
 @router.post("/logs/save", response_model=FoodLogResponse)
 async def save_analysis(
     request: AnalysisSaveRequest,
-    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
@@ -391,75 +394,77 @@ async def save_analysis(
     - Sauvegarde les items détectés dans la base de données
     - Met à jour le résumé nutritionnel journalier
     """
-    # Protection anti-doublons: vérifier si un repas similaire existe dans les 5 dernières minutes
-    five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
-    duplicate_check = select(FoodLog).where(and_(
-        FoodLog.user_id == current_user.id,
-        FoodLog.meal_type == request.meal_type,
-        FoodLog.total_calories == request.total_calories,
-        FoodLog.created_at >= five_minutes_ago,
-    ))
-    duplicate_result = await db.execute(duplicate_check)
-    existing_duplicate = duplicate_result.scalar_one_or_none()
+    # Utiliser une session fraîche pour éviter les problèmes de connexion
+    async with async_session_maker() as db:
+        # Protection anti-doublons: vérifier si un repas similaire existe dans les 5 dernières minutes
+        five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
+        duplicate_check = select(FoodLog).where(and_(
+            FoodLog.user_id == current_user.id,
+            FoodLog.meal_type == request.meal_type,
+            FoodLog.total_calories == request.total_calories,
+            FoodLog.created_at >= five_minutes_ago,
+        ))
+        duplicate_result = await db.execute(duplicate_check)
+        existing_duplicate = duplicate_result.scalar_one_or_none()
 
-    if existing_duplicate:
-        # Retourner le repas existant sans créer de doublon
+        if existing_duplicate:
+            # Retourner le repas existant sans créer de doublon
+            query = (
+                select(FoodLog)
+                .where(FoodLog.id == existing_duplicate.id)
+                .options(selectinload(FoodLog.items))
+            )
+            result = await db.execute(query)
+            return result.scalar_one()
+
+        # Créer le food log
+        food_log = FoodLog(
+            user_id=current_user.id,
+            meal_type=request.meal_type,
+            meal_date=datetime.utcnow(),
+            description=request.description,
+            image_analyzed=True,
+            detected_items=[item.model_dump() for item in request.items],
+            confidence_score=request.confidence,
+            model_used=request.model_used,
+            total_calories=request.total_calories,
+            total_protein=request.total_protein,
+            total_carbs=request.total_carbs,
+            total_fat=request.total_fat,
+        )
+        db.add(food_log)
+        await db.flush()
+
+        # Créer les items individuels
+        for item in request.items:
+            food_item = FoodItemModel(
+                food_log_id=food_log.id,
+                name=item.name,
+                quantity=item.quantity,
+                unit=item.unit,
+                calories=item.calories,
+                protein=item.protein,
+                carbs=item.carbs,
+                fat=item.fat,
+                source="ai",
+                confidence=item.confidence,
+            )
+            db.add(food_item)
+
+        await db.commit()
+        await db.refresh(food_log)
+
+        # Mettre à jour le résumé journalier
+        await update_daily_nutrition(db, current_user.id, datetime.utcnow().date())
+
+        # Recharger avec les items
         query = (
             select(FoodLog)
-            .where(FoodLog.id == existing_duplicate.id)
+            .where(FoodLog.id == food_log.id)
             .options(selectinload(FoodLog.items))
         )
         result = await db.execute(query)
         return result.scalar_one()
-
-    # Créer le food log
-    food_log = FoodLog(
-        user_id=current_user.id,
-        meal_type=request.meal_type,
-        meal_date=datetime.utcnow(),
-        description=request.description,
-        image_analyzed=True,
-        detected_items=[item.model_dump() for item in request.items],
-        confidence_score=request.confidence,
-        model_used=request.model_used,
-        total_calories=request.total_calories,
-        total_protein=request.total_protein,
-        total_carbs=request.total_carbs,
-        total_fat=request.total_fat,
-    )
-    db.add(food_log)
-    await db.flush()
-
-    # Créer les items individuels
-    for item in request.items:
-        food_item = FoodItemModel(
-            food_log_id=food_log.id,
-            name=item.name,
-            quantity=item.quantity,
-            unit=item.unit,
-            calories=item.calories,
-            protein=item.protein,
-            carbs=item.carbs,
-            fat=item.fat,
-            source="ai",
-            confidence=item.confidence,
-        )
-        db.add(food_item)
-
-    await db.commit()
-    await db.refresh(food_log)
-
-    # Mettre à jour le résumé journalier
-    await update_daily_nutrition(db, current_user.id, datetime.utcnow().date())
-
-    # Recharger avec les items
-    query = (
-        select(FoodLog)
-        .where(FoodLog.id == food_log.id)
-        .options(selectinload(FoodLog.items))
-    )
-    result = await db.execute(query)
-    return result.scalar_one()
 
 
 @router.get("/logs", response_model=list[FoodLogResponse])

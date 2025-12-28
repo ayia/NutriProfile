@@ -44,7 +44,7 @@ if not database_url.startswith("sqlite"):
     engine_kwargs["pool_size"] = 5
     engine_kwargs["max_overflow"] = 10
     engine_kwargs["pool_timeout"] = 30
-    engine_kwargs["pool_recycle"] = 1800  # Recycle connections after 30 minutes
+    engine_kwargs["pool_recycle"] = 300  # Recycle connections after 5 minutes (Fly.io can close idle connections)
 else:
     # SQLite nécessite check_same_thread=False pour async
     engine_kwargs["connect_args"] = {"check_same_thread": False}

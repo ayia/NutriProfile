@@ -77,8 +77,7 @@ class SubscriptionService:
                 coach_messages=0
             )
             self.db.add(usage)
-            await self.db.commit()
-            await self.db.refresh(usage)
+            await self.db.flush()  # Flush instead of commit - let get_db handle commit
 
         return usage
 
@@ -146,8 +145,7 @@ class SubscriptionService:
 
         current_value = getattr(usage, action, 0)
         setattr(usage, action, current_value + 1)
-
-        await self.db.commit()
+        # No commit here - let get_db handle it
 
     async def get_usage_status(self, user_id: int) -> dict:
         """Retourne le statut complet d'usage pour un utilisateur."""
@@ -229,7 +227,7 @@ class SubscriptionService:
         if user:
             user.subscription_tier = tier
 
-        await self.db.commit()
+        await self.db.flush()
         await self.db.refresh(subscription)
         return subscription
 
@@ -249,7 +247,7 @@ class SubscriptionService:
             if user:
                 user.subscription_tier = "free"
 
-        await self.db.commit()
+        await self.db.flush()
         await self.db.refresh(subscription)
         return subscription
 
