@@ -8,6 +8,7 @@ import type { RegisterData } from '@/types'
 
 interface RegisterFormData extends RegisterData {
   confirmPassword: string
+  acceptTerms: boolean
 }
 
 export function RegisterPage() {
@@ -215,17 +216,36 @@ export function RegisterPage() {
               )}
             </div>
 
-            {/* Conditions */}
-            <div className="text-xs text-gray-500 p-3 bg-gray-50 rounded-xl">
-              {t('register.terms')}{' '}
-              <Link to="/terms" className="text-primary-600 hover:underline font-medium">
-                {t('register.termsLink')}
-              </Link>{' '}
-              {t('register.and')}{' '}
-              <Link to="/privacy" className="text-primary-600 hover:underline font-medium">
-                {t('register.privacyLink')}
-              </Link>
-              .
+            {/* Conditions avec checkbox obligatoire */}
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <div className="relative flex-shrink-0 mt-0.5">
+                  <input
+                    type="checkbox"
+                    id="acceptTerms"
+                    className="w-5 h-5 rounded border-2 border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors cursor-pointer"
+                    {...register('acceptTerms', {
+                      required: t('register.termsRequired'),
+                    })}
+                  />
+                </div>
+                <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                  {t('register.termsAccept')}{' '}
+                  <Link to="/terms" className="text-primary-600 hover:text-primary-700 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                    {t('register.termsLink')}
+                  </Link>{' '}
+                  {t('register.and')}{' '}
+                  <Link to="/privacy" className="text-primary-600 hover:text-primary-700 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                    {t('register.privacyLink')}
+                  </Link>
+                </span>
+              </label>
+              {errors.acceptTerms && (
+                <p className="mt-2 text-sm text-error-600 flex items-center gap-1">
+                  <span>⚠️</span>
+                  {errors.acceptTerms.message}
+                </p>
+              )}
             </div>
 
             <button
