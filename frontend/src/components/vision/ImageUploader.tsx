@@ -1,10 +1,11 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { visionApi, compressImage } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import type { MealType, ImageAnalyzeResponse } from '@/types/foodLog'
 import { MEAL_TYPE_ICONS } from '@/types/foodLog'
+import { USAGE_QUERY_KEY } from '@/components/subscription/UsageBanner'
 
 export interface AnalysisData {
   result: ImageAnalyzeResponse
@@ -28,6 +29,7 @@ const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack']
 
 export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
   const { t } = useTranslation('vision')
+  const queryClient = useQueryClient()
   const [selectedMealType, setSelectedMealType] = useState<MealType>('lunch')
   const [preview, setPreview] = useState<string | null>(null)
   const [dragActive, setDragActive] = useState(false)
@@ -39,6 +41,8 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
     mutationFn: visionApi.analyzeImage,
     onSuccess: (data) => {
       setCurrentStep(ANALYSIS_STEP_CONFIG.length) // Mark as complete
+      // Invalider le cache d'usage pour mettre à jour le compteur
+      queryClient.invalidateQueries({ queryKey: USAGE_QUERY_KEY })
       setTimeout(() => onAnalysisComplete({
         result: data,
         imageBase64: lastImageBase64,

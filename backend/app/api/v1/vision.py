@@ -464,7 +464,7 @@ async def save_analysis(
 
 @router.get("/logs", response_model=list[FoodLogResponse])
 async def get_food_logs(
-    date: date | None = None,
+    filter_date: date | None = None,
     meal_type: str | None = None,
     limit: int = 20,
     db: AsyncSession = Depends(get_db),
@@ -487,9 +487,9 @@ async def get_food_logs(
         )
         query = query.where(FoodLog.meal_date >= min_date)
 
-    if date:
-        start = datetime.combine(date, datetime.min.time())
-        end = datetime.combine(date, datetime.max.time())
+    if filter_date:
+        start = datetime.combine(filter_date, datetime.min.time())
+        end = datetime.combine(filter_date, datetime.max.time())
         query = query.where(and_(FoodLog.meal_date >= start, FoodLog.meal_date <= end))
 
     if meal_type:

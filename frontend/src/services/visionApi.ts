@@ -28,7 +28,7 @@ export const visionApi = {
   // Food Logs
   getLogs: async (date?: string, mealType?: string, limit = 20): Promise<FoodLog[]> => {
     const params = new URLSearchParams()
-    if (date) params.append('date', date)
+    if (date) params.append('filter_date', date)
     if (mealType) params.append('meal_type', mealType)
     params.append('limit', limit.toString())
 

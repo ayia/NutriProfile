@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { X } from 'lucide-react'
 import { subscriptionApi } from '@/services/api'
-import type { UsageStatusResponse } from '@/types'
+
+// Clé de query exportée pour permettre l'invalidation depuis d'autres composants
+export const USAGE_QUERY_KEY = ['usage']
 
 interface UsageBannerProps {
   action?: 'vision_analyses' | 'recipe_generations' | 'coach_messages'
@@ -19,25 +22,16 @@ const featureIcons = {
 
 export function UsageBanner({ action = 'vision_analyses', showAlways = false, compact = false }: UsageBannerProps) {
   const { t } = useTranslation('common')
-  const [usage, setUsage] = useState<UsageStatusResponse | null>(null)
   const [dismissed, setDismissed] = useState(false)
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchUsage = async () => {
-      try {
-        const data = await subscriptionApi.getUsage()
-        setUsage(data)
-      } catch (error) {
-        console.error('Failed to fetch usage:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchUsage()
-  }, [])
+  const { data: usage, isLoading } = useQuery({
+    queryKey: USAGE_QUERY_KEY,
+    queryFn: subscriptionApi.getUsage,
+    staleTime: 30 * 1000, // 30 secondes
+    refetchOnWindowFocus: true,
+  })
 
-  if (loading || !usage || dismissed) return null
+  if (isLoading || !usage || dismissed) return null
 
   const used = usage.usage[action]
   const limit = usage.limits[action]
