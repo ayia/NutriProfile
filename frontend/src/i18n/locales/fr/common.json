@@ -81,5 +81,22 @@
     "remaining_one": "restante",
     "remaining_other": "restantes",
     "upgradeToPremium": "Passer à Premium"
+  },
+  "toast": {
+    "saved": "Enregistrement effectue",
+    "saveError": "Erreur lors de l'enregistrement",
+    "loginSuccess": "Connexion reussie !",
+    "logoutSuccess": "Deconnexion reussie",
+    "registerSuccess": "Compte cree avec succes !",
+    "profileUpdated": "Profil mis a jour",
+    "settingsSaved": "Parametres enregistres",
+    "networkError": "Erreur reseau. Verifiez votre connexion.",
+    "mealAdded": "Repas ajoute",
+    "mealDeleted": "Repas supprime",
+    "recipeGenerated": "Recette generee avec succes !",
+    "photoAnalyzed": "Photo analysee avec succes !",
+    "passwordChanged": "Mot de passe modifie",
+    "emailSent": "Email envoye",
+    "copied": "Copie dans le presse-papiers"
   }
 }

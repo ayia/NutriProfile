@@ -13,13 +13,15 @@ import { Step5Summary } from './Step5Summary'
 const TOTAL_STEPS = 5
 
 const stepIcons = ['👤', '🏃', '🥗', '❤️', '✨']
-const stepLabels = ['Info', 'Activité', 'Régime', 'Santé', 'Résumé']
+const stepKeys = ['info', 'activity', 'diet', 'health', 'summary'] as const
 
 export function OnboardingWizard() {
   const { t } = useTranslation('onboarding')
   const navigate = useNavigate()
   const { currentStep, getFullProfile, reset } = useOnboardingStore()
   const { setProfileStatus } = useAuthStore()
+
+  const stepLabels = stepKeys.map(key => t(`steps.${key}`))
 
   const createProfile = useMutation({
     mutationFn: profileApi.createProfile,
@@ -39,15 +41,15 @@ export function OnboardingWizard() {
 
   return (
     <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-      {/* Progress bar - Enhanced */}
-      <div className="mb-10">
+      {/* Progress bar - Enhanced for better visibility */}
+      <div className="mb-10 px-2">
         {/* Steps indicators */}
         <div className="flex justify-between mb-4 relative">
-          {/* Background line */}
-          <div className="absolute top-5 left-0 right-0 h-1 bg-gray-200 rounded-full" />
-          {/* Progress line */}
+          {/* Background line - thicker for visibility */}
+          <div className="absolute top-6 left-0 right-0 h-1.5 bg-gray-200 rounded-full" />
+          {/* Progress line - animated gradient */}
           <div
-            className="absolute top-5 left-0 h-1 bg-gradient-to-r from-primary-500 to-emerald-500 rounded-full transition-all duration-500 ease-out"
+            className="absolute top-6 left-0 h-1.5 bg-gradient-to-r from-primary-600 to-emerald-500 rounded-full transition-all duration-700 ease-out shadow-sm shadow-primary-500/50"
             style={{ width: `${((currentStep - 1) / (TOTAL_STEPS - 1)) * 100}%` }}
           />
 
@@ -58,23 +60,27 @@ export function OnboardingWizard() {
 
             return (
               <div key={i} className="relative z-10 flex flex-col items-center">
+                {/* Outer ring for current step - pulsing animation */}
+                {isCurrent && (
+                  <div className="absolute w-16 h-16 -top-1 rounded-2xl bg-primary-400/30 animate-pulse" />
+                )}
                 <div
-                  className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${
+                  className={`relative flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
                     isCompleted
-                      ? 'bg-gradient-to-br from-primary-500 to-emerald-500 text-white shadow-lg shadow-primary-500/30'
+                      ? 'bg-gradient-to-br from-primary-600 to-emerald-500 text-white shadow-lg shadow-primary-600/40'
                       : isCurrent
-                      ? 'bg-gradient-to-br from-primary-500 to-emerald-500 text-white shadow-xl shadow-primary-500/40 scale-110'
-                      : 'bg-white border-2 border-gray-200 text-gray-400'
+                      ? 'bg-gradient-to-br from-primary-600 to-emerald-500 text-white shadow-xl shadow-primary-600/50 scale-110 ring-4 ring-primary-200'
+                      : 'bg-white border-2 border-gray-300 text-gray-400 hover:border-gray-400'
                   }`}
                 >
                   {isCompleted ? (
-                    <span className="text-lg">✓</span>
+                    <span className="text-xl font-bold">✓</span>
                   ) : (
-                    <span className="text-lg">{stepIcons[i]}</span>
+                    <span className="text-xl">{stepIcons[i]}</span>
                   )}
                 </div>
-                <span className={`mt-2 text-xs font-medium transition-colors ${
-                  isCurrent ? 'text-primary-600' : isCompleted ? 'text-gray-700' : 'text-gray-400'
+                <span className={`mt-3 text-sm font-semibold transition-colors ${
+                  isCurrent ? 'text-primary-700' : isCompleted ? 'text-gray-800' : 'text-gray-400'
                 }`}>
                   {stepLabels[i]}
                 </span>
@@ -83,11 +89,16 @@ export function OnboardingWizard() {
           })}
         </div>
 
-        {/* Progress percentage */}
-        <div className="text-center mt-4">
-          <span className="text-sm font-medium text-gray-500">
-            Étape <span className="text-primary-600 font-bold">{currentStep}</span> sur {TOTAL_STEPS}
-          </span>
+        {/* Progress percentage - enhanced */}
+        <div className="text-center mt-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full">
+            <span className="text-sm font-medium text-gray-600">
+              {t('stepOf', { current: currentStep, total: TOTAL_STEPS })}
+            </span>
+            <span className="text-xs text-gray-400">
+              ({Math.round((currentStep / TOTAL_STEPS) * 100)}%)
+            </span>
+          </div>
         </div>
       </div>
 
@@ -119,8 +130,9 @@ export function OnboardingWizard() {
 
       {/* Help text */}
       <div className="mt-8 text-center">
-        <p className="text-sm text-gray-400">
-          💡 Toutes vos informations sont sécurisées et utilisées uniquement pour personnaliser votre expérience
+        <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
+          <span className="text-base">💡</span>
+          <span>{t('securityNote')}</span>
         </p>
       </div>
     </div>

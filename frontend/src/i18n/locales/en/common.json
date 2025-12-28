@@ -92,5 +92,22 @@
     "remaining_one": "remaining",
     "remaining_other": "remaining",
     "upgradeToPremium": "Upgrade to Premium"
+  },
+  "toast": {
+    "saved": "Saved successfully",
+    "saveError": "Error saving",
+    "loginSuccess": "Login successful!",
+    "logoutSuccess": "Logged out successfully",
+    "registerSuccess": "Account created successfully!",
+    "profileUpdated": "Profile updated",
+    "settingsSaved": "Settings saved",
+    "networkError": "Network error. Check your connection.",
+    "mealAdded": "Meal added",
+    "mealDeleted": "Meal deleted",
+    "recipeGenerated": "Recipe generated successfully!",
+    "photoAnalyzed": "Photo analyzed successfully!",
+    "passwordChanged": "Password changed",
+    "emailSent": "Email sent",
+    "copied": "Copied to clipboard"
   }
 }

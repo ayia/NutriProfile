@@ -192,31 +192,134 @@ textarea:focus-visible {
   }
 
   /* ============================================
-     Button Styles
+     Button Styles - Enhanced with Micro-interactions
      ============================================ */
 
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all duration-200;
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Press effect for all buttons */
+  .btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* Hover lift effect */
+  .btn:hover:not(:disabled) {
+    transform: translateY(-1px);
   }
 
   .btn-primary {
-    @apply btn bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700;
+    @apply btn bg-primary-600 text-white;
+    box-shadow: 0 4px 14px -3px rgba(5, 150, 105, 0.4);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    @apply bg-primary-700;
+    box-shadow: 0 6px 20px -4px rgba(5, 150, 105, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    @apply bg-primary-800;
+    box-shadow: 0 2px 8px -2px rgba(5, 150, 105, 0.4);
+    transform: scale(0.97) translateY(0);
   }
 
   .btn-secondary {
-    @apply btn bg-secondary-500 text-white hover:bg-secondary-600 active:bg-secondary-700;
+    @apply btn bg-secondary-600 text-white;
+    box-shadow: 0 4px 14px -3px rgba(8, 145, 178, 0.4);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    @apply bg-secondary-700;
+    box-shadow: 0 6px 20px -4px rgba(8, 145, 178, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary:active:not(:disabled) {
+    @apply bg-secondary-800;
+    box-shadow: 0 2px 8px -2px rgba(8, 145, 178, 0.4);
+    transform: scale(0.97) translateY(0);
   }
 
   .btn-accent {
-    @apply btn bg-accent-500 text-white hover:bg-accent-600 active:bg-accent-700;
+    @apply btn bg-accent-500 text-white;
+    box-shadow: 0 4px 14px -3px rgba(249, 115, 22, 0.4);
+  }
+
+  .btn-accent:hover:not(:disabled) {
+    @apply bg-accent-600;
+    box-shadow: 0 6px 20px -4px rgba(249, 115, 22, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-accent:active:not(:disabled) {
+    @apply bg-accent-700;
+    box-shadow: 0 2px 8px -2px rgba(249, 115, 22, 0.4);
+    transform: scale(0.97) translateY(0);
   }
 
   .btn-outline {
-    @apply btn border-2 border-primary-500 text-primary-500 hover:bg-primary-50 active:bg-primary-100;
+    @apply btn border-2 border-primary-600 text-primary-600 bg-transparent;
+  }
+
+  .btn-outline:hover:not(:disabled) {
+    @apply bg-primary-50 border-primary-700 text-primary-700;
+    transform: translateY(-2px);
+  }
+
+  .btn-outline:active:not(:disabled) {
+    @apply bg-primary-100;
+    transform: scale(0.97) translateY(0);
   }
 
   .btn-ghost {
-    @apply btn text-neutral-600 hover:bg-neutral-100 active:bg-neutral-200;
+    @apply btn text-neutral-600 bg-transparent;
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    @apply bg-neutral-100;
+  }
+
+  .btn-ghost:active:not(:disabled) {
+    @apply bg-neutral-200;
+    transform: scale(0.97);
+  }
+
+  /* Disabled state for all buttons */
+  .btn:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Gradient button variant with shimmer effect */
+  .btn-gradient {
+    @apply btn text-white font-semibold;
+    background: linear-gradient(135deg, #059669 0%, #0891b2 100%);
+    box-shadow: 0 4px 20px -4px rgba(5, 150, 105, 0.5);
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  .btn-gradient:hover:not(:disabled) {
+    box-shadow: 0 8px 30px -6px rgba(5, 150, 105, 0.6);
+    transform: translateY(-2px);
+  }
+
+  .btn-gradient:active:not(:disabled) {
+    box-shadow: 0 2px 10px -2px rgba(5, 150, 105, 0.5);
+    transform: scale(0.97) translateY(0);
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 
   /* ============================================

@@ -2,6 +2,15 @@
   "title": "Create your nutritional profile",
   "subtitle": "Answer a few questions to receive personalized recommendations.",
   "error": "An error occurred. Please try again.",
+  "steps": {
+    "info": "Info",
+    "activity": "Activity",
+    "diet": "Diet",
+    "health": "Health",
+    "summary": "Summary"
+  },
+  "stepOf": "Step {{current}} of {{total}}",
+  "securityNote": "All your information is secured and used only to personalize your experience",
   "step1": {
     "title": "Basic Information",
     "subtitle": "This information helps us calculate your caloric needs.",

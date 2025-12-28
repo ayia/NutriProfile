@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { authApi, userApi, tokenStorage } from '@/services/api'
 import { profileApi } from '@/services/profileApi'
 import { useAuthStore } from '@/store/authStore'
@@ -9,7 +10,7 @@ import type { LoginCredentials, RegisterData } from '@/types'
 export function useAuth() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation('common')
   const { setAuth, setProfileStatus, logout: storeLogout, isAuthenticated, checkAuthState } = useAuthStore()
 
   // Vérifier l'état d'authentification au chargement
@@ -47,6 +48,9 @@ export function useAuth() {
         }
       }
 
+      // Toast de succès
+      toast.success(t('toast.loginSuccess'))
+
       // Invalider les queries pour forcer le rechargement des données
       queryClient.invalidateQueries()
       // Rediriger vers onboarding si pas de profil, sinon dashboard
@@ -71,6 +75,7 @@ export function useAuth() {
     onSuccess: ({ userData }) => {
       setAuth(userData)
       setProfileStatus(false) // Nouveau user = pas de profil
+      toast.success(t('toast.registerSuccess'))
       queryClient.invalidateQueries()
       navigate('/onboarding')
     },
@@ -84,6 +89,7 @@ export function useAuth() {
     } finally {
       storeLogout()
       queryClient.clear()
+      toast.success(t('toast.logoutSuccess'))
       navigate('/login')
     }
   }

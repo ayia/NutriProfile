@@ -147,6 +147,7 @@ export default {
         'slide-down': 'slideDown 0.4s ease-out forwards',
         'slide-left': 'slideLeft 0.4s ease-out forwards',
         'slide-right': 'slideRight 0.4s ease-out forwards',
+        'slide-in-right': 'slideInRight 0.3s ease-out forwards',
         'scale-in': 'scaleIn 0.3s ease-out forwards',
         'scale-up': 'scaleUp 0.2s ease-out',
         'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
@@ -188,6 +189,10 @@ export default {
         },
         slideRight: {
           '0%': { opacity: '0', transform: 'translateX(-20px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(100%)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
         },
         scaleIn: {

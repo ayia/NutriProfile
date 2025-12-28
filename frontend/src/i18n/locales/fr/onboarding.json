@@ -1,7 +1,16 @@
 {
-  "title": "Créez votre profil nutritionnel",
-  "subtitle": "Répondez à quelques questions pour recevoir des recommandations personnalisées.",
-  "error": "Une erreur est survenue. Veuillez réessayer.",
+  "title": "Creez votre profil nutritionnel",
+  "subtitle": "Repondez a quelques questions pour recevoir des recommandations personnalisees.",
+  "error": "Une erreur est survenue. Veuillez reessayer.",
+  "steps": {
+    "info": "Info",
+    "activity": "Activite",
+    "diet": "Regime",
+    "health": "Sante",
+    "summary": "Resume"
+  },
+  "stepOf": "Etape {{current}} sur {{total}}",
+  "securityNote": "Toutes vos informations sont securisees et utilisees uniquement pour personnaliser votre experience",
   "step1": {
     "title": "Informations de base",
     "subtitle": "Ces informations nous permettent de calculer vos besoins caloriques.",

@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { toast } from 'sonner'
 import { profileApi } from '@/services/profileApi'
 import { useAuth } from '@/hooks/useAuth'
 import { Input } from '@/components/ui/Input'
@@ -14,6 +15,7 @@ type SettingsTab = 'profile' | 'account' | 'notifications' | 'privacy'
 
 export function SettingsPage() {
   const { t } = useTranslation('settings')
+  const { t: tCommon } = useTranslation('common')
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -30,6 +32,10 @@ export function SettingsPage() {
     mutationFn: profileApi.updateProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] })
+      toast.success(tCommon('toast.profileUpdated'))
+    },
+    onError: () => {
+      toast.error(tCommon('toast.saveError'))
     },
   })
 
