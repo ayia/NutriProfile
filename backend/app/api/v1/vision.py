@@ -773,7 +773,7 @@ async def delete_food_item(
 
 # Daily Nutrition endpoints
 
-@router.get("/daily/{date}", response_model=DailyMealsResponse)
+@router.get("/daily/{target_date}", response_model=DailyMealsResponse)
 async def get_daily_meals(
     target_date: date,
     db: AsyncSession = Depends(get_db),
@@ -832,16 +832,16 @@ async def get_daily_meals(
     )
 
 
-@router.post("/daily/{date}/water")
+@router.post("/daily/{target_date}/water")
 async def add_water(
-    date: date,
+    target_date: date,
     data: WaterLogRequest,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """Ajoute de l'eau au suivi journalier."""
-    start = datetime.combine(date, datetime.min.time())
-    end = datetime.combine(date, datetime.max.time())
+    start = datetime.combine(target_date, datetime.min.time())
+    end = datetime.combine(target_date, datetime.max.time())
 
     query = select(DailyNutrition).where(and_(
         DailyNutrition.user_id == current_user.id,
@@ -854,7 +854,7 @@ async def add_water(
     if not daily:
         daily = DailyNutrition(
             user_id=current_user.id,
-            date=datetime.combine(date, datetime.min.time()),
+            date=datetime.combine(target_date, datetime.min.time()),
         )
         db.add(daily)
 
