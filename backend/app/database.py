@@ -2,6 +2,7 @@ from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.pool import NullPool
 
 from app.config import get_settings
 
@@ -37,14 +38,12 @@ engine_kwargs = {
 
 # SQLite ne supporte pas pool_pre_ping
 if not database_url.startswith("sqlite"):
-    engine_kwargs["pool_pre_ping"] = True
+    # Use NullPool for Fly.io - creates new connection per request
+    # This avoids "connection was closed in the middle of operation" errors
+    # that happen when Fly.io closes idle connections
+    engine_kwargs["poolclass"] = NullPool
     # Disable SSL for Fly.io internal connections (asyncpg uses ssl=False)
     engine_kwargs["connect_args"] = {"ssl": False}
-    # Pool configuration for PostgreSQL
-    engine_kwargs["pool_size"] = 5
-    engine_kwargs["max_overflow"] = 10
-    engine_kwargs["pool_timeout"] = 30
-    engine_kwargs["pool_recycle"] = 300  # Recycle connections after 5 minutes (Fly.io can close idle connections)
 else:
     # SQLite nécessite check_same_thread=False pour async
     engine_kwargs["connect_args"] = {"check_same_thread": False}

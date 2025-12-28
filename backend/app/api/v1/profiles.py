@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -7,6 +8,7 @@ from sqlalchemy import select
 from app.database import get_db
 from app.models.user import User
 from app.models.profile import Profile
+from app.models.activity import WeightLog
 from app.schemas.profile import (
     ProfileCreate,
     ProfileUpdate,
@@ -120,6 +122,17 @@ async def create_profile(
     )
 
     db.add(profile)
+    await db.flush()
+
+    # Créer le premier enregistrement de poids dans l'historique
+    initial_weight_log = WeightLog(
+        user_id=current_user.id,
+        weight_kg=profile_data.weight_kg,
+        notes="Poids initial du profil",
+        log_date=datetime.utcnow(),
+    )
+    db.add(initial_weight_log)
+
     await db.commit()
     await db.refresh(profile)
 
@@ -143,6 +156,9 @@ async def update_profile(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Profil non trouvé.",
         )
+
+    # Sauvegarder l'ancien poids pour comparaison
+    old_weight = profile.weight_kg
 
     # Mettre à jour les champs fournis - convert enums to string values
     update_data = profile_data.model_dump(exclude_unset=True)
@@ -171,6 +187,16 @@ async def update_profile(
         profile.protein_g = nutrition.protein_g
         profile.carbs_g = nutrition.carbs_g
         profile.fat_g = nutrition.fat_g
+
+    # Si le poids a changé, créer une entrée dans l'historique
+    if 'weight_kg' in update_data and update_data['weight_kg'] != old_weight:
+        weight_log = WeightLog(
+            user_id=current_user.id,
+            weight_kg=update_data['weight_kg'],
+            notes="Mise à jour depuis le profil",
+            log_date=datetime.utcnow(),
+        )
+        db.add(weight_log)
 
     await db.commit()
     await db.refresh(profile)
