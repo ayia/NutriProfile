@@ -5,11 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.config import get_settings
-from app.database import get_db
+from app.database import async_session_maker
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
 from app.schemas.auth import Token, TokenData, RefreshTokenRequest
@@ -70,7 +69,6 @@ def verify_refresh_token(token: str) -> TokenData | None:
 
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
-    db: AsyncSession = Depends(get_db),
 ) -> User:
     """Récupère l'utilisateur courant depuis le token."""
     credentials_exception = HTTPException(
@@ -88,11 +86,12 @@ async def get_current_user(
     except JWTError:
         raise credentials_exception
 
-    result = await db.execute(select(User).where(User.email == token_data.email))
-    user = result.scalar_one_or_none()
-    if user is None:
-        raise credentials_exception
-    return user
+    async with async_session_maker() as db:
+        result = await db.execute(select(User).where(User.email == token_data.email))
+        user = result.scalar_one_or_none()
+        if user is None:
+            raise credentials_exception
+        return user
 
 
 def create_tokens(email: str) -> Token:
@@ -116,53 +115,52 @@ def create_tokens(email: str) -> Token:
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(
     user_data: UserCreate,
-    db: AsyncSession = Depends(get_db),
 ) -> UserResponse:
     """Créer un nouveau compte utilisateur."""
-    # Vérifier si l'email existe déjà
-    result = await db.execute(select(User).where(User.email == user_data.email))
-    if result.scalar_one_or_none():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Un compte avec cet email existe déjà",
+    async with async_session_maker() as db:
+        # Vérifier si l'email existe déjà
+        result = await db.execute(select(User).where(User.email == user_data.email))
+        if result.scalar_one_or_none():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Un compte avec cet email existe déjà",
+            )
+
+        # Créer l'utilisateur
+        user = User(
+            email=user_data.email,
+            hashed_password=get_password_hash(user_data.password),
+            name=user_data.name,
         )
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
 
-    # Créer l'utilisateur
-    user = User(
-        email=user_data.email,
-        hashed_password=get_password_hash(user_data.password),
-        name=user_data.name,
-    )
-    db.add(user)
-    await db.commit()
-    await db.refresh(user)
-
-    return UserResponse.model_validate(user)
+        return UserResponse.model_validate(user)
 
 
 @router.post("/login", response_model=Token)
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    db: AsyncSession = Depends(get_db),
 ) -> Token:
     """Authentifier et obtenir les tokens JWT."""
-    result = await db.execute(select(User).where(User.email == form_data.username))
-    user = result.scalar_one_or_none()
+    async with async_session_maker() as db:
+        result = await db.execute(select(User).where(User.email == form_data.username))
+        user = result.scalar_one_or_none()
 
-    if not user or not verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email ou mot de passe incorrect",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        if not user or not verify_password(form_data.password, user.hashed_password):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou mot de passe incorrect",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
-    return create_tokens(user.email)
+        return create_tokens(user.email)
 
 
 @router.post("/refresh", response_model=Token)
 async def refresh_token(
     request: RefreshTokenRequest,
-    db: AsyncSession = Depends(get_db),
 ) -> Token:
     """Rafraîchir le token d'accès avec un refresh token valide."""
     token_data = verify_refresh_token(request.refresh_token)
@@ -174,19 +172,20 @@ async def refresh_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # Vérifier que l'utilisateur existe toujours
-    result = await db.execute(select(User).where(User.email == token_data.email))
-    user = result.scalar_one_or_none()
+    async with async_session_maker() as db:
+        # Vérifier que l'utilisateur existe toujours
+        result = await db.execute(select(User).where(User.email == token_data.email))
+        user = result.scalar_one_or_none()
 
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Utilisateur non trouvé",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Utilisateur non trouvé",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
-    # Créer de nouveaux tokens
-    return create_tokens(user.email)
+        # Créer de nouveaux tokens
+        return create_tokens(user.email)
 
 
 @router.post("/logout")
