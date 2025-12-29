@@ -492,14 +492,115 @@ interface AccountSettingsProps {
   onDeleteClick: () => void
 }
 
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[]
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed'
+    platform: string
+  }>
+  prompt(): Promise<void>
+}
+
 function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
   const { t } = useTranslation('settings')
   const [showPasswordForm, setShowPasswordForm] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [isStandalone, setIsStandalone] = useState(false)
+  const [isIOS, setIsIOS] = useState(false)
+
+  useEffect(() => {
+    // Vérifier si déjà installé en mode standalone
+    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
+      || (window.navigator as Navigator & { standalone?: boolean }).standalone === true
+    setIsStandalone(isInStandaloneMode)
+
+    // Détecter iOS
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream
+    setIsIOS(isIOSDevice)
+
+    // Écouter l'événement beforeinstallprompt (Android/Chrome)
+    const handler = (e: Event) => {
+      e.preventDefault()
+      setDeferredPrompt(e as BeforeInstallPromptEvent)
+    }
+
+    window.addEventListener('beforeinstallprompt', handler)
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+    }
+  }, [])
+
+  const handleInstall = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt()
+      const { outcome } = await deferredPrompt.userChoice
+      if (outcome === 'accepted') {
+        setIsStandalone(true)
+      }
+      setDeferredPrompt(null)
+    }
+  }
 
   return (
     <div className="divide-y divide-gray-100">
-      {/* Email */}
+      {/* Installation PWA */}
       <div className="p-6 reveal">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-2xl">📲</span>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">{t('account.installApp')}</h3>
+        </div>
+
+        {isStandalone ? (
+          <div className="p-4 rounded-xl bg-emerald-50/80 border border-emerald-200">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">✅</span>
+              <div>
+                <p className="font-medium text-emerald-700">{t('account.appInstalled')}</p>
+                <p className="text-sm text-emerald-600 mt-1">{t('account.appInstalledDesc')}</p>
+              </div>
+            </div>
+          </div>
+        ) : isIOS ? (
+          <div className="space-y-4">
+            <p className="text-gray-600">{t('account.installAppDesc')}</p>
+            <div className="p-4 rounded-xl bg-gray-50/80">
+              <p className="font-medium text-gray-700 mb-3">{t('account.iosInstallTitle')}</p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
+                    <span className="text-blue-600">1</span>
+                  </div>
+                  <span className="text-sm text-gray-600">{t('account.iosInstallStep1')}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-8 h-8 bg-emerald-100 rounded-full">
+                    <span className="text-emerald-600">2</span>
+                  </div>
+                  <span className="text-sm text-gray-600">{t('account.iosInstallStep2')}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <p className="text-gray-600">{t('account.installAppDesc')}</p>
+            <button
+              onClick={handleInstall}
+              disabled={!deferredPrompt}
+              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-semibold shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center gap-2"
+            >
+              <span>📲</span>
+              {t('account.installButton')}
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Email */}
+      <div className="p-6 reveal" style={{ animationDelay: '0.05s' }}>
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
             <span className="text-2xl">✉️</span>
@@ -572,7 +673,7 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
       </div>
 
       {/* Suppression du compte */}
-      <div className="p-6 bg-gradient-to-r from-error-50 to-rose-50 reveal" style={{ animationDelay: '0.2s' }}>
+      <div className="p-6 bg-gradient-to-r from-error-50 to-rose-50 reveal" style={{ animationDelay: '0.15s' }}>
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-gradient-to-br from-error-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg">
             <span className="text-2xl">⚠️</span>
