@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { invalidationGroups } from '@/lib/queryKeys'
 import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate, MealType } from '@/types/foodLog'
 
 interface AnalysisResultProps {
@@ -61,9 +62,10 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
     }),
     onSuccess: (data) => {
       setIsSaved(true)
-      // Invalider les queries pour rafraîchir les données
-      queryClient.invalidateQueries({ queryKey: ['foodLogs'] })
-      queryClient.invalidateQueries({ queryKey: ['dailyMeals'] })
+      // Invalidate all related queries for immediate sync (vision, dashboard, tracking)
+      invalidationGroups.mealAnalysis.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
       // Mettre à jour le result avec le food_log_id
       result.food_log_id = data.id
     },
@@ -94,7 +96,9 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
   const saveEdit = () => {
     // TODO: Implémenter la mise à jour via l'API
     // Pour l'instant, on ferme simplement l'éditeur
-    queryClient.invalidateQueries({ queryKey: ['foodLogs'] })
+    invalidationGroups.mealAnalysis.forEach(key => {
+      queryClient.invalidateQueries({ queryKey: key })
+    })
     setEditingItem(null)
   }
 

@@ -5,6 +5,7 @@ import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { ACTIVITY_TYPES } from '@/types/tracking'
+import { invalidationGroups } from '@/lib/queryKeys'
 import type { ActivityLogCreate } from '@/types/tracking'
 
 interface ActivityFormProps {
@@ -24,14 +25,14 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
   const createMutation = useMutation({
     mutationFn: trackingApi.createActivity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tracking'] })
-      queryClient.invalidateQueries({ queryKey: ['activities'] })
+      // Invalidate all related queries for immediate sync
+      invalidationGroups.trackingUpdate.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
       onSuccess?.()
     },
     onError: (error: any) => {
       console.error('Activity creation error:', error)
-      console.error('Error response:', error?.response?.data)
-      console.error('Error status:', error?.response?.status)
       if (error?.response?.status === 401) {
         console.error('Token expiré ou invalide - veuillez vous reconnecter')
       }

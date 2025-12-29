@@ -12,8 +12,15 @@ import './i18n'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 2, // 2 minutes - data considered fresh
+      gcTime: 1000 * 60 * 10, // 10 minutes - keep in cache
       retry: 1,
+      refetchOnWindowFocus: true, // Refetch when user returns to tab
+      refetchOnReconnect: true, // Refetch when network reconnects
+      refetchOnMount: true, // Refetch when component mounts if stale
+    },
+    mutations: {
+      retry: 0, // Don't retry mutations automatically
     },
   },
 })

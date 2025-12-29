@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { recipeApi } from '@/services/recipeApi'
 import { Button } from '@/components/ui/Button'
+import { invalidationGroups } from '@/lib/queryKeys'
 import type { Recipe } from '@/types/recipe'
 import { MEAL_TYPE_ICONS } from '@/types/recipe'
 
@@ -23,7 +24,10 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
     mutationFn: () => recipeApi.addFavorite(recipe.id),
     onSuccess: () => {
       setIsFavorite(true)
-      queryClient.invalidateQueries({ queryKey: ['recipes', 'favorites'] })
+      // Invalidate recipes and dashboard for immediate sync
+      invalidationGroups.recipeGeneration.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
     },
   })
 
@@ -31,7 +35,10 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
     mutationFn: () => recipeApi.removeFavorite(recipe.id),
     onSuccess: () => {
       setIsFavorite(false)
-      queryClient.invalidateQueries({ queryKey: ['recipes', 'favorites'] })
+      // Invalidate recipes and dashboard for immediate sync
+      invalidationGroups.recipeGeneration.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
     },
   })
 

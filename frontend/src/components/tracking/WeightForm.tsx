@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { invalidationGroups } from '@/lib/queryKeys'
 import type { WeightLogCreate } from '@/types/tracking'
 
 interface WeightFormProps {
@@ -22,14 +23,14 @@ export function WeightForm({ onSuccess, onCancel, currentWeight }: WeightFormPro
   const createMutation = useMutation({
     mutationFn: trackingApi.createWeightLog,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tracking'] })
-      queryClient.invalidateQueries({ queryKey: ['weight'] })
+      // Invalidate all related queries for immediate sync
+      invalidationGroups.trackingUpdate.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
       onSuccess?.()
     },
     onError: (error: any) => {
       console.error('Weight creation error:', error)
-      console.error('Error response:', error?.response?.data)
-      console.error('Error status:', error?.response?.status)
       if (error?.response?.status === 401) {
         console.error('Token expiré ou invalide - veuillez vous reconnecter')
       }

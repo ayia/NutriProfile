@@ -5,6 +5,7 @@ import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { GOAL_TYPES } from '@/types/tracking'
+import { invalidationGroups } from '@/lib/queryKeys'
 import type { GoalCreate } from '@/types/tracking'
 
 interface GoalFormProps {
@@ -25,8 +26,10 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
   const createMutation = useMutation({
     mutationFn: trackingApi.createGoal,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tracking'] })
-      queryClient.invalidateQueries({ queryKey: ['goals'] })
+      // Invalidate all related queries for immediate sync
+      invalidationGroups.trackingUpdate.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
       onSuccess?.()
     },
     onError: (error) => {

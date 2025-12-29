@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
+import { invalidationGroups } from '@/lib/queryKeys'
 import type { FoodLog } from '@/types/foodLog'
 import { MEAL_TYPE_ICONS } from '@/types/foodLog'
 
@@ -19,8 +20,10 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
   const deleteMutation = useMutation({
     mutationFn: () => visionApi.deleteLog(log.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['foodLogs'], refetchType: 'all' })
-      queryClient.invalidateQueries({ queryKey: ['dailyMeals'], refetchType: 'all' })
+      // Invalidate all related queries for immediate sync
+      invalidationGroups.mealAnalysis.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key, refetchType: 'all' })
+      })
     },
     onError: (error) => {
       console.error('Delete error:', error)

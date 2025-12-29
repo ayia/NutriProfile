@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
+import { invalidationGroups } from '@/lib/queryKeys'
 
 interface WaterFormProps {
   onSuccess: () => void
@@ -28,8 +29,10 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
   const mutation = useMutation({
     mutationFn: (amountMl: number) => trackingApi.addWater(today, amountMl),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tracking'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      // Invalidate all related queries for immediate sync
+      invalidationGroups.trackingUpdate.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
       onSuccess()
     },
     onError: (err) => {
