@@ -62,5 +62,18 @@
     "remaining_one": "متبقية",
     "remaining_other": "متبقية",
     "upgradeToPremium": "الترقية إلى بريميوم"
+  },
+  "pwa": {
+    "title": "تثبيت NutriProfile",
+    "description": "قم بتثبيت NutriProfile على جهازك للوصول السريع وتجربة أفضل.",
+    "install": "تثبيت",
+    "later": "لاحقاً",
+    "understood": "فهمت",
+    "iosInstructions": "للتثبيت على iOS:",
+    "iosStep1": "1. اضغط على زر المشاركة",
+    "iosStep2": "2. اختر \"إضافة إلى الشاشة الرئيسية\"",
+    "benefit1": "وصول بدون إنترنت",
+    "benefit2": "أسرع",
+    "benefit3": "إشعارات"
   }
 }

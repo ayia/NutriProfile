@@ -82,6 +82,19 @@
     "remaining_other": "restantes",
     "upgradeToPremium": "Passer à Premium"
   },
+  "pwa": {
+    "title": "Installer NutriProfile",
+    "description": "Installez NutriProfile sur votre appareil pour un accès rapide et une meilleure expérience.",
+    "install": "Installer",
+    "later": "Plus tard",
+    "understood": "Compris",
+    "iosInstructions": "Pour installer sur iOS :",
+    "iosStep1": "1. Appuyez sur le bouton Partager",
+    "iosStep2": "2. Sélectionnez \"Sur l'écran d'accueil\"",
+    "benefit1": "Accès hors-ligne",
+    "benefit2": "Plus rapide",
+    "benefit3": "Notifications"
+  },
   "toast": {
     "saved": "Enregistrement effectue",
     "saveError": "Erreur lors de l'enregistrement",

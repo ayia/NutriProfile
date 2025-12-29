@@ -93,6 +93,19 @@
     "remaining_other": "remaining",
     "upgradeToPremium": "Upgrade to Premium"
   },
+  "pwa": {
+    "title": "Install NutriProfile",
+    "description": "Install NutriProfile on your device for quick access and a better experience.",
+    "install": "Install",
+    "later": "Later",
+    "understood": "Got it",
+    "iosInstructions": "To install on iOS:",
+    "iosStep1": "1. Tap the Share button",
+    "iosStep2": "2. Select \"Add to Home Screen\"",
+    "benefit1": "Offline access",
+    "benefit2": "Faster",
+    "benefit3": "Notifications"
+  },
   "toast": {
     "saved": "Saved successfully",
     "saveError": "Error saving",

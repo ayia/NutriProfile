@@ -62,5 +62,18 @@
     "remaining_one": "剩余",
     "remaining_other": "剩余",
     "upgradeToPremium": "升级到高级版"
+  },
+  "pwa": {
+    "title": "安装 NutriProfile",
+    "description": "在您的设备上安装 NutriProfile，快速访问，体验更佳。",
+    "install": "安装",
+    "later": "稍后",
+    "understood": "知道了",
+    "iosInstructions": "在 iOS 上安装：",
+    "iosStep1": "1. 点击分享按钮",
+    "iosStep2": "2. 选择「添加到主屏幕」",
+    "benefit1": "离线访问",
+    "benefit2": "更快速",
+    "benefit3": "通知推送"
   }
 }

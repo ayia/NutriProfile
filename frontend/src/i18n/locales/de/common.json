@@ -62,5 +62,18 @@
     "remaining_one": "übrig",
     "remaining_other": "übrig",
     "upgradeToPremium": "Auf Premium upgraden"
+  },
+  "pwa": {
+    "title": "NutriProfile installieren",
+    "description": "Installieren Sie NutriProfile auf Ihrem Gerät für schnellen Zugriff und ein besseres Erlebnis.",
+    "install": "Installieren",
+    "later": "Später",
+    "understood": "Verstanden",
+    "iosInstructions": "So installieren Sie auf iOS:",
+    "iosStep1": "1. Tippen Sie auf die Teilen-Schaltfläche",
+    "iosStep2": "2. Wählen Sie \"Zum Home-Bildschirm\"",
+    "benefit1": "Offline-Zugriff",
+    "benefit2": "Schneller",
+    "benefit3": "Benachrichtigungen"
   }
 }

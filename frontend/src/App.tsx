@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { Layout } from '@/components/layout/Layout'
+import { PWAInstallPrompt } from '@/components/pwa/PWAInstallPrompt'
 import { HomePage } from '@/pages/HomePage'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
@@ -21,7 +22,9 @@ import { ProfileRequiredRoute } from '@/components/auth/ProfileRequiredRoute'
 
 function App() {
   return (
-    <Routes>
+    <>
+      <PWAInstallPrompt />
+      <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
@@ -104,6 +107,7 @@ function App() {
         <Route path="refund" element={<RefundPage />} />
       </Route>
     </Routes>
+    </>
   )
 }
 
