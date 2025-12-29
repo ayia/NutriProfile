@@ -111,6 +111,8 @@
   },
   "macros": {
     "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
     "water": "Water",
     "activity": "Activity"
   },

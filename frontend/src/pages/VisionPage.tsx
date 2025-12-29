@@ -218,7 +218,7 @@ export function VisionPage() {
                       <div key={macro.key} className="glass-card p-4 text-center hover-lift">
                         <span className="text-2xl block mb-2">{macro.icon}</span>
                         <div className={`text-2xl font-bold text-${macro.color}-600`}>
-                          {macro.value}g
+                          {Math.round(macro.value * 10) / 10}g
                         </div>
                         <div className="text-xs text-gray-500 mt-1">{macro.label}</div>
                         <div className={`h-1.5 bg-${macro.color}-100 rounded-full overflow-hidden mt-3`}>

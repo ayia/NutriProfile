@@ -11,7 +11,6 @@ import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton'
 import { HealthAlerts } from '@/components/dashboard/HealthAlerts'
 import { PersonalizedInsights } from '@/components/dashboard/PersonalizedInsights'
 import { ProfileSummaryBanner } from '@/components/dashboard/ProfileSummaryBanner'
-import { AdaptiveStatsGrid } from '@/components/dashboard/AdaptiveStatsGrid'
 import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
 
@@ -91,7 +90,7 @@ export function MainDashboardPage() {
         <HealthAlerts alerts={personalization.health_alerts} />
       )}
 
-      {/* Hero Card - Stats principales */}
+      {/* Hero Card - Stats principales avec les 4 macros */}
       <HeroCard
         userName={data.user_name}
         quickStats={data.quick_stats}
@@ -99,16 +98,8 @@ export function MainDashboardPage() {
         notifications={data.notifications}
         unreadCount={data.unread_notifications}
         onWaterClick={() => setShowWaterModal(true)}
+        uiConfig={personalization?.ui_config}
       />
-
-      {/* Stats adaptatives basées sur le profil */}
-      {personalization && (
-        <AdaptiveStatsGrid
-          stats={data.quick_stats}
-          uiConfig={personalization.ui_config}
-          personalizedStats={personalization.personalized_stats}
-        />
-      )}
 
       {/* Actions rapides - scroll horizontal */}
       <QuickActions onWaterClick={() => setShowWaterModal(true)} />
