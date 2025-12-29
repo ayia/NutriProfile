@@ -107,11 +107,11 @@ export function HomePage() {
     <div className="overflow-hidden">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        {/* Animated Background Blobs */}
+        {/* Animated Background Blobs - Responsive */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-primary-200/50 to-cyan-200/50 rounded-full blur-3xl blob animate-blob" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-purple-200/50 to-pink-200/50 rounded-full blur-3xl blob animate-blob" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary-100/30 to-emerald-100/30 rounded-full blur-3xl blob animate-blob" style={{ animationDelay: '4s' }} />
+          <div className="absolute top-0 right-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gradient-to-br from-primary-200/50 to-cyan-200/50 rounded-full blur-3xl blob animate-blob" />
+          <div className="absolute bottom-0 left-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gradient-to-br from-purple-200/50 to-pink-200/50 rounded-full blur-3xl blob animate-blob" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] md:w-[600px] md:h-[600px] bg-gradient-to-br from-primary-100/30 to-emerald-100/30 rounded-full blur-3xl blob animate-blob" style={{ animationDelay: '4s' }} />
         </div>
 
         <div className="max-w-6xl mx-auto px-4">
@@ -126,7 +126,7 @@ export function HomePage() {
             </div>
 
             {/* Title */}
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 animate-fade-in-up tracking-tight">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 animate-fade-in-up tracking-tight">
               {t('hero.title')}
               <br />
               <span className="text-gradient">
@@ -135,7 +135,7 @@ export function HomePage() {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.1s' }}>
+            <p className="text-base sm:text-xl md:text-2xl text-gray-600 mb-6 sm:mb-10 max-w-2xl mx-auto animate-fade-in-up leading-relaxed px-2" style={{ animationDelay: '0.1s' }}>
               {t('hero.subtitle')}
             </p>
 
@@ -156,15 +156,15 @@ export function HomePage() {
             </div>
 
             {/* Stats with glassmorphism */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 mt-10 sm:mt-20 max-w-4xl mx-auto">
               {stats.map((stat, index) => (
                 <div
                   key={stat.label}
-                  className="glass-card p-6 text-center hover-lift animate-fade-in-up"
+                  className="glass-card p-3 sm:p-6 text-center hover-lift animate-fade-in-up"
                   style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                 >
-                  <div className="text-4xl md:text-5xl font-bold text-gradient mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+                  <div className="text-2xl sm:text-4xl md:text-5xl font-bold text-gradient mb-1">{stat.value}</div>
+                  <div className="text-xs sm:text-sm text-gray-600 font-medium">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -173,19 +173,19 @@ export function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-24 bg-white relative">
+      <section className="py-12 sm:py-24 bg-white relative">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white pointer-events-none" />
         <div className="max-w-6xl mx-auto px-4 relative">
-          <div className="text-center mb-16 reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+          <div className="text-center mb-8 sm:mb-16 reveal">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 tracking-tight">
               {t('howItWorks.title')}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto">
               {t('howItWorks.subtitle')}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-8 mb-8 sm:mb-16">
             {/* Step 1 */}
             <div className="reveal stagger-1">
               <div className="relative group">
@@ -304,18 +304,18 @@ export function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 bg-gradient-to-b from-gray-50 to-white relative">
+      <section id="features" className="py-12 sm:py-24 bg-gradient-to-b from-gray-50 to-white relative">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16 reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+          <div className="text-center mb-8 sm:mb-16 reveal">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 tracking-tight">
               {t('features.title')}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto">
               {t('features.subtitle')}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {features.map((feature, index) => (
               <div
                 key={feature.title}
@@ -335,22 +335,22 @@ export function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary-100/50 to-cyan-100/50 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-purple-100/50 to-pink-100/50 rounded-full blur-3xl -z-10" />
+      <section className="py-12 sm:py-24 bg-white relative overflow-hidden">
+        {/* Background decoration - Responsive */}
+        <div className="absolute top-0 right-0 w-48 sm:w-96 h-48 sm:h-96 bg-gradient-to-br from-primary-100/50 to-cyan-100/50 rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-0 left-0 w-48 sm:w-96 h-48 sm:h-96 bg-gradient-to-br from-purple-100/50 to-pink-100/50 rounded-full blur-3xl -z-10" />
 
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16 reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+          <div className="text-center mb-8 sm:mb-16 reveal">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 tracking-tight">
               {t('testimonials.title')}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto">
               {t('testimonials.subtitle')}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
             {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.name}
@@ -383,21 +383,21 @@ export function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-12 sm:py-24 relative overflow-hidden">
         {/* Animated gradient background */}
         <div className="absolute inset-0 bg-gradient-animated" />
         <div className="absolute inset-0 bg-black/10" />
 
-        {/* Floating shapes */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-float" />
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-float" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-white/10 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }} />
+        {/* Floating shapes - Responsive */}
+        <div className="absolute top-10 left-10 w-12 sm:w-20 h-12 sm:h-20 bg-white/10 rounded-full blur-xl animate-float" />
+        <div className="absolute bottom-10 right-10 w-20 sm:w-32 h-20 sm:h-32 bg-white/10 rounded-full blur-xl animate-float" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 right-1/4 w-10 sm:w-16 h-10 sm:h-16 bg-white/10 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }} />
 
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10 reveal">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6 tracking-tight">
             {t('cta.title')}
           </h2>
-          <p className="text-white/90 text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-white/90 text-base sm:text-xl mb-6 sm:mb-10 max-w-2xl mx-auto leading-relaxed">
             {t('cta.subtitle')}
           </p>
           <Link to="/register">
@@ -416,10 +416,10 @@ export function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 py-16 relative">
+      <footer className="bg-gray-900 py-10 sm:py-16 relative">
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
         <div className="max-w-6xl mx-auto px-4 relative">
-          <div className="grid md:grid-cols-4 gap-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10">
             <div>
               <div className="flex items-center gap-3 mb-5">
                 <span className="text-3xl">🥗</span>

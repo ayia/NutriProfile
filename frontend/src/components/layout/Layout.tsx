@@ -14,7 +14,7 @@ export function Layout() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className={`container mx-auto px-4 py-8 ${needsBottomPadding ? 'pb-24 md:pb-8' : ''}`}>
+      <main className={`container mx-auto px-3 sm:px-4 py-4 sm:py-8 ${needsBottomPadding ? 'pb-24 md:pb-8' : ''}`}>
         <Outlet />
       </main>
       <BottomNav />

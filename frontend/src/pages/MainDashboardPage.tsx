@@ -186,7 +186,7 @@ export function MainDashboardPage() {
           </span>
           <h3 className="heading-4">{t('journey.title')}</h3>
         </div>
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
           {[
             { value: data.user_stats.total_meals_logged, label: t('journey.meals'), color: 'text-primary-600', bg: 'bg-primary-50' },
             { value: data.user_stats.total_activities, label: t('journey.activities'), color: 'text-accent-600', bg: 'bg-accent-50' },
@@ -195,7 +195,7 @@ export function MainDashboardPage() {
             { value: data.user_stats.achievements_count, label: t('journey.achievements'), color: 'text-warning-600', bg: 'bg-warning-50' },
           ].map((stat) => (
             <div key={stat.label} className={`${stat.bg} rounded-xl p-3 text-center`}>
-              <div className={`text-xl font-bold ${stat.color}`}>{stat.value}</div>
+              <div className={`text-lg sm:text-xl font-bold ${stat.color}`}>{stat.value}</div>
               <div className="text-xs text-neutral-600">{stat.label}</div>
             </div>
           ))}
@@ -204,8 +204,8 @@ export function MainDashboardPage() {
 
       {/* Water Modal */}
       {showWaterModal && (
-        <div className="fixed inset-0 bg-neutral-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="card-elevated w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-neutral-900/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
+          <div className="card-elevated w-full max-w-[calc(100vw-24px)] sm:max-w-md max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">

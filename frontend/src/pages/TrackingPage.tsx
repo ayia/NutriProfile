@@ -98,9 +98,9 @@ export function TrackingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-accent-100/40 to-amber-100/40 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-br from-primary-100/40 to-emerald-100/40 rounded-full blur-3xl -z-10" />
+      {/* Background decorations - Responsive */}
+      <div className="absolute top-20 right-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gradient-to-br from-accent-100/40 to-amber-100/40 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[280px] sm:h-[280px] md:w-[400px] md:h-[400px] bg-gradient-to-br from-primary-100/40 to-emerald-100/40 rounded-full blur-3xl -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
@@ -205,34 +205,34 @@ export function TrackingPage() {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">{t('today.title')}</h3>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="glass-primary p-4 text-center hover-lift">
-                  <div className="text-3xl font-bold text-primary-600">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
+                <div className="glass-primary p-3 sm:p-4 text-center hover-lift">
+                  <div className="text-2xl sm:text-3xl font-bold text-primary-600">
                     {summary.today.calories_consumed}
                   </div>
-                  <div className="text-xs text-gray-500 mt-1">{t('today.caloriesConsumed')}</div>
+                  <div className="text-[10px] sm:text-xs text-gray-500 mt-1">{t('today.caloriesConsumed')}</div>
                 </div>
-                <div className="glass-accent p-4 text-center hover-lift">
-                  <div className="text-3xl font-bold text-accent-600">
+                <div className="glass-accent p-3 sm:p-4 text-center hover-lift">
+                  <div className="text-2xl sm:text-3xl font-bold text-accent-600">
                     {summary.today.calories_burned}
                   </div>
-                  <div className="text-xs text-gray-500 mt-1">{t('today.caloriesBurned')}</div>
+                  <div className="text-[10px] sm:text-xs text-gray-500 mt-1">{t('today.caloriesBurned')}</div>
                 </div>
-                <div className="bg-warning-50/80 backdrop-blur border border-warning-100 rounded-2xl p-4 text-center hover-lift">
-                  <div className="text-3xl font-bold text-warning-600">
+                <div className="bg-warning-50/80 backdrop-blur border border-warning-100 rounded-2xl p-3 sm:p-4 text-center hover-lift">
+                  <div className="text-2xl sm:text-3xl font-bold text-warning-600">
                     {summary.today.activity_minutes}
                   </div>
-                  <div className="text-xs text-gray-500 mt-1">{t('today.activityMinutes')}</div>
+                  <div className="text-[10px] sm:text-xs text-gray-500 mt-1">{t('today.activityMinutes')}</div>
                 </div>
                 <button
                   onClick={() => setActiveModal('water')}
-                  className="bg-gradient-to-br from-cyan-50 to-blue-50 backdrop-blur border border-cyan-200 rounded-2xl p-4 text-center hover-lift cursor-pointer hover:shadow-lg hover:shadow-cyan-500/20 transition-all group"
+                  className="bg-gradient-to-br from-cyan-50 to-blue-50 backdrop-blur border border-cyan-200 rounded-2xl p-3 sm:p-4 text-center hover-lift cursor-pointer hover:shadow-lg hover:shadow-cyan-500/20 transition-all group"
                 >
-                  <div className="text-3xl font-bold text-cyan-600 group-hover:scale-110 transition-transform">
+                  <div className="text-2xl sm:text-3xl font-bold text-cyan-600 group-hover:scale-110 transition-transform">
                     {summary.today.water_ml}
                   </div>
-                  <div className="text-xs text-gray-500 mt-1">{t('today.waterMl')}</div>
-                  <div className="text-xs text-cyan-500 mt-2 font-medium flex items-center justify-center gap-1">
+                  <div className="text-[10px] sm:text-xs text-gray-500 mt-1">{t('today.waterMl')}</div>
+                  <div className="text-[10px] sm:text-xs text-cyan-500 mt-1 sm:mt-2 font-medium flex items-center justify-center gap-1">
                     <span className="animate-pulse">💧</span> {t('today.addWater')}
                   </div>
                 </button>
@@ -297,30 +297,30 @@ export function TrackingPage() {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">{t('week.title')}</h3>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover-lift">
-                  <div className="text-sm text-gray-500 mb-1">{t('week.avgCalories')}</div>
-                  <div className="text-2xl font-bold text-gray-900">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
+                <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover-lift">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">{t('week.avgCalories')}</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
                     {Math.round(summary.week.avg_calories_consumed)}
-                    <span className="text-sm font-normal text-gray-400 ml-1">{t('common.kcal')}</span>
+                    <span className="text-xs sm:text-sm font-normal text-gray-400 ml-1">{t('common.kcal')}</span>
                   </div>
                 </div>
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover-lift">
-                  <div className="text-sm text-gray-500 mb-1">{t('week.totalActivity')}</div>
-                  <div className="text-2xl font-bold text-gray-900">
+                <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover-lift">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">{t('week.totalActivity')}</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
                     {summary.week.total_activity_minutes}
-                    <span className="text-sm font-normal text-gray-400 ml-1">{t('common.min')}</span>
+                    <span className="text-xs sm:text-sm font-normal text-gray-400 ml-1">{t('common.min')}</span>
                   </div>
                 </div>
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover-lift">
-                  <div className="text-sm text-gray-500 mb-1">{t('week.totalSteps')}</div>
-                  <div className="text-2xl font-bold text-gray-900">
+                <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover-lift">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">{t('week.totalSteps')}</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
                     {summary.week.total_steps.toLocaleString()}
                   </div>
                 </div>
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover-lift">
-                  <div className="text-sm text-gray-500 mb-1">{t('week.weightChange')}</div>
-                  <div className={`text-2xl font-bold flex items-center gap-2 ${
+                <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover-lift">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">{t('week.weightChange')}</div>
+                  <div className={`text-xl sm:text-2xl font-bold flex items-center gap-2 ${
                     summary.week.weight_change === null
                       ? 'text-gray-400'
                       : summary.week.weight_change > 0
@@ -659,10 +659,10 @@ export function TrackingPage() {
           </div>
         )}
 
-        {/* Modals - Enhanced */}
+        {/* Modals - Enhanced & Responsive */}
         {activeModal && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-            <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-white/50 animate-scale-in">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50 animate-fade-in">
+            <div className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-[calc(100vw-24px)] sm:max-w-md max-h-[90vh] overflow-y-auto border border-white/50 animate-scale-in">
               <div className="p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${

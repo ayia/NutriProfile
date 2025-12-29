@@ -86,36 +86,36 @@ export function VisionPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-secondary-100/40 to-cyan-100/40 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-br from-primary-100/40 to-emerald-100/40 rounded-full blur-3xl -z-10" />
+      {/* Background decorations - Responsive */}
+      <div className="absolute top-20 right-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gradient-to-br from-secondary-100/40 to-cyan-100/40 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[280px] sm:h-[280px] md:w-[400px] md:h-[400px] bg-gradient-to-br from-primary-100/40 to-emerald-100/40 rounded-full blur-3xl -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Header - Enhanced */}
-        <div className="mb-8 animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 glass-card text-secondary-700 text-sm font-medium mb-4">
+        {/* Header - Enhanced & Responsive */}
+        <div className="mb-6 sm:mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 glass-card text-secondary-700 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
             <span className="animate-pulse">📷</span>
             {t('subtitle')}
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
             {t('title')}
           </h1>
         </div>
 
-        {/* Tabs - Glassmorphism style */}
-        <div className="flex gap-2 mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+        {/* Tabs - Glassmorphism style - Responsive */}
+        <div className="flex gap-1.5 sm:gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           {tabs.map((tab, index) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-medium transition-all duration-300 ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-medium transition-all duration-300 whitespace-nowrap text-sm sm:text-base ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-secondary-500 to-cyan-500 text-white shadow-lg shadow-secondary-500/30 scale-105'
                   : 'glass-card text-gray-600 hover:text-gray-900 hover:shadow-md hover:-translate-y-0.5'
               }`}
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
-              <span className={`text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
+              <span className={`text-base sm:text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
               <span>{tab.label}</span>
             </button>
           ))}
@@ -208,8 +208,8 @@ export function VisionPage() {
                     </div>
                   </div>
 
-                  {/* Macros - Grid */}
-                  <div className="grid grid-cols-3 gap-4">
+                  {/* Macros - Grid - Responsive */}
+                  <div className="grid grid-cols-3 gap-2 sm:gap-4">
                     {[
                       { key: 'protein', icon: '💪', label: t('today.protein'), value: nutrition.total_protein, percent: nutrition.protein_percent, color: 'secondary' },
                       { key: 'carbs', icon: '🌾', label: t('today.carbs'), value: nutrition.total_carbs, percent: nutrition.carbs_percent, color: 'warning' },

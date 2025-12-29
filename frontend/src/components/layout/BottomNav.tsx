@@ -39,7 +39,7 @@ export function BottomNav() {
               <span className={`text-xl mb-0.5 transition-transform ${isActive ? 'scale-110' : ''}`}>
                 {isActive ? item.activeIcon : item.icon}
               </span>
-              <span className={`text-xs ${isActive ? 'font-medium' : ''}`}>
+              <span className={`text-[10px] sm:text-xs truncate max-w-[48px] sm:max-w-none ${isActive ? 'font-medium' : ''}`}>
                 {item.label}
               </span>
               {isActive && (

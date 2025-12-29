@@ -84,73 +84,73 @@ export function RecipesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-primary-100/40 to-emerald-100/40 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-br from-accent-100/40 to-amber-100/40 rounded-full blur-3xl -z-10" />
+      {/* Background decorations - Responsive */}
+      <div className="absolute top-20 right-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gradient-to-br from-primary-100/40 to-emerald-100/40 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[280px] sm:h-[280px] md:w-[400px] md:h-[400px] bg-gradient-to-br from-accent-100/40 to-amber-100/40 rounded-full blur-3xl -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Header amélioré */}
-        <div className="mb-8 animate-fade-in">
-          <div className="flex items-center justify-between flex-wrap gap-4">
+        {/* Header amélioré - Responsive */}
+        <div className="mb-6 sm:mb-8 animate-fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 glass-card text-primary-700 text-sm font-medium mb-4">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 glass-card text-primary-700 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
                 <span className="animate-pulse">✨</span>
                 {t('subtitle')}
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
                 {t('title')}
               </h1>
             </div>
-            <div className="flex items-center gap-3 px-4 py-2 glass-card">
-              <span className="text-primary-600 font-medium">{t('coachActive')}</span>
-              <span className="relative flex h-3 w-3">
+            <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 glass-card self-start sm:self-auto">
+              <span className="text-primary-600 font-medium text-sm sm:text-base">{t('coachActive')}</span>
+              <span className="relative flex h-2.5 sm:h-3 w-2.5 sm:w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-success-500"></span>
+                <span className="relative inline-flex rounded-full h-2.5 sm:h-3 w-2.5 sm:w-3 bg-success-500"></span>
               </span>
-              <span className="text-gray-500">{t('active')}</span>
+              <span className="text-gray-500 text-sm sm:text-base">{t('active')}</span>
             </div>
           </div>
         </div>
 
-        {/* Suggestions rapides - Enhanced */}
-        <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-          <p className="text-sm font-semibold text-gray-600 mb-4 flex items-center gap-2">
+        {/* Suggestions rapides - Enhanced & Responsive */}
+        <div className="mb-6 sm:mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-3 sm:mb-4 flex items-center gap-2">
             <span>💡</span> {t('quickSuggestions')}
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             {quickSuggestions.map((suggestion, index) => (
               <button
                 key={suggestion.label}
                 onClick={() => handleQuickSuggestion(suggestion.tags)}
-                className="group relative flex items-center gap-2 px-5 py-3 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl text-sm font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
+                className="group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
                 style={{ animationDelay: `${0.05 * (index + 1)}s` }}
               >
                 {/* Gradient background on hover */}
                 <div className={`absolute inset-0 bg-gradient-to-r ${suggestion.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-                <span className="text-xl group-hover:scale-110 transition-transform">{suggestion.icon}</span>
+                <span className="text-base sm:text-xl group-hover:scale-110 transition-transform">{suggestion.icon}</span>
                 <span className="relative text-gray-700 group-hover:text-gray-900">{suggestion.label}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Tabs avec compteurs - Enhanced */}
-        <div className="flex gap-2 mb-8 overflow-x-auto pb-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        {/* Tabs avec compteurs - Enhanced & Responsive */}
+        <div className="flex gap-1.5 sm:gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           {tabs.map((tab, index) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-medium transition-all duration-300 whitespace-nowrap ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-medium transition-all duration-300 whitespace-nowrap text-sm sm:text-base ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-primary-500 to-emerald-500 text-white shadow-lg shadow-primary-500/30 scale-105'
                   : 'glass-card text-gray-600 hover:text-gray-900 hover:shadow-md hover:-translate-y-0.5'
               }`}
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
-              <span className={`text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
+              <span className={`text-base sm:text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
               <span>{tab.label}</span>
               {tab.count !== undefined && tab.count > 0 && (
-                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                <span className={`px-1.5 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold ${
                   activeTab === tab.id
                     ? 'bg-white/20 text-white'
                     : 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-600'

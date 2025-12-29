@@ -102,6 +102,111 @@ function BadComponent() {
 - [ ] Namespace approprié utilisé
 - [ ] Clés de traduction cohérentes avec les fichiers existants
 
+## Règles Responsive Design & UI/UX
+
+**IMPORTANT**: L'application doit être 100% responsive et optimisée pour tous les écrans (375px à 1920px+).
+
+### Approche Mobile-First
+
+- TOUJOURS coder d'abord pour mobile, puis ajouter les breakpoints pour écrans plus grands
+- Utiliser les breakpoints Tailwind CSS dans cet ordre : `base` → `sm:` → `md:` → `lg:` → `xl:`
+
+### Breakpoints Tailwind CSS
+
+| Préfixe | Largeur min | Usage |
+|---------|-------------|-------|
+| (base) | 0px | Mobile (iPhone SE, 375px) |
+| `sm:` | 640px | Grands mobiles, petites tablettes |
+| `md:` | 768px | Tablettes |
+| `lg:` | 1024px | Laptops |
+| `xl:` | 1280px | Desktops |
+
+### Règles obligatoires
+
+#### 1. Éléments décoratifs (blobs, backgrounds)
+```tsx
+// BON - Tailles responsives pour éviter overflow
+className="w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px]"
+
+// MAUVAIS - Taille fixe cause overflow sur mobile
+className="w-[500px] h-[500px]"
+```
+
+#### 2. Grilles CSS
+```tsx
+// BON - Colonnes adaptatives
+className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+
+// MAUVAIS - Trop de colonnes sur mobile
+className="grid grid-cols-5"
+```
+
+#### 3. Modals et Dialogs
+```tsx
+// BON - Largeur calculée pour petits écrans
+className="max-w-[calc(100vw-24px)] sm:max-w-md"
+
+// MAUVAIS - Modal dépasse l'écran sur 375px
+className="max-w-md"
+```
+
+#### 4. Typographie responsive
+```tsx
+// BON - Tailles adaptatives
+className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
+
+// Navigation mobile
+className="text-[10px] sm:text-xs"
+
+// MAUVAIS - Texte trop grand sur mobile
+className="text-5xl"
+```
+
+#### 5. Espacements (padding, gap, margin)
+```tsx
+// BON - Espacements réduits sur mobile
+className="p-3 sm:p-4 md:p-6"
+className="gap-2 sm:gap-4"
+className="py-12 sm:py-24"
+
+// MAUVAIS - Espacements fixes trop grands
+className="p-6 gap-8"
+```
+
+#### 6. Boutons et éléments interactifs
+```tsx
+// BON - Zone tactile minimum 44px, padding adaptatif
+className="px-3 sm:px-5 py-2 sm:py-3 min-h-[44px]"
+
+// Boutons d'action
+className="w-full sm:w-auto"
+```
+
+#### 7. Texte tronqué pour navigation
+```tsx
+// BON - Troncature avec max-width responsive
+className="truncate max-w-[48px] sm:max-w-none"
+```
+
+### Patterns UI/UX à respecter
+
+1. **Touch targets** : Minimum 44x44px pour tous les éléments cliquables sur mobile
+2. **Safe area** : Utiliser `safe-area-bottom` pour la navigation mobile (iPhone notch)
+3. **Overflow** : TOUJOURS `overflow-hidden` sur les conteneurs avec éléments décoratifs
+4. **Z-index** : Navigation mobile `z-50`, modals `z-50`, overlays `z-40`
+5. **Transitions** : Utiliser `transition-all` ou `transition-colors` pour les interactions
+
+### Checklist Responsive avant commit
+
+- [ ] Testé sur 375px (iPhone SE)
+- [ ] Testé sur 768px (tablette)
+- [ ] Testé sur 1024px+ (desktop)
+- [ ] Aucun overflow horizontal
+- [ ] Textes lisibles sur tous les écrans
+- [ ] Boutons/liens facilement cliquables sur mobile
+- [ ] Modals ne dépassent pas l'écran
+- [ ] Navigation mobile fonctionnelle
+
 ## Commandes
 
 ```bash
