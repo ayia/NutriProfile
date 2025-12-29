@@ -178,5 +178,21 @@
     "meals": "Refeições",
     "activities": "Atividades",
     "bestStreak": "Melhor sequência"
+  },
+  "personalization": {
+    "greeting": "Olá",
+    "insights": "Dicas personalizadas",
+    "suggestedAction": "Ação sugerida",
+    "basedOnProfile": "Com base no seu perfil",
+    "healthAlerts": "Alertas de saúde",
+    "priorityStats": "Estatísticas prioritárias"
+  },
+  "stats": {
+    "calories": "Calorias",
+    "protein": "Proteínas",
+    "carbs": "Carboidratos",
+    "fat": "Gorduras",
+    "water": "Água",
+    "activity": "Atividade"
   }
 }

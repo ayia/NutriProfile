@@ -178,5 +178,21 @@
     "meals": "餐食",
     "activities": "活动",
     "bestStreak": "最佳连续记录"
+  },
+  "personalization": {
+    "greeting": "你好",
+    "insights": "个性化建议",
+    "suggestedAction": "建议操作",
+    "basedOnProfile": "根据您的个人资料",
+    "healthAlerts": "健康警报",
+    "priorityStats": "优先统计"
+  },
+  "stats": {
+    "calories": "卡路里",
+    "protein": "蛋白质",
+    "carbs": "碳水化合物",
+    "fat": "脂肪",
+    "water": "水",
+    "activity": "活动"
   }
 }

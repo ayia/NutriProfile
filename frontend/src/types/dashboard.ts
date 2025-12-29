@@ -67,14 +67,78 @@ export interface QuickStats {
   protein_today: number
   protein_target: number
   protein_percent: number
+  // Glucides - important pour diabétiques
+  carbs_today: number
+  carbs_target: number
+  carbs_percent: number
+  // Lipides - important pour santé cardiaque
+  fat_today: number
+  fat_target: number
+  fat_percent: number
   water_today: number
   water_target: number
   water_percent: number
   activity_today: number
   activity_target: number
   activity_percent: number
+  calories_burned: number
   meals_today: number
   streak_days: number
+}
+
+// Personnalisation Types
+
+export interface PriorityWidget {
+  id: string
+  type: 'health' | 'goal' | 'diet' | 'general'
+  priority: number
+  reason: string
+  source: 'medical_condition' | 'goal' | 'diet_type' | 'age'
+}
+
+export interface PersonalizedStat {
+  id: string
+  priority: number
+  reason: string
+}
+
+export interface HealthAlert {
+  type: string
+  severity: 'info' | 'warning' | 'critical'
+  title: string
+  message: string
+  icon: string
+  action?: string | null
+  show_always?: boolean
+}
+
+export interface PersonalizedInsight {
+  type: string
+  title: string
+  message: string
+  icon: string
+  priority: number
+}
+
+export interface UIConfig {
+  show_carbs_prominently: boolean
+  show_fat_breakdown: boolean
+  show_sodium_tracker: boolean
+  show_hydration_prominently: boolean
+  show_activity_prominently: boolean
+  show_weight_tracker: boolean
+  primary_color_theme: string
+  stats_layout: 'standard' | 'compact' | 'detailed'
+}
+
+export interface PersonalizationData {
+  profile_summary: string
+  health_context: string[]
+  priority_widgets: PriorityWidget[]
+  personalized_stats: PersonalizedStat[]
+  health_alerts: HealthAlert[]
+  insights: PersonalizedInsight[]
+  ui_config: UIConfig
 }
 
 export interface DashboardData {
@@ -86,6 +150,8 @@ export interface DashboardData {
   active_streaks: Streak[]
   unread_notifications: number
   notifications: Notification[]
+  // Personnalisation basée sur le profil complet
+  personalization: PersonalizationData | null
 }
 
 export const STREAK_LABELS: Record<string, { name: string; icon: string }> = {

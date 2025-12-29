@@ -12,6 +12,7 @@ from app.models.food_log import FoodLog, DailyNutrition
 from app.models.activity import ActivityLog
 from app.models.gamification import Achievement, Streak, Notification, UserStats, ACHIEVEMENTS, calculate_level
 from app.agents.coach import get_coach_agent, CoachInput, get_time_of_day
+from app.agents.dashboard_personalizer import get_dashboard_personalizer_agent, PersonalizerInput
 from app.i18n import get_translator, DEFAULT_LANGUAGE
 from app.schemas.dashboard import (
     CoachResponseSchema,
@@ -22,6 +23,12 @@ from app.schemas.dashboard import (
     UserStatsResponse,
     QuickStats,
     DashboardResponse,
+    PersonalizationData,
+    PriorityWidget,
+    PersonalizedStat,
+    HealthAlert,
+    PersonalizedInsight,
+    UIConfig,
 )
 
 router = APIRouter()
@@ -54,6 +61,8 @@ async def get_dashboard(
     # Calculer les totaux depuis les food_logs
     calories_from_food = sum(log.total_calories or 0 for log in food_logs)
     protein_from_food = sum(log.total_protein or 0 for log in food_logs)
+    carbs_from_food = sum(log.total_carbs or 0 for log in food_logs)
+    fat_from_food = sum(log.total_fat or 0 for log in food_logs)
     meals_count = len(food_logs)
 
     # Récupérer l'eau depuis DailyNutrition (seule donnée qui y est stockée séparément)
@@ -94,6 +103,8 @@ async def get_dashboard(
     profile = profile_result.scalar_one_or_none()
     target_calories = profile.daily_calories if profile and profile.daily_calories else 2000
     target_protein = profile.protein_g if profile and profile.protein_g else 100
+    target_carbs = profile.carbs_g if profile and profile.carbs_g else 250
+    target_fat = profile.fat_g if profile and profile.fat_g else 65
 
     # Calculer les calories nettes (mangées - brûlées par activité)
     # Note: On affiche les calories nettes pour un suivi plus précis
@@ -111,12 +122,21 @@ async def get_dashboard(
         protein_today=protein_from_food,
         protein_target=target_protein,
         protein_percent=round((protein_from_food / target_protein) * 100, 1) if target_protein else 0,
+        # Glucides - important pour diabétiques
+        carbs_today=carbs_from_food,
+        carbs_target=target_carbs,
+        carbs_percent=round((carbs_from_food / target_carbs) * 100, 1) if target_carbs else 0,
+        # Lipides - important pour santé cardiaque
+        fat_today=fat_from_food,
+        fat_target=target_fat,
+        fat_percent=round((fat_from_food / target_fat) * 100, 1) if target_fat else 0,
         water_today=water_today,
         water_target=water_target,
         water_percent=round((water_today / water_target) * 100, 1) if water_target else 0,
         activity_today=activity_minutes,
         activity_target=activity_target,
         activity_percent=round((activity_minutes / activity_target) * 100, 1) if activity_target else 0,
+        calories_burned=calories_burned,
         meals_today=meals_count,
         streak_days=logging_streak.current_count if logging_streak else 0,
     )
@@ -197,6 +217,21 @@ async def get_dashboard(
         achievements_count=stats.achievements_count,
     )
 
+    # Personnalisation du dashboard basée sur le profil complet
+    personalization = None
+    if profile:
+        try:
+            personalization = await asyncio.wait_for(
+                get_personalization(db, current_user, profile, quick_stats),
+                timeout=3.0
+            )
+        except asyncio.TimeoutError:
+            import logging
+            logging.warning("Dashboard personalization timed out, using defaults")
+        except Exception as e:
+            import logging
+            logging.warning(f"Dashboard personalization failed: {e}")
+
     return DashboardResponse(
         user_name=current_user.name,
         quick_stats=quick_stats,
@@ -206,6 +241,7 @@ async def get_dashboard(
         active_streaks=active_streaks,
         unread_notifications=unread_count,
         notifications=notifications,
+        personalization=personalization,
     )
 
 
@@ -396,6 +432,141 @@ async def get_coach_advice(db: AsyncSession, user: User, quick_stats: QuickStats
         ],
         motivation_quote=result.result.motivation_quote,
         confidence=result.confidence,
+    )
+
+
+async def get_personalization(
+    db: AsyncSession,
+    user: User,
+    profile: Profile,
+    quick_stats: QuickStats
+) -> PersonalizationData | None:
+    """
+    Génère la personnalisation du dashboard basée sur le profil complet.
+    Utilise l'agent DashboardPersonalizer pour analyser:
+    - Conditions médicales (diabète, hypertension, etc.)
+    - Objectifs (perte de poids, prise de muscle, etc.)
+    - Régime alimentaire (végan, keto, etc.)
+    - Âge et genre
+    - Allergies et médicaments
+    - Historique et habitudes
+    """
+    # Stats de la semaine pour le contexte historique
+    week_start = datetime.combine(date.today() - timedelta(days=7), datetime.min.time())
+
+    # Moyenne des calories et protéines de la semaine
+    week_nutrition_query = select(
+        func.avg(DailyNutrition.total_calories),
+        func.avg(DailyNutrition.total_protein),
+        func.avg(DailyNutrition.total_carbs),
+        func.count(DailyNutrition.id)
+    ).where(and_(
+        DailyNutrition.user_id == user.id,
+        DailyNutrition.date >= week_start,
+    ))
+    week_result = await db.execute(week_nutrition_query)
+    week_row = week_result.one()
+    avg_calories_week = week_row[0] or 0
+    avg_protein_week = week_row[1] or 0
+    avg_carbs_week = week_row[2] or 0
+    days_logged_week = week_row[3] or 0
+
+    # Créer l'input pour le personnaliseur
+    personalizer_input = PersonalizerInput(
+        name=user.name,
+        age=profile.age,
+        gender=profile.gender,
+        height_cm=profile.height_cm,
+        weight_kg=profile.weight_kg,
+        goal=profile.goal,
+        diet_type=profile.diet_type,
+        activity_level=profile.activity_level,
+        medical_conditions=profile.medical_conditions or [],
+        allergies=profile.allergies or [],
+        medications=profile.medications or [],
+        target_calories=profile.daily_calories or 2000,
+        target_protein=profile.protein_g or 100,
+        target_carbs=profile.carbs_g or 250,
+        target_fat=profile.fat_g or 65,
+        target_water=profile.water_target_ml if hasattr(profile, 'water_target_ml') else 2000,
+        calories_today=quick_stats.calories_today,
+        protein_today=quick_stats.protein_today,
+        carbs_today=quick_stats.carbs_today,
+        fat_today=quick_stats.fat_today,
+        water_today=quick_stats.water_today,
+        activity_minutes_today=quick_stats.activity_today,
+        avg_calories_week=avg_calories_week,
+        avg_protein_week=avg_protein_week,
+        avg_carbs_week=avg_carbs_week,
+        days_logged_week=days_logged_week,
+        time_of_day=get_time_of_day(),
+        meals_today=quick_stats.meals_today,
+        streak_days=quick_stats.streak_days,
+    )
+
+    # Appeler l'agent de personnalisation
+    personalizer = get_dashboard_personalizer_agent(language=user.preferred_language)
+    result = await personalizer.process(personalizer_input)
+
+    if not result or not result.result:
+        return None
+
+    # Convertir le résultat en schéma Pydantic
+    personalization_result = result.result
+
+    return PersonalizationData(
+        profile_summary=personalization_result.profile_summary,
+        health_context=personalization_result.health_context,
+        priority_widgets=[
+            PriorityWidget(
+                id=w["id"],
+                type=w["type"],
+                priority=w["priority"],
+                reason=w["reason"],
+                source=w["source"],
+            )
+            for w in personalization_result.priority_widgets
+        ],
+        personalized_stats=[
+            PersonalizedStat(
+                id=s["id"],
+                priority=s["priority"],
+                reason=s["reason"],
+            )
+            for s in personalization_result.personalized_stats
+        ],
+        health_alerts=[
+            HealthAlert(
+                type=a["type"],
+                severity=a["severity"],
+                title=a["title"],
+                message=a["message"],
+                icon=a["icon"],
+                action=a.get("action"),
+                show_always=a.get("show_always", False),
+            )
+            for a in personalization_result.health_alerts
+        ],
+        insights=[
+            PersonalizedInsight(
+                type=i["type"],
+                title=i["title"],
+                message=i["message"],
+                icon=i["icon"],
+                priority=i["priority"],
+            )
+            for i in personalization_result.insights
+        ],
+        ui_config=UIConfig(
+            show_carbs_prominently=personalization_result.ui_config.get("show_carbs_prominently", False),
+            show_fat_breakdown=personalization_result.ui_config.get("show_fat_breakdown", False),
+            show_sodium_tracker=personalization_result.ui_config.get("show_sodium_tracker", False),
+            show_hydration_prominently=personalization_result.ui_config.get("show_hydration_prominently", False),
+            show_activity_prominently=personalization_result.ui_config.get("show_activity_prominently", False),
+            show_weight_tracker=personalization_result.ui_config.get("show_weight_tracker", False),
+            primary_color_theme=personalization_result.ui_config.get("primary_color_theme", "default"),
+            stats_layout=personalization_result.ui_config.get("stats_layout", "standard"),
+        ),
     )
 
 

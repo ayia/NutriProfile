@@ -1,0 +1,15 @@
+export { CoachCard } from './CoachCard'
+export { LevelProgress } from './LevelProgress'
+export { NotificationBell } from './NotificationBell'
+export { DashboardSkeleton } from './DashboardSkeleton'
+export { StatsRing } from './StatsRing'
+export { WeeklyChart } from './WeeklyChart'
+export { QuickActions } from './QuickActions'
+export { ScannerCard } from './ScannerCard'
+export { HeroCard } from './HeroCard'
+
+// Composants de personnalisation
+export { HealthAlerts } from './HealthAlerts'
+export { PersonalizedInsights } from './PersonalizedInsights'
+export { AdaptiveStatsGrid } from './AdaptiveStatsGrid'
+export { ProfileSummaryBanner } from './ProfileSummaryBanner'

@@ -8,6 +8,10 @@ import { ScannerCard } from '@/components/dashboard/ScannerCard'
 import { CoachCard } from '@/components/dashboard/CoachCard'
 import { WeeklyChart } from '@/components/dashboard/WeeklyChart'
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton'
+import { HealthAlerts } from '@/components/dashboard/HealthAlerts'
+import { PersonalizedInsights } from '@/components/dashboard/PersonalizedInsights'
+import { ProfileSummaryBanner } from '@/components/dashboard/ProfileSummaryBanner'
+import { AdaptiveStatsGrid } from '@/components/dashboard/AdaptiveStatsGrid'
 import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
 
@@ -69,8 +73,24 @@ export function MainDashboardPage() {
     )
   }
 
+  const personalization = data.personalization
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+      {/* Bannière de profil personnalisée */}
+      {personalization && (
+        <ProfileSummaryBanner
+          summary={personalization.profile_summary}
+          healthContext={personalization.health_context}
+          userName={data.user_name}
+        />
+      )}
+
+      {/* Alertes de santé prioritaires */}
+      {personalization?.health_alerts && personalization.health_alerts.length > 0 && (
+        <HealthAlerts alerts={personalization.health_alerts} />
+      )}
+
       {/* Hero Card - Stats principales */}
       <HeroCard
         userName={data.user_name}
@@ -81,6 +101,15 @@ export function MainDashboardPage() {
         onWaterClick={() => setShowWaterModal(true)}
       />
 
+      {/* Stats adaptatives basées sur le profil */}
+      {personalization && (
+        <AdaptiveStatsGrid
+          stats={data.quick_stats}
+          uiConfig={personalization.ui_config}
+          personalizedStats={personalization.personalized_stats}
+        />
+      )}
+
       {/* Actions rapides - scroll horizontal */}
       <QuickActions onWaterClick={() => setShowWaterModal(true)} />
 
@@ -89,6 +118,11 @@ export function MainDashboardPage() {
         <ScannerCard />
         {data.coach_advice && <CoachCard advice={data.coach_advice} />}
       </div>
+
+      {/* Insights personnalisés */}
+      {personalization?.insights && personalization.insights.length > 0 && (
+        <PersonalizedInsights insights={personalization.insights} />
+      )}
 
       {/* Graphique de la semaine */}
       <WeeklyChart />

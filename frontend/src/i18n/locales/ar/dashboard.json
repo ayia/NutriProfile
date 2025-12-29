@@ -178,5 +178,21 @@
     "meals": "الوجبات",
     "activities": "الأنشطة",
     "bestStreak": "أفضل سلسلة"
+  },
+  "personalization": {
+    "greeting": "مرحباً",
+    "insights": "نصائح مخصصة",
+    "suggestedAction": "الإجراء المقترح",
+    "basedOnProfile": "بناءً على ملفك الشخصي",
+    "healthAlerts": "تنبيهات صحية",
+    "priorityStats": "إحصائيات ذات أولوية"
+  },
+  "stats": {
+    "calories": "السعرات",
+    "protein": "البروتين",
+    "carbs": "الكربوهيدرات",
+    "fat": "الدهون",
+    "water": "الماء",
+    "activity": "النشاط"
   }
 }
