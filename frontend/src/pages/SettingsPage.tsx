@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Input } from '@/components/ui/Input'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import type { Profile, ProfileCreate, ActivityLevel, Goal, DietType } from '@/types/profile'
-import { ACTIVITY_LABELS, GOAL_LABELS, DIET_LABELS, COMMON_ALLERGIES } from '@/types/profile'
+import { ACTIVITY_LABELS, GOAL_LABELS, DIET_LABELS, COMMON_ALLERGIES, COMMON_MEDICAL_CONDITIONS, COMMON_MEDICATIONS } from '@/types/profile'
 
 type SettingsTab = 'profile' | 'account' | 'notifications' | 'privacy'
 
@@ -275,6 +275,16 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
         { key: 'allergies', label: t('profile.allergies'), value: profile?.allergies?.join(', ') || t('profile.noAllergies') },
       ],
     },
+    {
+      id: 'health',
+      title: t('profile.health'),
+      icon: '🏥',
+      color: 'from-rose-500 to-pink-500',
+      fields: [
+        { key: 'medical_conditions', label: t('profile.medicalConditions'), value: profile?.medical_conditions?.map(c => COMMON_MEDICAL_CONDITIONS.find(mc => mc.key === c)?.label || c).join(', ') || t('profile.noConditions') },
+        { key: 'medications', label: t('profile.medications'), value: profile?.medications?.join(', ') || t('profile.noMedications') },
+      ],
+    },
   ]
 
   return (
@@ -398,22 +408,36 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                 </div>
               )}
 
-              <div className="flex justify-end pt-4">
-                <button
-                  type="submit"
-                  disabled={isUpdating}
-                  className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
-                >
-                  {isUpdating ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      <span>Enregistrement...</span>
-                    </>
-                  ) : (
-                    t('profile.save')
-                  )}
-                </button>
-              </div>
+              {section.id === 'health' && (
+                <HealthSectionForm
+                  profile={profile}
+                  onSave={(data) => {
+                    onUpdate(data)
+                    setEditSection(null)
+                  }}
+                  isUpdating={isUpdating}
+                />
+              )}
+
+              {/* Bouton de soumission générique - pas pour la section health qui a son propre bouton */}
+              {section.id !== 'health' && (
+                <div className="flex justify-end pt-4">
+                  <button
+                    type="submit"
+                    disabled={isUpdating}
+                    className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {isUpdating ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Enregistrement...</span>
+                      </>
+                    ) : (
+                      t('profile.save')
+                    )}
+                  </button>
+                </div>
+              )}
             </form>
           ) : (
             <div className="grid gap-4">
@@ -483,6 +507,166 @@ function NutritionCard({ label, value, unit, icon, color }: { label: string; val
       <div className="text-sm font-medium text-gray-500">{unit}</div>
       <div className="text-xs text-gray-400 mt-1">{label}</div>
     </div>
+  )
+}
+
+// Composant formulaire section Santé
+interface HealthSectionFormProps {
+  profile: Profile | undefined
+  onSave: (data: Partial<ProfileCreate>) => void
+  isUpdating: boolean
+}
+
+function HealthSectionForm({ profile, onSave, isUpdating }: HealthSectionFormProps) {
+  const { t } = useTranslation('settings')
+  const [selectedConditions, setSelectedConditions] = useState<string[]>(profile?.medical_conditions || [])
+  const [selectedMedications, setSelectedMedications] = useState<string[]>(profile?.medications || [])
+  const [customMedication, setCustomMedication] = useState('')
+
+  const toggleCondition = (key: string) => {
+    setSelectedConditions(prev =>
+      prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]
+    )
+  }
+
+  const toggleMedication = (med: string) => {
+    setSelectedMedications(prev =>
+      prev.includes(med) ? prev.filter(m => m !== med) : [...prev, med]
+    )
+  }
+
+  const addCustomMedication = () => {
+    if (customMedication.trim() && !selectedMedications.includes(customMedication.trim())) {
+      setSelectedMedications(prev => [...prev, customMedication.trim()])
+      setCustomMedication('')
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSave({
+      medical_conditions: selectedConditions,
+      medications: selectedMedications,
+    })
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
+      {/* Conditions médicales */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-3">
+          {t('profile.medicalConditions')}
+        </label>
+        <p className="text-xs text-gray-500 mb-3">{t('profile.medicalConditionsDesc')}</p>
+        <div className="grid grid-cols-2 gap-2">
+          {COMMON_MEDICAL_CONDITIONS.map((condition) => (
+            <label
+              key={condition.key}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm cursor-pointer transition-all ${
+                selectedConditions.includes(condition.key)
+                  ? 'bg-rose-100 border-2 border-rose-400 text-rose-700'
+                  : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedConditions.includes(condition.key)}
+                onChange={() => toggleCondition(condition.key)}
+                className="sr-only"
+              />
+              <span className="text-lg">{condition.icon}</span>
+              <span className="font-medium">{condition.label}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Médicaments */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-3">
+          {t('profile.medications')}
+        </label>
+        <p className="text-xs text-gray-500 mb-3">{t('profile.medicationsDesc')}</p>
+        <div className="flex flex-wrap gap-2 mb-3">
+          {COMMON_MEDICATIONS.map((med) => (
+            <label
+              key={med}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer transition-all ${
+                selectedMedications.includes(med)
+                  ? 'bg-indigo-100 border border-indigo-400 text-indigo-700'
+                  : 'bg-gray-50 hover:bg-gray-100 border border-transparent'
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedMedications.includes(med)}
+                onChange={() => toggleMedication(med)}
+                className="sr-only"
+              />
+              <span>{med}</span>
+            </label>
+          ))}
+        </div>
+
+        {/* Custom medication input */}
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={customMedication}
+            onChange={(e) => setCustomMedication(e.target.value)}
+            placeholder={t('profile.addMedication')}
+            className="flex-1 px-4 py-2 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all text-sm"
+            onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomMedication())}
+          />
+          <button
+            type="button"
+            onClick={addCustomMedication}
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-medium transition-colors"
+          >
+            +
+          </button>
+        </div>
+
+        {/* Selected custom medications */}
+        {selectedMedications.filter(m => !COMMON_MEDICATIONS.includes(m)).length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-3">
+            {selectedMedications.filter(m => !COMMON_MEDICATIONS.includes(m)).map((med) => (
+              <span
+                key={med}
+                className="flex items-center gap-1 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm"
+              >
+                {med}
+                <button
+                  type="button"
+                  onClick={() => toggleMedication(med)}
+                  className="ml-1 hover:text-indigo-900"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Submit button */}
+      <div className="flex justify-end pt-4">
+        <button
+          type="submit"
+          disabled={isUpdating}
+          className="px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg shadow-rose-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
+        >
+          {isUpdating ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span>{t('profile.saving')}</span>
+            </>
+          ) : (
+            t('profile.save')
+          )}
+        </button>
+      </div>
+    </form>
   )
 }
 

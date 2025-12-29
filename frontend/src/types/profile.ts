@@ -98,3 +98,27 @@ export const COMMON_ALLERGIES = [
   'Soja',
   'Sésame',
 ]
+
+export const COMMON_MEDICAL_CONDITIONS = [
+  { key: 'diabetes', label: 'Diabète', icon: '🩸' },
+  { key: 'hypertension', label: 'Hypertension', icon: '❤️' },
+  { key: 'heart_disease', label: 'Maladie cardiaque', icon: '🫀' },
+  { key: 'kidney_disease', label: 'Maladie rénale', icon: '🫘' },
+  { key: 'cholesterol', label: 'Cholestérol élevé', icon: '🧪' },
+  { key: 'obesity', label: 'Obésité', icon: '⚖️' },
+  { key: 'anemia', label: 'Anémie', icon: '🔴' },
+  { key: 'thyroid', label: 'Problème thyroïdien', icon: '🦋' },
+  { key: 'digestive', label: 'Problèmes digestifs', icon: '🫃' },
+  { key: 'celiac', label: 'Maladie cœliaque', icon: '🌾' },
+]
+
+export const COMMON_MEDICATIONS = [
+  'Metformine',
+  'Insuline',
+  'Antihypertenseurs',
+  'Statines',
+  'Anticoagulants',
+  'Antidépresseurs',
+  'Corticoïdes',
+  'Diurétiques',
+]
