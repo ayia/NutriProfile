@@ -26,12 +26,15 @@ async def update_current_user(
     db: AsyncSession = Depends(get_db),
 ) -> UserResponse:
     """Mettre à jour les informations de l'utilisateur connecté."""
+    # Merger l'utilisateur dans la session courante
+    user = await db.merge(current_user)
+
     update_data = user_update.model_dump(exclude_unset=True)
 
     for field, value in update_data.items():
-        setattr(current_user, field, value)
+        setattr(user, field, value)
 
     await db.commit()
-    await db.refresh(current_user)
+    await db.refresh(user)
 
-    return UserResponse.model_validate(current_user)
+    return UserResponse.model_validate(user)

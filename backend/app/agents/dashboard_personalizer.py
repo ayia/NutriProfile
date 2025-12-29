@@ -251,6 +251,18 @@ class DashboardPersonalizerAgent(BaseAgent[PersonalizerInput, PersonalizationRes
     capability = ModelCapability.COACHING
     confidence_threshold = 0.5
 
+    def build_prompt(self, input_data: PersonalizerInput) -> str:
+        """Non utilisé - cet agent utilise une analyse déterministe."""
+        return ""
+
+    def parse_response(self, raw_response: str, input_data: PersonalizerInput) -> PersonalizationResult:
+        """Non utilisé - cet agent utilise une analyse déterministe."""
+        return self._deterministic_analysis(input_data)
+
+    def calculate_confidence(self, result: PersonalizationResult, raw_response: str) -> float:
+        """Non utilisé - cet agent utilise une analyse déterministe."""
+        return 0.85
+
     async def process(self, input_data: PersonalizerInput, model=None) -> AgentResponse:
         """
         Personnalise le dashboard basé sur le profil utilisateur.
