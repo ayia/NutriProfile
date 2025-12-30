@@ -248,6 +248,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
   }
 
   const handleSave = (data: Partial<ProfileCreate>) => {
+    console.log('[ProfileSettings.handleSave] Saving data:', data)
     onUpdate(data)
     setEditSection(null)
     reset()
@@ -332,6 +333,15 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                   }}
                   isUpdating={isUpdating}
                 />
+              ) : section.id === 'diet' ? (
+                <DietSectionForm
+                  profile={profile}
+                  onSave={(data) => {
+                    onUpdate(data)
+                    setEditSection(null)
+                  }}
+                  isUpdating={isUpdating}
+                />
               ) : (
             <form onSubmit={handleSubmit(handleSave)} className="space-y-4 animate-fade-in">
               {section.id === 'physical' && (
@@ -395,38 +405,6 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                     defaultValue={profile?.target_weight_kg}
                     {...register('target_weight_kg', { valueAsNumber: true })}
                   />
-                </div>
-              )}
-
-              {section.id === 'diet' && (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('profile.dietType')}</label>
-                    <select
-                      className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
-                      defaultValue={profile?.diet_type}
-                      {...register('diet_type')}
-                    >
-                      {(Object.keys(DIET_LABELS) as DietType[]).map((key) => (
-                        <option key={key} value={key}>{DIET_LABELS[key]}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">{t('profile.allergies')}</label>
-                    <div className="flex flex-wrap gap-2">
-                      {COMMON_ALLERGIES.map((allergy) => (
-                        <label key={allergy} className="flex items-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm cursor-pointer transition-colors group">
-                          <input
-                            type="checkbox"
-                            defaultChecked={profile?.allergies?.includes(allergy)}
-                            className="w-4 h-4 rounded text-primary-500 focus:ring-primary-500"
-                          />
-                          <span className="group-hover:text-gray-900">{allergy}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -667,6 +645,96 @@ function HealthSectionForm({ profile, onSave, isUpdating }: HealthSectionFormPro
           type="submit"
           disabled={isUpdating}
           className="px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg shadow-rose-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
+        >
+          {isUpdating ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span>{t('profile.saving')}</span>
+            </>
+          ) : (
+            t('profile.save')
+          )}
+        </button>
+      </div>
+    </form>
+  )
+}
+
+// Composant formulaire section Régime alimentaire
+interface DietSectionFormProps {
+  profile: Profile | undefined
+  onSave: (data: Partial<ProfileCreate>) => void
+  isUpdating: boolean
+}
+
+function DietSectionForm({ profile, onSave, isUpdating }: DietSectionFormProps) {
+  const { t } = useTranslation('settings')
+  const [selectedDietType, setSelectedDietType] = useState<DietType>(profile?.diet_type || 'omnivore')
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>(profile?.allergies || [])
+
+  const toggleAllergy = (allergy: string) => {
+    setSelectedAllergies(prev =>
+      prev.includes(allergy) ? prev.filter(a => a !== allergy) : [...prev, allergy]
+    )
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const data = {
+      diet_type: selectedDietType,
+      allergies: selectedAllergies,
+    }
+    console.log('[DietSectionForm] Submitting data:', data)
+    onSave(data)
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
+      {/* Type de régime */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t('profile.dietType')}</label>
+        <select
+          className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+          value={selectedDietType}
+          onChange={(e) => setSelectedDietType(e.target.value as DietType)}
+        >
+          {(Object.keys(DIET_LABELS) as DietType[]).map((key) => (
+            <option key={key} value={key}>{DIET_LABELS[key]}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Allergies */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-3">{t('profile.allergies')}</label>
+        <div className="flex flex-wrap gap-2">
+          {COMMON_ALLERGIES.map((allergy) => (
+            <label
+              key={allergy}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm cursor-pointer transition-all ${
+                selectedAllergies.includes(allergy)
+                  ? 'bg-primary-100 border-2 border-primary-400 text-primary-700'
+                  : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedAllergies.includes(allergy)}
+                onChange={() => toggleAllergy(allergy)}
+                className="sr-only"
+              />
+              <span>{allergy}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Submit button */}
+      <div className="flex justify-end pt-4">
+        <button
+          type="submit"
+          disabled={isUpdating}
+          className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
         >
           {isUpdating ? (
             <>
