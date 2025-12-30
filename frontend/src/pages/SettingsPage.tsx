@@ -10,6 +10,35 @@ import { Input } from '@/components/ui/Input'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import type { Profile, ProfileCreate, ActivityLevel, Goal, DietType } from '@/types/profile'
 import { ACTIVITY_LABELS, GOAL_LABELS, DIET_LABELS, COMMON_ALLERGIES, COMMON_MEDICAL_CONDITIONS, COMMON_MEDICATIONS } from '@/types/profile'
+import {
+  User,
+  Lock,
+  Bell,
+  Shield,
+  Target,
+  Ruler,
+  Salad,
+  Heart,
+  Flame,
+  Dumbbell,
+  Wheat,
+  Droplet,
+  BarChart3,
+  Mail,
+  Smartphone,
+  AlertTriangle,
+  Clock,
+  TrendingUp,
+  ChefHat,
+  Trophy,
+  Lightbulb,
+  FileText,
+  Download,
+  KeyRound,
+  Cookie,
+  CheckCircle,
+  type LucideIcon,
+} from 'lucide-react'
 
 type SettingsTab = 'profile' | 'account' | 'notifications' | 'privacy'
 
@@ -77,11 +106,11 @@ export function SettingsPage() {
     }
   }, [activeTab, profileQuery.data])
 
-  const tabs: { id: SettingsTab; label: string; icon: string; color: string }[] = [
-    { id: 'profile', label: t('tabs.profile'), icon: '👤', color: 'from-primary-500 to-emerald-500' },
-    { id: 'account', label: t('tabs.account'), icon: '🔐', color: 'from-secondary-500 to-cyan-500' },
-    { id: 'notifications', label: t('tabs.notifications'), icon: '🔔', color: 'from-warning-500 to-amber-500' },
-    { id: 'privacy', label: t('tabs.privacy'), icon: '🛡️', color: 'from-indigo-500 to-purple-500' },
+  const tabs: { id: SettingsTab; label: string; IconComponent: LucideIcon; color: string }[] = [
+    { id: 'profile', label: t('tabs.profile'), IconComponent: User, color: 'from-primary-500 to-emerald-500' },
+    { id: 'account', label: t('tabs.account'), IconComponent: Lock, color: 'from-secondary-500 to-cyan-500' },
+    { id: 'notifications', label: t('tabs.notifications'), IconComponent: Bell, color: 'from-warning-500 to-amber-500' },
+    { id: 'privacy', label: t('tabs.privacy'), IconComponent: Shield, color: 'from-indigo-500 to-purple-500' },
   ]
 
   const handleDeleteAccount = () => {
@@ -111,7 +140,7 @@ export function SettingsPage() {
               <p className="text-gray-500 mt-1 text-sm sm:text-base truncate">{user?.email}</p>
               {profileQuery.data?.goal && (
                 <span className="inline-flex items-center gap-1.5 sm:gap-2 mt-2 sm:mt-3 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-xs sm:text-sm font-medium rounded-full shadow-lg">
-                  <span>🎯</span>
+                  <Target className="w-4 h-4" />
                   <span className="truncate max-w-[150px] sm:max-w-none">{GOAL_LABELS[profileQuery.data.goal]}</span>
                 </span>
               )}
@@ -132,7 +161,7 @@ export function SettingsPage() {
               }`}
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
-              <span className={`text-base sm:text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
+              <tab.IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`} />
               <span className="hidden xs:inline sm:inline">{tab.label}</span>
             </button>
           ))}
@@ -167,7 +196,7 @@ export function SettingsPage() {
             <div className="bg-white/95 backdrop-blur-xl rounded-3xl max-w-md w-full p-8 shadow-2xl border border-white/50 animate-scale-in">
               <div className="text-center mb-8">
                 <div className="w-20 h-20 bg-gradient-to-br from-error-100 to-rose-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                  <span className="text-4xl">⚠️</span>
+                  <AlertTriangle className="w-10 h-10 text-error-500" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">
                   {t('account.deleteTitle')}
@@ -258,7 +287,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
     {
       id: 'physical',
       title: t('profile.physicalInfo'),
-      icon: '📏',
+      IconComponent: Ruler,
       color: 'from-secondary-500 to-cyan-500',
       fields: [
         { key: 'age', label: t('profile.age'), value: profile?.age, suffix: t('profile.ageUnit') },
@@ -269,7 +298,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
     {
       id: 'goals',
       title: t('profile.goals'),
-      icon: '🎯',
+      IconComponent: Target,
       color: 'from-accent-500 to-amber-500',
       fields: [
         { key: 'goal', label: t('profile.goal'), value: profile?.goal ? GOAL_LABELS[profile.goal] : '-' },
@@ -280,7 +309,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
     {
       id: 'diet',
       title: t('profile.diet'),
-      icon: '🥗',
+      IconComponent: Salad,
       color: 'from-primary-500 to-emerald-500',
       fields: [
         { key: 'diet_type', label: t('profile.dietType'), value: profile?.diet_type ? DIET_LABELS[profile.diet_type] : '-' },
@@ -290,7 +319,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
     {
       id: 'health',
       title: t('profile.health'),
-      icon: '🏥',
+      IconComponent: Heart,
       color: 'from-rose-500 to-pink-500',
       fields: [
         { key: 'medical_conditions', label: t('profile.medicalConditions'), value: profile?.medical_conditions?.map(c => COMMON_MEDICAL_CONDITIONS.find(mc => mc.key === c)?.label || c).join(', ') || t('profile.noConditions') },
@@ -306,7 +335,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className={`w-12 h-12 bg-gradient-to-br ${section.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                <span className="text-2xl">{section.icon}</span>
+                <section.IconComponent className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900">{section.title}</h3>
             </div>
@@ -446,7 +475,7 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
       <div className="p-6 bg-gradient-to-r from-primary-50 via-emerald-50 to-cyan-50">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-2xl">📊</span>
+            <BarChart3 className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-bold text-gray-900">{t('profile.nutritionalNeeds')}</h3>
         </div>
@@ -455,28 +484,28 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
             label={t('profile.calories')}
             value={profile?.daily_calories}
             unit="kcal"
-            icon="🔥"
+            IconComponent={Flame}
             color="from-accent-500 to-amber-500"
           />
           <NutritionCard
             label={t('profile.protein')}
             value={profile?.protein_g}
             unit="g"
-            icon="💪"
+            IconComponent={Dumbbell}
             color="from-secondary-500 to-cyan-500"
           />
           <NutritionCard
             label={t('profile.carbs')}
             value={profile?.carbs_g}
             unit="g"
-            icon="🌾"
+            IconComponent={Wheat}
             color="from-warning-500 to-amber-500"
           />
           <NutritionCard
             label={t('profile.fat')}
             value={profile?.fat_g}
             unit="g"
-            icon="🥑"
+            IconComponent={Droplet}
             color="from-error-500 to-rose-500"
           />
         </div>
@@ -485,11 +514,11 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
   )
 }
 
-function NutritionCard({ label, value, unit, icon, color }: { label: string; value: number | null | undefined; unit: string; icon: string; color: string }) {
+function NutritionCard({ label, value, unit, IconComponent, color }: { label: string; value: number | null | undefined; unit: string; IconComponent: LucideIcon; color: string }) {
   return (
     <div className="glass-card p-5 text-center hover-lift group">
       <div className={`w-12 h-12 mx-auto mb-3 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-        <span className="text-xl">{icon}</span>
+        <IconComponent className="w-6 h-6 text-white" />
       </div>
       <div className="text-3xl font-bold text-gray-900">{value || '-'}</div>
       <div className="text-sm font-medium text-gray-500">{unit}</div>
@@ -812,7 +841,7 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
       <div className="p-6 reveal">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-2xl">📲</span>
+            <Smartphone className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-bold text-gray-900">{t('account.installApp')}</h3>
         </div>
@@ -820,7 +849,7 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
         {isStandalone ? (
           <div className="p-4 rounded-xl bg-emerald-50/80 border border-emerald-200">
             <div className="flex items-center gap-3">
-              <span className="text-2xl">✅</span>
+              <CheckCircle className="w-6 h-6 text-emerald-500" />
               <div>
                 <p className="font-medium text-emerald-700">{t('account.appInstalled')}</p>
                 <p className="text-sm text-emerald-600 mt-1">{t('account.appInstalledDesc')}</p>
@@ -856,7 +885,7 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
               disabled={!deferredPrompt}
               className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-semibold shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center gap-2"
             >
-              <span>📲</span>
+              <Smartphone className="w-5 h-5" />
               {t('account.installButton')}
             </button>
           </div>
@@ -867,7 +896,7 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
       <div className="p-6 reveal" style={{ animationDelay: '0.05s' }}>
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-2xl">✉️</span>
+            <Mail className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-bold text-gray-900">{t('account.email')}</h3>
         </div>
@@ -884,7 +913,7 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-warning-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-2xl">🔒</span>
+              <KeyRound className="w-6 h-6 text-white" />
             </div>
             <h3 className="text-xl font-bold text-gray-900">{t('account.password')}</h3>
           </div>
@@ -940,7 +969,7 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
       <div className="p-6 bg-gradient-to-r from-error-50 to-rose-50 reveal" style={{ animationDelay: '0.15s' }}>
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-gradient-to-br from-error-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-2xl">⚠️</span>
+            <AlertTriangle className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-bold text-error-700">{t('account.dangerZone')}</h3>
         </div>
@@ -974,11 +1003,11 @@ function NotificationSettings() {
   }
 
   const notificationOptions = [
-    { key: 'dailyReminder' as const, label: t('notifications.dailyReminder'), description: t('notifications.dailyReminderDesc'), icon: '⏰', color: 'from-secondary-500 to-cyan-500' },
-    { key: 'weeklyReport' as const, label: t('notifications.weeklyReport'), description: t('notifications.weeklyReportDesc'), icon: '📈', color: 'from-primary-500 to-emerald-500' },
-    { key: 'newRecipes' as const, label: t('notifications.newRecipes'), description: t('notifications.newRecipesDesc'), icon: '🍽️', color: 'from-accent-500 to-amber-500' },
-    { key: 'achievements' as const, label: t('notifications.achievements'), description: t('notifications.achievementsDesc'), icon: '🏆', color: 'from-warning-500 to-amber-500' },
-    { key: 'tips' as const, label: t('notifications.tips'), description: t('notifications.tipsDesc'), icon: '💡', color: 'from-indigo-500 to-purple-500' },
+    { key: 'dailyReminder' as const, label: t('notifications.dailyReminder'), description: t('notifications.dailyReminderDesc'), IconComponent: Clock, color: 'from-secondary-500 to-cyan-500' },
+    { key: 'weeklyReport' as const, label: t('notifications.weeklyReport'), description: t('notifications.weeklyReportDesc'), IconComponent: TrendingUp, color: 'from-primary-500 to-emerald-500' },
+    { key: 'newRecipes' as const, label: t('notifications.newRecipes'), description: t('notifications.newRecipesDesc'), IconComponent: ChefHat, color: 'from-accent-500 to-amber-500' },
+    { key: 'achievements' as const, label: t('notifications.achievements'), description: t('notifications.achievementsDesc'), IconComponent: Trophy, color: 'from-warning-500 to-amber-500' },
+    { key: 'tips' as const, label: t('notifications.tips'), description: t('notifications.tipsDesc'), IconComponent: Lightbulb, color: 'from-indigo-500 to-purple-500' },
   ]
 
   return (
@@ -987,7 +1016,7 @@ function NotificationSettings() {
         <div key={option.key} className="p-6 flex items-center justify-between reveal" style={{ animationDelay: `${0.05 * (index + 1)}s` }}>
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 bg-gradient-to-br ${option.color} rounded-xl flex items-center justify-center shadow-lg`}>
-              <span className="text-2xl">{option.icon}</span>
+              <option.IconComponent className="w-6 h-6 text-white" />
             </div>
             <div>
               <h4 className="font-semibold text-gray-900">{option.label}</h4>
@@ -1029,7 +1058,7 @@ function PrivacySettings() {
       <div className="p-6 reveal">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-2xl">📋</span>
+            <FileText className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-bold text-gray-900">{t('privacy.yourData')}</h3>
         </div>
@@ -1037,7 +1066,7 @@ function PrivacySettings() {
           {t('privacy.gdprNote')}
         </p>
         <button className="px-6 py-3 glass-card text-gray-700 font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2">
-          <span>📥</span>
+          <Download className="w-5 h-5" />
           {t('privacy.downloadData')}
         </button>
       </div>
@@ -1045,7 +1074,7 @@ function PrivacySettings() {
       <div className="p-6 reveal" style={{ animationDelay: '0.1s' }}>
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-2xl">🔐</span>
+            <KeyRound className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-bold text-gray-900">{t('privacy.dataSharing')}</h3>
         </div>
@@ -1070,23 +1099,23 @@ function PrivacySettings() {
       <div className="p-6 reveal" style={{ animationDelay: '0.2s' }}>
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-2xl">📄</span>
+            <FileText className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-bold text-gray-900">{t('privacy.legalDocs')}</h3>
         </div>
         <div className="space-y-3">
           <Link to="/privacy" className="flex items-center gap-3 p-4 rounded-xl bg-gray-50/80 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition-all group">
-            <span className="text-xl group-hover:scale-110 transition-transform">🔒</span>
+            <Lock className="w-5 h-5 text-indigo-500 group-hover:scale-110 transition-transform" />
             <span className="font-medium">{t('privacy.privacyPolicy')}</span>
             <span className="ml-auto text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
           </Link>
           <Link to="/terms" className="flex items-center gap-3 p-4 rounded-xl bg-gray-50/80 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition-all group">
-            <span className="text-xl group-hover:scale-110 transition-transform">📜</span>
+            <FileText className="w-5 h-5 text-emerald-500 group-hover:scale-110 transition-transform" />
             <span className="font-medium">{t('privacy.termsOfService')}</span>
             <span className="ml-auto text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
           </Link>
           <a href="#" className="flex items-center gap-3 p-4 rounded-xl bg-gray-50/80 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition-all group">
-            <span className="text-xl group-hover:scale-110 transition-transform">🍪</span>
+            <Cookie className="w-5 h-5 text-amber-500 group-hover:scale-110 transition-transform" />
             <span className="font-medium">{t('privacy.cookiePolicy')}</span>
             <span className="ml-auto text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
           </a>

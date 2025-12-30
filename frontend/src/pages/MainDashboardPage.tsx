@@ -13,13 +13,17 @@ import { PersonalizedInsights } from '@/components/dashboard/PersonalizedInsight
 import { ProfileSummaryBanner } from '@/components/dashboard/ProfileSummaryBanner'
 import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
-
-const STREAK_ICONS: Record<string, string> = {
-  logging: '📝',
-  activity: '🏃',
-  water: '💧',
-  calories: '🎯',
-}
+import {
+  Zap,
+  Trophy,
+  TrendingUp,
+  Droplets,
+  XCircle,
+  BarChart3,
+  X,
+  getStreakIcon,
+  STREAK_COLORS,
+} from '@/lib/icons'
 
 export function MainDashboardPage() {
   const { t } = useTranslation('dashboard')
@@ -41,8 +45,8 @@ export function MainDashboardPage() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 text-center">
         <div className="card-elevated p-8">
-          <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">❌</span>
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <XCircle className="w-8 h-8 text-red-500" />
           </div>
           <p className="body-lg text-neutral-600 mb-2">{t('error.loading')}</p>
           <p className="text-error-600 text-sm mb-4">
@@ -60,8 +64,8 @@ export function MainDashboardPage() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 text-center">
         <div className="card-elevated p-8">
-          <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">📊</span>
+          <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <BarChart3 className="w-8 h-8 text-primary-500" />
           </div>
           <p className="body-lg text-neutral-600 mb-4">{t('error.noData')}</p>
           <Button onClick={() => dashboardQuery.refetch()}>
@@ -123,9 +127,9 @@ export function MainDashboardPage() {
         {/* Streaks */}
         <div className="card-elevated p-5">
           <div className="flex items-center gap-2 mb-4">
-            <span className="w-8 h-8 bg-accent-100 rounded-lg flex items-center justify-center text-lg">
-              🔥
-            </span>
+            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center shadow-sm">
+              <Zap className="w-4 h-4 text-white" />
+            </div>
             <h3 className="heading-4">{t('streak.title')}</h3>
           </div>
           {data.active_streaks.length === 0 ? (
@@ -135,7 +139,8 @@ export function MainDashboardPage() {
           ) : (
             <div className="space-y-3">
               {data.active_streaks.map((streak) => {
-                const icon = STREAK_ICONS[streak.streak_type] || '🔥'
+                const StreakIcon = getStreakIcon(streak.streak_type)
+                const colorClass = STREAK_COLORS[streak.streak_type] || STREAK_COLORS.default
                 const name = t(`streakTypes.${streak.streak_type}`, { defaultValue: streak.streak_type })
                 return (
                   <div
@@ -143,7 +148,9 @@ export function MainDashboardPage() {
                     className="flex items-center justify-between p-3 bg-gradient-to-r from-accent-50 to-warning-50 rounded-xl"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl">{icon}</span>
+                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                        <StreakIcon className={`w-5 h-5 ${colorClass}`} />
+                      </div>
                       <span className="font-medium text-neutral-700">{name}</span>
                     </div>
                     <div className="text-right">
@@ -164,9 +171,9 @@ export function MainDashboardPage() {
         {/* Achievements recents */}
         <div className="card-elevated p-5">
           <div className="flex items-center gap-2 mb-4">
-            <span className="w-8 h-8 bg-warning-100 rounded-lg flex items-center justify-center text-lg">
-              🏆
-            </span>
+            <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-lg flex items-center justify-center shadow-sm">
+              <Trophy className="w-4 h-4 text-white" />
+            </div>
             <h3 className="heading-4">{t('achievements.title')}</h3>
           </div>
           {data.recent_achievements.length === 0 ? (
@@ -184,8 +191,8 @@ export function MainDashboardPage() {
                       : 'bg-neutral-50'
                   }`}
                 >
-                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                    <span className="text-xl">{achievement.icon}</span>
+                  <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-xl flex items-center justify-center shadow-sm">
+                    <Trophy className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-neutral-800 truncate">{achievement.name}</div>
@@ -206,9 +213,9 @@ export function MainDashboardPage() {
       {/* Stats globales - version compacte */}
       <div className="card-elevated p-5">
         <div className="flex items-center gap-2 mb-4">
-          <span className="w-8 h-8 bg-secondary-100 rounded-lg flex items-center justify-center text-lg">
-            📈
-          </span>
+          <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center shadow-sm">
+            <TrendingUp className="w-4 h-4 text-white" />
+          </div>
           <h3 className="heading-4">{t('journey.title')}</h3>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
@@ -234,8 +241,8 @@ export function MainDashboardPage() {
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <span className="text-xl">💧</span>
+                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-sm">
+                    <Droplets className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="heading-3">{t('water.title')}</h3>
                 </div>
@@ -243,10 +250,7 @@ export function MainDashboardPage() {
                   onClick={() => setShowWaterModal(false)}
                   className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 6 6 18"/>
-                    <path d="m6 6 12 12"/>
-                  </svg>
+                  <X className="w-5 h-5 text-neutral-500" />
                 </button>
               </div>
               <WaterForm

@@ -1,6 +1,17 @@
 import { useTranslation } from 'react-i18next'
 import type { QuickStats, UserStats, UIConfig } from '@/types/dashboard'
 import { NotificationBell } from './NotificationBell'
+import {
+  Flame,
+  Dumbbell,
+  Wheat,
+  Droplet,
+  Droplets,
+  Trophy,
+  BarChart3,
+  User,
+  Zap,
+} from '@/lib/icons'
 
 interface HeroCardProps {
   userName: string
@@ -52,7 +63,8 @@ export function HeroCard({
     {
       id: 'protein',
       label: t('macros.protein'),
-      icon: '💪',
+      IconComponent: Dumbbell,
+      iconColor: 'text-blue-500',
       value: quickStats.protein_today,
       max: quickStats.protein_target,
       color: 'bg-gradient-to-r from-blue-500 to-cyan-500',
@@ -63,7 +75,8 @@ export function HeroCard({
     {
       id: 'carbs',
       label: t('macros.carbs'),
-      icon: '🍞',
+      IconComponent: Wheat,
+      iconColor: showCarbsProminently ? 'text-red-500' : 'text-amber-500',
       value: quickStats.carbs_today,
       max: quickStats.carbs_target,
       color: showCarbsProminently
@@ -76,7 +89,8 @@ export function HeroCard({
     {
       id: 'fat',
       label: t('macros.fat'),
-      icon: '🥑',
+      IconComponent: Droplet,
+      iconColor: 'text-purple-500',
       value: quickStats.fat_today,
       max: quickStats.fat_target,
       color: 'bg-gradient-to-r from-purple-500 to-pink-500',
@@ -87,7 +101,8 @@ export function HeroCard({
     {
       id: 'water',
       label: t('macros.water'),
-      icon: '💧',
+      IconComponent: Droplets,
+      iconColor: 'text-cyan-500',
       value: quickStats.water_today,
       max: quickStats.water_target,
       color: 'bg-gradient-to-r from-cyan-500 to-blue-500',
@@ -118,7 +133,7 @@ export function HeroCard({
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-cyan-400 rounded-xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
               <div className="relative w-14 h-14 bg-gradient-to-br from-primary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-105 transition-transform duration-300">
-                <span className="text-2xl">👤</span>
+                <User className="w-7 h-7 text-white" />
               </div>
               <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-warning-400 to-amber-500 rounded-lg flex items-center justify-center text-xs font-bold text-white shadow-lg ring-2 ring-white">
                 {userStats.level}
@@ -128,8 +143,8 @@ export function HeroCard({
               <h1 className="text-xl font-bold text-gray-900">{t('hello')}, {userName} !</h1>
               <p className="text-gray-600 text-sm">
                 {quickStats.streak_days > 0 ? (
-                  <span className="flex items-center gap-1 text-accent-600 font-semibold">
-                    <span className="animate-pulse">🔥</span> {t('streakMessage', { count: quickStats.streak_days })}
+                  <span className="flex items-center gap-1.5 text-accent-600 font-semibold">
+                    <Zap className="w-4 h-4 text-orange-500 animate-pulse" /> {t('streakMessage', { count: quickStats.streak_days })}
                   </span>
                 ) : (
                   t('newDayMessage')
@@ -201,7 +216,9 @@ export function HeroCard({
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl mb-1 transform group-hover:scale-110 transition-transform">🔥</span>
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-1 transform group-hover:scale-110 transition-transform shadow-lg">
+                    <Flame className="w-5 h-5 text-white" />
+                  </div>
                   <span className={`text-3xl font-bold ${calorieColors.text}`}>
                     {quickStats.calories_today}
                   </span>
@@ -249,7 +266,7 @@ export function HeroCard({
         <div className="glass-card p-5 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center gap-2 mb-4">
             <div className="w-9 h-9 bg-gradient-to-br from-warning-400 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-lg">🏆</span>
+              <Trophy className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-lg font-bold text-gray-900">{t('hero.progression')}</h3>
           </div>
@@ -300,7 +317,7 @@ export function HeroCard({
       <div className="glass-card p-5 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
         <div className="flex items-center gap-2 mb-4">
           <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-lg">📊</span>
+            <BarChart3 className="w-5 h-5 text-white" />
           </div>
           <h3 className="text-lg font-bold text-gray-900">{t('hero.today')}</h3>
         </div>
@@ -329,7 +346,7 @@ export function HeroCard({
                   )}
                   <div className="flex items-center gap-2 mb-2">
                     <div className={`w-8 h-8 ${macro.bgColor} backdrop-blur-sm rounded-lg flex items-center justify-center transition-transform duration-300 group-hover/macro:scale-110`}>
-                      <span className="text-lg">{macro.icon}</span>
+                      <macro.IconComponent className={`w-4 h-4 ${macro.iconColor}`} />
                     </div>
                     <span className="font-medium text-gray-900 text-sm">{macro.label}</span>
                   </div>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { ACTIVITY_TYPES } from '@/types/tracking'
 import { invalidationGroups } from '@/lib/queryKeys'
+import { getActivityIcon, ACTIVITY_COLORS } from '@/lib/icons'
 import type { ActivityLogCreate } from '@/types/tracking'
 
 interface ActivityFormProps {
@@ -55,21 +56,29 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
           {t('activityForm.type')}
         </label>
         <div className="grid grid-cols-4 gap-2">
-          {Object.entries(ACTIVITY_TYPES).map(([type, { icon }]) => (
-            <button
-              key={type}
-              type="button"
-              onClick={() => setFormData({ ...formData, activity_type: type })}
-              className={`flex flex-col items-center p-2 border rounded-lg transition-colors ${
-                formData.activity_type === type
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <span className="text-xl">{icon}</span>
-              <span className="text-xs mt-1">{t(`activityForm.types.${type}`)}</span>
-            </button>
-          ))}
+          {Object.entries(ACTIVITY_TYPES).map(([type]) => {
+            const ActivityIcon = getActivityIcon(type)
+            const colorClass = ACTIVITY_COLORS[type] || 'text-gray-500'
+            return (
+              <button
+                key={type}
+                type="button"
+                onClick={() => setFormData({ ...formData, activity_type: type })}
+                className={`flex flex-col items-center p-2 border rounded-xl transition-all ${
+                  formData.activity_type === type
+                    ? 'border-primary-500 bg-primary-50 shadow-sm'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                  formData.activity_type === type ? 'bg-primary-100' : 'bg-gray-100'
+                }`}>
+                  <ActivityIcon className={`w-4 h-4 ${formData.activity_type === type ? 'text-primary-600' : colorClass}`} />
+                </div>
+                <span className="text-xs mt-1 font-medium">{t(`activityForm.types.${type}`)}</span>
+              </button>
+            )
+          })}
         </div>
       </div>
 

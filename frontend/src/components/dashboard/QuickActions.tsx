@@ -1,13 +1,22 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import {
+  Camera,
+  ChefHat,
+  Droplets,
+  Activity,
+  Scale,
+  BarChart3,
+  type LucideIcon,
+} from '@/lib/icons'
 
 interface QuickAction {
-  icon: string
+  IconComponent: LucideIcon
   labelKey: string
   to?: string
   onClick?: () => void
-  color: string
-  bgColor: string
+  iconColor: string
+  gradient: string
 }
 
 interface QuickActionsProps {
@@ -19,46 +28,46 @@ export function QuickActions({ onWaterClick }: QuickActionsProps) {
 
   const actions: QuickAction[] = [
     {
-      icon: '📸',
+      IconComponent: Camera,
       labelKey: 'quickActions.scanMeal',
       to: '/vision',
-      color: 'text-primary-600',
-      bgColor: 'bg-primary-100',
+      iconColor: 'text-white',
+      gradient: 'from-primary-500 to-emerald-500',
     },
     {
-      icon: '🔍',
+      IconComponent: ChefHat,
       labelKey: 'quickActions.viewRecipes',
       to: '/recipes',
-      color: 'text-accent-600',
-      bgColor: 'bg-accent-100',
+      iconColor: 'text-white',
+      gradient: 'from-amber-500 to-orange-500',
     },
     {
-      icon: '💧',
+      IconComponent: Droplets,
       labelKey: 'quickActions.addWater',
       onClick: onWaterClick,
-      color: 'text-secondary-600',
-      bgColor: 'bg-secondary-100',
+      iconColor: 'text-white',
+      gradient: 'from-cyan-500 to-blue-500',
     },
     {
-      icon: '🏃',
+      IconComponent: Activity,
       labelKey: 'quickActions.logActivity',
       to: '/tracking',
-      color: 'text-primary-600',
-      bgColor: 'bg-primary-100',
+      iconColor: 'text-white',
+      gradient: 'from-green-500 to-emerald-500',
     },
     {
-      icon: '⚖️',
+      IconComponent: Scale,
       labelKey: 'quickActions.logWeight',
       to: '/tracking?tab=weight',
-      color: 'text-warning-600',
-      bgColor: 'bg-warning-100',
+      iconColor: 'text-white',
+      gradient: 'from-purple-500 to-indigo-500',
     },
     {
-      icon: '📊',
+      IconComponent: BarChart3,
       labelKey: 'quickActions.stats',
       to: '/tracking?tab=history',
-      color: 'text-secondary-600',
-      bgColor: 'bg-secondary-100',
+      iconColor: 'text-white',
+      gradient: 'from-rose-500 to-pink-500',
     },
   ]
 
@@ -66,14 +75,15 @@ export function QuickActions({ onWaterClick }: QuickActionsProps) {
     <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
       <div className="flex gap-3 pb-2" style={{ minWidth: 'max-content' }}>
         {actions.map((action) => {
+          const IconComponent = action.IconComponent
           const content = (
             <>
               <div
-                className={`w-14 h-14 ${action.bgColor} rounded-2xl flex items-center justify-center mb-2 group-hover:scale-105 transition-transform shadow-sm`}
+                className={`w-14 h-14 bg-gradient-to-br ${action.gradient} rounded-2xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform shadow-lg`}
               >
-                <span className="text-2xl">{action.icon}</span>
+                <IconComponent className={`w-6 h-6 ${action.iconColor}`} strokeWidth={2} />
               </div>
-              <span className={`text-xs font-medium text-neutral-700`}>
+              <span className="text-xs font-medium text-neutral-700">
                 {t(action.labelKey)}
               </span>
             </>

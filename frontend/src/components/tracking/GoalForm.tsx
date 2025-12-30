@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { GOAL_TYPES } from '@/types/tracking'
 import { invalidationGroups } from '@/lib/queryKeys'
+import { getGoalIcon, GOAL_COLORS } from '@/lib/icons'
 import type { GoalCreate } from '@/types/tracking'
 
 interface GoalFormProps {
@@ -77,21 +78,29 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
           {t('goalForm.type')}
         </label>
         <div className="grid grid-cols-3 gap-2">
-          {Object.entries(GOAL_TYPES).map(([type, { icon }]) => (
-            <button
-              key={type}
-              type="button"
-              onClick={() => handleGoalTypeChange(type)}
-              className={`flex flex-col items-center p-3 border rounded-lg transition-colors ${
-                formData.goal_type === type
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <span className="text-2xl">{icon}</span>
-              <span className="text-xs mt-1">{t(`goalForm.types.${type}`)}</span>
-            </button>
-          ))}
+          {Object.entries(GOAL_TYPES).map(([type]) => {
+            const GoalIcon = getGoalIcon(type)
+            const colorClass = GOAL_COLORS[type] || 'text-gray-500'
+            return (
+              <button
+                key={type}
+                type="button"
+                onClick={() => handleGoalTypeChange(type)}
+                className={`flex flex-col items-center p-3 border rounded-xl transition-all ${
+                  formData.goal_type === type
+                    ? 'border-primary-500 bg-primary-50 shadow-sm'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-1 ${
+                  formData.goal_type === type ? 'bg-primary-100' : 'bg-gray-100'
+                }`}>
+                  <GoalIcon className={`w-5 h-5 ${formData.goal_type === type ? 'text-primary-600' : colorClass}`} />
+                </div>
+                <span className="text-xs font-medium">{t(`goalForm.types.${type}`)}</span>
+              </button>
+            )
+          })}
         </div>
       </div>
 

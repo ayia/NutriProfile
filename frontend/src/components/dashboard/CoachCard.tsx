@@ -1,4 +1,5 @@
 import type { CoachResponse } from '@/types/dashboard'
+import { HeartPulse, AlertCircle, AlertTriangle, CheckCircle, Sparkles } from 'lucide-react'
 
 interface CoachCardProps {
   advice: CoachResponse
@@ -16,12 +17,25 @@ export function CoachCard({ advice }: CoachCardProps) {
     }
   }
 
+  const getPriorityIcon = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return <AlertCircle className="w-5 h-5 text-red-500" />
+      case 'medium':
+        return <AlertTriangle className="w-5 h-5 text-yellow-600" />
+      default:
+        return <CheckCircle className="w-5 h-5 text-green-500" />
+    }
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary-500 to-primary-600 p-4 text-white">
         <div className="flex items-center gap-3">
-          <span className="text-3xl">🧑‍⚕️</span>
+          <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+            <HeartPulse className="w-6 h-6 text-white" />
+          </div>
           <div>
             <h3 className="font-semibold">{advice.greeting}</h3>
             <p className="text-primary-100 text-sm mt-1">{advice.summary}</p>
@@ -37,7 +51,9 @@ export function CoachCard({ advice }: CoachCardProps) {
             className={`border-l-4 rounded-r-lg p-3 ${getPriorityColor(item.priority)}`}
           >
             <div className="flex items-start gap-2">
-              <span className="text-xl flex-shrink-0">{item.emoji}</span>
+              <div className="flex-shrink-0 mt-0.5">
+                {getPriorityIcon(item.priority)}
+              </div>
               <div className="flex-1">
                 <p className="text-sm text-gray-700">{item.message}</p>
                 {item.action && (
@@ -54,7 +70,10 @@ export function CoachCard({ advice }: CoachCardProps) {
       {/* Citation motivation */}
       {advice.motivation_quote && (
         <div className="px-4 pb-4">
-          <div className="bg-gray-50 rounded-lg p-3 text-center">
+          <div className="bg-gradient-to-r from-primary-50 to-emerald-50 rounded-lg p-3 text-center">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <Sparkles className="w-4 h-4 text-primary-500" />
+            </div>
             <p className="text-sm text-gray-600 italic">"{advice.motivation_quote}"</p>
           </div>
         </div>
