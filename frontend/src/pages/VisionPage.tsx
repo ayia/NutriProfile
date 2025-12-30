@@ -116,7 +116,7 @@ export function VisionPage() {
         </div>
 
         {/* Tabs - Glassmorphism style - Responsive */}
-        <div className="flex gap-1.5 sm:gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+        <div className="flex gap-2 sm:gap-3 mb-6 sm:mb-8 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 animate-fade-in-up scrollbar-hide" style={{ animationDelay: '0.1s' }}>
           {tabs.map((tab, index) => (
             <button
               key={tab.id}

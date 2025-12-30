@@ -140,20 +140,20 @@ export function TrackingPage() {
           </h1>
         </div>
 
-        {/* Tabs - Enhanced */}
-        <div className="flex gap-2 mb-8 overflow-x-auto pb-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+        {/* Tabs - Enhanced & Responsive */}
+        <div className="flex gap-2 sm:gap-3 mb-6 sm:mb-8 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 animate-fade-in-up scrollbar-hide" style={{ animationDelay: '0.1s' }}>
           {tabs.map((tab, index) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-medium transition-all duration-300 whitespace-nowrap ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-medium transition-all duration-300 whitespace-nowrap text-sm sm:text-base ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-accent-500 to-amber-500 text-white shadow-lg shadow-accent-500/30 scale-105'
                   : 'glass-card text-gray-600 hover:text-gray-900 hover:shadow-md hover:-translate-y-0.5'
               }`}
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
-              <tab.IconComponent className={`w-5 h-5 ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`} />
+              <tab.IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`} />
               <span>{tab.label}</span>
             </button>
           ))}
