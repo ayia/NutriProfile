@@ -51,25 +51,31 @@ export function SettingsPage() {
     },
   })
 
-  // Scroll reveal animation
+  // Scroll reveal animation - re-run when profile data loads or tab changes
   useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible')
-          }
-        })
-      },
-      { threshold: 0.1 }
-    )
+    // Small delay to ensure DOM is rendered
+    const timer = setTimeout(() => {
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible')
+            }
+          })
+        },
+        { threshold: 0.1 }
+      )
 
-    document.querySelectorAll('.reveal').forEach((el) => {
-      observerRef.current?.observe(el)
-    })
+      document.querySelectorAll('.reveal').forEach((el) => {
+        observerRef.current?.observe(el)
+      })
+    }, 100)
 
-    return () => observerRef.current?.disconnect()
-  }, [activeTab])
+    return () => {
+      clearTimeout(timer)
+      observerRef.current?.disconnect()
+    }
+  }, [activeTab, profileQuery.data])
 
   const tabs: { id: SettingsTab; label: string; icon: string; color: string }[] = [
     { id: 'profile', label: t('tabs.profile'), icon: '👤', color: 'from-primary-500 to-emerald-500' },
