@@ -1,0 +1,48 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Main gradient for the N letter -->
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14B8A6" />
+      <stop offset="50%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Lighter gradient for the leaf -->
+    <linearGradient id="leafGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#6EE7B7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#logoGradient)" />
+
+  <!-- Letter N - stylized -->
+  <path
+    d="M 28 72 L 28 32 L 34 32 L 58 60 L 58 32 L 72 32 L 72 72 L 66 72 L 42 44 L 42 72 Z"
+    fill="white"
+    opacity="0.95"
+  />
+
+  <!-- Leaf overlay -->
+  <path
+    d="M 60 18
+       Q 78 24, 82 42
+       Q 84 54, 76 58
+       Q 70 60, 64 56
+       Q 60 52, 58 44
+       Q 56 32, 60 18 Z"
+    fill="url(#leafGradient)"
+    opacity="0.9"
+  />
+
+  <!-- Leaf vein -->
+  <path
+    d="M 62 22 Q 72 34, 74 50"
+    stroke="white"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    fill="none"
+    opacity="0.6"
+  />
+</svg>

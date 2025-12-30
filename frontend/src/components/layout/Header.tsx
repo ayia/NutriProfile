@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
+import { Logo } from '@/components/ui/Logo'
 import { cn } from '@/lib/utils'
 
 interface NavLink {
@@ -84,18 +85,10 @@ export function Header() {
         {/* Logo */}
         <Link
           to={isAuthenticated ? '/dashboard' : '/'}
-          className="flex items-center gap-2.5 group"
+          className="flex items-center group"
         >
-          <div className="relative">
-            <img
-              src="/logo.png"
-              alt="NutriProfile"
-              className="h-10 w-10 drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
-            />
-          </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent tracking-tight">
-            NutriProfile
-          </span>
+          <Logo size="md" showText className="hidden sm:flex" />
+          <Logo size="sm" className="sm:hidden" />
         </Link>
 
         {/* Navigation principale (desktop) */}

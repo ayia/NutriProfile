@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X, Download, Share } from 'lucide-react'
+import { Logo } from '@/components/ui/Logo'
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[]
@@ -91,7 +92,7 @@ export function PWAInstallPrompt() {
         {/* Header avec gradient */}
         <div className="bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="NutriProfile" className="h-8 w-8" />
+            <Logo size="sm" />
             <span className="text-white font-semibold">{t('pwa.title', 'Installer NutriProfile')}</span>
           </div>
           <button
