@@ -146,12 +146,17 @@ async def update_profile(
     db: AsyncSession = Depends(get_db),
 ) -> ProfileResponse:
     """Mettre à jour le profil."""
+    # Use print for guaranteed visibility in logs
+    print(f"[PROFILE UPDATE] Received request from user {current_user.id}")
+    print(f"[PROFILE UPDATE] Raw profile_data: {profile_data}")
+
     result = await db.execute(
         select(Profile).where(Profile.user_id == current_user.id)
     )
     profile = result.scalar_one_or_none()
 
     if not profile:
+        print(f"[PROFILE UPDATE] Profile not found for user {current_user.id}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Profil non trouvé.",
@@ -162,6 +167,7 @@ async def update_profile(
 
     # Mettre à jour les champs fournis - convert enums to string values
     update_data = profile_data.model_dump(exclude_unset=True)
+    print(f"[PROFILE UPDATE] update_data after model_dump: {update_data}")
     enum_fields = {'gender', 'activity_level', 'goal', 'diet_type'}
     for field, value in update_data.items():
         if field in enum_fields and hasattr(value, 'value'):
@@ -201,6 +207,7 @@ async def update_profile(
     await db.commit()
     await db.refresh(profile)
 
+    print(f"[PROFILE UPDATE] SUCCESS - medications: {profile.medications}, medical_conditions: {profile.medical_conditions}")
     return ProfileResponse.model_validate(profile)
 
 
