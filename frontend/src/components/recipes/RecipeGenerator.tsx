@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { RecipeCard } from './RecipeCard'
 import type { RecipeGenerateRequest, RecipeGenerateResponse } from '@/types/recipe'
-import { MEAL_TYPE_ICONS } from '@/types/recipe'
+import { getMealTypeIcon, MEAL_TYPE_COLORS } from '@/lib/icons'
+
+const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'] as const
 
 interface RecipeGeneratorProps {
   initialTags?: string[]
@@ -103,25 +105,29 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
             {t('generator.mealType')}
           </label>
           <div className="grid grid-cols-4 gap-2">
-            {Object.keys(MEAL_TYPE_ICONS).map((value) => (
-              <label
-                key={value}
-                className={`flex flex-col items-center p-3 border rounded-lg cursor-pointer transition-colors ${
-                  selectedMealType === value
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <input
-                  type="radio"
-                  value={value}
-                  className="sr-only"
-                  {...register('meal_type')}
-                />
-                <span className="text-2xl">{MEAL_TYPE_ICONS[value]}</span>
-                <span className="text-sm mt-1">{t(`categories.${value}`)}</span>
-              </label>
-            ))}
+            {MEAL_TYPES.map((value) => {
+              const MealIcon = getMealTypeIcon(value)
+              const colorClass = MEAL_TYPE_COLORS[value] || 'text-gray-500'
+              return (
+                <label
+                  key={value}
+                  className={`flex flex-col items-center p-3 border rounded-lg cursor-pointer transition-colors ${
+                    selectedMealType === value
+                      ? 'border-primary-500 bg-primary-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    value={value}
+                    className="sr-only"
+                    {...register('meal_type')}
+                  />
+                  <MealIcon className={`w-7 h-7 ${colorClass}`} />
+                  <span className="text-sm mt-1">{t(`categories.${value}`)}</span>
+                </label>
+              )
+            })}
           </div>
         </div>
 
