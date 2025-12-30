@@ -29,12 +29,17 @@ export function SettingsPage() {
   })
 
   const updateProfileMutation = useMutation({
-    mutationFn: profileApi.updateProfile,
-    onSuccess: () => {
+    mutationFn: (data: Partial<ProfileCreate>) => {
+      console.log('[updateProfileMutation] Sending to API:', data)
+      return profileApi.updateProfile(data)
+    },
+    onSuccess: (response) => {
+      console.log('[updateProfileMutation] Success, response:', response)
       queryClient.invalidateQueries({ queryKey: ['profile'] })
       toast.success(tCommon('toast.profileUpdated'))
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('[updateProfileMutation] Error:', error)
       toast.error(tCommon('toast.saveError'))
     },
   })
@@ -544,10 +549,12 @@ function HealthSectionForm({ profile, onSave, isUpdating }: HealthSectionFormPro
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSave({
+    const data = {
       medical_conditions: selectedConditions,
       medications: selectedMedications,
-    })
+    }
+    console.log('[HealthSectionForm] Submitting data:', data)
+    onSave(data)
   }
 
   return (

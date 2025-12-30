@@ -18,7 +18,9 @@ export const profileApi = {
   },
 
   updateProfile: async (data: Partial<ProfileCreate>): Promise<Profile> => {
+    console.log('[profileApi.updateProfile] Request data:', data)
     const response = await api.put<Profile>('/profiles/me', data)
+    console.log('[profileApi.updateProfile] Response:', response.data)
     return response.data
   },
 
