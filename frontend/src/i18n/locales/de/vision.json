@@ -123,5 +123,32 @@
     "noImage": "Bitte wählen Sie ein Bild aus",
     "imageTooLarge": "Bild zu groß (max. 10MB)",
     "invalidFormat": "Ungültiges Format. Verwenden Sie JPG, PNG oder WebP"
+  },
+  "photoTips": {
+    "title": "Foto-Tipps",
+    "subtitle": "Bessere Ergebnisse mit diesen Tipps",
+    "showTips": "Tipps für bessere Fotos",
+    "doThis": "Das sollten Sie tun",
+    "avoidThis": "Das sollten Sie vermeiden",
+    "proTip": "Profi-Tipp",
+    "proTipDesc": "Natürliches Tageslicht in der Nähe eines Fensters liefert die besten Ergebnisse für die Lebensmittelerkennung.",
+    "examples": {
+      "goodLighting": "Gute Beleuchtung",
+      "goodLightingDesc": "Natürliches oder helles Licht",
+      "topDown": "Draufsicht",
+      "topDownDesc": "Direkt von oben fotografieren",
+      "allVisible": "Alle Lebensmittel sichtbar",
+      "allVisibleDesc": "Nichts versteckt oder abgeschnitten",
+      "clearFocus": "Klar und fokussiert",
+      "clearFocusDesc": "Scharfes, nicht verschwommenes Bild",
+      "darkPhoto": "Dunkle Fotos",
+      "darkPhotoDesc": "Schwer zu erkennen",
+      "blurry": "Unscharfe Aufnahmen",
+      "blurryDesc": "KI kann nicht identifizieren",
+      "partialView": "Teilansicht",
+      "partialViewDesc": "Lebensmittel aus dem Rahmen geschnitten",
+      "cluttered": "Unordentlicher Hintergrund",
+      "clutteredDesc": "Verwirrt die KI-Erkennung"
+    }
   }
 }

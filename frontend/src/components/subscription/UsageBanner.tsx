@@ -12,6 +12,7 @@ interface UsageBannerProps {
   action?: 'vision_analyses' | 'recipe_generations' | 'coach_messages'
   showAlways?: boolean
   compact?: boolean
+  proactive?: boolean // Affiche toujours avec framing positif
 }
 
 const featureIcons: Record<string, LucideIcon> = {
@@ -20,7 +21,7 @@ const featureIcons: Record<string, LucideIcon> = {
   coach_messages: MessageSquare,
 }
 
-export function UsageBanner({ action = 'vision_analyses', showAlways = false, compact = false }: UsageBannerProps) {
+export function UsageBanner({ action = 'vision_analyses', showAlways = false, compact = false, proactive = false }: UsageBannerProps) {
   const { t } = useTranslation('common')
   const [dismissed, setDismissed] = useState(false)
 
@@ -56,11 +57,54 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
     )
   }
 
-  // Ne pas afficher si plus de 50% restant et showAlways est false
-  if (!showAlways && percentage < 50) return null
+  // Ne pas afficher si plus de 50% restant et showAlways est false (sauf proactive)
+  if (!showAlways && !proactive && percentage < 50) return null
 
   const isLow = remaining <= 1
   const isZero = remaining === 0
+
+  // Version proactive - Affiche toujours avec framing positif
+  if (proactive && !isZero && !isLow) {
+    return (
+      <div className="glass-card p-4 mb-4 relative overflow-hidden border-primary-100">
+        <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-primary-50 to-emerald-50" />
+        <div className="relative flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {(() => { const Icon = icon; return <Icon className="w-6 h-6 text-primary-600" /> })()}
+            <div>
+              <span className="text-sm font-medium text-gray-700">
+                {t('usage.freeToday', { count: remaining })}
+              </span>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="flex gap-0.5">
+                  {Array.from({ length: limit }).map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        i < used
+                          ? 'bg-gray-300'
+                          : 'bg-gradient-to-r from-primary-500 to-emerald-500'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs text-gray-500">
+                  {remaining}/{limit} {t('usage.remainingToday')}
+                </span>
+              </div>
+            </div>
+          </div>
+          <Link
+            to="/pricing"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-primary-600 text-sm font-medium hover:bg-primary-50 rounded-lg transition-colors"
+          >
+            <Zap className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('usage.getUnlimited')}</span>
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   // Version compacte
   if (compact) {

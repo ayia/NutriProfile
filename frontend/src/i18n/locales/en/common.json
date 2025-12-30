@@ -91,7 +91,9 @@
     "remainingToday": "remaining today",
     "remaining_one": "remaining",
     "remaining_other": "remaining",
-    "upgradeToPremium": "Upgrade to Premium"
+    "upgradeToPremium": "Upgrade to Premium",
+    "freeToday": "{{count}} free analyses remaining",
+    "getUnlimited": "Get unlimited"
   },
   "pwa": {
     "title": "Install NutriProfile",
@@ -122,5 +124,23 @@
     "passwordChanged": "Password changed",
     "emailSent": "Email sent",
     "copied": "Copied to clipboard"
+  },
+  "tour": {
+    "skip": "Skip tour",
+    "finish": "Finish",
+    "dashboard": {
+      "welcomeTitle": "Welcome to NutriProfile!",
+      "welcome": "Let's take a quick tour to help you get started. You can skip this at any time.",
+      "navDashboardTitle": "Dashboard",
+      "navDashboard": "This is your main dashboard where you can see your daily progress and nutrition summary.",
+      "navVisionTitle": "Photo Analysis",
+      "navVision": "Take a photo of your meal and our AI will analyze it to estimate calories and nutrients.",
+      "navTrackingTitle": "Activity Tracking",
+      "navTracking": "Track your weight, water intake, and physical activities here.",
+      "navRecipesTitle": "Smart Recipes",
+      "navRecipes": "Get personalized recipe suggestions based on your goals and preferences.",
+      "quickActionsTitle": "Quick Actions",
+      "quickActions": "Use this button for quick access to scan meals, log water, and more!"
+    }
   }
 }

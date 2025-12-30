@@ -92,5 +92,19 @@
   },
   "errors": {
     "generateFailed": "Erreur lors de la génération. Veuillez réessayer."
+  },
+  "preview": {
+    "title": "Aperçu de la recette",
+    "subtitle": "Voici ce que notre IA va créer pour vous",
+    "usingIngredients": "Avec vos ingrédients :",
+    "estimatedNutrition": "Nutrition estimée par portion :",
+    "whatYouGet": "Ce que vous obtiendrez :",
+    "benefits": {
+      "personalizedRecipe": "Recette personnalisée adaptée à votre profil",
+      "stepInstructions": "Instructions de préparation étape par étape",
+      "nutritionInfo": "Informations nutritionnelles complètes",
+      "aiOptimized": "Optimisée par l'IA pour vos objectifs santé"
+    },
+    "generateNow": "Générer la recette"
   }
 }

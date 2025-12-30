@@ -46,7 +46,22 @@
     "title": "Distribución de actividades (30d)",
     "newActivity": "+ Nueva actividad",
     "noActivities": "Sin actividades registradas",
-    "addActivity": "Agregar actividad"
+    "addActivity": "Agregar actividad",
+    "emptyState": {
+      "title": "Comienza tu viaje fitness",
+      "subtitle": "Registra tus actividades para desbloquear insights sobre tu salud",
+      "benefits": {
+        "calories": "Quema más calorías y alcanza tus objetivos más rápido",
+        "progress": "Visualiza tu progreso con gráficos detallados",
+        "motivation": "Mantente motivado con insignias de logros"
+      },
+      "quickStart": "Sugerencias para empezar:",
+      "suggestions": {
+        "walking": "15 min caminata",
+        "running": "30 min carrera",
+        "gym": "Sesión de gym"
+      }
+    }
   },
   "activityForm": {
     "type": "Tipo de actividad",
@@ -83,7 +98,18 @@
     "newWeight": "+ Nuevo pesaje",
     "noWeight": "Sin pesajes registrados",
     "addWeight": "Agregar pesaje",
-    "bodyFat": "GC"
+    "bodyFat": "GC",
+    "emptyState": {
+      "title": "Sigue tu viaje de peso",
+      "subtitle": "Pesajes regulares te ayudan a entender mejor tu cuerpo",
+      "benefits": {
+        "trends": "Visualiza tendencias de peso en semanas y meses",
+        "insights": "Obtén insights con IA sobre tu progreso",
+        "goals": "Sigue tu composición corporal junto con el peso"
+      },
+      "tip": "Consejo pro: Pésate a la misma hora cada día para resultados consistentes",
+      "startNow": "Registra tu primer pesaje"
+    }
   },
   "weightForm": {
     "weight": "Peso (kg)",
@@ -94,9 +120,42 @@
     "notesPlaceholder": "Notas opcionales..."
   },
   "goals": {
+    "title": "Tus Objetivos",
+    "subtitle": "Sigue tu progreso hacia tus objetivos",
     "newGoal": "+ Nuevo objetivo",
     "noGoals": "Sin objetivos definidos",
-    "createGoal": "Crear objetivo"
+    "noGoalsDesc": "Define tus objetivos para mantenerte motivado",
+    "createGoal": "Crear objetivo",
+    "emptyState": {
+      "title": "Establece metas, logra resultados",
+      "subtitle": "Los objetivos te ayudan a mantenerte enfocado y motivado en tu camino",
+      "benefits": {
+        "focus": "Mantente enfocado con metas claras y medibles",
+        "track": "Sigue tu progreso diario, semanal o mensual",
+        "celebrate": "Celebra logros con insignias y recompensas"
+      },
+      "popular": "Objetivos populares:",
+      "popularGoals": {
+        "steps": "10.000 pasos/día",
+        "water": "2L agua/día",
+        "activity": "30 min actividad/día"
+      }
+    },
+    "profileBased": "Objetivos basados en tu perfil",
+    "profileBasedDesc": "Estos objetivos se calculan automáticamente",
+    "customGoals": "Tus objetivos personalizados",
+    "addCustom": "Agrega tus propios objetivos",
+    "addCustomDesc": "Crea objetivos personalizados para seguir tu progreso",
+    "weightGoal": "Objetivo de Peso",
+    "caloriesGoal": "Calorías diarias",
+    "proteinGoal": "Proteína diaria",
+    "fromProfile": "Desde tu perfil",
+    "dailyTarget": "Objetivo diario",
+    "tolose": "a perder",
+    "togain": "a ganar",
+    "remaining": "restantes",
+    "excess": "en exceso",
+    "achieved": "¡Objetivo logrado!"
   },
   "goalForm": {
     "type": "Tipo de objetivo",

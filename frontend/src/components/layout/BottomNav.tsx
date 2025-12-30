@@ -15,6 +15,7 @@ interface NavItem {
   path: string
   label: string
   icon: LucideIcon
+  tourId: string
 }
 
 export function BottomNav() {
@@ -23,11 +24,11 @@ export function BottomNav() {
   const { isAuthenticated } = useAuth()
 
   const navItems: NavItem[] = [
-    { path: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
-    { path: '/vision', label: t('nav.vision'), icon: Camera },
-    { path: '/tracking', label: t('nav.tracking'), icon: TrendingUp },
-    { path: '/recipes', label: t('nav.recipes'), icon: ChefHat },
-    { path: '/settings', label: t('nav.profile'), icon: User },
+    { path: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard, tourId: 'nav-dashboard' },
+    { path: '/vision', label: t('nav.vision'), icon: Camera, tourId: 'nav-vision' },
+    { path: '/tracking', label: t('nav.tracking'), icon: TrendingUp, tourId: 'nav-tracking' },
+    { path: '/recipes', label: t('nav.recipes'), icon: ChefHat, tourId: 'nav-recipes' },
+    { path: '/settings', label: t('nav.profile'), icon: User, tourId: 'nav-settings' },
   ]
 
   // Ne pas afficher sur certaines pages
@@ -47,6 +48,7 @@ export function BottomNav() {
             <Link
               key={item.path}
               to={item.path}
+              data-tour={item.tourId}
               className={cn(
                 'relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-200',
                 isActive

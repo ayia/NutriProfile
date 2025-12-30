@@ -123,5 +123,32 @@
     "noImage": "请选择一张图片",
     "imageTooLarge": "图片太大（最大10MB）",
     "invalidFormat": "格式无效。请使用JPG、PNG或WebP"
+  },
+  "photoTips": {
+    "title": "拍照技巧",
+    "subtitle": "通过这些技巧获得更好的结果",
+    "showTips": "更好照片的技巧",
+    "doThis": "这样做",
+    "avoidThis": "避免这样做",
+    "proTip": "专业提示",
+    "proTipDesc": "窗户附近的自然光线能为食物检测提供最佳效果。",
+    "examples": {
+      "goodLighting": "良好的光线",
+      "goodLightingDesc": "自然光或明亮的光线",
+      "topDown": "俯拍视角",
+      "topDownDesc": "直接从上方拍摄",
+      "allVisible": "所有食物可见",
+      "allVisibleDesc": "没有遮挡或裁切",
+      "clearFocus": "清晰对焦",
+      "clearFocusDesc": "清晰、不模糊的图像",
+      "darkPhoto": "暗淡的照片",
+      "darkPhotoDesc": "难以检测食物",
+      "blurry": "模糊的照片",
+      "blurryDesc": "AI无法识别",
+      "partialView": "部分视图",
+      "partialViewDesc": "食物被裁出画面",
+      "cluttered": "杂乱的背景",
+      "clutteredDesc": "干扰AI检测"
+    }
   }
 }

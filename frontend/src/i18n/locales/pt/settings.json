@@ -1,9 +1,65 @@
 {
   "tabs": {
     "profile": "Perfil",
+    "subscription": "Assinatura",
     "account": "Conta",
     "notifications": "Notificações",
     "privacy": "Privacidade"
+  },
+  "subscription": {
+    "title": "Gerenciar assinatura",
+    "currentPlan": "Plano atual",
+    "free": {
+      "name": "Gratuito",
+      "description": "Recursos básicos para começar"
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Desbloqueie recursos avançados"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Acesso ilimitado a todos os recursos"
+    },
+    "features": {
+      "title": "Seus recursos",
+      "visionAnalyses": "Análises de fotos",
+      "recipeGeneration": "Geração de receitas",
+      "coachMessages": "Mensagens do Coach IA",
+      "historyDays": "Histórico",
+      "perDay": "/dia",
+      "perWeek": "/semana",
+      "unlimited": "Ilimitado",
+      "days": "dias"
+    },
+    "usage": {
+      "title": "Uso de hoje",
+      "remaining": "restante",
+      "used": "usado"
+    },
+    "upgrade": {
+      "title": "Atualize seu plano",
+      "benefits": "Com Premium você obtém:",
+      "benefit1": "Análises de fotos ilimitadas",
+      "benefit2": "Mais receitas geradas por semana",
+      "benefit3": "Acesso estendido ao histórico",
+      "benefit4": "Suporte prioritário do Coach IA",
+      "cta": "Atualizar para Premium",
+      "ctaPro": "Atualizar para Pro"
+    },
+    "manage": {
+      "title": "Gerenciar assinatura",
+      "renewsOn": "Renova em",
+      "cancelledOn": "Cancelado, termina em",
+      "manageButton": "Gerenciar cobrança",
+      "cancelButton": "Cancelar assinatura",
+      "cancelConfirm": "Tem certeza que deseja cancelar? Você manterá o acesso até o final do período de cobrança."
+    },
+    "status": {
+      "active": "Ativo",
+      "cancelled": "Cancelado",
+      "expired": "Expirado"
+    }
   },
   "profile": {
     "physicalInfo": "Informações físicas",
@@ -88,6 +144,18 @@
       "explorer": "Explorador",
       "dedicated": "Dedicado",
       "champion": "Campeão"
+    }
+  },
+  "preferences": {
+    "title": "Preferências",
+    "language": "Idioma",
+    "languageDesc": "Escolha seu idioma preferido",
+    "theme": "Tema",
+    "themeDesc": "Escolha seu tema preferido",
+    "themes": {
+      "light": "Claro",
+      "dark": "Escuro",
+      "system": "Sistema"
     }
   },
   "privacy": {

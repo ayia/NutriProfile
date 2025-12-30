@@ -46,7 +46,22 @@
     "title": "活动分布（30天）",
     "newActivity": "+ 新活动",
     "noActivities": "暂无活动记录",
-    "addActivity": "添加活动"
+    "addActivity": "添加活动",
+    "emptyState": {
+      "title": "开始您的健身之旅",
+      "subtitle": "追踪您的活动，解锁健康洞察",
+      "benefits": {
+        "calories": "燃烧更多卡路里，更快达成目标",
+        "progress": "通过详细图表查看您的进展",
+        "motivation": "通过成就徽章保持动力"
+      },
+      "quickStart": "快速开始建议：",
+      "suggestions": {
+        "walking": "15分钟步行",
+        "running": "30分钟跑步",
+        "gym": "健身房训练"
+      }
+    }
   },
   "activityForm": {
     "type": "活动类型",
@@ -83,7 +98,18 @@
     "newWeight": "+ 新称重",
     "noWeight": "暂无称重记录",
     "addWeight": "添加称重",
-    "bodyFat": "体脂"
+    "bodyFat": "体脂",
+    "emptyState": {
+      "title": "追踪您的体重之旅",
+      "subtitle": "定期称重帮助您更好地了解自己的身体",
+      "benefits": {
+        "trends": "查看数周和数月的体重趋势",
+        "insights": "获取AI驱动的进展洞察",
+        "goals": "同时追踪体重和身体成分"
+      },
+      "tip": "专业提示：每天同一时间称重，以获得一致的结果",
+      "startNow": "记录您的第一次称重"
+    }
   },
   "weightForm": {
     "weight": "体重（公斤）",
@@ -94,9 +120,42 @@
     "notesPlaceholder": "可选备注..."
   },
   "goals": {
+    "title": "您的目标",
+    "subtitle": "追踪您的目标进展",
     "newGoal": "+ 新目标",
     "noGoals": "暂无目标",
-    "createGoal": "创建目标"
+    "noGoalsDesc": "设定目标以保持动力",
+    "createGoal": "创建目标",
+    "emptyState": {
+      "title": "设定目标，实现成果",
+      "subtitle": "目标帮助您在旅程中保持专注和动力",
+      "benefits": {
+        "focus": "通过清晰可衡量的目标保持专注",
+        "track": "追踪每日、每周或每月进展",
+        "celebrate": "通过徽章和奖励庆祝成就"
+      },
+      "popular": "热门目标：",
+      "popularGoals": {
+        "steps": "每天10,000步",
+        "water": "每天2升水",
+        "activity": "每天30分钟运动"
+      }
+    },
+    "profileBased": "基于您个人资料的目标",
+    "profileBasedDesc": "这些目标是自动计算的",
+    "customGoals": "您的自定义目标",
+    "addCustom": "添加您自己的目标",
+    "addCustomDesc": "创建自定义目标来追踪您的进展",
+    "weightGoal": "体重目标",
+    "caloriesGoal": "每日卡路里",
+    "proteinGoal": "每日蛋白质",
+    "fromProfile": "来自您的个人资料",
+    "dailyTarget": "每日目标",
+    "tolose": "待减",
+    "togain": "待增",
+    "remaining": "剩余",
+    "excess": "超出",
+    "achieved": "目标达成！"
   },
   "goalForm": {
     "type": "目标类型",

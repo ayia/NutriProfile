@@ -1,9 +1,65 @@
 {
   "tabs": {
     "profile": "Profil",
+    "subscription": "Abonnement",
     "account": "Compte",
     "notifications": "Notifications",
     "privacy": "Confidentialité"
+  },
+  "subscription": {
+    "title": "Gérer l'abonnement",
+    "currentPlan": "Plan actuel",
+    "free": {
+      "name": "Gratuit",
+      "description": "Fonctionnalités de base pour commencer"
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Débloquez les fonctionnalités avancées"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Accès illimité à toutes les fonctionnalités"
+    },
+    "features": {
+      "title": "Vos fonctionnalités",
+      "visionAnalyses": "Analyses photo",
+      "recipeGeneration": "Génération de recettes",
+      "coachMessages": "Messages du Coach IA",
+      "historyDays": "Historique",
+      "perDay": "/jour",
+      "perWeek": "/semaine",
+      "unlimited": "Illimité",
+      "days": "jours"
+    },
+    "usage": {
+      "title": "Utilisation du jour",
+      "remaining": "restant",
+      "used": "utilisé"
+    },
+    "upgrade": {
+      "title": "Améliorez votre plan",
+      "benefits": "Avec Premium, vous obtenez :",
+      "benefit1": "Analyses photo illimitées",
+      "benefit2": "Plus de recettes générées par semaine",
+      "benefit3": "Accès étendu à l'historique",
+      "benefit4": "Support prioritaire du Coach IA",
+      "cta": "Passer à Premium",
+      "ctaPro": "Passer à Pro"
+    },
+    "manage": {
+      "title": "Gérer l'abonnement",
+      "renewsOn": "Renouvellement le",
+      "cancelledOn": "Annulé, se termine le",
+      "manageButton": "Gérer la facturation",
+      "cancelButton": "Annuler l'abonnement",
+      "cancelConfirm": "Êtes-vous sûr de vouloir annuler ? Vous conserverez l'accès jusqu'à la fin de votre période de facturation."
+    },
+    "status": {
+      "active": "Actif",
+      "cancelled": "Annulé",
+      "expired": "Expiré"
+    }
   },
   "profile": {
     "physicalInfo": "Informations physiques",
@@ -88,6 +144,18 @@
       "explorer": "Explorateur",
       "dedicated": "Dévoué",
       "champion": "Champion"
+    }
+  },
+  "preferences": {
+    "title": "Préférences",
+    "language": "Langue",
+    "languageDesc": "Choisissez votre langue préférée",
+    "theme": "Thème",
+    "themeDesc": "Choisissez votre thème préféré",
+    "themes": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
     }
   },
   "privacy": {

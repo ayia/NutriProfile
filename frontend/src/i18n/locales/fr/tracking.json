@@ -46,7 +46,22 @@
     "title": "Répartition des activités (30j)",
     "newActivity": "+ Nouvelle activité",
     "noActivities": "Aucune activité enregistrée",
-    "addActivity": "Ajouter une activité"
+    "addActivity": "Ajouter une activité",
+    "emptyState": {
+      "title": "Commencez votre parcours fitness",
+      "subtitle": "Suivez vos activités pour débloquer des insights sur votre santé",
+      "benefits": {
+        "calories": "Brûlez plus de calories et atteignez vos objectifs plus vite",
+        "progress": "Visualisez votre progression avec des graphiques détaillés",
+        "motivation": "Restez motivé avec des badges de réussite"
+      },
+      "quickStart": "Suggestions pour démarrer :",
+      "suggestions": {
+        "walking": "15 min de marche",
+        "running": "30 min de course",
+        "gym": "Séance de musculation"
+      }
+    }
   },
   "activityForm": {
     "type": "Type d'activité",
@@ -83,7 +98,18 @@
     "newWeight": "+ Nouvelle pesée",
     "noWeight": "Aucune pesée enregistrée",
     "addWeight": "Ajouter une pesée",
-    "bodyFat": "MG"
+    "bodyFat": "MG",
+    "emptyState": {
+      "title": "Suivez votre évolution de poids",
+      "subtitle": "Des pesées régulières vous aident à mieux comprendre votre corps",
+      "benefits": {
+        "trends": "Visualisez les tendances sur des semaines et des mois",
+        "insights": "Obtenez des insights IA sur votre progression",
+        "goals": "Suivez votre composition corporelle en plus du poids"
+      },
+      "tip": "Conseil pro : Pesez-vous à la même heure chaque jour pour des résultats cohérents",
+      "startNow": "Enregistrez votre première pesée"
+    }
   },
   "weightForm": {
     "weight": "Poids (kg)",
@@ -100,6 +126,21 @@
     "noGoals": "Aucun objectif défini",
     "noGoalsDesc": "Définissez vos objectifs pour rester motivé",
     "createGoal": "Créer un objectif",
+    "emptyState": {
+      "title": "Fixez des objectifs, obtenez des résultats",
+      "subtitle": "Les objectifs vous aident à rester concentré et motivé dans votre parcours",
+      "benefits": {
+        "focus": "Restez concentré avec des cibles claires et mesurables",
+        "track": "Suivez votre progression quotidienne, hebdomadaire ou mensuelle",
+        "celebrate": "Célébrez vos réussites avec des badges et récompenses"
+      },
+      "popular": "Objectifs populaires :",
+      "popularGoals": {
+        "steps": "10 000 pas/jour",
+        "water": "2L d'eau/jour",
+        "activity": "30 min d'activité/jour"
+      }
+    },
     "profileBased": "Objectifs basés sur votre profil",
     "profileBasedDesc": "Ces objectifs sont calculés automatiquement",
     "customGoals": "Vos objectifs personnalisés",

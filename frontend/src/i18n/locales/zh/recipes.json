@@ -92,5 +92,19 @@
   },
   "errors": {
     "generateFailed": "生成错误，请重试。"
+  },
+  "preview": {
+    "title": "食谱预览",
+    "subtitle": "我们的AI将为您创建以下内容",
+    "usingIngredients": "使用您的配料：",
+    "estimatedNutrition": "每份预估营养：",
+    "whatYouGet": "您将获得：",
+    "benefits": {
+      "personalizedRecipe": "根据您的个人资料定制的个性化食谱",
+      "stepInstructions": "分步烹饪说明",
+      "nutritionInfo": "完整的营养信息",
+      "aiOptimized": "AI优化，符合您的健康目标"
+    },
+    "generateNow": "生成食谱"
   }
 }

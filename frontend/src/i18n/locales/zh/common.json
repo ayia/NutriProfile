@@ -61,7 +61,9 @@
     "remainingToday": "今日剩余",
     "remaining_one": "剩余",
     "remaining_other": "剩余",
-    "upgradeToPremium": "升级到高级版"
+    "upgradeToPremium": "升级到高级版",
+    "freeToday": "剩余{{count}}次免费分析",
+    "getUnlimited": "获取无限"
   },
   "pwa": {
     "title": "安装 NutriProfile",
@@ -75,5 +77,28 @@
     "benefit1": "离线访问",
     "benefit2": "更快速",
     "benefit3": "通知推送"
+  },
+  "actions": {
+    "back": "返回",
+    "close": "关闭",
+    "next": "下一步"
+  },
+  "tour": {
+    "skip": "跳过导览",
+    "finish": "完成",
+    "dashboard": {
+      "welcomeTitle": "欢迎来到 NutriProfile！",
+      "welcome": "让我们快速浏览一下，帮助您入门。您可以随时跳过。",
+      "navDashboardTitle": "仪表板",
+      "navDashboard": "这是您的主仪表板，您可以在这里查看每日进度和营养摘要。",
+      "navVisionTitle": "照片分析",
+      "navVision": "拍摄您的餐食照片，我们的AI会分析并估算卡路里和营养成分。",
+      "navTrackingTitle": "活动追踪",
+      "navTracking": "在这里追踪您的体重、饮水量和体育活动。",
+      "navRecipesTitle": "智能食谱",
+      "navRecipes": "根据您的目标和偏好获取个性化食谱建议。",
+      "quickActionsTitle": "快速操作",
+      "quickActions": "使用此按钮快速访问餐食扫描、记录饮水等功能！"
+    }
   }
 }

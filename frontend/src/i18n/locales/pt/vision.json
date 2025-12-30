@@ -123,5 +123,32 @@
     "noImage": "Por favor selecione uma imagem",
     "imageTooLarge": "Imagem muito grande (máx. 10MB)",
     "invalidFormat": "Formato inválido. Use JPG, PNG ou WebP"
+  },
+  "photoTips": {
+    "title": "Dicas de Fotos",
+    "subtitle": "Obtenha melhores resultados com estas dicas",
+    "showTips": "Dicas para fotos melhores",
+    "doThis": "Faça isso",
+    "avoidThis": "Evite isso",
+    "proTip": "Dica profissional",
+    "proTipDesc": "A luz natural do dia perto de uma janela oferece os melhores resultados para detecção de alimentos.",
+    "examples": {
+      "goodLighting": "Boa iluminação",
+      "goodLightingDesc": "Luz natural ou brilhante",
+      "topDown": "Vista de cima",
+      "topDownDesc": "Fotografe diretamente de cima",
+      "allVisible": "Toda comida visível",
+      "allVisibleDesc": "Nada escondido ou cortado",
+      "clearFocus": "Clara e focada",
+      "clearFocusDesc": "Imagem nítida, não borrada",
+      "darkPhoto": "Fotos escuras",
+      "darkPhotoDesc": "Difícil detectar comida",
+      "blurry": "Fotos borradas",
+      "blurryDesc": "IA não consegue identificar",
+      "partialView": "Vista parcial",
+      "partialViewDesc": "Comida cortada do quadro",
+      "cluttered": "Fundo bagunçado",
+      "clutteredDesc": "Confunde a detecção da IA"
+    }
   }
 }

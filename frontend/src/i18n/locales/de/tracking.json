@@ -46,7 +46,22 @@
     "title": "Aktivitätsverteilung (30T)",
     "newActivity": "+ Neue Aktivität",
     "noActivities": "Keine Aktivitäten aufgezeichnet",
-    "addActivity": "Aktivität hinzufügen"
+    "addActivity": "Aktivität hinzufügen",
+    "emptyState": {
+      "title": "Starten Sie Ihre Fitness-Reise",
+      "subtitle": "Verfolgen Sie Ihre Aktivitäten für Einblicke in Ihre Gesundheit",
+      "benefits": {
+        "calories": "Verbrennen Sie mehr Kalorien und erreichen Sie Ihre Ziele schneller",
+        "progress": "Sehen Sie Ihren Fortschritt mit detaillierten Grafiken",
+        "motivation": "Bleiben Sie motiviert mit Erfolgsabzeichen"
+      },
+      "quickStart": "Schnellstart-Vorschläge:",
+      "suggestions": {
+        "walking": "15 Min Gehen",
+        "running": "30 Min Laufen",
+        "gym": "Krafttraining"
+      }
+    }
   },
   "activityForm": {
     "type": "Aktivitätstyp",
@@ -83,7 +98,18 @@
     "newWeight": "+ Neue Wiegung",
     "noWeight": "Keine Wiegungen aufgezeichnet",
     "addWeight": "Wiegung hinzufügen",
-    "bodyFat": "KF"
+    "bodyFat": "KF",
+    "emptyState": {
+      "title": "Verfolgen Sie Ihre Gewichtsreise",
+      "subtitle": "Regelmäßige Wiegungen helfen Ihnen, Ihren Körper besser zu verstehen",
+      "benefits": {
+        "trends": "Sehen Sie Gewichtstrends über Wochen und Monate",
+        "insights": "Erhalten Sie KI-gestützte Einblicke in Ihren Fortschritt",
+        "goals": "Verfolgen Sie die Körperzusammensetzung neben dem Gewicht"
+      },
+      "tip": "Profi-Tipp: Wiegen Sie sich jeden Tag zur gleichen Zeit für konsistente Ergebnisse",
+      "startNow": "Erste Wiegung aufzeichnen"
+    }
   },
   "weightForm": {
     "weight": "Gewicht (kg)",
@@ -94,9 +120,42 @@
     "notesPlaceholder": "Optionale Notizen..."
   },
   "goals": {
+    "title": "Ihre Ziele",
+    "subtitle": "Verfolgen Sie Ihren Fortschritt bei Ihren Zielen",
     "newGoal": "+ Neues Ziel",
     "noGoals": "Keine Ziele definiert",
-    "createGoal": "Ziel erstellen"
+    "noGoalsDesc": "Setzen Sie sich Ziele, um motiviert zu bleiben",
+    "createGoal": "Ziel erstellen",
+    "emptyState": {
+      "title": "Ziele setzen, Ergebnisse erzielen",
+      "subtitle": "Ziele helfen Ihnen, fokussiert und motiviert auf Ihrem Weg zu bleiben",
+      "benefits": {
+        "focus": "Bleiben Sie fokussiert mit klaren, messbaren Zielen",
+        "track": "Verfolgen Sie tägliche, wöchentliche oder monatliche Fortschritte",
+        "celebrate": "Feiern Sie Erfolge mit Abzeichen und Belohnungen"
+      },
+      "popular": "Beliebte Ziele:",
+      "popularGoals": {
+        "steps": "10.000 Schritte/Tag",
+        "water": "2L Wasser/Tag",
+        "activity": "30 Min Aktivität/Tag"
+      }
+    },
+    "profileBased": "Ziele basierend auf Ihrem Profil",
+    "profileBasedDesc": "Diese Ziele werden automatisch berechnet",
+    "customGoals": "Ihre benutzerdefinierten Ziele",
+    "addCustom": "Eigene Ziele hinzufügen",
+    "addCustomDesc": "Erstellen Sie benutzerdefinierte Ziele zur Fortschrittsverfolgung",
+    "weightGoal": "Gewichtsziel",
+    "caloriesGoal": "Tägliche Kalorien",
+    "proteinGoal": "Tägliches Protein",
+    "fromProfile": "Aus Ihrem Profil",
+    "dailyTarget": "Tägliches Ziel",
+    "tolose": "abzunehmen",
+    "togain": "zuzunehmen",
+    "remaining": "verbleibend",
+    "excess": "überschüssig",
+    "achieved": "Ziel erreicht!"
   },
   "goalForm": {
     "type": "Zieltyp",

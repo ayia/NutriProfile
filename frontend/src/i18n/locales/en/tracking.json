@@ -46,7 +46,22 @@
     "title": "Activities breakdown (30d)",
     "newActivity": "+ New activity",
     "noActivities": "No activities recorded",
-    "addActivity": "Add an activity"
+    "addActivity": "Add an activity",
+    "emptyState": {
+      "title": "Start your fitness journey",
+      "subtitle": "Track your activities to unlock insights about your health",
+      "benefits": {
+        "calories": "Burn more calories and reach your goals faster",
+        "progress": "See your progress over time with detailed charts",
+        "motivation": "Stay motivated with achievement badges"
+      },
+      "quickStart": "Quick start suggestions:",
+      "suggestions": {
+        "walking": "15 min walk",
+        "running": "30 min run",
+        "gym": "Gym session"
+      }
+    }
   },
   "activityForm": {
     "type": "Activity type",
@@ -83,7 +98,18 @@
     "newWeight": "+ New weigh-in",
     "noWeight": "No weigh-ins recorded",
     "addWeight": "Add a weigh-in",
-    "bodyFat": "BF"
+    "bodyFat": "BF",
+    "emptyState": {
+      "title": "Track your weight journey",
+      "subtitle": "Regular weigh-ins help you understand your body better",
+      "benefits": {
+        "trends": "See weight trends over weeks and months",
+        "insights": "Get AI-powered insights about your progress",
+        "goals": "Track body composition alongside weight"
+      },
+      "tip": "Pro tip: Weigh yourself at the same time each day for consistent results",
+      "startNow": "Record your first weigh-in"
+    }
   },
   "weightForm": {
     "weight": "Weight (kg)",
@@ -100,6 +126,21 @@
     "noGoals": "No goals set",
     "noGoalsDesc": "Set your goals to stay motivated",
     "createGoal": "Create a goal",
+    "emptyState": {
+      "title": "Set goals, achieve results",
+      "subtitle": "Goals help you stay focused and motivated on your journey",
+      "benefits": {
+        "focus": "Stay focused with clear, measurable targets",
+        "track": "Track daily, weekly, or monthly progress",
+        "celebrate": "Celebrate achievements with badges and rewards"
+      },
+      "popular": "Popular goals:",
+      "popularGoals": {
+        "steps": "10,000 steps/day",
+        "water": "2L water/day",
+        "activity": "30 min activity/day"
+      }
+    },
     "profileBased": "Goals based on your profile",
     "profileBasedDesc": "These goals are calculated automatically",
     "customGoals": "Your custom goals",

@@ -115,5 +115,32 @@
     "edit": "Modifier",
     "deleteConfirm": "Supprimer ce repas ?",
     "deleteError": "Erreur lors de la suppression. Veuillez réessayer."
+  },
+  "photoTips": {
+    "title": "Conseils Photo",
+    "subtitle": "Améliorez vos résultats avec ces conseils",
+    "showTips": "Conseils pour de meilleures photos",
+    "doThis": "À faire",
+    "avoidThis": "À éviter",
+    "proTip": "Astuce pro",
+    "proTipDesc": "La lumière naturelle près d'une fenêtre donne les meilleurs résultats pour la détection des aliments.",
+    "examples": {
+      "goodLighting": "Bon éclairage",
+      "goodLightingDesc": "Lumière naturelle ou vive",
+      "topDown": "Vue de dessus",
+      "topDownDesc": "Photographiez directement d'en haut",
+      "allVisible": "Tout visible",
+      "allVisibleDesc": "Rien de caché ou coupé",
+      "clearFocus": "Net et clair",
+      "clearFocusDesc": "Image nette, pas floue",
+      "darkPhoto": "Photos sombres",
+      "darkPhotoDesc": "Difficile à détecter",
+      "blurry": "Photos floues",
+      "blurryDesc": "L'IA ne peut pas identifier",
+      "partialView": "Vue partielle",
+      "partialViewDesc": "Aliments coupés du cadre",
+      "cluttered": "Arrière-plan encombré",
+      "clutteredDesc": "Perturbe la détection IA"
+    }
   }
 }

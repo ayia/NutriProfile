@@ -94,6 +94,7 @@ export function QuickActionsFAB() {
   return (
     <div
       ref={fabRef}
+      data-tour="quick-actions"
       className="fixed bottom-20 right-4 md:bottom-6 z-40"
     >
       {/* Menu d'actions */}

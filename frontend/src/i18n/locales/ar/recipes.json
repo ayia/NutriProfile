@@ -92,5 +92,19 @@
   },
   "errors": {
     "generateFailed": "خطأ في الإنشاء. يرجى المحاولة مرة أخرى."
+  },
+  "preview": {
+    "title": "معاينة الوصفة",
+    "subtitle": "هذا ما سينشئه الذكاء الاصطناعي لك",
+    "usingIngredients": "باستخدام مكوناتك:",
+    "estimatedNutrition": "التغذية المقدرة لكل حصة:",
+    "whatYouGet": "ما ستحصل عليه:",
+    "benefits": {
+      "personalizedRecipe": "وصفة مخصصة تناسب ملفك الشخصي",
+      "stepInstructions": "تعليمات الطبخ خطوة بخطوة",
+      "nutritionInfo": "معلومات غذائية كاملة",
+      "aiOptimized": "محسنة بالذكاء الاصطناعي لأهدافك الصحية"
+    },
+    "generateNow": "إنشاء الوصفة"
   }
 }

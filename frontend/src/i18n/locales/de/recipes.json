@@ -92,5 +92,19 @@
   },
   "errors": {
     "generateFailed": "Generierungsfehler. Bitte erneut versuchen."
+  },
+  "preview": {
+    "title": "Rezeptvorschau",
+    "subtitle": "Das wird unsere KI für Sie erstellen",
+    "usingIngredients": "Mit Ihren Zutaten:",
+    "estimatedNutrition": "Geschätzte Nährwerte pro Portion:",
+    "whatYouGet": "Was Sie bekommen:",
+    "benefits": {
+      "personalizedRecipe": "Personalisiertes Rezept für Ihr Profil",
+      "stepInstructions": "Schritt-für-Schritt Kochanleitung",
+      "nutritionInfo": "Vollständige Nährwertinformationen",
+      "aiOptimized": "KI-optimiert für Ihre Gesundheitsziele"
+    },
+    "generateNow": "Rezept generieren"
   }
 }

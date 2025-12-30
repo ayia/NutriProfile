@@ -61,7 +61,9 @@
     "remainingToday": "heute übrig",
     "remaining_one": "übrig",
     "remaining_other": "übrig",
-    "upgradeToPremium": "Auf Premium upgraden"
+    "upgradeToPremium": "Auf Premium upgraden",
+    "freeToday": "{{count}} kostenlose Analysen übrig",
+    "getUnlimited": "Unbegrenzt erhalten"
   },
   "pwa": {
     "title": "NutriProfile installieren",
@@ -75,5 +77,28 @@
     "benefit1": "Offline-Zugriff",
     "benefit2": "Schneller",
     "benefit3": "Benachrichtigungen"
+  },
+  "actions": {
+    "back": "Zurück",
+    "close": "Schließen",
+    "next": "Weiter"
+  },
+  "tour": {
+    "skip": "Tour überspringen",
+    "finish": "Beenden",
+    "dashboard": {
+      "welcomeTitle": "Willkommen bei NutriProfile!",
+      "welcome": "Lassen Sie uns eine kurze Tour machen, um Ihnen den Einstieg zu erleichtern. Sie können jederzeit überspringen.",
+      "navDashboardTitle": "Dashboard",
+      "navDashboard": "Dies ist Ihr Haupt-Dashboard, wo Sie Ihren täglichen Fortschritt und Ihre Ernährungsübersicht sehen können.",
+      "navVisionTitle": "Fotoanalyse",
+      "navVision": "Machen Sie ein Foto Ihrer Mahlzeit und unsere KI analysiert es, um Kalorien und Nährstoffe zu schätzen.",
+      "navTrackingTitle": "Aktivitätsverfolgung",
+      "navTracking": "Verfolgen Sie hier Ihr Gewicht, Ihre Wasseraufnahme und körperliche Aktivitäten.",
+      "navRecipesTitle": "Intelligente Rezepte",
+      "navRecipes": "Erhalten Sie personalisierte Rezeptvorschläge basierend auf Ihren Zielen und Vorlieben.",
+      "quickActionsTitle": "Schnellaktionen",
+      "quickActions": "Verwenden Sie diese Schaltfläche für schnellen Zugriff auf Mahlzeiten-Scan, Wassereintrag und mehr!"
+    }
   }
 }

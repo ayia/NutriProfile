@@ -123,5 +123,32 @@
     "noImage": "يرجى اختيار صورة",
     "imageTooLarge": "الصورة كبيرة جداً (الحد الأقصى 10 ميغابايت)",
     "invalidFormat": "تنسيق غير صالح. استخدم JPG أو PNG أو WebP"
+  },
+  "photoTips": {
+    "title": "نصائح التصوير",
+    "subtitle": "احصل على نتائج أفضل مع هذه النصائح",
+    "showTips": "نصائح لصور أفضل",
+    "doThis": "افعل هذا",
+    "avoidThis": "تجنب هذا",
+    "proTip": "نصيحة احترافية",
+    "proTipDesc": "ضوء النهار الطبيعي بالقرب من النافذة يعطي أفضل النتائج لاكتشاف الطعام.",
+    "examples": {
+      "goodLighting": "إضاءة جيدة",
+      "goodLightingDesc": "ضوء طبيعي أو ساطع",
+      "topDown": "تصوير من الأعلى",
+      "topDownDesc": "صور مباشرة من فوق",
+      "allVisible": "كل الطعام مرئي",
+      "allVisibleDesc": "لا شيء مخفي أو مقطوع",
+      "clearFocus": "واضحة ومركزة",
+      "clearFocusDesc": "صورة حادة، غير ضبابية",
+      "darkPhoto": "صور داكنة",
+      "darkPhotoDesc": "صعب اكتشاف الطعام",
+      "blurry": "صور ضبابية",
+      "blurryDesc": "الذكاء الاصطناعي لا يستطيع التحديد",
+      "partialView": "عرض جزئي",
+      "partialViewDesc": "الطعام مقطوع من الإطار",
+      "cluttered": "خلفية مزدحمة",
+      "clutteredDesc": "تربك اكتشاف الذكاء الاصطناعي"
+    }
   }
 }

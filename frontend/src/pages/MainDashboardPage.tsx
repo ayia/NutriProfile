@@ -13,6 +13,7 @@ import { PersonalizedInsights } from '@/components/dashboard/PersonalizedInsight
 import { ProfileSummaryBanner } from '@/components/dashboard/ProfileSummaryBanner'
 import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
+import { DashboardTour } from '@/components/onboarding/DashboardTour'
 import {
   Zap,
   Trophy,
@@ -80,6 +81,9 @@ export function MainDashboardPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+      {/* Tour guidé pour les nouveaux utilisateurs */}
+      <DashboardTour />
+
       {/* Bannière de profil personnalisée */}
       {personalization && (
         <ProfileSummaryBanner

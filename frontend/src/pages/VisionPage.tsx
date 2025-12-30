@@ -5,6 +5,7 @@ import { visionApi } from '@/services/visionApi'
 import { ImageUploader, type AnalysisData } from '@/components/vision/ImageUploader'
 import { AnalysisResult } from '@/components/vision/AnalysisResult'
 import { FoodLogCard } from '@/components/vision/FoodLogCard'
+import { PhotoTips } from '@/components/vision/PhotoTips'
 import { Button } from '@/components/ui/Button'
 import { UsageBanner } from '@/components/subscription/UsageBanner'
 import {
@@ -137,8 +138,11 @@ export function VisionPage() {
         {/* Content */}
         {activeTab === 'scan' && (
           <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            {/* Usage Banner */}
-            <UsageBanner action="vision_analyses" showAlways />
+            {/* Usage Banner - Affichage proactif des limites freemium */}
+            <UsageBanner action="vision_analyses" proactive />
+
+            {/* Photo Tips - Conseils pour de meilleures photos */}
+            <PhotoTips compact />
 
             {!analysisData ? (
               <div className="glass-card p-8 hover-lift">

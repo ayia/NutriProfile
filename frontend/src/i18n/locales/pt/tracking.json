@@ -46,7 +46,22 @@
     "title": "Distribuição de atividades (30d)",
     "newActivity": "+ Nova atividade",
     "noActivities": "Nenhuma atividade registrada",
-    "addActivity": "Adicionar atividade"
+    "addActivity": "Adicionar atividade",
+    "emptyState": {
+      "title": "Comece sua jornada fitness",
+      "subtitle": "Registre suas atividades para desbloquear insights sobre sua saúde",
+      "benefits": {
+        "calories": "Queime mais calorias e alcance seus objetivos mais rápido",
+        "progress": "Visualize seu progresso com gráficos detalhados",
+        "motivation": "Mantenha-se motivado com emblemas de conquistas"
+      },
+      "quickStart": "Sugestões para começar:",
+      "suggestions": {
+        "walking": "15 min caminhada",
+        "running": "30 min corrida",
+        "gym": "Sessão de academia"
+      }
+    }
   },
   "activityForm": {
     "type": "Tipo de atividade",
@@ -83,7 +98,18 @@
     "newWeight": "+ Nova pesagem",
     "noWeight": "Nenhuma pesagem registrada",
     "addWeight": "Adicionar pesagem",
-    "bodyFat": "GC"
+    "bodyFat": "GC",
+    "emptyState": {
+      "title": "Acompanhe sua jornada de peso",
+      "subtitle": "Pesagens regulares ajudam você a entender melhor seu corpo",
+      "benefits": {
+        "trends": "Veja tendências de peso ao longo de semanas e meses",
+        "insights": "Obtenha insights com IA sobre seu progresso",
+        "goals": "Acompanhe a composição corporal junto com o peso"
+      },
+      "tip": "Dica pro: Pese-se no mesmo horário todos os dias para resultados consistentes",
+      "startNow": "Registre sua primeira pesagem"
+    }
   },
   "weightForm": {
     "weight": "Peso (kg)",
@@ -94,9 +120,42 @@
     "notesPlaceholder": "Notas opcionais..."
   },
   "goals": {
+    "title": "Seus Objetivos",
+    "subtitle": "Acompanhe seu progresso em direção aos seus objetivos",
     "newGoal": "+ Novo objetivo",
     "noGoals": "Nenhum objetivo definido",
-    "createGoal": "Criar objetivo"
+    "noGoalsDesc": "Defina seus objetivos para se manter motivado",
+    "createGoal": "Criar objetivo",
+    "emptyState": {
+      "title": "Defina metas, alcance resultados",
+      "subtitle": "Os objetivos ajudam você a manter o foco e a motivação em sua jornada",
+      "benefits": {
+        "focus": "Mantenha o foco com metas claras e mensuráveis",
+        "track": "Acompanhe o progresso diário, semanal ou mensal",
+        "celebrate": "Celebre conquistas com emblemas e recompensas"
+      },
+      "popular": "Objetivos populares:",
+      "popularGoals": {
+        "steps": "10.000 passos/dia",
+        "water": "2L água/dia",
+        "activity": "30 min atividade/dia"
+      }
+    },
+    "profileBased": "Objetivos baseados no seu perfil",
+    "profileBasedDesc": "Estes objetivos são calculados automaticamente",
+    "customGoals": "Seus objetivos personalizados",
+    "addCustom": "Adicione seus próprios objetivos",
+    "addCustomDesc": "Crie objetivos personalizados para acompanhar seu progresso",
+    "weightGoal": "Objetivo de Peso",
+    "caloriesGoal": "Calorias diárias",
+    "proteinGoal": "Proteína diária",
+    "fromProfile": "Do seu perfil",
+    "dailyTarget": "Meta diária",
+    "tolose": "a perder",
+    "togain": "a ganhar",
+    "remaining": "restantes",
+    "excess": "em excesso",
+    "achieved": "Objetivo alcançado!"
   },
   "goalForm": {
     "type": "Tipo de objetivo",

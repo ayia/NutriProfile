@@ -61,7 +61,9 @@
     "remainingToday": "restantes hoje",
     "remaining_one": "restante",
     "remaining_other": "restantes",
-    "upgradeToPremium": "Atualizar para Premium"
+    "upgradeToPremium": "Atualizar para Premium",
+    "freeToday": "{{count}} análises gratuitas restantes",
+    "getUnlimited": "Obter ilimitado"
   },
   "pwa": {
     "title": "Instalar NutriProfile",
@@ -75,5 +77,28 @@
     "benefit1": "Acesso offline",
     "benefit2": "Mais rápido",
     "benefit3": "Notificações"
+  },
+  "actions": {
+    "back": "Voltar",
+    "close": "Fechar",
+    "next": "Próximo"
+  },
+  "tour": {
+    "skip": "Pular tour",
+    "finish": "Finalizar",
+    "dashboard": {
+      "welcomeTitle": "Bem-vindo ao NutriProfile!",
+      "welcome": "Vamos fazer um tour rápido para ajudá-lo a começar. Você pode pular a qualquer momento.",
+      "navDashboardTitle": "Painel",
+      "navDashboard": "Este é seu painel principal onde você pode ver seu progresso diário e resumo nutricional.",
+      "navVisionTitle": "Análise de Fotos",
+      "navVision": "Tire uma foto da sua refeição e nossa IA irá analisá-la para estimar calorias e nutrientes.",
+      "navTrackingTitle": "Acompanhamento de Atividade",
+      "navTracking": "Acompanhe seu peso, consumo de água e atividades físicas aqui.",
+      "navRecipesTitle": "Receitas Inteligentes",
+      "navRecipes": "Obtenha sugestões de receitas personalizadas com base em seus objetivos e preferências.",
+      "quickActionsTitle": "Ações Rápidas",
+      "quickActions": "Use este botão para acesso rápido ao escaneamento de refeições, registro de água e mais!"
+    }
   }
 }

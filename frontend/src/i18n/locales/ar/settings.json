@@ -1,9 +1,65 @@
 {
   "tabs": {
     "profile": "الملف الشخصي",
+    "subscription": "الاشتراك",
     "account": "الحساب",
     "notifications": "الإشعارات",
     "privacy": "الخصوصية"
+  },
+  "subscription": {
+    "title": "إدارة الاشتراك",
+    "currentPlan": "الخطة الحالية",
+    "free": {
+      "name": "مجاني",
+      "description": "ميزات أساسية لبدء رحلتك"
+    },
+    "premium": {
+      "name": "بريميوم",
+      "description": "افتح الميزات المتقدمة"
+    },
+    "pro": {
+      "name": "برو",
+      "description": "وصول غير محدود لجميع الميزات"
+    },
+    "features": {
+      "title": "ميزاتك",
+      "visionAnalyses": "تحليل الصور",
+      "recipeGeneration": "توليد الوصفات",
+      "coachMessages": "رسائل المدرب الذكي",
+      "historyDays": "السجل",
+      "perDay": "/يوم",
+      "perWeek": "/أسبوع",
+      "unlimited": "غير محدود",
+      "days": "أيام"
+    },
+    "usage": {
+      "title": "استخدام اليوم",
+      "remaining": "متبقي",
+      "used": "مستخدم"
+    },
+    "upgrade": {
+      "title": "ترقية خطتك",
+      "benefits": "مع بريميوم، تحصل على:",
+      "benefit1": "تحليل صور غير محدود",
+      "benefit2": "المزيد من الوصفات أسبوعياً",
+      "benefit3": "وصول موسع للسجل",
+      "benefit4": "دعم أولوي من المدرب الذكي",
+      "cta": "الترقية إلى بريميوم",
+      "ctaPro": "الترقية إلى برو"
+    },
+    "manage": {
+      "title": "إدارة الاشتراك",
+      "renewsOn": "يتجدد في",
+      "cancelledOn": "ملغى، ينتهي في",
+      "manageButton": "إدارة الفوترة",
+      "cancelButton": "إلغاء الاشتراك",
+      "cancelConfirm": "هل أنت متأكد من الإلغاء؟ ستحتفظ بالوصول حتى نهاية فترة الفوترة."
+    },
+    "status": {
+      "active": "نشط",
+      "cancelled": "ملغى",
+      "expired": "منتهي"
+    }
   },
   "profile": {
     "physicalInfo": "المعلومات الجسدية",
@@ -88,6 +144,18 @@
       "explorer": "مستكشف",
       "dedicated": "ملتزم",
       "champion": "بطل"
+    }
+  },
+  "preferences": {
+    "title": "التفضيلات",
+    "language": "اللغة",
+    "languageDesc": "اختر لغتك المفضلة",
+    "theme": "المظهر",
+    "themeDesc": "اختر مظهرك المفضل",
+    "themes": {
+      "light": "فاتح",
+      "dark": "داكن",
+      "system": "النظام"
     }
   },
   "privacy": {

@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/Input'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import type { Profile, ProfileCreate, ActivityLevel, Goal, DietType } from '@/types/profile'
 import { ACTIVITY_LABELS, GOAL_LABELS, DIET_LABELS, COMMON_ALLERGIES, COMMON_MEDICAL_CONDITIONS, COMMON_MEDICATIONS } from '@/types/profile'
+import { SUPPORTED_LANGUAGES } from '@/i18n'
+import i18n from '@/i18n'
 import {
   User,
   Lock,
@@ -42,10 +44,20 @@ import {
   Crown,
   Sparkles,
   Zap,
+  CreditCard,
+  Camera,
+  MessageCircle,
+  History,
+  ArrowRight,
+  Sun,
+  Moon,
+  Monitor,
+  Languages,
+  Palette,
   type LucideIcon,
 } from 'lucide-react'
 
-type SettingsTab = 'profile' | 'account' | 'notifications' | 'privacy'
+type SettingsTab = 'profile' | 'subscription' | 'account' | 'notifications' | 'privacy'
 
 export function SettingsPage() {
   const { t } = useTranslation('settings')
@@ -113,6 +125,7 @@ export function SettingsPage() {
 
   const tabs: { id: SettingsTab; label: string; IconComponent: LucideIcon; color: string }[] = [
     { id: 'profile', label: t('tabs.profile'), IconComponent: User, color: 'from-primary-500 to-emerald-500' },
+    { id: 'subscription', label: t('tabs.subscription'), IconComponent: CreditCard, color: 'from-violet-500 to-purple-500' },
     { id: 'account', label: t('tabs.account'), IconComponent: Lock, color: 'from-secondary-500 to-cyan-500' },
     { id: 'notifications', label: t('tabs.notifications'), IconComponent: Bell, color: 'from-warning-500 to-amber-500' },
     { id: 'privacy', label: t('tabs.privacy'), IconComponent: Shield, color: 'from-indigo-500 to-purple-500' },
@@ -182,6 +195,8 @@ export function SettingsPage() {
               isUpdating={updateProfileMutation.isPending}
             />
           )}
+
+          {activeTab === 'subscription' && <SubscriptionSettings />}
 
           {activeTab === 'account' && (
             <AccountSettings
@@ -1083,8 +1098,11 @@ function AccountSettings({ user, onDeleteClick }: AccountSettingsProps) {
         )}
       </div>
 
+      {/* Preferences - Language & Theme */}
+      <PreferencesSection />
+
       {/* Suppression du compte */}
-      <div className="p-6 bg-gradient-to-r from-error-50 to-rose-50 reveal" style={{ animationDelay: '0.15s' }}>
+      <div className="p-6 bg-gradient-to-r from-error-50 to-rose-50 reveal" style={{ animationDelay: '0.2s' }}>
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-gradient-to-br from-error-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg">
             <AlertTriangle className="w-6 h-6 text-white" />
@@ -1239,6 +1257,368 @@ function PrivacySettings() {
           </a>
         </div>
       </div>
+    </div>
+  )
+}
+
+// Composant Préférences (Langue et Thème)
+function PreferencesSection() {
+  const { t } = useTranslation('settings')
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language || 'en')
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
+    const stored = localStorage.getItem('theme')
+    return (stored as 'light' | 'dark' | 'system') || 'system'
+  })
+
+  const handleLanguageChange = (langCode: string) => {
+    i18n.changeLanguage(langCode)
+    setCurrentLanguage(langCode)
+    localStorage.setItem('i18nextLng', langCode)
+  }
+
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+    setTheme(newTheme)
+    localStorage.setItem('theme', newTheme)
+
+    // Apply theme
+    if (newTheme === 'system') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      document.documentElement.classList.toggle('dark', prefersDark)
+    } else {
+      document.documentElement.classList.toggle('dark', newTheme === 'dark')
+    }
+  }
+
+  const themeOptions = [
+    { value: 'light' as const, icon: Sun, label: t('preferences.themes.light') },
+    { value: 'dark' as const, icon: Moon, label: t('preferences.themes.dark') },
+    { value: 'system' as const, icon: Monitor, label: t('preferences.themes.system') },
+  ]
+
+  return (
+    <>
+      {/* Language Selector */}
+      <div className="p-6 reveal" style={{ animationDelay: '0.15s' }}>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Languages className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">{t('preferences.language')}</h3>
+            <p className="text-sm text-gray-500">{t('preferences.languageDesc')}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {SUPPORTED_LANGUAGES.map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => handleLanguageChange(lang.code)}
+              className={`flex items-center gap-3 p-4 rounded-xl transition-all ${
+                currentLanguage === lang.code
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/30'
+                  : 'bg-gray-50/80 hover:bg-gray-100/80 text-gray-700'
+              }`}
+            >
+              <span className="text-2xl">{lang.flag}</span>
+              <span className="font-medium text-sm">{lang.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Theme Selector */}
+      <div className="p-6 reveal" style={{ animationDelay: '0.17s' }}>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Palette className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">{t('preferences.theme')}</h3>
+            <p className="text-sm text-gray-500">{t('preferences.themeDesc')}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          {themeOptions.map((option) => {
+            const Icon = option.icon
+            return (
+              <button
+                key={option.value}
+                onClick={() => handleThemeChange(option.value)}
+                className={`flex flex-col items-center gap-3 p-6 rounded-xl transition-all ${
+                  theme === option.value
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
+                    : 'bg-gray-50/80 hover:bg-gray-100/80 text-gray-700'
+                }`}
+              >
+                <Icon className="w-8 h-8" />
+                <span className="font-medium">{option.label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </>
+  )
+}
+
+// Composant Paramètres Abonnement - Enhanced
+function SubscriptionSettings() {
+  const { t } = useTranslation('settings')
+
+  // Mock data - In production, this would come from an API
+  const currentTier = 'free' as 'free' | 'premium' | 'pro'
+  const usage = {
+    visionAnalyses: { used: 2, limit: 3 },
+    recipeGeneration: { used: 1, limit: 2 },
+    coachMessages: { used: 0, limit: 1 },
+  }
+
+  const tierLimits = {
+    free: {
+      visionAnalyses: 3,
+      recipeGeneration: 2,
+      coachMessages: 1,
+      historyDays: 7,
+    },
+    premium: {
+      visionAnalyses: -1, // unlimited
+      recipeGeneration: 10,
+      coachMessages: 5,
+      historyDays: 90,
+    },
+    pro: {
+      visionAnalyses: -1,
+      recipeGeneration: -1,
+      coachMessages: -1,
+      historyDays: -1,
+    },
+  }
+
+  const features = [
+    {
+      key: 'visionAnalyses',
+      icon: Camera,
+      color: 'from-violet-500 to-purple-500',
+      getValue: (tier: 'free' | 'premium' | 'pro') =>
+        tierLimits[tier].visionAnalyses === -1
+          ? t('subscription.features.unlimited')
+          : `${tierLimits[tier].visionAnalyses}${t('subscription.features.perDay')}`
+    },
+    {
+      key: 'recipeGeneration',
+      icon: ChefHat,
+      color: 'from-amber-500 to-orange-500',
+      getValue: (tier: 'free' | 'premium' | 'pro') =>
+        tierLimits[tier].recipeGeneration === -1
+          ? t('subscription.features.unlimited')
+          : `${tierLimits[tier].recipeGeneration}${t('subscription.features.perWeek')}`
+    },
+    {
+      key: 'coachMessages',
+      icon: MessageCircle,
+      color: 'from-emerald-500 to-teal-500',
+      getValue: (tier: 'free' | 'premium' | 'pro') =>
+        tierLimits[tier].coachMessages === -1
+          ? t('subscription.features.unlimited')
+          : `${tierLimits[tier].coachMessages}${t('subscription.features.perDay')}`
+    },
+    {
+      key: 'historyDays',
+      icon: History,
+      color: 'from-blue-500 to-indigo-500',
+      getValue: (tier: 'free' | 'premium' | 'pro') =>
+        tierLimits[tier].historyDays === -1
+          ? t('subscription.features.unlimited')
+          : `${tierLimits[tier].historyDays} ${t('subscription.features.days')}`
+    },
+  ]
+
+  const tierColors = {
+    free: 'from-gray-400 to-gray-500',
+    premium: 'from-violet-500 to-purple-500',
+    pro: 'from-amber-500 to-orange-500',
+  }
+
+  const tierIcons = {
+    free: Star,
+    premium: Crown,
+    pro: Zap,
+  }
+
+  const TierIcon = tierIcons[currentTier]
+
+  return (
+    <div className="divide-y divide-gray-100">
+      {/* Current Plan */}
+      <div className="p-6 reveal">
+        <div className="flex items-center gap-3 mb-6">
+          <div className={`w-12 h-12 bg-gradient-to-br ${tierColors[currentTier]} rounded-xl flex items-center justify-center shadow-lg`}>
+            <TierIcon className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">{t('subscription.currentPlan')}</h3>
+            <p className="text-sm text-gray-500">{t(`subscription.${currentTier}.description`)}</p>
+          </div>
+          <div className="ml-auto">
+            <span className={`px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r ${tierColors[currentTier]} shadow-lg`}>
+              {t(`subscription.${currentTier}.name`)}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Features List */}
+      <div className="p-6 reveal" style={{ animationDelay: '0.05s' }}>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Sparkles className="w-6 h-6 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">{t('subscription.features.title')}</h3>
+        </div>
+
+        <div className="grid gap-4">
+          {features.map((feature, index) => {
+            const FeatureIcon = feature.icon
+            return (
+              <div
+                key={feature.key}
+                className="flex items-center gap-4 p-4 rounded-xl bg-gray-50/80 hover:bg-gray-100/80 transition-colors"
+                style={{ animationDelay: `${0.05 * (index + 1)}s` }}
+              >
+                <div className={`w-10 h-10 bg-gradient-to-br ${feature.color} rounded-lg flex items-center justify-center shadow-md`}>
+                  <FeatureIcon className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-gray-700 font-medium">{t(`subscription.features.${feature.key}`)}</span>
+                <span className="ml-auto font-bold text-gray-900">{feature.getValue(currentTier)}</span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Today's Usage (only for free tier) */}
+      {currentTier === 'free' && (
+        <div className="p-6 reveal" style={{ animationDelay: '0.1s' }}>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
+              <BarChart3 className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">{t('subscription.usage.title')}</h3>
+          </div>
+
+          <div className="space-y-4">
+            {Object.entries(usage).map(([key, value]) => {
+              const percentage = (value.used / value.limit) * 100
+              const isNearLimit = percentage >= 70
+              const isAtLimit = percentage >= 100
+
+              return (
+                <div key={key} className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">{t(`subscription.features.${key}`)}</span>
+                    <span className={`font-medium ${isAtLimit ? 'text-error-600' : isNearLimit ? 'text-warning-600' : 'text-gray-900'}`}>
+                      {value.used} / {value.limit} {t('subscription.usage.used')}
+                    </span>
+                  </div>
+                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        isAtLimit
+                          ? 'bg-gradient-to-r from-error-500 to-rose-500'
+                          : isNearLimit
+                            ? 'bg-gradient-to-r from-warning-500 to-amber-500'
+                            : 'bg-gradient-to-r from-primary-500 to-emerald-500'
+                      }`}
+                      style={{ width: `${Math.min(percentage, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Upgrade CTA (only for non-pro tiers) */}
+      {currentTier !== 'pro' && (
+        <div className="p-6 bg-gradient-to-r from-violet-50 via-purple-50 to-pink-50 reveal" style={{ animationDelay: '0.15s' }}>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+              <Crown className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">{t('subscription.upgrade.title')}</h3>
+          </div>
+
+          <p className="text-gray-600 mb-4">{t('subscription.upgrade.benefits')}</p>
+
+          <ul className="space-y-3 mb-6">
+            {['benefit1', 'benefit2', 'benefit3', 'benefit4'].map((benefit) => (
+              <li key={benefit} className="flex items-center gap-3 text-gray-700">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center shadow-sm">
+                  <CheckCircle className="w-4 h-4 text-white" />
+                </div>
+                <span>{t(`subscription.upgrade.${benefit}`)}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex gap-4">
+            {currentTier === 'free' && (
+              <Link
+                to="/pricing"
+                className="flex-1 px-6 py-4 bg-gradient-to-r from-violet-500 to-purple-500 text-white rounded-2xl font-semibold shadow-lg shadow-violet-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+              >
+                <Crown className="w-5 h-5" />
+                {t('subscription.upgrade.cta')}
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            )}
+            <Link
+              to="/pricing"
+              className={`${currentTier === 'free' ? 'flex-1' : 'w-full'} px-6 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-semibold shadow-lg shadow-amber-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2`}
+            >
+              <Zap className="w-5 h-5" />
+              {t('subscription.upgrade.ctaPro')}
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Manage Subscription (for paid tiers) */}
+      {currentTier !== 'free' && (
+        <div className="p-6 reveal" style={{ animationDelay: '0.2s' }}>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center shadow-lg">
+              <CreditCard className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">{t('subscription.manage.title')}</h3>
+          </div>
+
+          <div className="p-4 rounded-xl bg-gray-50/80 mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500">{t('subscription.manage.renewsOn')}</p>
+                <p className="font-bold text-gray-900">15 janvier 2025</p>
+              </div>
+              <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
+                {t('subscription.status.active')}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <button className="flex-1 px-6 py-3 glass-card text-gray-700 font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              {t('subscription.manage.manageButton')}
+            </button>
+            <button className="px-6 py-3 border-2 border-error-300 text-error-600 rounded-xl font-semibold hover:bg-error-50 transition-all">
+              {t('subscription.manage.cancelButton')}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

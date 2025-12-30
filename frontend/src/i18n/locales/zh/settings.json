@@ -1,9 +1,65 @@
 {
   "tabs": {
     "profile": "个人资料",
+    "subscription": "订阅",
     "account": "账户",
     "notifications": "通知",
     "privacy": "隐私"
+  },
+  "subscription": {
+    "title": "管理订阅",
+    "currentPlan": "当前计划",
+    "free": {
+      "name": "免费",
+      "description": "开始您旅程的基本功能"
+    },
+    "premium": {
+      "name": "高级版",
+      "description": "解锁高级功能"
+    },
+    "pro": {
+      "name": "专业版",
+      "description": "无限访问所有功能"
+    },
+    "features": {
+      "title": "您的功能",
+      "visionAnalyses": "照片分析",
+      "recipeGeneration": "食谱生成",
+      "coachMessages": "AI教练消息",
+      "historyDays": "历史记录",
+      "perDay": "/天",
+      "perWeek": "/周",
+      "unlimited": "无限制",
+      "days": "天"
+    },
+    "usage": {
+      "title": "今日使用",
+      "remaining": "剩余",
+      "used": "已使用"
+    },
+    "upgrade": {
+      "title": "升级您的计划",
+      "benefits": "使用高级版，您将获得：",
+      "benefit1": "无限照片分析",
+      "benefit2": "每周更多食谱生成",
+      "benefit3": "扩展历史记录访问",
+      "benefit4": "AI教练优先支持",
+      "cta": "升级到高级版",
+      "ctaPro": "升级到专业版"
+    },
+    "manage": {
+      "title": "管理订阅",
+      "renewsOn": "续订日期",
+      "cancelledOn": "已取消，结束于",
+      "manageButton": "管理账单",
+      "cancelButton": "取消订阅",
+      "cancelConfirm": "确定要取消吗？您将保留访问权限直到计费期结束。"
+    },
+    "status": {
+      "active": "活跃",
+      "cancelled": "已取消",
+      "expired": "已过期"
+    }
   },
   "profile": {
     "physicalInfo": "身体信息",
@@ -88,6 +144,18 @@
       "explorer": "探索者",
       "dedicated": "专注者",
       "champion": "冠军"
+    }
+  },
+  "preferences": {
+    "title": "偏好设置",
+    "language": "语言",
+    "languageDesc": "选择您的首选语言",
+    "theme": "主题",
+    "themeDesc": "选择您的首选主题",
+    "themes": {
+      "light": "浅色",
+      "dark": "深色",
+      "system": "跟随系统"
     }
   },
   "privacy": {

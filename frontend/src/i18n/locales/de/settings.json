@@ -1,9 +1,65 @@
 {
   "tabs": {
     "profile": "Profil",
+    "subscription": "Abonnement",
     "account": "Konto",
     "notifications": "Benachrichtigungen",
     "privacy": "Datenschutz"
+  },
+  "subscription": {
+    "title": "Abonnement verwalten",
+    "currentPlan": "Aktueller Plan",
+    "free": {
+      "name": "Kostenlos",
+      "description": "Grundfunktionen für den Einstieg"
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Erweiterte Funktionen freischalten"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Unbegrenzter Zugang zu allen Funktionen"
+    },
+    "features": {
+      "title": "Ihre Funktionen",
+      "visionAnalyses": "Foto-Analysen",
+      "recipeGeneration": "Rezeptgenerierung",
+      "coachMessages": "KI-Coach Nachrichten",
+      "historyDays": "Verlauf",
+      "perDay": "/Tag",
+      "perWeek": "/Woche",
+      "unlimited": "Unbegrenzt",
+      "days": "Tage"
+    },
+    "usage": {
+      "title": "Heutige Nutzung",
+      "remaining": "verbleibend",
+      "used": "verwendet"
+    },
+    "upgrade": {
+      "title": "Plan upgraden",
+      "benefits": "Mit Premium erhalten Sie:",
+      "benefit1": "Unbegrenzte Foto-Analysen",
+      "benefit2": "Mehr Rezepte pro Woche",
+      "benefit3": "Erweiterter Zugang zum Verlauf",
+      "benefit4": "Prioritäts-Support vom KI-Coach",
+      "cta": "Auf Premium upgraden",
+      "ctaPro": "Auf Pro upgraden"
+    },
+    "manage": {
+      "title": "Abonnement verwalten",
+      "renewsOn": "Verlängert am",
+      "cancelledOn": "Gekündigt, endet am",
+      "manageButton": "Abrechnung verwalten",
+      "cancelButton": "Abonnement kündigen",
+      "cancelConfirm": "Sind Sie sicher? Sie behalten den Zugang bis zum Ende Ihrer Abrechnungsperiode."
+    },
+    "status": {
+      "active": "Aktiv",
+      "cancelled": "Gekündigt",
+      "expired": "Abgelaufen"
+    }
   },
   "profile": {
     "physicalInfo": "Körperliche Informationen",
@@ -88,6 +144,18 @@
       "explorer": "Entdecker",
       "dedicated": "Engagiert",
       "champion": "Champion"
+    }
+  },
+  "preferences": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "languageDesc": "Wählen Sie Ihre bevorzugte Sprache",
+    "theme": "Theme",
+    "themeDesc": "Wählen Sie Ihr bevorzugtes Theme",
+    "themes": {
+      "light": "Hell",
+      "dark": "Dunkel",
+      "system": "System"
     }
   },
   "privacy": {

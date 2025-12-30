@@ -462,16 +462,71 @@ export function TrackingPage() {
             )}
 
             {activitiesQuery.data?.length === 0 && (
-              <div className="glass-card p-12 text-center animate-fade-in-up">
-                <div className="w-20 h-20 bg-gradient-to-br from-accent-100 to-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Activity className="w-10 h-10 text-accent-500" />
+              <div className="glass-card p-8 animate-fade-in-up overflow-hidden relative">
+                {/* Background decoration */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-accent-100/50 to-amber-100/50 rounded-full blur-3xl -z-10" />
+
+                <div className="text-center mb-8">
+                  <div className="w-20 h-20 bg-gradient-to-br from-accent-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-accent-500/30">
+                    <Activity className="w-10 h-10 text-white" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-900 mb-2">{t('activities.emptyState.title')}</h4>
+                  <p className="text-gray-500 max-w-md mx-auto">{t('activities.emptyState.subtitle')}</p>
                 </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('activities.noActivities')}</h4>
-                <p className="text-gray-500 mb-6">Enregistrez vos activités pour suivre vos progrès</p>
-                <Button onClick={() => setActiveModal('activity')} className="gap-2">
-                  <Plus className="w-4 h-4" />
-                  {t('activities.addActivity')}
-                </Button>
+
+                {/* Benefits */}
+                <div className="grid md:grid-cols-3 gap-4 mb-8">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-accent-50 to-amber-50 border border-accent-100">
+                    <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center mb-3">
+                      <Flame className="w-5 h-5 text-accent-600" />
+                    </div>
+                    <p className="text-sm text-gray-700">{t('activities.emptyState.benefits.calories')}</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-primary-50 to-emerald-50 border border-primary-100">
+                    <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center mb-3">
+                      <TrendingUp className="w-5 h-5 text-primary-600" />
+                    </div>
+                    <p className="text-sm text-gray-700">{t('activities.emptyState.benefits.progress')}</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-warning-50 to-orange-50 border border-warning-100">
+                    <div className="w-10 h-10 bg-warning-100 rounded-xl flex items-center justify-center mb-3">
+                      <Trophy className="w-5 h-5 text-warning-600" />
+                    </div>
+                    <p className="text-sm text-gray-700">{t('activities.emptyState.benefits.motivation')}</p>
+                  </div>
+                </div>
+
+                {/* Quick Start Suggestions */}
+                <div className="mb-8">
+                  <p className="text-sm font-medium text-gray-500 mb-3 text-center">{t('activities.emptyState.quickStart')}</p>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    <button
+                      onClick={() => setActiveModal('activity')}
+                      className="px-4 py-2 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-accent-50 hover:border-accent-200 hover:text-accent-700 transition-all"
+                    >
+                      🚶 {t('activities.emptyState.suggestions.walking')}
+                    </button>
+                    <button
+                      onClick={() => setActiveModal('activity')}
+                      className="px-4 py-2 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-accent-50 hover:border-accent-200 hover:text-accent-700 transition-all"
+                    >
+                      🏃 {t('activities.emptyState.suggestions.running')}
+                    </button>
+                    <button
+                      onClick={() => setActiveModal('activity')}
+                      className="px-4 py-2 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-accent-50 hover:border-accent-200 hover:text-accent-700 transition-all"
+                    >
+                      💪 {t('activities.emptyState.suggestions.gym')}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <Button onClick={() => setActiveModal('activity')} className="gap-2 px-8 py-3">
+                    <Plus className="w-5 h-5" />
+                    {t('activities.addActivity')}
+                  </Button>
+                </div>
               </div>
             )}
 
@@ -558,16 +613,54 @@ export function TrackingPage() {
             )}
 
             {weightsQuery.data?.length === 0 && (
-              <div className="glass-card p-12 text-center animate-fade-in-up">
-                <div className="w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Scale className="w-10 h-10 text-indigo-500" />
+              <div className="glass-card p-8 animate-fade-in-up overflow-hidden relative">
+                {/* Background decoration */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-indigo-100/50 to-purple-100/50 rounded-full blur-3xl -z-10" />
+
+                <div className="text-center mb-8">
+                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/30">
+                    <Scale className="w-10 h-10 text-white" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-900 mb-2">{t('weight.emptyState.title')}</h4>
+                  <p className="text-gray-500 max-w-md mx-auto">{t('weight.emptyState.subtitle')}</p>
                 </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('weight.noWeight')}</h4>
-                <p className="text-gray-500 mb-6">Enregistrez votre poids pour suivre votre progression</p>
-                <Button onClick={() => setActiveModal('weight')} className="gap-2">
-                  <Plus className="w-4 h-4" />
-                  {t('weight.addWeight')}
-                </Button>
+
+                {/* Benefits */}
+                <div className="grid md:grid-cols-3 gap-4 mb-8">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100">
+                    <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center mb-3">
+                      <TrendingUp className="w-5 h-5 text-indigo-600" />
+                    </div>
+                    <p className="text-sm text-gray-700">{t('weight.emptyState.benefits.trends')}</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100">
+                    <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mb-3">
+                      <Sparkles className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <p className="text-sm text-gray-700">{t('weight.emptyState.benefits.insights')}</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-50 to-rose-50 border border-pink-100">
+                    <div className="w-10 h-10 bg-pink-100 rounded-xl flex items-center justify-center mb-3">
+                      <Target className="w-5 h-5 text-pink-600" />
+                    </div>
+                    <p className="text-sm text-gray-700">{t('weight.emptyState.benefits.goals')}</p>
+                  </div>
+                </div>
+
+                {/* Pro Tip */}
+                <div className="mb-8 p-4 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200">
+                  <p className="text-sm text-indigo-700 flex items-center gap-2">
+                    <span className="text-lg">💡</span>
+                    {t('weight.emptyState.tip')}
+                  </p>
+                </div>
+
+                <div className="text-center">
+                  <Button onClick={() => setActiveModal('weight')} className="gap-2 px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600">
+                    <Plus className="w-5 h-5" />
+                    {t('weight.emptyState.startNow')}
+                  </Button>
+                </div>
               </div>
             )}
 
@@ -827,16 +920,71 @@ export function TrackingPage() {
 
             {/* Message si pas d'objectifs personnalisés et pas de profil */}
             {summary.goals.length === 0 && !profileQuery.data && (
-              <div className="glass-card p-12 text-center animate-fade-in-up">
-                <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Target className="w-10 h-10 text-primary-500" />
+              <div className="glass-card p-8 animate-fade-in-up overflow-hidden relative">
+                {/* Background decoration */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-primary-100/50 to-emerald-100/50 rounded-full blur-3xl -z-10" />
+
+                <div className="text-center mb-8">
+                  <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-500/30">
+                    <Target className="w-10 h-10 text-white" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-900 mb-2">{t('goals.emptyState.title')}</h4>
+                  <p className="text-gray-500 max-w-md mx-auto">{t('goals.emptyState.subtitle')}</p>
                 </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('goals.noGoals')}</h4>
-                <p className="text-gray-500 mb-6">{t('goals.noGoalsDesc', 'Définissez vos objectifs pour rester motivé')}</p>
-                <Button onClick={() => setActiveModal('goal')} className="gap-2">
-                  <Plus className="w-4 h-4" />
-                  {t('goals.createGoal')}
-                </Button>
+
+                {/* Benefits */}
+                <div className="grid md:grid-cols-3 gap-4 mb-8">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-primary-50 to-emerald-50 border border-primary-100">
+                    <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center mb-3">
+                      <Target className="w-5 h-5 text-primary-600" />
+                    </div>
+                    <p className="text-sm text-gray-700">{t('goals.emptyState.benefits.focus')}</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100">
+                    <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mb-3">
+                      <TrendingUp className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <p className="text-sm text-gray-700">{t('goals.emptyState.benefits.track')}</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100">
+                    <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mb-3">
+                      <Trophy className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <p className="text-sm text-gray-700">{t('goals.emptyState.benefits.celebrate')}</p>
+                  </div>
+                </div>
+
+                {/* Popular Goals */}
+                <div className="mb-8">
+                  <p className="text-sm font-medium text-gray-500 mb-3 text-center">{t('goals.emptyState.popular')}</p>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    <button
+                      onClick={() => setActiveModal('goal')}
+                      className="px-4 py-2 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-all"
+                    >
+                      👟 {t('goals.emptyState.popularGoals.steps')}
+                    </button>
+                    <button
+                      onClick={() => setActiveModal('goal')}
+                      className="px-4 py-2 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-all"
+                    >
+                      💧 {t('goals.emptyState.popularGoals.water')}
+                    </button>
+                    <button
+                      onClick={() => setActiveModal('goal')}
+                      className="px-4 py-2 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-all"
+                    >
+                      ⏱️ {t('goals.emptyState.popularGoals.activity')}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <Button onClick={() => setActiveModal('goal')} className="gap-2 px-8 py-3">
+                    <Plus className="w-5 h-5" />
+                    {t('goals.createGoal')}
+                  </Button>
+                </div>
               </div>
             )}
 

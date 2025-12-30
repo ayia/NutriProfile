@@ -1,9 +1,65 @@
 {
   "tabs": {
     "profile": "Profile",
+    "subscription": "Subscription",
     "account": "Account",
     "notifications": "Notifications",
     "privacy": "Privacy"
+  },
+  "subscription": {
+    "title": "Manage Subscription",
+    "currentPlan": "Current Plan",
+    "free": {
+      "name": "Free",
+      "description": "Basic features to start your journey"
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Unlock advanced features"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Unlimited access to all features"
+    },
+    "features": {
+      "title": "Your Features",
+      "visionAnalyses": "Photo analyses",
+      "recipeGeneration": "Recipe generation",
+      "coachMessages": "AI Coach messages",
+      "historyDays": "History",
+      "perDay": "/day",
+      "perWeek": "/week",
+      "unlimited": "Unlimited",
+      "days": "days"
+    },
+    "usage": {
+      "title": "Today's Usage",
+      "remaining": "remaining",
+      "used": "used"
+    },
+    "upgrade": {
+      "title": "Upgrade Your Plan",
+      "benefits": "With Premium, you get:",
+      "benefit1": "Unlimited photo analyses",
+      "benefit2": "More recipe generations per week",
+      "benefit3": "Extended history access",
+      "benefit4": "Priority AI Coach support",
+      "cta": "Upgrade to Premium",
+      "ctaPro": "Upgrade to Pro"
+    },
+    "manage": {
+      "title": "Manage Subscription",
+      "renewsOn": "Renews on",
+      "cancelledOn": "Cancelled, ends on",
+      "manageButton": "Manage Billing",
+      "cancelButton": "Cancel Subscription",
+      "cancelConfirm": "Are you sure you want to cancel? You'll keep access until the end of your billing period."
+    },
+    "status": {
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    }
   },
   "profile": {
     "physicalInfo": "Physical information",
@@ -88,6 +144,18 @@
       "explorer": "Explorer",
       "dedicated": "Dedicated",
       "champion": "Champion"
+    }
+  },
+  "preferences": {
+    "title": "Preferences",
+    "language": "Language",
+    "languageDesc": "Choose your preferred language",
+    "theme": "Theme",
+    "themeDesc": "Choose your preferred theme",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
     }
   },
   "privacy": {

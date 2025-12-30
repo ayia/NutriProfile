@@ -115,5 +115,32 @@
     "edit": "Edit",
     "deleteConfirm": "Delete this meal?",
     "deleteError": "Error deleting. Please try again."
+  },
+  "photoTips": {
+    "title": "Photo Tips",
+    "subtitle": "Get better results with these tips",
+    "showTips": "Tips for better photos",
+    "doThis": "Do this",
+    "avoidThis": "Avoid this",
+    "proTip": "Pro tip",
+    "proTipDesc": "Natural daylight near a window gives the best results for food detection.",
+    "examples": {
+      "goodLighting": "Good lighting",
+      "goodLightingDesc": "Natural or bright light",
+      "topDown": "Top-down view",
+      "topDownDesc": "Shoot from directly above",
+      "allVisible": "All food visible",
+      "allVisibleDesc": "Nothing hidden or cut off",
+      "clearFocus": "Clear & focused",
+      "clearFocusDesc": "Sharp, not blurry image",
+      "darkPhoto": "Dark photos",
+      "darkPhotoDesc": "Hard to detect food",
+      "blurry": "Blurry shots",
+      "blurryDesc": "AI can't identify items",
+      "partialView": "Partial view",
+      "partialViewDesc": "Food cut off from frame",
+      "cluttered": "Cluttered background",
+      "clutteredDesc": "Confuses the AI detection"
+    }
   }
 }

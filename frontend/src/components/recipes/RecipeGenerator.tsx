@@ -6,6 +6,7 @@ import { recipeApi } from '@/services/recipeApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { RecipeCard } from './RecipeCard'
+import { RecipePreview } from './RecipePreview'
 import type { RecipeGenerateRequest, RecipeGenerateResponse } from '@/types/recipe'
 import { getMealTypeIcon, MEAL_TYPE_COLORS } from '@/lib/icons'
 
@@ -210,20 +211,24 @@ export function RecipeGenerator({ initialTags = [], onTagsCleared }: RecipeGener
           </div>
         </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          isLoading={generateMutation.isPending}
-        >
-          {generateMutation.isPending ? t('generate.generating') : t('generate.generate')}
-        </Button>
-
         {generateMutation.error && (
           <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
             {t('errors.generateFailed')}
           </div>
         )}
       </form>
+
+      {/* Recipe Preview - Shows before generation */}
+      {!generatedRecipe && (
+        <RecipePreview
+          mealType={selectedMealType}
+          maxPrepTime={watch('max_prep_time')}
+          servings={watch('servings')}
+          ingredients={ingredients}
+          onGenerate={handleSubmit(onSubmit)}
+          isGenerating={generateMutation.isPending}
+        />
+      )}
 
       {/* Résultat */}
       {generatedRecipe && (
