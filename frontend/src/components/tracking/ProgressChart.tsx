@@ -1,6 +1,7 @@
 import { useMemo, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ProgressData } from '@/types/tracking'
+import { Flame, Dumbbell, Scale, Activity, type LucideIcon } from '@/lib/icons'
 
 interface ProgressChartProps {
   data: ProgressData
@@ -18,32 +19,32 @@ interface TooltipData {
   index: number
 }
 
-const METRIC_CONFIG = {
+const METRIC_CONFIG: Record<string, { labelKey: string; unit: string; IconComponent: LucideIcon; gradient: string[]; bgGradient: string }> = {
   calories: {
     labelKey: 'progressChart.metrics.calories',
     unit: 'kcal',
-    icon: '🔥',
+    IconComponent: Flame,
     gradient: ['#10B981', '#059669'],
     bgGradient: 'from-emerald-500/10 to-emerald-500/5',
   },
   protein: {
     labelKey: 'progressChart.metrics.protein',
     unit: 'g',
-    icon: '🥩',
+    IconComponent: Dumbbell,
     gradient: ['#06B6D4', '#0891B2'],
     bgGradient: 'from-cyan-500/10 to-cyan-500/5',
   },
   weight: {
     labelKey: 'progressChart.metrics.weight',
     unit: 'kg',
-    icon: '⚖️',
+    IconComponent: Scale,
     gradient: ['#8B5CF6', '#7C3AED'],
     bgGradient: 'from-violet-500/10 to-violet-500/5',
   },
   activity_minutes: {
     labelKey: 'progressChart.metrics.activity',
     unit: 'min',
-    icon: '🏃',
+    IconComponent: Activity,
     gradient: ['#F97316', '#EA580C'],
     bgGradient: 'from-orange-500/10 to-orange-500/5',
   },
@@ -104,7 +105,7 @@ export function ProgressChart({
         style={{ height }}
       >
         <div className="w-12 h-12 bg-neutral-200 rounded-xl flex items-center justify-center mb-3">
-          <span className="text-2xl opacity-50">{config.icon}</span>
+          <config.IconComponent className="w-6 h-6 text-neutral-400" />
         </div>
         <p className="text-neutral-500 text-sm font-medium">{t('progressChart.noData')}</p>
         <p className="text-neutral-400 text-xs mt-1">{t('progressChart.startTracking')}</p>
@@ -246,7 +247,7 @@ export function ProgressChart({
             className="w-8 h-8 rounded-lg flex items-center justify-center"
             style={{ backgroundColor: `${primaryColor}20` }}
           >
-            <span className="text-lg">{config.icon}</span>
+            <config.IconComponent className="w-5 h-5" style={{ color: primaryColor }} />
           </div>
           <div>
             <span className="text-lg font-bold text-neutral-800">

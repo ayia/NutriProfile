@@ -29,8 +29,9 @@ import {
   MessageSquare,
   Sparkles,
   Dumbbell,
+  getActivityIcon,
   type LucideIcon,
-} from 'lucide-react'
+} from '@/lib/icons'
 
 type Tab = 'overview' | 'activities' | 'weight' | 'goals'
 type Modal = 'activity' | 'weight' | 'goal' | 'water' | null
@@ -389,7 +390,10 @@ export function TrackingPage() {
                         style={{ animationDelay: `${0.1 * (index + 1)}s` }}
                       >
                         <div className="w-14 h-14 bg-gradient-to-br from-accent-100 to-amber-100 rounded-xl flex items-center justify-center">
-                          <span className="text-3xl">{activity.icon}</span>
+                          {(() => {
+                            const ActivityIcon = getActivityIcon(activity.activity_type)
+                            return <ActivityIcon className="w-7 h-7 text-accent-600" />
+                          })()}
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between text-sm mb-2">
@@ -483,7 +487,10 @@ export function TrackingPage() {
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-gradient-to-br from-accent-100 to-amber-100 rounded-2xl flex items-center justify-center shadow-inner">
-                      <span className="text-4xl">{activityInfo.icon}</span>
+                      {(() => {
+                        const ActivityIcon = getActivityIcon(activity.activity_type)
+                        return <ActivityIcon className="w-8 h-8 text-accent-600" />
+                      })()}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-1">
@@ -719,7 +726,7 @@ export function TrackingPage() {
                           ? `${(profileQuery.data.weight_kg - profileQuery.data.target_weight_kg).toFixed(1)} kg ${t('goals.tolose', 'à perdre')}`
                           : profileQuery.data.weight_kg < profileQuery.data.target_weight_kg
                           ? `${(profileQuery.data.target_weight_kg - profileQuery.data.weight_kg).toFixed(1)} kg ${t('goals.togain', 'à prendre')}`
-                          : `🎉 ${t('goals.achieved', 'Objectif atteint!')}`
+                          : t('goals.achieved', 'Objectif atteint!')
                         }
                       </div>
                     </div>
@@ -789,7 +796,7 @@ export function TrackingPage() {
                       <div className="mt-2 text-sm text-gray-600">
                         {(summary.today.protein_g || 0) < profileQuery.data.protein_g
                           ? `${profileQuery.data.protein_g - (summary.today.protein_g || 0)}g ${t('goals.remaining', 'restantes')}`
-                          : `🎉 ${t('goals.achieved', 'Objectif atteint!')}`
+                          : t('goals.achieved', 'Objectif atteint!')
                         }
                       </div>
                     </div>

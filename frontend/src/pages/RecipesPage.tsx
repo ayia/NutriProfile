@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Sparkles, History, Heart, type LucideIcon } from 'lucide-react'
+import { Sparkles, History, Heart, Egg, Salad, Carrot, Apple, Package, Zap, Lightbulb, Search, X, AlertTriangle, Scroll, Calendar, FileText, Star, type LucideIcon } from 'lucide-react'
 import { recipeApi } from '@/services/recipeApi'
 import { RecipeGenerator } from '@/components/recipes/RecipeGenerator'
 import { RecipeCard } from '@/components/recipes/RecipeCard'
@@ -19,13 +19,13 @@ export function RecipesPage() {
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   // Suggestions de types de recettes rapides
-  const quickSuggestions = [
-    { label: t('suggestions.proteinBreakfast'), icon: '🥚', tags: ['petit-dejeuner', 'protéines'], color: 'from-amber-500 to-orange-500' },
-    { label: t('suggestions.lightLunch'), icon: '🥗', tags: ['dejeuner', 'light'], color: 'from-primary-500 to-emerald-500' },
-    { label: t('suggestions.vegetarianDinner'), icon: '🥬', tags: ['diner', 'vegetarien'], color: 'from-green-500 to-teal-500' },
-    { label: t('suggestions.healthySnack'), icon: '🍎', tags: ['snack', 'healthy'], color: 'from-rose-500 to-pink-500' },
-    { label: t('suggestions.mealPrep'), icon: '📦', tags: ['meal-prep', 'batch'], color: 'from-secondary-500 to-cyan-500' },
-    { label: t('suggestions.express'), icon: '⚡', tags: ['rapide', 'facile'], color: 'from-warning-500 to-amber-500' },
+  const quickSuggestions: { label: string; IconComponent: LucideIcon; tags: string[]; color: string; iconColor: string }[] = [
+    { label: t('suggestions.proteinBreakfast'), IconComponent: Egg, tags: ['petit-dejeuner', 'protéines'], color: 'from-amber-500 to-orange-500', iconColor: 'text-amber-600' },
+    { label: t('suggestions.lightLunch'), IconComponent: Salad, tags: ['dejeuner', 'light'], color: 'from-primary-500 to-emerald-500', iconColor: 'text-emerald-600' },
+    { label: t('suggestions.vegetarianDinner'), IconComponent: Carrot, tags: ['diner', 'vegetarien'], color: 'from-green-500 to-teal-500', iconColor: 'text-green-600' },
+    { label: t('suggestions.healthySnack'), IconComponent: Apple, tags: ['snack', 'healthy'], color: 'from-rose-500 to-pink-500', iconColor: 'text-rose-600' },
+    { label: t('suggestions.mealPrep'), IconComponent: Package, tags: ['meal-prep', 'batch'], color: 'from-secondary-500 to-cyan-500', iconColor: 'text-cyan-600' },
+    { label: t('suggestions.express'), IconComponent: Zap, tags: ['rapide', 'facile'], color: 'from-warning-500 to-amber-500', iconColor: 'text-amber-500' },
   ]
 
   const historyQuery = useQuery({
@@ -95,7 +95,7 @@ export function RecipesPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div>
               <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 glass-card text-primary-700 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
-                <span className="animate-pulse">✨</span>
+                <Sparkles className="w-4 h-4 animate-pulse" />
                 {t('subtitle')}
               </div>
               <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
@@ -116,22 +116,25 @@ export function RecipesPage() {
         {/* Suggestions rapides - Enhanced & Responsive */}
         <div className="mb-6 sm:mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-3 sm:mb-4 flex items-center gap-2">
-            <span>💡</span> {t('quickSuggestions')}
+            <Lightbulb className="w-4 h-4 text-amber-500" /> {t('quickSuggestions')}
           </p>
           <div className="flex flex-wrap gap-2 sm:gap-3">
-            {quickSuggestions.map((suggestion, index) => (
-              <button
-                key={suggestion.label}
-                onClick={() => handleQuickSuggestion(suggestion.tags)}
-                className="group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
-                style={{ animationDelay: `${0.05 * (index + 1)}s` }}
-              >
-                {/* Gradient background on hover */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${suggestion.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-                <span className="text-base sm:text-xl group-hover:scale-110 transition-transform">{suggestion.icon}</span>
-                <span className="relative text-gray-700 group-hover:text-gray-900">{suggestion.label}</span>
-              </button>
-            ))}
+            {quickSuggestions.map((suggestion, index) => {
+              const SuggestionIcon = suggestion.IconComponent
+              return (
+                <button
+                  key={suggestion.label}
+                  onClick={() => handleQuickSuggestion(suggestion.tags)}
+                  className="group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
+                  style={{ animationDelay: `${0.05 * (index + 1)}s` }}
+                >
+                  {/* Gradient background on hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${suggestion.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                  <SuggestionIcon className={`w-5 h-5 sm:w-6 sm:h-6 ${suggestion.iconColor} group-hover:scale-110 transition-transform`} />
+                  <span className="relative text-gray-700 group-hover:text-gray-900">{suggestion.label}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -176,13 +179,13 @@ export function RecipesPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-5 py-4 pl-12 bg-white/60 border-0 rounded-xl focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all text-gray-900 placeholder-gray-400"
               />
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl">🔍</span>
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
                   className="absolute right-6 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 transition-colors"
                 >
-                  ✕
+                  <X className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -213,7 +216,7 @@ export function RecipesPage() {
               <div className="glass-card p-6 border-error-200 animate-fade-in-up">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-error-100 to-rose-100 rounded-xl flex items-center justify-center">
-                    <span className="text-3xl">⚠️</span>
+                    <AlertTriangle className="w-8 h-8 text-error-500" />
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-error-600">{t('history.loadError')}</p>
@@ -229,7 +232,7 @@ export function RecipesPage() {
             {historyQuery.data && filterRecipes(historyQuery.data).length === 0 && (
               <div className="glass-card p-16 text-center animate-fade-in-up">
                 <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-50 rounded-full flex items-center justify-center mx-auto mb-8">
-                  <span className="text-5xl">📜</span>
+                  <Scroll className="w-12 h-12 text-gray-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">
                   {searchQuery ? t('history.noResults') : t('history.noHistory')}
@@ -244,7 +247,7 @@ export function RecipesPage() {
                     onClick={() => setActiveTab('generate')}
                     className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-2xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all"
                   >
-                    <span className="text-xl">✨</span>
+                    <Sparkles className="w-5 h-5" />
                     {t('history.generateRecipe')}
                   </button>
                 )}
@@ -261,7 +264,7 @@ export function RecipesPage() {
                   >
                     <div className="flex items-center gap-3 text-sm text-gray-500 ml-1">
                       <div className="flex items-center gap-2 px-3 py-1.5 glass-card">
-                        <span className="text-lg">📅</span>
+                        <Calendar className="w-4 h-4 text-gray-500" />
                         <span className="font-medium">
                           {new Date(item.created_at).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
                             day: 'numeric',
@@ -274,7 +277,7 @@ export function RecipesPage() {
                       </div>
                       {item.input_ingredients.length > 0 && (
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-50/80 backdrop-blur-sm rounded-full text-primary-700">
-                          <span>🥗</span>
+                          <Salad className="w-4 h-4" />
                           <span className="font-medium">
                             {item.input_ingredients.slice(0, 3).join(', ')}
                             {item.input_ingredients.length > 3 && ` +${item.input_ingredients.length - 3}`}
@@ -304,7 +307,7 @@ export function RecipesPage() {
               <div className="glass-card p-6 border-error-200 animate-fade-in-up">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-error-100 to-rose-100 rounded-xl flex items-center justify-center">
-                    <span className="text-3xl">⚠️</span>
+                    <AlertTriangle className="w-8 h-8 text-error-500" />
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-error-600">{t('favorites.loadError')}</p>
@@ -320,7 +323,7 @@ export function RecipesPage() {
             {favoritesQuery.data && filterRecipes(favoritesQuery.data).length === 0 && (
               <div className="glass-card p-16 text-center bg-gradient-to-br from-rose-50/50 to-pink-50/50 animate-fade-in-up">
                 <div className="w-24 h-24 bg-gradient-to-br from-rose-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-8">
-                  <span className="text-5xl">❤️</span>
+                  <Heart className="w-12 h-12 text-rose-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">
                   {searchQuery ? t('favorites.noResults') : t('favorites.noFavorites')}
@@ -335,7 +338,7 @@ export function RecipesPage() {
                     onClick={() => setActiveTab('generate')}
                     className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-2xl font-semibold shadow-lg shadow-rose-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all"
                   >
-                    <span className="text-xl">✨</span>
+                    <Sparkles className="w-5 h-5" />
                     {t('favorites.discoverRecipes')}
                   </button>
                 )}
@@ -353,23 +356,21 @@ export function RecipesPage() {
                     <div className="flex items-center gap-4 ml-1">
                       {favorite.rating && (
                         <div className="flex items-center gap-1 px-3 py-1.5 glass-card">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                              key={star}
-                              className={`text-xl transition-all ${
-                                star <= favorite.rating!
-                                  ? 'text-warning-400 scale-100'
+                          {[1, 2, 3, 4, 5].map((starNum) => (
+                            <Star
+                              key={starNum}
+                              className={`w-5 h-5 transition-all ${
+                                starNum <= favorite.rating!
+                                  ? 'text-warning-400 fill-warning-400 scale-100'
                                   : 'text-gray-200 scale-90'
                               }`}
-                            >
-                              ★
-                            </span>
+                            />
                           ))}
                         </div>
                       )}
                       {favorite.notes && (
                         <div className="flex items-center gap-2 px-4 py-2 bg-warning-50/80 backdrop-blur-sm rounded-xl border border-warning-100">
-                          <span className="text-lg">📝</span>
+                          <FileText className="w-4 h-4 text-warning-600" />
                           <span className="text-sm text-warning-800 truncate max-w-xs font-medium">{favorite.notes}</span>
                         </div>
                       )}

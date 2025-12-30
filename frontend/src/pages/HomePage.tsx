@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/Button'
+import { Camera, Target, Bot, BarChart3, ChefHat, Trophy, Rocket, Hand, Star, Utensils, CheckCircle, HeartPulse, Salad } from '@/lib/icons'
 
 export function HomePage() {
   const { t } = useTranslation('home')
@@ -29,42 +30,42 @@ export function HomePage() {
 
   const features = [
     {
-      icon: '📸',
+      IconComponent: Camera,
       title: t('features.visionScan.title'),
       description: t('features.visionScan.description'),
       color: 'from-blue-500 to-cyan-500',
       bgColor: 'from-blue-50 to-cyan-50',
     },
     {
-      icon: '🎯',
+      IconComponent: Target,
       title: t('features.personalizedProfile.title'),
       description: t('features.personalizedProfile.description'),
       color: 'from-purple-500 to-pink-500',
       bgColor: 'from-purple-50 to-pink-50',
     },
     {
-      icon: '🤖',
+      IconComponent: Bot,
       title: t('features.aiCoach.title'),
       description: t('features.aiCoach.description'),
       color: 'from-primary-500 to-emerald-500',
       bgColor: 'from-primary-50 to-emerald-50',
     },
     {
-      icon: '📊',
+      IconComponent: BarChart3,
       title: t('features.smartTracking.title'),
       description: t('features.smartTracking.description'),
       color: 'from-orange-500 to-amber-500',
       bgColor: 'from-orange-50 to-amber-50',
     },
     {
-      icon: '🍳',
+      IconComponent: ChefHat,
       title: t('features.personalizedRecipes.title'),
       description: t('features.personalizedRecipes.description'),
       color: 'from-red-500 to-rose-500',
       bgColor: 'from-red-50 to-rose-50',
     },
     {
-      icon: '🏆',
+      IconComponent: Trophy,
       title: t('features.gamification.title'),
       description: t('features.gamification.description'),
       color: 'from-indigo-500 to-violet-500',
@@ -143,13 +144,13 @@ export function HomePage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <Link to="/register">
                 <Button size="lg" className="w-full sm:w-auto gap-2 btn-animated btn-glow text-lg px-8 py-4">
-                  <span className="text-xl">🚀</span>
+                  <Rocket className="w-5 h-5" />
                   {t('hero.cta')}
                 </Button>
               </Link>
               <Link to="/login">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto gap-2 hover-lift text-lg px-8 py-4 bg-white/80 backdrop-blur-sm">
-                  <span className="text-xl">👋</span>
+                  <Hand className="w-5 h-5" />
                   {t('hero.ctaSecondary')}
                 </Button>
               </Link>
@@ -194,7 +195,9 @@ export function HomePage() {
                   <div className="absolute -top-5 -left-5 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-2xl flex items-center justify-center font-bold text-lg shadow-lg shadow-blue-500/30">
                     1
                   </div>
-                  <div className="text-7xl mb-6 transform group-hover:scale-110 transition-transform duration-300">📸</div>
+                  <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300 flex items-center justify-center">
+                    <Camera className="w-20 h-20 text-blue-600" />
+                  </div>
                   <h3 className="font-bold text-xl mb-3 text-gray-900">{t('howItWorks.step1.title')}</h3>
                   <p className="text-gray-600">
                     {t('howItWorks.step1.description')}
@@ -211,7 +214,9 @@ export function HomePage() {
                   <div className="absolute -top-5 -left-5 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-2xl flex items-center justify-center font-bold text-lg shadow-lg shadow-purple-500/30">
                     2
                   </div>
-                  <div className="text-7xl mb-6 transform group-hover:scale-110 transition-transform duration-300">🤖</div>
+                  <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300 flex items-center justify-center">
+                    <Bot className="w-20 h-20 text-purple-600" />
+                  </div>
                   <h3 className="font-bold text-xl mb-3 text-gray-900">{t('howItWorks.step2.title')}</h3>
                   <p className="text-gray-600">
                     {t('howItWorks.step2.description')}
@@ -228,7 +233,9 @@ export function HomePage() {
                   <div className="absolute -top-5 -left-5 w-12 h-12 bg-gradient-to-br from-primary-500 to-emerald-500 text-white rounded-2xl flex items-center justify-center font-bold text-lg shadow-lg shadow-primary-500/30">
                     3
                   </div>
-                  <div className="text-7xl mb-6 transform group-hover:scale-110 transition-transform duration-300">📊</div>
+                  <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300 flex items-center justify-center">
+                    <BarChart3 className="w-20 h-20 text-primary-600" />
+                  </div>
                   <h3 className="font-bold text-xl mb-3 text-gray-900">{t('howItWorks.step3.title')}</h3>
                   <p className="text-gray-600">
                     {t('howItWorks.step3.description')}
@@ -263,13 +270,13 @@ export function HomePage() {
                     <div className="relative group/img">
                       <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl blur-lg opacity-20" />
                       <div className="relative bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl aspect-video flex items-center justify-center border border-orange-100">
-                        <span className="text-8xl transform group-hover/img:scale-110 transition-transform duration-500">🍝</span>
+                        <Utensils className="w-32 h-32 text-orange-600 transform group-hover/img:scale-110 transition-transform duration-500" />
                       </div>
                     </div>
                     {/* Results */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-3 p-3 bg-primary-50 rounded-xl border border-primary-100">
-                        <span className="text-3xl">✅</span>
+                        <CheckCircle className="w-8 h-8 text-primary-600" />
                         <span className="font-semibold text-primary-800">{t('preview.detected')}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
@@ -291,7 +298,7 @@ export function HomePage() {
                         </div>
                       </div>
                       <div className="glass-primary p-4 flex items-center gap-3">
-                        <span className="text-2xl">💚</span>
+                        <HeartPulse className="w-7 h-7 text-primary-600" />
                         <span className="text-sm font-medium text-primary-800">{t('preview.feedback')}</span>
                       </div>
                     </div>
@@ -322,8 +329,8 @@ export function HomePage() {
                 className={`reveal stagger-${(index % 6) + 1}`}
               >
                 <div className="card-feature group h-full">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-3xl mb-5 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                    {feature.icon}
+                  <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                    <feature.IconComponent className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="font-bold text-xl mb-3 text-gray-900">{feature.title}</h3>
                   <p className="text-gray-600 leading-relaxed">{feature.description}</p>
@@ -360,7 +367,7 @@ export function HomePage() {
                   {/* Stars */}
                   <div className="flex items-center gap-1 mb-5">
                     {Array.from({ length: testimonial.rating }).map((_, i) => (
-                      <span key={i} className="text-yellow-400 text-xl">★</span>
+                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                     ))}
                   </div>
                   {/* Quote */}
@@ -405,7 +412,7 @@ export function HomePage() {
               size="lg"
               className="!bg-white !text-primary-600 hover:!bg-gray-50 gap-2 shadow-2xl hover:shadow-white/20 text-lg px-10 py-5 hover-lift"
             >
-              <span className="text-xl">🚀</span>
+              <Rocket className="w-5 h-5" />
               {t('cta.button')}
             </Button>
           </Link>
@@ -422,7 +429,7 @@ export function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10">
             <div>
               <div className="flex items-center gap-3 mb-5">
-                <span className="text-3xl">🥗</span>
+                <Salad className="w-8 h-8 text-primary-400" />
                 <span className="text-2xl font-bold text-white">NutriProfile</span>
               </div>
               <p className="text-gray-400 leading-relaxed">

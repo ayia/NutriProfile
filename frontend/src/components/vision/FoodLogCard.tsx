@@ -5,7 +5,7 @@ import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { FoodLog } from '@/types/foodLog'
-import { MEAL_TYPE_ICONS } from '@/types/foodLog'
+import { getMealTypeIcon, MEAL_TYPE_COLORS, Trash2, Edit } from '@/lib/icons'
 
 interface FoodLogCardProps {
   log: FoodLog
@@ -38,14 +38,17 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
     })
   }
 
+  const MealIcon = getMealTypeIcon(log.meal_type)
+  const mealColorClass = MEAL_TYPE_COLORS[log.meal_type] || 'text-gray-500'
+
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
       {/* Header */}
       <div className="p-4 flex items-center justify-between border-b">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">
-            {MEAL_TYPE_ICONS[log.meal_type as keyof typeof MEAL_TYPE_ICONS]}
-          </span>
+          <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+            <MealIcon className={`w-5 h-5 ${mealColorClass}`} />
+          </div>
           <div>
             <div className="font-medium">
               {t(`mealTypes.${log.meal_type}`)}
@@ -117,7 +120,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
             >
               <div className="flex items-center gap-2">
                 {item.source === 'manual' && (
-                  <span className="text-xs text-gray-400">✏️</span>
+                  <Edit className="w-3 h-3 text-gray-400" />
                 )}
                 <span className="font-medium">{item.name}</span>
                 <span className="text-gray-500">
@@ -155,7 +158,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
             }}
             disabled={deleteMutation.isPending}
           >
-            🗑️
+            <Trash2 className="w-4 h-4 text-gray-500 hover:text-red-500" />
           </Button>
         </div>
       </div>

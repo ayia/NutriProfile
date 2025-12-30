@@ -5,7 +5,7 @@ import { recipeApi } from '@/services/recipeApi'
 import { Button } from '@/components/ui/Button'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { Recipe } from '@/types/recipe'
-import { MEAL_TYPE_ICONS } from '@/types/recipe'
+import { getMealTypeIcon, Heart } from '@/lib/icons'
 
 interface RecipeCardProps {
   recipe: Recipe
@@ -56,19 +56,21 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
       <div className="p-4 border-b">
         <div className="flex items-start justify-between">
           <div>
-            <span className="text-sm text-gray-500">
-              {MEAL_TYPE_ICONS[recipe.meal_type]} {t(`categories.${recipe.meal_type}`)}
+            <span className="text-sm text-gray-500 flex items-center gap-1">
+              {(() => {
+                const MealIcon = getMealTypeIcon(recipe.meal_type)
+                return <MealIcon className="w-4 h-4" />
+              })()}
+              {t(`categories.${recipe.meal_type}`)}
             </span>
             <h3 className="font-semibold text-lg mt-1">{recipe.title}</h3>
           </div>
           <button
             onClick={toggleFavorite}
-            className={`text-2xl transition-transform hover:scale-110 ${
-              isFavorite ? 'text-red-500' : 'text-gray-300 hover:text-red-400'
-            }`}
+            className="transition-transform hover:scale-110"
             disabled={addFavorite.isPending || removeFavorite.isPending}
           >
-            {isFavorite ? '❤️' : '🤍'}
+            <Heart className={`w-6 h-6 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-300 hover:text-red-400'}`} />
           </button>
         </div>
         {recipe.description && (

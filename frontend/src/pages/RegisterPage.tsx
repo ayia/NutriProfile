@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/hooks/useAuth'
+import { Sparkles, AlertTriangle, Check, Eye, EyeOff, Target, Bot } from '@/lib/icons'
 import type { RegisterData } from '@/types'
 
 interface RegisterFormData extends RegisterData {
@@ -68,7 +69,7 @@ export function RegisterPage() {
             <div className="relative inline-block">
               <div className="absolute inset-0 bg-gradient-to-br from-secondary-400 to-cyan-400 rounded-2xl blur-lg opacity-40" />
               <div className="relative w-20 h-20 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl">
-                <span className="text-4xl">🎉</span>
+                <Sparkles className="w-10 h-10 text-white" />
               </div>
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mt-6 tracking-tight">{t('register.title')}</h1>
@@ -78,7 +79,7 @@ export function RegisterPage() {
           {registerError && (
             <div className="mb-6 p-4 bg-gradient-to-r from-error-50 to-rose-50 border border-error-200 text-error-600 rounded-2xl text-sm flex items-center gap-3 animate-fade-in">
               <div className="w-10 h-10 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <span className="text-xl">⚠️</span>
+                <AlertTriangle className="w-5 h-5 text-error-600" />
               </div>
               <span className="font-medium">{t('register.error')}</span>
             </div>
@@ -102,7 +103,7 @@ export function RegisterPage() {
                 })}
               />
               {touchedFields.name && !errors.name && (
-                <span className="absolute right-3 top-9 text-success-500 animate-scale-in">✓</span>
+                <span className="absolute right-3 top-9 text-success-500 animate-scale-in"><Check className="w-4 h-4" /></span>
               )}
             </div>
 
@@ -123,7 +124,7 @@ export function RegisterPage() {
                 })}
               />
               {touchedFields.email && !errors.email && (
-                <span className="absolute right-3 top-9 text-success-500 animate-scale-in">✓</span>
+                <span className="absolute right-3 top-9 text-success-500 animate-scale-in"><Check className="w-4 h-4" /></span>
               )}
             </div>
 
@@ -149,7 +150,7 @@ export function RegisterPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  {showPassword ? '🙈' : '👁️'}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
 
@@ -177,10 +178,10 @@ export function RegisterPage() {
                           req.test ? 'text-success-600' : 'text-gray-400'
                         }`}
                       >
-                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${
+                        <span className={`w-4 h-4 rounded-full flex items-center justify-center ${
                           req.test ? 'bg-success-100 text-success-600' : 'bg-gray-200'
                         }`}>
-                          {req.test ? '✓' : '○'}
+                          {req.test ? <Check className="w-2.5 h-2.5" /> : <span className="text-[10px]">○</span>}
                         </span>
                         <span>{req.label}</span>
                       </div>
@@ -209,10 +210,10 @@ export function RegisterPage() {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors"
               >
-                {showConfirmPassword ? '🙈' : '👁️'}
+                {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
               {touchedFields.confirmPassword && !errors.confirmPassword && watch('confirmPassword') && (
-                <span className="absolute right-10 top-9 text-success-500 animate-scale-in">✓</span>
+                <span className="absolute right-10 top-9 text-success-500 animate-scale-in"><Check className="w-4 h-4" /></span>
               )}
             </div>
 
@@ -242,7 +243,7 @@ export function RegisterPage() {
               </label>
               {errors.acceptTerms && (
                 <p className="mt-2 text-sm text-error-600 flex items-center gap-1">
-                  <span>⚠️</span>
+                  <AlertTriangle className="w-4 h-4" />
                   {errors.acceptTerms.message}
                 </p>
               )}
@@ -314,11 +315,11 @@ export function RegisterPage() {
         {/* Features hint */}
         <div className="mt-8 flex justify-center gap-6 text-sm text-gray-400">
           <div className="flex items-center gap-2">
-            <span>🎯</span>
+            <Target className="w-4 h-4" />
             <span>Suivi personnalisé</span>
           </div>
           <div className="flex items-center gap-2">
-            <span>🤖</span>
+            <Bot className="w-4 h-4" />
             <span>IA nutritionnelle</span>
           </div>
         </div>

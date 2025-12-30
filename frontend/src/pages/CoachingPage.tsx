@@ -1,7 +1,24 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { RefreshCw, Trophy } from 'lucide-react'
+import {
+  RefreshCw,
+  Trophy,
+  Lightbulb,
+  Target,
+  BarChart3,
+  Brain,
+  MessageSquare,
+  Check,
+  Flame,
+  Dumbbell,
+  Wheat,
+  Droplet,
+  Activity,
+  Clock,
+  Utensils,
+  type LucideIcon
+} from 'lucide-react'
 import { UsageBanner } from '@/components/subscription/UsageBanner'
 import { api } from '@/services/api'
 
@@ -71,10 +88,10 @@ export function CoachingPage() {
     enabled: activeTab === 'summary',
   })
 
-  const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: 'tips', label: t('tabs.tips'), icon: '💡' },
-    { id: 'challenges', label: t('tabs.challenges'), icon: '🎯' },
-    { id: 'summary', label: t('tabs.summary'), icon: '📊' },
+  const tabs: { id: Tab; label: string; IconComponent: LucideIcon }[] = [
+    { id: 'tips', label: t('tabs.tips'), IconComponent: Lightbulb },
+    { id: 'challenges', label: t('tabs.challenges'), IconComponent: Target },
+    { id: 'summary', label: t('tabs.summary'), IconComponent: BarChart3 },
   ]
 
   const getPriorityColor = (priority: string) => {
@@ -111,7 +128,7 @@ export function CoachingPage() {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 glass-card text-primary-700 text-sm font-medium mb-4">
-                <span className="animate-pulse">🧠</span>
+                <Brain className="w-4 h-4 animate-pulse" />
                 {t('subtitle')}
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
@@ -146,7 +163,7 @@ export function CoachingPage() {
               }`}
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
-              <span className={`text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
+              <tab.IconComponent className={`w-5 h-5 ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`} />
               <span>{tab.label}</span>
             </button>
           ))}
@@ -191,7 +208,7 @@ export function CoachingPage() {
 
             {tipsQuery.data && tipsQuery.data.length === 0 && (
               <div className="glass-card p-8 text-center">
-                <span className="text-4xl mb-4 block">💭</span>
+                <MessageSquare className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-500">{t('tips.noTips')}</p>
               </div>
             )}
@@ -295,7 +312,7 @@ export function CoachingPage() {
                         </span>
                         {challenge.completed && (
                           <span className="text-xs font-medium text-green-600 flex items-center gap-1">
-                            ✓ {t('challenges.completed')}
+                            <Check className="w-3 h-3" /> {t('challenges.completed')}
                           </span>
                         )}
                       </div>
@@ -344,22 +361,22 @@ export function CoachingPage() {
                 {/* Stats grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="glass-card p-4 text-center">
-                    <div className="text-3xl mb-2">🔥</div>
+                    <Flame className="w-8 h-8 mx-auto mb-2 text-orange-500" />
                     <div className="text-2xl font-bold text-gray-900">{Math.round(summaryQuery.data.avg_calories)}</div>
                     <div className="text-xs text-gray-500">{t('summary.avgCalories')}</div>
                   </div>
                   <div className="glass-card p-4 text-center">
-                    <div className="text-3xl mb-2">🥩</div>
+                    <Dumbbell className="w-8 h-8 mx-auto mb-2 text-red-500" />
                     <div className="text-2xl font-bold text-gray-900">{summaryQuery.data.avg_protein}g</div>
                     <div className="text-xs text-gray-500">{t('summary.avgProtein')}</div>
                   </div>
                   <div className="glass-card p-4 text-center">
-                    <div className="text-3xl mb-2">🍞</div>
+                    <Wheat className="w-8 h-8 mx-auto mb-2 text-amber-600" />
                     <div className="text-2xl font-bold text-gray-900">{summaryQuery.data.avg_carbs}g</div>
                     <div className="text-xs text-gray-500">{t('summary.avgCarbs')}</div>
                   </div>
                   <div className="glass-card p-4 text-center">
-                    <div className="text-3xl mb-2">🥑</div>
+                    <Droplet className="w-8 h-8 mx-auto mb-2 text-green-500" />
                     <div className="text-2xl font-bold text-gray-900">{summaryQuery.data.avg_fat}g</div>
                     <div className="text-xs text-gray-500">{t('summary.avgFat')}</div>
                   </div>
@@ -368,22 +385,22 @@ export function CoachingPage() {
                 {/* Activity stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="glass-card p-4 text-center">
-                    <div className="text-3xl mb-2">🏃</div>
+                    <Activity className="w-8 h-8 mx-auto mb-2 text-blue-500" />
                     <div className="text-2xl font-bold text-gray-900">{summaryQuery.data.total_activities}</div>
                     <div className="text-xs text-gray-500">{t('summary.activities')}</div>
                   </div>
                   <div className="glass-card p-4 text-center">
-                    <div className="text-3xl mb-2">⏱️</div>
+                    <Clock className="w-8 h-8 mx-auto mb-2 text-purple-500" />
                     <div className="text-2xl font-bold text-gray-900">{summaryQuery.data.activity_minutes}</div>
                     <div className="text-xs text-gray-500">{t('summary.activityMinutes')}</div>
                   </div>
                   <div className="glass-card p-4 text-center">
-                    <div className="text-3xl mb-2">🍽️</div>
+                    <Utensils className="w-8 h-8 mx-auto mb-2 text-pink-500" />
                     <div className="text-2xl font-bold text-gray-900">{summaryQuery.data.meals_logged}</div>
                     <div className="text-xs text-gray-500">{t('summary.mealsLogged')}</div>
                   </div>
                   <div className="glass-card p-4 text-center">
-                    <div className="text-3xl mb-2">🔥</div>
+                    <Flame className="w-8 h-8 mx-auto mb-2 text-orange-500" />
                     <div className="text-2xl font-bold text-gray-900">{summaryQuery.data.streak_days}</div>
                     <div className="text-xs text-gray-500">{t('summary.streakDays')}</div>
                   </div>

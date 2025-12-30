@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate, MealType } from '@/types/foodLog'
+import { Star, Sparkles, AlertTriangle, HeartPulse, Utensils, Camera, Edit, Loader2, Check, Info, ChevronDown, ThumbsUp, Meh, BarChart3, Lightbulb, Save, ArrowRight } from '@/lib/icons'
 
 interface AnalysisResultProps {
   result: ImageAnalyzeResponse
@@ -17,22 +18,22 @@ interface AnalysisResultProps {
 // Verdict styling config (labels come from translations)
 const VERDICT_STYLE = {
   excellent: {
-    emoji: '🌟',
+    IconComponent: Star,
     bgGradient: 'from-green-500 to-emerald-600',
     textColor: 'text-white',
   },
   good: {
-    emoji: '👍',
+    IconComponent: ThumbsUp,
     bgGradient: 'from-blue-500 to-cyan-600',
     textColor: 'text-white',
   },
   moderate: {
-    emoji: '😐',
+    IconComponent: Meh,
     bgGradient: 'from-yellow-500 to-orange-500',
     textColor: 'text-white',
   },
   poor: {
-    emoji: '⚠️',
+    IconComponent: AlertTriangle,
     bgGradient: 'from-red-500 to-rose-600',
     textColor: 'text-white',
   },
@@ -117,13 +118,13 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
       {showSuccess && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
           <div className="absolute top-0 left-1/4 animate-bounce delay-100">
-            <span className="text-2xl">🎉</span>
+            <Sparkles className="w-8 h-8 text-yellow-400" />
           </div>
           <div className="absolute top-0 right-1/4 animate-bounce delay-200">
-            <span className="text-2xl">✨</span>
+            <Sparkles className="w-8 h-8 text-blue-400" />
           </div>
           <div className="absolute top-0 left-1/2 animate-bounce">
-            <span className="text-3xl">🌟</span>
+            <Star className="w-10 h-10 text-yellow-300" />
           </div>
         </div>
       )}
@@ -133,7 +134,12 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
         <div className={`p-6 bg-gradient-to-r ${verdictStyle.bgGradient} ${verdictStyle.textColor}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="text-5xl animate-pulse">{verdictStyle.emoji}</div>
+              <div className="animate-pulse">
+                {(() => {
+                  const VerdictIcon = verdictStyle.IconComponent
+                  return <VerdictIcon className="w-12 h-12" />
+                })()}
+              </div>
               <div>
                 <h2 className="text-2xl font-bold">{t(`result.verdict.${healthReport.verdict}`)}</h2>
                 <p className="text-sm opacity-90">{healthReport.verdict_message}</p>
@@ -279,12 +285,10 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
               className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
               <div className="flex items-center gap-2">
-                <span className="text-xl">💚</span>
+                <HeartPulse className="w-5 h-5 text-green-500" />
                 <span className="font-semibold text-gray-800">{t('result.healthReport')}</span>
               </div>
-              <span className={`transform transition-transform ${expandedSection === 'health' ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
+              <ChevronDown className={`w-5 h-5 transform transition-transform ${expandedSection === 'health' ? 'rotate-180' : ''}`} />
             </button>
 
             {expandedSection === 'health' && (
@@ -296,7 +300,13 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                     healthReport.calorie_analysis.status === 'under' ? 'bg-blue-50' : 'bg-orange-50'
                   }`}>
                     <div className="flex items-center gap-2 mb-1">
-                      <span>{healthReport.calorie_analysis.status === 'optimal' ? '✅' : healthReport.calorie_analysis.status === 'under' ? 'ℹ️' : '⚠️'}</span>
+                      {healthReport.calorie_analysis.status === 'optimal' ? (
+                        <Check className="w-4 h-4 text-green-600" />
+                      ) : healthReport.calorie_analysis.status === 'under' ? (
+                        <Info className="w-4 h-4 text-blue-600" />
+                      ) : (
+                        <AlertTriangle className="w-4 h-4 text-orange-600" />
+                      )}
                       <span className="font-medium text-sm">{healthReport.calorie_analysis.message}</span>
                     </div>
                     {healthReport.calorie_analysis.remaining !== 0 && (
@@ -314,12 +324,12 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                 {healthReport.positive_points && healthReport.positive_points.length > 0 && (
                   <div className="bg-green-50 p-3 rounded-lg">
                     <h5 className="font-medium text-green-800 text-sm mb-2 flex items-center gap-2">
-                      <span>✨</span> {t('result.positivePoints')}
+                      <Sparkles className="w-4 h-4" /> {t('result.positivePoints')}
                     </h5>
                     <ul className="space-y-1">
                       {healthReport.positive_points.map((point, idx) => (
                         <li key={idx} className="text-sm text-green-700 flex items-start gap-2">
-                          <span className="text-green-500 mt-0.5">✓</span>
+                          <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                           {point}
                         </li>
                       ))}
@@ -331,12 +341,12 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                 {healthReport.health_warnings && healthReport.health_warnings.length > 0 && (
                   <div className="bg-red-50 p-3 rounded-lg border border-red-100">
                     <h5 className="font-medium text-red-800 text-sm mb-2 flex items-center gap-2">
-                      <span>⚠️</span> {t('result.warnings')}
+                      <AlertTriangle className="w-4 h-4" /> {t('result.warnings')}
                     </h5>
                     <ul className="space-y-1">
                       {healthReport.health_warnings.map((warning, idx) => (
                         <li key={idx} className="text-sm text-red-700 flex items-start gap-2">
-                          <span className="text-red-500 mt-0.5">!</span>
+                          <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
                           {warning}
                         </li>
                       ))}
@@ -348,12 +358,12 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                 {healthReport.suggestions && healthReport.suggestions.length > 0 && (
                   <div className="bg-blue-50 p-3 rounded-lg">
                     <h5 className="font-medium text-blue-800 text-sm mb-2 flex items-center gap-2">
-                      <span>💡</span> {t('result.suggestions')}
+                      <Lightbulb className="w-4 h-4" /> {t('result.suggestions')}
                     </h5>
                     <ul className="space-y-1">
                       {healthReport.suggestions.map((suggestion, idx) => (
                         <li key={idx} className="text-sm text-blue-700 flex items-start gap-2">
-                          <span className="text-blue-500 mt-0.5">→</span>
+                          <ArrowRight className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
                           {suggestion}
                         </li>
                       ))}
@@ -365,7 +375,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                 {healthReport.macro_analysis && healthReport.macro_analysis.recommendations && healthReport.macro_analysis.recommendations.length > 0 && (
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <h5 className="font-medium text-gray-800 text-sm mb-2 flex items-center gap-2">
-                      <span>📊</span> {t('result.macroBalance')}
+                      <BarChart3 className="w-4 h-4" /> {t('result.macroBalance')}
                     </h5>
                     <div className="grid grid-cols-3 gap-2 text-xs mb-2">
                       <div className="text-center p-2 bg-white rounded">
@@ -395,15 +405,13 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
             className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center gap-2">
-              <span className="text-xl">🍽️</span>
+              <Utensils className="w-5 h-5 text-gray-700" />
               <span className="font-semibold text-gray-800">{t('result.detectedFoods')}</span>
               <span className="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">
                 {result.items.length}
               </span>
             </div>
-            <span className={`transform transition-transform ${expandedSection === 'items' ? 'rotate-180' : ''}`}>
-              ▼
-            </span>
+            <ChevronDown className={`w-5 h-5 transform transition-transform ${expandedSection === 'items' ? 'rotate-180' : ''}`} />
           </button>
 
           {expandedSection === 'items' && (
@@ -506,7 +514,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                         onClick={() => startEditing(item, index)}
                         className="text-gray-400 hover:text-primary-600"
                       >
-                        ✏️ {t('result.modify')}
+                        <Edit className="w-4 h-4 mr-1" /> {t('result.modify')}
                       </Button>
                     </div>
                   )}
@@ -521,7 +529,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
       {result.confidence < 0.7 && (
         <div className="px-4 py-3 bg-yellow-50 border-t border-yellow-100">
           <div className="flex items-start gap-2">
-            <span className="text-yellow-600">⚠️</span>
+            <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
             <div>
               <p className="text-sm font-medium text-yellow-800">{t('result.lowConfidence')} ({Math.round(result.confidence * 100)}%)</p>
               <p className="text-xs text-yellow-700">
@@ -541,7 +549,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
             onClick={onClose}
             className="flex-1 gap-2 py-3"
           >
-            <span>📸</span>
+            <Camera className="w-4 h-4" />
             {t('result.actions.newAnalysis')}
           </Button>
 
@@ -551,7 +559,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
             onClick={() => setExpandedSection('items')}
             className="flex-1 gap-2 py-3 border border-dashed border-gray-300 hover:border-primary-400"
           >
-            <span>✏️</span>
+            <Edit className="w-4 h-4" />
             {t('result.actions.editMeal')}
           </Button>
 
@@ -564,12 +572,12 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
             >
               {saveMutation.isPending ? (
                 <>
-                  <span className="animate-spin">⏳</span>
+                  <Loader2 className="w-4 h-4 animate-spin" />
                   {t('result.actions.saving')}
                 </>
               ) : (
                 <>
-                  <span>💾</span>
+                  <Save className="w-4 h-4" />
                   {t('result.actions.saveMeal')}
                 </>
               )}
@@ -579,7 +587,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
               onClick={onClose}
               className="flex-1 gap-2 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg"
             >
-              <span>✓</span>
+              <Check className="w-4 h-4" />
               {t('result.actions.done')}
             </Button>
           )}
@@ -587,8 +595,8 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
 
         {/* Status messages */}
         {isSaved && (
-          <p className="text-center text-xs text-green-600 mt-3 font-medium">
-            ✓ {t('result.mealSaved')}
+          <p className="text-center text-xs text-green-600 mt-3 font-medium flex items-center justify-center gap-1">
+            <Check className="w-3 h-3" /> {t('result.mealSaved')}
           </p>
         )}
         {saveMutation.isError && (

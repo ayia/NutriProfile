@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Calendar, Loader2, Lock, Clock, ShoppingCart, Sparkles } from 'lucide-react'
+import { Calendar, Loader2, Lock, Clock, ShoppingCart, Sparkles, getMealTypeIcon, type LucideIcon } from '@/lib/icons'
 import { mealPlansApi, type MealPlanRequest, type MealPlanResponse } from '@/services/api'
 
 interface MealPlanGeneratorProps {
@@ -41,11 +41,8 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
     }
   }
 
-  const mealTypeIcons: Record<string, string> = {
-    breakfast: '🌅',
-    lunch: '☀️',
-    dinner: '🌙',
-    snack: '🍎',
+  const getMealIcon = (mealType: string): LucideIcon => {
+    return getMealTypeIcon(mealType)
   }
 
   const mealTypeLabels: Record<string, string> = {
@@ -275,7 +272,10 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
                     key={mealIndex}
                     className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl"
                   >
-                    <span className="text-2xl">{mealTypeIcons[meal.meal_type]}</span>
+                    {(() => {
+                      const MealIcon = getMealIcon(meal.meal_type)
+                      return <MealIcon className="w-6 h-6 text-primary-500" />
+                    })()}
                     <div className="flex-1">
                       <div className="flex items-start justify-between">
                         <div>

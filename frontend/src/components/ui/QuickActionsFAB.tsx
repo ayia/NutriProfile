@@ -2,11 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/hooks/useAuth'
+import { Camera, Droplets, Scale, ChefHat, type LucideIcon } from '@/lib/icons'
 
 interface QuickAction {
   id: string
   labelKey: string
-  icon: string
+  IconComponent: LucideIcon
   path?: string
   action?: () => void
   color: string
@@ -48,28 +49,28 @@ export function QuickActionsFAB() {
     {
       id: 'scan',
       labelKey: 'fab.scanMeal',
-      icon: '📸',
+      IconComponent: Camera,
       path: '/vision',
       color: 'bg-green-500',
     },
     {
       id: 'water',
       labelKey: 'fab.addWater',
-      icon: '💧',
+      IconComponent: Droplets,
       path: '/tracking',
       color: 'bg-blue-500',
     },
     {
       id: 'weight',
       labelKey: 'fab.newWeight',
-      icon: '⚖️',
+      IconComponent: Scale,
       path: '/tracking',
       color: 'bg-purple-500',
     },
     {
       id: 'recipes',
       labelKey: 'fab.searchRecipe',
-      icon: '🍳',
+      IconComponent: ChefHat,
       path: '/recipes',
       color: 'bg-orange-500',
     },
@@ -117,7 +118,7 @@ export function QuickActionsFAB() {
             }`}
           >
             <span className="text-sm font-medium whitespace-nowrap">{t(action.labelKey)}</span>
-            <span className="text-xl">{action.icon}</span>
+            <action.IconComponent className="w-5 h-5" />
           </button>
         ))}
       </div>

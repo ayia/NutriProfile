@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { OnboardingWizard } from '@/components/onboarding/OnboardingWizard'
+import { Leaf } from '@/lib/icons'
 
 export function OnboardingPage() {
   const { t } = useTranslation('onboarding')
@@ -17,7 +18,7 @@ export function OnboardingPage() {
           <div className="relative inline-block mb-6">
             <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-emerald-400 rounded-2xl blur-lg opacity-40" />
             <div className="relative w-20 h-20 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl">
-              <span className="text-4xl">🌱</span>
+              <Leaf className="w-10 h-10 text-white" />
             </div>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">

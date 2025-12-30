@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { Mail, Key } from '@/lib/icons'
 
 interface ForgotPasswordForm {
   email: string
@@ -30,7 +31,7 @@ export function ForgotPasswordPage() {
       <div className="max-w-md mx-auto">
         <div className="bg-white rounded-xl shadow-sm p-8 text-center">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span className="text-4xl">✉️</span>
+            <Mail className="w-10 h-10 text-green-600" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             {t('forgotPassword.successTitle')}
@@ -60,7 +61,7 @@ export function ForgotPasswordPage() {
         {/* En-tête */}
         <div className="text-center mb-6">
           <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">🔑</span>
+            <Key className="w-8 h-8 text-primary-600" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">
             {t('forgotPassword.title')}

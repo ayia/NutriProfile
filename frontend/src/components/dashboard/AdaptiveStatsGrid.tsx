@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { QuickStats, UIConfig, PersonalizedStat } from '@/types/dashboard'
+import { Flame, Dumbbell, Wheat, Droplet, Droplets, Activity, type LucideIcon } from '@/lib/icons'
 
 interface AdaptiveStatsGridProps {
   stats: QuickStats
@@ -14,18 +15,18 @@ interface StatCardProps {
   percent: number
   unit: string
   color: string
-  icon: string
+  IconComponent: LucideIcon
   prominent?: boolean
 }
 
-function StatCard({ label, value, target, percent, unit, color, icon, prominent }: StatCardProps) {
+function StatCard({ label, value, target, percent, unit, color, IconComponent, prominent }: StatCardProps) {
   const clampedPercent = Math.min(percent, 100)
 
   return (
     <div className={`bg-white rounded-xl shadow-sm p-4 ${prominent ? 'ring-2 ring-primary-200 bg-primary-50/30' : ''}`}>
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm text-gray-600">{label}</span>
-        <span className="text-lg">{icon}</span>
+        <IconComponent className={`w-5 h-5 ${color}`} />
       </div>
       <div className="flex items-baseline gap-1 mb-2">
         <span className={`text-2xl font-bold ${color}`}>{Math.round(value)}</span>
@@ -60,7 +61,7 @@ export function AdaptiveStatsGrid({ stats, uiConfig, personalizedStats }: Adapti
       percent: stats.calories_percent,
       unit: '',
       color: 'text-orange-600',
-      icon: '🔥',
+      IconComponent: Flame,
       prominent: priorityIds.includes('calories'),
     },
     {
@@ -71,7 +72,7 @@ export function AdaptiveStatsGrid({ stats, uiConfig, personalizedStats }: Adapti
       percent: stats.protein_percent,
       unit: 'g',
       color: 'text-blue-600',
-      icon: '💪',
+      IconComponent: Dumbbell,
       prominent: priorityIds.includes('protein'),
     },
   ]
@@ -89,7 +90,7 @@ export function AdaptiveStatsGrid({ stats, uiConfig, personalizedStats }: Adapti
       percent: stats.carbs_percent,
       unit: 'g',
       color: 'text-yellow-600',
-      icon: '🍞',
+      IconComponent: Wheat,
       prominent: uiConfig?.show_carbs_prominently || priorityIds.includes('carbs'),
     })
   }
@@ -104,7 +105,7 @@ export function AdaptiveStatsGrid({ stats, uiConfig, personalizedStats }: Adapti
       percent: stats.fat_percent,
       unit: 'g',
       color: 'text-purple-600',
-      icon: '🥑',
+      IconComponent: Droplet,
       prominent: uiConfig?.show_fat_breakdown,
     })
   }
@@ -118,7 +119,7 @@ export function AdaptiveStatsGrid({ stats, uiConfig, personalizedStats }: Adapti
     percent: stats.water_percent,
     unit: 'ml',
     color: 'text-cyan-600',
-    icon: '💧',
+    IconComponent: Droplets,
     prominent: uiConfig?.show_hydration_prominently || priorityIds.includes('water'),
   })
 
@@ -131,7 +132,7 @@ export function AdaptiveStatsGrid({ stats, uiConfig, personalizedStats }: Adapti
     percent: stats.activity_percent,
     unit: 'min',
     color: 'text-green-600',
-    icon: '🏃',
+    IconComponent: Activity,
     prominent: uiConfig?.show_activity_prominently || priorityIds.includes('activity'),
   })
 

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import type { Goal } from '@/types/tracking'
-import { GOAL_TYPES } from '@/types/tracking'
+import { Check, Trash2, Trophy, getGoalIcon } from '@/lib/icons'
 
 interface GoalCardProps {
   goal: Goal
@@ -12,7 +12,6 @@ interface GoalCardProps {
 export function GoalCard({ goal, showActions = true }: GoalCardProps) {
   const { t } = useTranslation('tracking')
   const queryClient = useQueryClient()
-  const goalInfo = GOAL_TYPES[goal.goal_type] || { name: goal.goal_type, icon: '🎯', unit: '' }
 
   const updateMutation = useMutation({
     mutationFn: ({ goalId, data }: { goalId: number; data: Partial<Goal> }) =>
@@ -78,7 +77,7 @@ export function GoalCard({ goal, showActions = true }: GoalCardProps) {
       {isComplete && (
         <div className="absolute top-3 right-3">
           <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-500 text-white text-xs font-semibold rounded-full shadow-lg shadow-green-500/30">
-            <span>✓</span>
+            <Check className="w-3 h-3" />
             <span>{t('goalCard.completed', 'Atteint!')}</span>
           </div>
         </div>
@@ -87,7 +86,10 @@ export function GoalCard({ goal, showActions = true }: GoalCardProps) {
       {/* Header avec icône */}
       <div className="flex items-start gap-4 mb-4">
         <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${colors.icon} flex items-center justify-center shadow-lg`}>
-          <span className="text-2xl filter drop-shadow-sm">{goalInfo.icon}</span>
+          {(() => {
+            const GoalIcon = getGoalIcon(goal.goal_type)
+            return <GoalIcon className="w-7 h-7 text-white" />
+          })()}
         </div>
         <div className="flex-1">
           <h4 className="text-lg font-bold text-gray-900">{t(`goalCard.types.${goal.goal_type}`)}</h4>
@@ -110,11 +112,11 @@ export function GoalCard({ goal, showActions = true }: GoalCardProps) {
           </span>
         </div>
         {goal.goal_type === 'weight' && goal.current_value > 0 && (
-          <div className={`text-sm mt-1 font-medium ${
+          <div className={`text-sm mt-1 font-medium flex items-center gap-1 ${
             goal.current_value <= goal.target_value ? 'text-green-600' : 'text-orange-600'
           }`}>
             {goal.current_value <= goal.target_value
-              ? `🎉 ${t('goalCard.onTrack', 'Objectif atteint!')}`
+              ? <><Trophy className="w-4 h-4" /> {t('goalCard.onTrack', 'Objectif atteint!')}</>
               : `${(goal.current_value - goal.target_value).toFixed(1)} kg ${t('goalCard.remaining', 'restants')}`
             }
           </div>
@@ -188,9 +190,7 @@ export function GoalCard({ goal, showActions = true }: GoalCardProps) {
             disabled={deleteMutation.isPending}
             className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       )}

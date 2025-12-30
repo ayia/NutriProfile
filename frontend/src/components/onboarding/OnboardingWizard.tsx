@@ -9,10 +9,11 @@ import { Step2Activity } from './Step2Activity'
 import { Step3Diet } from './Step3Diet'
 import { Step4Health } from './Step4Health'
 import { Step5Summary } from './Step5Summary'
+import { User, Activity, Salad, Heart, Sparkles, AlertTriangle, Check, Lightbulb, type LucideIcon } from '@/lib/icons'
 
 const TOTAL_STEPS = 5
 
-const stepIcons = ['👤', '🏃', '🥗', '❤️', '✨']
+const stepIconComponents: LucideIcon[] = [User, Activity, Salad, Heart, Sparkles]
 const stepKeys = ['info', 'activity', 'diet', 'health', 'summary'] as const
 
 export function OnboardingWizard() {
@@ -74,9 +75,12 @@ export function OnboardingWizard() {
                   }`}
                 >
                   {isCompleted ? (
-                    <span className="text-xl font-bold">✓</span>
+                    <Check className="w-5 h-5" />
                   ) : (
-                    <span className="text-xl">{stepIcons[i]}</span>
+                    (() => {
+                      const IconComponent = stepIconComponents[i]
+                      return <IconComponent className="w-5 h-5" />
+                    })()
                   )}
                 </div>
                 <span className={`mt-3 text-sm font-semibold transition-colors ${
@@ -106,7 +110,7 @@ export function OnboardingWizard() {
       {createProfile.error && (
         <div className="mb-6 p-4 bg-gradient-to-r from-error-50 to-rose-50 border border-error-200 text-error-600 rounded-2xl flex items-center gap-3 animate-fade-in">
           <div className="w-10 h-10 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
-            <span className="text-xl">⚠️</span>
+            <AlertTriangle className="w-5 h-5 text-error-600" />
           </div>
           <span className="font-medium">{t('error')}</span>
         </div>
@@ -131,7 +135,7 @@ export function OnboardingWizard() {
       {/* Help text */}
       <div className="mt-8 text-center">
         <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
-          <span className="text-base">💡</span>
+          <Lightbulb className="w-4 h-4 text-yellow-500" />
           <span>{t('securityNote')}</span>
         </p>
       </div>

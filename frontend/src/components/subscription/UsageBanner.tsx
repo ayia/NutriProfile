@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { X } from 'lucide-react'
+import { X, Camera, ChefHat, MessageSquare, Zap, type LucideIcon } from '@/lib/icons'
 import { subscriptionApi } from '@/services/api'
 
 // Clé de query exportée pour permettre l'invalidation depuis d'autres composants
@@ -14,10 +14,10 @@ interface UsageBannerProps {
   compact?: boolean
 }
 
-const featureIcons = {
-  vision_analyses: '📸',
-  recipe_generations: '🍳',
-  coach_messages: '💬',
+const featureIcons: Record<string, LucideIcon> = {
+  vision_analyses: Camera,
+  recipe_generations: ChefHat,
+  coach_messages: MessageSquare,
 }
 
 export function UsageBanner({ action = 'vision_analyses', showAlways = false, compact = false }: UsageBannerProps) {
@@ -45,7 +45,7 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
     if (!showAlways) return null
     return (
       <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-50 to-emerald-50 rounded-xl border border-primary-100">
-        <span className="text-lg">{icon}</span>
+        {(() => { const Icon = icon; return <Icon className="w-5 h-5 text-primary-600" /> })()}
         <span className="text-sm font-medium text-primary-700">
           {label} {t('usage.unlimited')}
         </span>
@@ -70,7 +70,7 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
         isLow ? 'bg-warning-100 text-warning-700' :
         'bg-gray-100 text-gray-700'
       }`}>
-        <span>{icon}</span>
+        {(() => { const Icon = icon; return <Icon className="w-4 h-4" /> })()}
         <span>{used}/{limit}</span>
         {(isLow || isZero) && (
           <Link to="/pricing" className="ml-1 underline">
@@ -96,7 +96,7 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-xl">{icon}</span>
+            {(() => { const Icon = icon; return <Icon className="w-6 h-6 text-primary-600" /> })()}
             <div>
               <span className="text-sm font-semibold text-gray-800">
                 {label.charAt(0).toUpperCase() + label.slice(1)}
@@ -154,7 +154,7 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
               to="/pricing"
               className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-primary-500/30 hover:-translate-y-0.5 transition-all"
             >
-              <span>⚡</span>
+              <Zap className="w-4 h-4" />
               <span>{t('usage.upgradeToPremium')}</span>
             </Link>
           )}

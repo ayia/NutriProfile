@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import { Button } from '@/components/ui/Button'
 import { invalidationGroups } from '@/lib/queryKeys'
+import { Droplets, type LucideIcon } from '@/lib/icons'
 
 interface WaterFormProps {
   onSuccess: () => void
@@ -17,11 +18,11 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
   const [error, setError] = useState<string | null>(null)
   const queryClient = useQueryClient()
 
-  const QUICK_AMOUNTS = [
-    { label: t('water.glass'), ml: 250, icon: '🥛' },
-    { label: t('water.bottle'), ml: 500, icon: '🍶' },
-    { label: t('water.largeBottle'), ml: 1000, icon: '🫗' },
-    { label: '1.5L', ml: 1500, icon: '💧' },
+  const QUICK_AMOUNTS: { label: string; ml: number; IconComponent: LucideIcon }[] = [
+    { label: t('water.glass'), ml: 250, IconComponent: Droplets },
+    { label: t('water.bottle'), ml: 500, IconComponent: Droplets },
+    { label: t('water.largeBottle'), ml: 1000, IconComponent: Droplets },
+    { label: '1.5L', ml: 1500, IconComponent: Droplets },
   ]
 
   const today = new Date().toISOString().split('T')[0]
@@ -66,7 +67,7 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
     <div className="space-y-6">
       {/* Affichage actuel */}
       <div className="text-center p-4 bg-cyan-50 rounded-lg">
-        <div className="text-3xl mb-1">💧</div>
+        <Droplets className="w-8 h-8 text-cyan-500 mx-auto mb-1" />
         <div className="text-sm text-gray-600">{t('water.today')}</div>
         <div className="text-2xl font-bold text-cyan-600">{currentWater} ml</div>
         <div className="text-xs text-gray-500">{t('water.goal')}: 2000 ml</div>
@@ -90,7 +91,7 @@ export function WaterForm({ onSuccess, onCancel, currentWater = 0 }: WaterFormPr
               disabled={mutation.isPending}
               className="flex items-center justify-center gap-2 p-3 bg-gray-50 hover:bg-cyan-50 rounded-lg border border-gray-200 hover:border-cyan-300 transition-colors disabled:opacity-50"
             >
-              <span className="text-xl">{item.icon}</span>
+              <item.IconComponent className="w-5 h-5 text-cyan-500" />
               <div className="text-left">
                 <div className="text-sm font-medium">{item.label}</div>
                 <div className="text-xs text-gray-500">{item.ml} ml</div>

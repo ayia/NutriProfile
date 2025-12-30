@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { visionApi, compressImage } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import type { MealType, ImageAnalyzeResponse } from '@/types/foodLog'
-import { MEAL_TYPE_ICONS } from '@/types/foodLog'
+import { getMealTypeIcon, MEAL_TYPE_COLORS, Camera, Image, Lightbulb, Check, X, Download, Search, Calculator, Heart, type LucideIcon } from '@/lib/icons'
 import { USAGE_QUERY_KEY } from '@/components/subscription/UsageBanner'
 
 export interface AnalysisData {
@@ -18,11 +18,11 @@ interface ImageUploaderProps {
 }
 
 // Analysis step icons and durations (labels come from translations)
-const ANALYSIS_STEP_CONFIG = [
-  { id: 1, key: 'step1', icon: '📥', duration: 800 },
-  { id: 2, key: 'step2', icon: '🔍', duration: 1500 },
-  { id: 3, key: 'step3', icon: '🧮', duration: 1200 },
-  { id: 4, key: 'step4', icon: '💚', duration: 1000 },
+const ANALYSIS_STEP_CONFIG: { id: number; key: string; IconComponent: LucideIcon; duration: number }[] = [
+  { id: 1, key: 'step1', IconComponent: Download, duration: 800 },
+  { id: 2, key: 'step2', IconComponent: Search, duration: 1500 },
+  { id: 3, key: 'step3', IconComponent: Calculator, duration: 1200 },
+  { id: 4, key: 'step4', IconComponent: Heart, duration: 1000 },
 ]
 
 const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack']
@@ -159,21 +159,29 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
           {t('uploader.mealTypeLabel')}
         </label>
         <div className="grid grid-cols-4 gap-2">
-          {MEAL_TYPES.map((type) => (
-            <button
-              key={type}
-              type="button"
-              onClick={() => setSelectedMealType(type)}
-              className={`flex flex-col items-center p-3 border rounded-lg transition-colors ${
-                selectedMealType === type
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <span className="text-2xl">{MEAL_TYPE_ICONS[type]}</span>
-              <span className="text-xs mt-1">{t(`mealTypes.${type}`)}</span>
-            </button>
-          ))}
+          {MEAL_TYPES.map((type) => {
+            const MealIcon = getMealTypeIcon(type)
+            const colorClass = MEAL_TYPE_COLORS[type] || 'text-gray-500'
+            return (
+              <button
+                key={type}
+                type="button"
+                onClick={() => setSelectedMealType(type)}
+                className={`flex flex-col items-center p-3 border rounded-xl transition-all ${
+                  selectedMealType === type
+                    ? 'border-primary-500 bg-primary-50 shadow-sm'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                  selectedMealType === type ? 'bg-primary-100' : 'bg-gray-100'
+                }`}>
+                  <MealIcon className={`w-5 h-5 ${selectedMealType === type ? 'text-primary-600' : colorClass}`} />
+                </div>
+                <span className="text-xs mt-1 font-medium">{t(`mealTypes.${type}`)}</span>
+              </button>
+            )
+          })}
         </div>
       </div>
 
@@ -192,7 +200,9 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
         >
           {/* Camera icon animation */}
           <div className="relative inline-block mb-4">
-            <div className="text-5xl animate-bounce">📸</div>
+            <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center animate-bounce">
+              <Camera className="w-8 h-8 text-primary-600" />
+            </div>
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-ping" />
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full" />
           </div>
@@ -206,20 +216,21 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
 
           {/* Tips for good photo */}
           <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-3 mb-4 text-left">
-            <p className="text-xs font-medium text-gray-700 mb-2">
-              💡 {t('uploader.tipsTitle')}
+            <p className="text-xs font-medium text-gray-700 mb-2 flex items-center gap-1.5">
+              <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+              {t('uploader.tipsTitle')}
             </p>
             <ul className="text-xs text-gray-600 space-y-1">
               <li className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
+                <Check className="w-3.5 h-3.5 text-green-500" />
                 {t('uploader.tip1')}
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
+                <Check className="w-3.5 h-3.5 text-green-500" />
                 {t('uploader.tip2')}
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
+                <Check className="w-3.5 h-3.5 text-green-500" />
                 {t('uploader.tip3')}
               </li>
             </ul>
@@ -231,11 +242,11 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
               onClick={openCamera}
               className="gap-2 shadow-lg hover:shadow-xl transition-shadow"
             >
-              <span>📷</span>
+              <Camera className="w-4 h-4" />
               {t('uploader.takePhoto')}
             </Button>
             <Button type="button" variant="outline" onClick={openGallery} className="gap-2">
-              <span>🖼️</span>
+              <Image className="w-4 h-4" />
               {t('uploader.gallery')}
             </Button>
           </div>
@@ -280,39 +291,47 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
                     </defs>
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-3xl animate-pulse">
-                      {ANALYSIS_STEP_CONFIG[currentStep - 1]?.icon || '📸'}
-                    </span>
+                    {(() => {
+                      const StepIcon = ANALYSIS_STEP_CONFIG[currentStep - 1]?.IconComponent || Camera
+                      return <StepIcon className="w-8 h-8 text-white animate-pulse" />
+                    })()}
                   </div>
                 </div>
 
                 {/* Progress steps */}
                 <div className="space-y-3">
-                  {ANALYSIS_STEP_CONFIG.map((step, index) => (
-                    <div
-                      key={step.id}
-                      className={`flex items-center gap-3 transition-all duration-300 ${
-                        index + 1 < currentStep
-                          ? 'opacity-50'
-                          : index + 1 === currentStep
-                          ? 'opacity-100 scale-105'
-                          : 'opacity-30'
-                      }`}
-                    >
+                  {ANALYSIS_STEP_CONFIG.map((step, index) => {
+                    const StepIcon = step.IconComponent
+                    return (
                       <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-all ${
+                        key={step.id}
+                        className={`flex items-center gap-3 transition-all duration-300 ${
                           index + 1 < currentStep
-                            ? 'bg-green-500'
+                            ? 'opacity-50'
                             : index + 1 === currentStep
-                            ? 'bg-white/20 ring-2 ring-white animate-pulse'
-                            : 'bg-white/10'
+                            ? 'opacity-100 scale-105'
+                            : 'opacity-30'
                         }`}
                       >
-                        {index + 1 < currentStep ? '✓' : step.icon}
+                        <div
+                          className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
+                            index + 1 < currentStep
+                              ? 'bg-green-500'
+                              : index + 1 === currentStep
+                              ? 'bg-white/20 ring-2 ring-white animate-pulse'
+                              : 'bg-white/10'
+                          }`}
+                        >
+                          {index + 1 < currentStep ? (
+                            <Check className="w-3 h-3 text-white" />
+                          ) : (
+                            <StepIcon className="w-3 h-3 text-white" />
+                          )}
+                        </div>
+                        <span className="text-sm font-medium">{t(`analysisSteps.${step.key}`)}</span>
                       </div>
-                      <span className="text-sm font-medium">{t(`analysisSteps.${step.key}`)}</span>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
 
                 <p className="text-xs text-white/60 mt-4">
@@ -326,7 +345,7 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
               onClick={resetUploader}
               className="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full p-2"
             >
-              ✕
+              <X className="w-4 h-4 text-gray-600" />
             </button>
           )}
         </div>

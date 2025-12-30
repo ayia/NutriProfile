@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
 import type { WeeklyChartDay } from '@/types/tracking'
+import { AlertTriangle, BarChart3 } from '@/lib/icons'
 
 interface WeeklyChartProps {
   title?: string
@@ -53,7 +54,7 @@ export function WeeklyChart({ title }: WeeklyChartProps) {
       <div className="card-elevated overflow-hidden">
         <div className="p-6 text-center">
           <div className="w-12 h-12 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-3">
-            <span className="text-2xl">⚠️</span>
+            <AlertTriangle className="w-6 h-6 text-error-600" />
           </div>
           <p className="text-neutral-600 text-sm">{t('weeklyChart.loadError')}</p>
         </div>
@@ -67,7 +68,7 @@ export function WeeklyChart({ title }: WeeklyChartProps) {
       <div className="card-elevated overflow-hidden">
         <div className="p-6 text-center">
           <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-3">
-            <span className="text-2xl">📊</span>
+            <BarChart3 className="w-6 h-6 text-neutral-500" />
           </div>
           <p className="text-neutral-600 text-sm">{t('weeklyChart.noData')}</p>
         </div>

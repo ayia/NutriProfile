@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { X } from 'lucide-react'
+import { X, Camera, ChefHat, MessageSquare, AlertTriangle, Check, type LucideIcon } from '@/lib/icons'
 
 interface UpgradeModalProps {
   isOpen: boolean
@@ -10,9 +10,9 @@ interface UpgradeModalProps {
   limit?: number
 }
 
-const featureConfig = {
+const featureConfig: Record<string, { IconComponent: LucideIcon; title: string; description: string; benefits: string[] }> = {
   vision_analyses: {
-    icon: '📸',
+    IconComponent: Camera,
     title: 'Analyses photo',
     description: 'Vous avez atteint votre limite d\'analyses photo pour aujourd\'hui.',
     benefits: [
@@ -22,7 +22,7 @@ const featureConfig = {
     ],
   },
   recipe_generations: {
-    icon: '🍳',
+    IconComponent: ChefHat,
     title: 'Génération de recettes',
     description: 'Vous avez atteint votre limite de recettes pour cette semaine.',
     benefits: [
@@ -32,7 +32,7 @@ const featureConfig = {
     ],
   },
   coach_messages: {
-    icon: '💬',
+    IconComponent: MessageSquare,
     title: 'Conseils du coach',
     description: 'Vous avez atteint votre limite de conseils coach pour aujourd\'hui.',
     benefits: [
@@ -83,7 +83,7 @@ export function UpgradeModal({ isOpen, onClose, feature, used, limit }: UpgradeM
           </button>
 
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl">{config.icon}</span>
+            <config.IconComponent className="w-10 h-10" />
             <div>
               <h2 className="text-xl font-bold">{config.title}</h2>
               {used !== undefined && limit !== undefined && (
@@ -97,7 +97,7 @@ export function UpgradeModal({ isOpen, onClose, feature, used, limit }: UpgradeM
         <div className="p-6">
           {/* Message */}
           <div className="flex items-start gap-3 p-4 bg-red-50 rounded-xl mb-6">
-            <span className="text-2xl">⚠️</span>
+            <AlertTriangle className="w-6 h-6 text-red-500 flex-shrink-0" />
             <div>
               <p className="text-red-800 font-medium">Limite atteinte</p>
               <p className="text-red-600 text-sm mt-1">{config.description}</p>
@@ -112,8 +112,8 @@ export function UpgradeModal({ isOpen, onClose, feature, used, limit }: UpgradeM
             <ul className="space-y-2">
               {config.benefits.map((benefit, index) => (
                 <li key={index} className="flex items-center gap-2">
-                  <span className="w-5 h-5 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs">
-                    ✓
+                  <span className="w-5 h-5 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-full flex items-center justify-center text-white">
+                    <Check className="w-3 h-3" />
                   </span>
                   <span className="text-gray-700">{benefit}</span>
                 </li>

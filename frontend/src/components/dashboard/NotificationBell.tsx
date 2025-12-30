@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { dashboardApi } from '@/services/dashboardApi'
 import type { Notification } from '@/types/dashboard'
+import { Bell, BellOff, Megaphone } from '@/lib/icons'
 
 interface NotificationBellProps {
   notifications: Notification[]
@@ -46,7 +47,7 @@ export function NotificationBell({ notifications, unreadCount }: NotificationBel
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
       >
-        <span className="text-xl">🔔</span>
+        <Bell className="w-5 h-5 text-gray-600" />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -79,7 +80,7 @@ export function NotificationBell({ notifications, unreadCount }: NotificationBel
             <div className="max-h-96 overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="p-8 text-center text-gray-500">
-                  <span className="text-3xl">🔕</span>
+                  <BellOff className="w-8 h-8 mx-auto text-gray-400" />
                   <p className="mt-2 text-sm">Aucune notification</p>
                 </div>
               ) : (
@@ -96,9 +97,9 @@ export function NotificationBell({ notifications, unreadCount }: NotificationBel
                     }}
                   >
                     <div className="flex gap-3">
-                      <span className="text-xl flex-shrink-0">
-                        {notification.icon || '📢'}
-                      </span>
+                      <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                        <Megaphone className="w-4 h-4 text-primary-600" />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-medium text-sm truncate">
                           {notification.title}

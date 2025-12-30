@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Loader2, Crown, Zap } from 'lucide-react'
+import { Check, Loader2, Crown, Zap, Gift } from '@/lib/icons'
 import { subscriptionApi } from '@/services/api'
 import type { PricingPlan, SubscriptionTier } from '@/types'
 
@@ -83,7 +83,7 @@ export function PricingCard({ plan, isYearly, currentTier }: PricingCardProps) {
         }`}>
           {plan.tier === 'premium' && <Crown className="h-6 w-6 text-amber-300" />}
           {plan.tier === 'pro' && <Zap className="h-6 w-6 text-purple-500" />}
-          {plan.tier === 'free' && <span className="text-2xl">🎁</span>}
+          {plan.tier === 'free' && <Gift className="h-6 w-6 text-gray-500" />}
         </div>
         <h3 className={`text-2xl font-bold ${isPremium ? 'text-white' : 'text-gray-900'}`}>
           {plan.name}
