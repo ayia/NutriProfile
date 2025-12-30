@@ -322,6 +322,17 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
           </div>
 
           {editSection === section.id ? (
+            <>
+              {section.id === 'health' ? (
+                <HealthSectionForm
+                  profile={profile}
+                  onSave={(data) => {
+                    onUpdate(data)
+                    setEditSection(null)
+                  }}
+                  isUpdating={isUpdating}
+                />
+              ) : (
             <form onSubmit={handleSubmit(handleSave)} className="space-y-4 animate-fade-in">
               {section.id === 'physical' && (
                 <div className="grid grid-cols-3 gap-4">
@@ -419,37 +430,25 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
                 </div>
               )}
 
-              {section.id === 'health' && (
-                <HealthSectionForm
-                  profile={profile}
-                  onSave={(data) => {
-                    onUpdate(data)
-                    setEditSection(null)
-                  }}
-                  isUpdating={isUpdating}
-                />
-              )}
-
-              {/* Bouton de soumission générique - pas pour la section health qui a son propre bouton */}
-              {section.id !== 'health' && (
-                <div className="flex justify-end pt-4">
-                  <button
-                    type="submit"
-                    disabled={isUpdating}
-                    className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
-                  >
-                    {isUpdating ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>Enregistrement...</span>
-                      </>
-                    ) : (
-                      t('profile.save')
-                    )}
-                  </button>
-                </div>
-              )}
+              <div className="flex justify-end pt-4">
+                <button
+                  type="submit"
+                  disabled={isUpdating}
+                  className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
+                >
+                  {isUpdating ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>Enregistrement...</span>
+                    </>
+                  ) : (
+                    t('profile.save')
+                  )}
+                </button>
+              </div>
             </form>
+              )}
+            </>
           ) : (
             <div className="grid gap-4">
               {section.fields.map((field) => (
