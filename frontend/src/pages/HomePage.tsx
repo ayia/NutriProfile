@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
-import { Camera, Target, Bot, BarChart3, ChefHat, Trophy, Rocket, Hand, Star, Utensils, CheckCircle, HeartPulse, Salad } from '@/lib/icons'
+import { Camera, Target, Bot, BarChart3, ChefHat, Trophy, Rocket, Hand, Star, Utensils, CheckCircle, HeartPulse, Salad, Play } from '@/lib/icons'
 
 export function HomePage() {
   const { t } = useTranslation('home')
   const observerRef = useRef<IntersectionObserver | null>(null)
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
 
   // Scroll reveal animation
   useEffect(() => {
@@ -308,6 +309,119 @@ export function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Demo Video Section */}
+      <section id="demo" className="py-12 sm:py-24 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-primary-100/30 to-cyan-100/30 rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-100/30 to-pink-100/30 rounded-full blur-3xl -z-10" />
+
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-8 sm:mb-12 reveal">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 tracking-tight">
+              {t('demo.title')}
+            </h2>
+            <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto">
+              {t('demo.subtitle')}
+            </p>
+          </div>
+
+          {/* Video Player Container */}
+          <div className="reveal">
+            <div className="relative group cursor-pointer" onClick={() => setIsVideoModalOpen(true)}>
+              {/* Glow effect */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+
+              {/* Video thumbnail container */}
+              <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-2 md:p-3 shadow-2xl overflow-hidden">
+                {/* Thumbnail */}
+                <div className="relative bg-gradient-to-br from-primary-900/90 to-gray-900 rounded-2xl aspect-video flex items-center justify-center overflow-hidden">
+                  {/* Animated background pattern */}
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary-500/30 via-transparent to-transparent animate-pulse" />
+                  </div>
+
+                  {/* App screenshot placeholder */}
+                  <div className="absolute inset-4 md:inset-8 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm flex items-center justify-center">
+                    <div className="text-center">
+                      <Salad className="w-16 h-16 md:w-24 md:h-24 text-primary-400 mx-auto mb-4" />
+                      <p className="text-white/70 text-sm md:text-base font-medium">NutriProfile Demo</p>
+                    </div>
+                  </div>
+
+                  {/* Play button */}
+                  <div className="relative z-10 w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300">
+                    <div className="absolute inset-0 bg-white rounded-full animate-ping opacity-30" />
+                    <Play className="w-8 h-8 md:w-10 md:h-10 text-primary-600 ml-1" />
+                  </div>
+
+                  {/* Duration badge */}
+                  <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-lg text-white text-sm font-medium">
+                    2:30
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature highlights below video */}
+            <div className="grid grid-cols-3 gap-4 mt-8 max-w-3xl mx-auto">
+              <div className="text-center p-4 glass-card hover-lift">
+                <Camera className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                <p className="text-sm font-medium text-gray-700">{t('demo.feature1')}</p>
+              </div>
+              <div className="text-center p-4 glass-card hover-lift">
+                <Bot className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                <p className="text-sm font-medium text-gray-700">{t('demo.feature2')}</p>
+              </div>
+              <div className="text-center p-4 glass-card hover-lift">
+                <BarChart3 className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+                <p className="text-sm font-medium text-gray-700">{t('demo.feature3')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Video Modal */}
+        {isVideoModalOpen && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in"
+            onClick={() => setIsVideoModalOpen(false)}
+          >
+            <div
+              className="relative w-full max-w-4xl mx-4 aspect-video bg-gray-900 rounded-2xl overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setIsVideoModalOpen(false)}
+                className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                <span className="text-2xl">&times;</span>
+              </button>
+
+              {/* Video placeholder - Replace with actual video embed */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center text-white">
+                  <Salad className="w-20 h-20 text-primary-400 mx-auto mb-4" />
+                  <p className="text-xl font-semibold mb-2">{t('demo.comingSoon')}</p>
+                  <p className="text-white/60">{t('demo.comingSoonSubtitle')}</p>
+                </div>
+              </div>
+
+              {/* Uncomment and replace with actual YouTube/Vimeo embed when video is ready:
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src="https://www.youtube.com/embed/YOUR_VIDEO_ID?autoplay=1"
+                title="NutriProfile Demo"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+              */}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Features Section */}

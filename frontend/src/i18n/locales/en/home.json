@@ -29,6 +29,15 @@
       "description": "Receive a detailed health report with personalized advice"
     }
   },
+  "demo": {
+    "title": "See NutriProfile in Action",
+    "subtitle": "Watch how easy it is to track your nutrition with AI-powered meal analysis",
+    "feature1": "Instant Scan",
+    "feature2": "AI Analysis",
+    "feature3": "Track Progress",
+    "comingSoon": "Demo Video Coming Soon",
+    "comingSoonSubtitle": "We're preparing an amazing demo for you"
+  },
   "preview": {
     "title": "NutriProfile - Vision Analysis",
     "detected": "Spaghetti bolognese detected",

@@ -39,6 +39,15 @@
       "description": "可视化您的发展并实现您的目标。"
     }
   },
+  "demo": {
+    "title": "观看NutriProfile实际演示",
+    "subtitle": "看看使用AI餐食分析跟踪营养有多简单",
+    "feature1": "即时扫描",
+    "feature2": "AI分析",
+    "feature3": "追踪进展",
+    "comingSoon": "演示视频即将推出",
+    "comingSoonSubtitle": "我们正在为您准备精彩的演示"
+  },
   "testimonials": {
     "title": "用户评价"
   },

@@ -194,3 +194,12 @@ async def logout():
     # Note: Pour une invalidation côté serveur, il faudrait utiliser Redis
     # pour stocker une liste de tokens révoqués (token blacklist)
     return {"message": "Déconnexion réussie"}
+
+
+@router.get("/check-email")
+async def check_email_exists(email: str) -> dict:
+    """Vérifie si un email est déjà utilisé (pour validation en temps réel)."""
+    async with async_session_maker() as db:
+        result = await db.execute(select(User).where(User.email == email.lower()))
+        exists = result.scalar_one_or_none() is not None
+        return {"exists": exists}

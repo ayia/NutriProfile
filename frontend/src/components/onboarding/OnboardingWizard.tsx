@@ -6,20 +6,19 @@ import { useAuthStore } from '@/store/authStore'
 import { profileApi } from '@/services/profileApi'
 import { Step1BasicInfo } from './Step1BasicInfo'
 import { Step2Activity } from './Step2Activity'
-import { Step3Diet } from './Step3Diet'
-import { Step4Health } from './Step4Health'
-import { Step5Summary } from './Step5Summary'
-import { User, Activity, Salad, Heart, Sparkles, AlertTriangle, Check, Lightbulb, type LucideIcon } from '@/lib/icons'
+import { Step3Preferences } from './Step3Preferences'
+import { User, Activity, Sparkles, AlertTriangle, Check, Lightbulb, SkipForward, type LucideIcon } from '@/lib/icons'
 
-const TOTAL_STEPS = 5
+// Onboarding réduit à 3 étapes pour meilleure conversion
+const TOTAL_STEPS = 3
 
-const stepIconComponents: LucideIcon[] = [User, Activity, Salad, Heart, Sparkles]
-const stepKeys = ['info', 'activity', 'diet', 'health', 'summary'] as const
+const stepIconComponents: LucideIcon[] = [User, Activity, Sparkles]
+const stepKeys = ['info', 'activity', 'preferences'] as const
 
 export function OnboardingWizard() {
   const { t } = useTranslation('onboarding')
   const navigate = useNavigate()
-  const { currentStep, getFullProfile, reset } = useOnboardingStore()
+  const { currentStep, getFullProfile, reset, skipToEnd } = useOnboardingStore()
   const { setProfileStatus } = useAuthStore()
 
   const stepLabels = stepKeys.map(key => t(`steps.${key}`))
@@ -121,10 +120,8 @@ export function OnboardingWizard() {
         <div className="animate-fade-in" key={currentStep}>
           {currentStep === 1 && <Step1BasicInfo />}
           {currentStep === 2 && <Step2Activity />}
-          {currentStep === 3 && <Step3Diet />}
-          {currentStep === 4 && <Step4Health />}
-          {currentStep === 5 && (
-            <Step5Summary
+          {currentStep === 3 && (
+            <Step3Preferences
               onSubmit={handleSubmit}
               isLoading={createProfile.isPending}
             />
@@ -132,8 +129,24 @@ export function OnboardingWizard() {
         </div>
       </div>
 
+      {/* Skip option - Only show on step 2 */}
+      {currentStep === 2 && (
+        <div className="mt-6 text-center">
+          <button
+            type="button"
+            onClick={() => {
+              skipToEnd()
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            <SkipForward className="w-4 h-4" />
+            <span>{t('buttons.skipOptional')}</span>
+          </button>
+        </div>
+      )}
+
       {/* Help text */}
-      <div className="mt-8 text-center">
+      <div className="mt-6 text-center">
         <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
           <Lightbulb className="w-4 h-4 text-yellow-500" />
           <span>{t('securityNote')}</span>

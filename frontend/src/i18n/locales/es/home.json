@@ -39,6 +39,15 @@
       "description": "Visualiza tu evolución y alcanza tus objetivos."
     }
   },
+  "demo": {
+    "title": "Mira NutriProfile en Acción",
+    "subtitle": "Descubre lo fácil que es seguir tu nutrición con análisis de comidas por IA",
+    "feature1": "Escaneo Instantáneo",
+    "feature2": "Análisis IA",
+    "feature3": "Sigue tu Progreso",
+    "comingSoon": "Video Demo Próximamente",
+    "comingSoonSubtitle": "Estamos preparando una increíble demo para ti"
+  },
   "testimonials": {
     "title": "Testimonios"
   },

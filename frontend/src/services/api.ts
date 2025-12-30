@@ -152,6 +152,11 @@ export const authApi = {
     return response.data
   },
 
+  checkEmailExists: async (email: string): Promise<boolean> => {
+    const response = await api.get<{ exists: boolean }>(`/auth/check-email?email=${encodeURIComponent(email)}`)
+    return response.data.exists
+  },
+
   login: async (credentials: LoginCredentials): Promise<AuthToken> => {
     const formData = new URLSearchParams()
     formData.append('username', credentials.email)

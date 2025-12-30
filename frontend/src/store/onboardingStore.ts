@@ -1,16 +1,21 @@
 import { create } from 'zustand'
 import type { ProfileStep1, ProfileStep2, ProfileStep3, ProfileStep4, ProfileCreate } from '@/types/profile'
 
+// Nombre d'étapes réduit à 3 pour un onboarding plus rapide
+const TOTAL_STEPS = 3
+
 interface OnboardingState {
   currentStep: number
   step1: Partial<ProfileStep1>
   step2: Partial<ProfileStep2>
   step3: Partial<ProfileStep3>
   step4: Partial<ProfileStep4>
+  skippedOptional: boolean
 
   setStep: (step: number) => void
   nextStep: () => void
   prevStep: () => void
+  skipToEnd: () => void
 
   setStep1: (data: Partial<ProfileStep1>) => void
   setStep2: (data: Partial<ProfileStep2>) => void
@@ -35,14 +40,16 @@ const initialState = {
     medical_conditions: [],
     medications: [],
   },
+  skippedOptional: false,
 }
 
 export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   ...initialState,
 
   setStep: (step) => set({ currentStep: step }),
-  nextStep: () => set((state) => ({ currentStep: Math.min(state.currentStep + 1, 5) })),
+  nextStep: () => set((state) => ({ currentStep: Math.min(state.currentStep + 1, TOTAL_STEPS) })),
   prevStep: () => set((state) => ({ currentStep: Math.max(state.currentStep - 1, 1) })),
+  skipToEnd: () => set({ currentStep: TOTAL_STEPS, skippedOptional: true }),
 
   setStep1: (data) => set((state) => ({ step1: { ...state.step1, ...data } })),
   setStep2: (data) => set((state) => ({ step2: { ...state.step2, ...data } })),

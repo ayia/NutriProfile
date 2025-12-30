@@ -93,7 +93,19 @@ export function LoginPage() {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
-              <div className="flex justify-end mt-2">
+              <div className="flex items-center justify-between mt-3">
+                {/* Remember Me checkbox */}
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    {...register('rememberMe')}
+                    className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 transition-colors cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
+                    {t('login.rememberMe')}
+                  </span>
+                </label>
                 <Link
                   to="/forgot-password"
                   className="text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors"

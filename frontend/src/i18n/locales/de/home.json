@@ -39,6 +39,15 @@
       "description": "Visualisieren Sie Ihre Entwicklung und erreichen Sie Ihre Ziele."
     }
   },
+  "demo": {
+    "title": "Sehen Sie NutriProfile in Aktion",
+    "subtitle": "Sehen Sie, wie einfach es ist, Ihre Ernährung mit KI-gestützter Mahlzeitenanalyse zu verfolgen",
+    "feature1": "Sofortiger Scan",
+    "feature2": "KI-Analyse",
+    "feature3": "Fortschritt verfolgen",
+    "comingSoon": "Demo-Video kommt bald",
+    "comingSoonSubtitle": "Wir bereiten eine tolle Demo für Sie vor"
+  },
   "testimonials": {
     "title": "Erfahrungsberichte"
   },

@@ -28,11 +28,25 @@
     "targetWeight": "Zielgewicht (kg) - optional",
     "targetWeightPlaceholder": "65"
   },
+  "steps": {
+    "info": "Info",
+    "activity": "Ziele",
+    "preferences": "Abschluss",
+    "diet": "Ernährung",
+    "health": "Gesundheit",
+    "summary": "Zusammenfassung"
+  },
+  "stepOf": "Schritt {{current}} von {{total}}",
+  "securityNote": "Alle Ihre Informationen sind sicher und werden nur zur Personalisierung Ihrer Erfahrung verwendet",
   "step3": {
     "title": "Ernährungspräferenzen",
     "subtitle": "Passen Sie Ihre Empfehlungen an Ihre Ernährung an.",
+    "titleFinal": "Profil abschließen",
+    "subtitleFinal": "Überprüfen Sie Ihre Informationen und passen Sie Ihre Präferenzen an.",
     "dietType": "Ernährungsart",
     "allergies": "Allergien & Unverträglichkeiten",
+    "allergiesOptional": "Allergien (optional)",
+    "dietPreferencesOptional": "Ernährungspräferenzen (optional)",
     "otherAllergy": "Andere Allergie...",
     "add": "Hinzufügen",
     "excludedFoods": "Zu vermeidende Lebensmittel (optional)",
@@ -85,7 +99,8 @@
   "buttons": {
     "back": "Zurück",
     "continue": "Weiter",
-    "viewSummary": "Zusammenfassung anzeigen"
+    "viewSummary": "Zusammenfassung anzeigen",
+    "skipOptional": "Präferenzen überspringen und abschließen"
   },
   "errors": {
     "ageRequired": "Alter erforderlich",

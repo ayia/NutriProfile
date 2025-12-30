@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/hooks/useAuth'
-import { Sparkles, AlertTriangle, Check, Eye, EyeOff, Target, Bot } from '@/lib/icons'
+import { Sparkles, AlertTriangle, Check, Eye, EyeOff, Target, Bot, X, Loader2 } from '@/lib/icons'
+import { authApi } from '@/services/api'
 import type { RegisterData } from '@/types'
 
 interface RegisterFormData extends RegisterData {
@@ -17,17 +18,45 @@ export function RegisterPage() {
   const { register: registerUser, isRegistering, registerError } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle')
 
   const {
     register,
     handleSubmit,
     formState: { errors, touchedFields, isValid },
     watch,
+    setError,
+    clearErrors,
   } = useForm<RegisterFormData>({
     mode: 'onChange',
   })
 
   const password = watch('password', '')
+
+  // Vérification email en temps réel (avec debounce)
+  const checkEmail = useCallback(async (email: string) => {
+    if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+      setEmailStatus('idle')
+      return
+    }
+
+    setEmailStatus('checking')
+    try {
+      const exists = await authApi.checkEmailExists(email)
+      if (exists) {
+        setEmailStatus('taken')
+        setError('email', {
+          type: 'manual',
+          message: t('register.emailTaken')
+        })
+      } else {
+        setEmailStatus('available')
+        clearErrors('email')
+      }
+    } catch {
+      setEmailStatus('idle')
+    }
+  }, [setError, clearErrors, t])
 
   // Calculer la force du mot de passe
   const passwordStrength = useMemo(() => {
@@ -121,10 +150,39 @@ export function RegisterPage() {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                     message: t('register.emailInvalid'),
                   },
+                  onBlur: (e) => checkEmail(e.target.value),
                 })}
               />
-              {touchedFields.email && !errors.email && (
-                <span className="absolute right-3 top-9 text-success-500 animate-scale-in"><Check className="w-4 h-4" /></span>
+              {/* Indicateurs d'état email */}
+              <span className="absolute right-3 top-9">
+                {emailStatus === 'checking' && (
+                  <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+                )}
+                {emailStatus === 'available' && !errors.email && (
+                  <Check className="w-4 h-4 text-success-500 animate-scale-in" />
+                )}
+                {emailStatus === 'taken' && (
+                  <X className="w-4 h-4 text-error-500 animate-scale-in" />
+                )}
+                {emailStatus === 'idle' && touchedFields.email && !errors.email && (
+                  <Check className="w-4 h-4 text-success-500 animate-scale-in" />
+                )}
+              </span>
+              {/* Message actionnable si email pris */}
+              {emailStatus === 'taken' && (
+                <p className="mt-2 text-sm text-error-600 flex items-center gap-1 animate-fade-in">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                  <span>
+                    {t('register.emailTaken')}{' '}
+                    <Link to="/login" className="text-primary-600 hover:underline font-medium">
+                      {t('register.signIn')}
+                    </Link>
+                    {' '}{t('register.or').toLowerCase()}{' '}
+                    <Link to="/forgot-password" className="text-primary-600 hover:underline font-medium">
+                      {t('register.resetPassword')}
+                    </Link>
+                  </span>
+                </p>
               )}
             </div>
 

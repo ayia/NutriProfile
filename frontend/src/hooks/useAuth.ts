@@ -26,9 +26,10 @@ export function useAuth() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
-      const tokenData = await authApi.login(credentials)
-      // Stocker les tokens de manière sécurisée
-      tokenStorage.setTokens(tokenData)
+      const { rememberMe = true, ...loginData } = credentials
+      const tokenData = await authApi.login(loginData)
+      // Stocker les tokens de manière sécurisée (avec rememberMe)
+      tokenStorage.setTokens(tokenData, rememberMe)
       const userData = await userApi.getMe()
       // Vérifier si l'utilisateur a un profil
       const profileSummary = await profileApi.getSummary()

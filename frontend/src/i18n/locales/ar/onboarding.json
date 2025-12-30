@@ -28,11 +28,25 @@
     "targetWeight": "الوزن المستهدف (كغ) - اختياري",
     "targetWeightPlaceholder": "65"
   },
+  "steps": {
+    "info": "معلومات",
+    "activity": "أهداف",
+    "preferences": "إنهاء",
+    "diet": "نظام غذائي",
+    "health": "صحة",
+    "summary": "ملخص"
+  },
+  "stepOf": "الخطوة {{current}} من {{total}}",
+  "securityNote": "جميع معلوماتك آمنة وتُستخدم فقط لتخصيص تجربتك",
   "step3": {
     "title": "التفضيلات الغذائية",
     "subtitle": "خصص توصياتك وفقاً لنظامك الغذائي.",
+    "titleFinal": "أكمل ملفك الشخصي",
+    "subtitleFinal": "راجع معلوماتك وخصص تفضيلاتك.",
     "dietType": "نوع النظام الغذائي",
     "allergies": "الحساسيات وعدم التحمل",
+    "allergiesOptional": "الحساسيات (اختياري)",
+    "dietPreferencesOptional": "التفضيلات الغذائية (اختياري)",
     "otherAllergy": "حساسية أخرى...",
     "add": "إضافة",
     "excludedFoods": "أطعمة يجب تجنبها (اختياري)",
@@ -85,7 +99,8 @@
   "buttons": {
     "back": "رجوع",
     "continue": "متابعة",
-    "viewSummary": "عرض الملخص"
+    "viewSummary": "عرض الملخص",
+    "skipOptional": "تخطي التفضيلات وإنهاء"
   },
   "errors": {
     "ageRequired": "العمر مطلوب",

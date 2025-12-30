@@ -29,6 +29,15 @@
       "description": "Recevez un rapport sante detaille avec des conseils personnalises"
     }
   },
+  "demo": {
+    "title": "Decouvrez NutriProfile en Action",
+    "subtitle": "Voyez comme il est facile de suivre votre nutrition avec l'analyse de repas par IA",
+    "feature1": "Scan Instantane",
+    "feature2": "Analyse IA",
+    "feature3": "Suivez vos Progres",
+    "comingSoon": "Video Demo Bientot Disponible",
+    "comingSoonSubtitle": "Nous preparons une demo incroyable pour vous"
+  },
   "preview": {
     "title": "NutriProfile - Analyse Vision",
     "detected": "Pates a la bolognaise detectees",

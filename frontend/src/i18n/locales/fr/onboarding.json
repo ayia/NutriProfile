@@ -4,7 +4,8 @@
   "error": "Une erreur est survenue. Veuillez reessayer.",
   "steps": {
     "info": "Info",
-    "activity": "Activite",
+    "activity": "Objectifs",
+    "preferences": "Finaliser",
     "diet": "Regime",
     "health": "Sante",
     "summary": "Resume"
@@ -40,8 +41,12 @@
   "step3": {
     "title": "Préférences alimentaires",
     "subtitle": "Personnalisez vos recommandations selon votre régime.",
+    "titleFinal": "Finalisez votre profil",
+    "subtitleFinal": "Vérifiez vos informations et personnalisez vos préférences.",
     "dietType": "Type de régime",
     "allergies": "Allergies & intolérances",
+    "allergiesOptional": "Allergies (optionnel)",
+    "dietPreferencesOptional": "Préférences alimentaires (optionnel)",
     "otherAllergy": "Autre allergie...",
     "add": "Ajouter",
     "excludedFoods": "Aliments à éviter (optionnel)",
@@ -94,7 +99,8 @@
   "buttons": {
     "back": "Retour",
     "continue": "Continuer",
-    "viewSummary": "Voir le résumé"
+    "viewSummary": "Voir le résumé",
+    "skipOptional": "Passer les préférences et terminer"
   },
   "errors": {
     "ageRequired": "Âge requis",

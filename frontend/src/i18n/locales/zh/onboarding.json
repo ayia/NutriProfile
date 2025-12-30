@@ -28,11 +28,25 @@
     "targetWeight": "目标体重（公斤）- 可选",
     "targetWeightPlaceholder": "65"
   },
+  "steps": {
+    "info": "信息",
+    "activity": "目标",
+    "preferences": "完成",
+    "diet": "饮食",
+    "health": "健康",
+    "summary": "摘要"
+  },
+  "stepOf": "第 {{current}} 步，共 {{total}} 步",
+  "securityNote": "您的所有信息都是安全的，仅用于个性化您的体验",
   "step3": {
     "title": "饮食偏好",
     "subtitle": "根据您的饮食习惯定制建议。",
+    "titleFinal": "完成您的档案",
+    "subtitleFinal": "查看您的信息并自定义您的偏好。",
     "dietType": "饮食类型",
     "allergies": "过敏与不耐受",
+    "allergiesOptional": "过敏（可选）",
+    "dietPreferencesOptional": "饮食偏好（可选）",
     "otherAllergy": "其他过敏...",
     "add": "添加",
     "excludedFoods": "要避免的食物（可选）",
@@ -85,7 +99,8 @@
   "buttons": {
     "back": "返回",
     "continue": "继续",
-    "viewSummary": "查看摘要"
+    "viewSummary": "查看摘要",
+    "skipOptional": "跳过偏好并完成"
   },
   "errors": {
     "ageRequired": "年龄必填",

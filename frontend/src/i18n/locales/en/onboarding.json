@@ -4,7 +4,8 @@
   "error": "An error occurred. Please try again.",
   "steps": {
     "info": "Info",
-    "activity": "Activity",
+    "activity": "Goals",
+    "preferences": "Finalize",
     "diet": "Diet",
     "health": "Health",
     "summary": "Summary"
@@ -40,8 +41,12 @@
   "step3": {
     "title": "Dietary Preferences",
     "subtitle": "Customize your recommendations according to your diet.",
+    "titleFinal": "Finalize your profile",
+    "subtitleFinal": "Review your information and customize your preferences.",
     "dietType": "Diet type",
     "allergies": "Allergies & intolerances",
+    "allergiesOptional": "Allergies (optional)",
+    "dietPreferencesOptional": "Dietary preferences (optional)",
     "otherAllergy": "Other allergy...",
     "add": "Add",
     "excludedFoods": "Foods to avoid (optional)",
@@ -94,7 +99,8 @@
   "buttons": {
     "back": "Back",
     "continue": "Continue",
-    "viewSummary": "View summary"
+    "viewSummary": "View summary",
+    "skipOptional": "Skip preferences and finish"
   },
   "errors": {
     "ageRequired": "Age required",
