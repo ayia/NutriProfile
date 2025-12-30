@@ -154,7 +154,7 @@ export function TrackingPage() {
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
               <tab.IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`} />
-              <span>{tab.label}</span>
+              <span className="hidden xs:inline sm:inline">{tab.label}</span>
             </button>
           ))}
         </div>

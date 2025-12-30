@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { Sparkles, History, Heart, type LucideIcon } from 'lucide-react'
 import { recipeApi } from '@/services/recipeApi'
 import { RecipeGenerator } from '@/components/recipes/RecipeGenerator'
 import { RecipeCard } from '@/components/recipes/RecipeCard'
@@ -59,10 +60,10 @@ export function RecipesPage() {
     return () => observerRef.current?.disconnect()
   }, [activeTab, historyQuery.data, favoritesQuery.data])
 
-  const tabs: { id: Tab; label: string; icon: string; count?: number }[] = [
-    { id: 'generate', label: t('tabs.generate'), icon: '✨' },
-    { id: 'history', label: t('tabs.history'), icon: '📜', count: historyQuery.data?.length },
-    { id: 'favorites', label: t('tabs.favorites'), icon: '❤️', count: favoritesQuery.data?.length },
+  const tabs: { id: Tab; label: string; IconComponent: LucideIcon; count?: number }[] = [
+    { id: 'generate', label: t('tabs.generate'), IconComponent: Sparkles },
+    { id: 'history', label: t('tabs.history'), IconComponent: History, count: historyQuery.data?.length },
+    { id: 'favorites', label: t('tabs.favorites'), IconComponent: Heart, count: favoritesQuery.data?.length },
   ]
 
   const handleQuickSuggestion = (tags: string[]) => {
@@ -135,31 +136,33 @@ export function RecipesPage() {
         </div>
 
         {/* Tabs avec compteurs - Enhanced & Responsive */}
-        <div className="flex gap-1.5 sm:gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          {tabs.map((tab, index) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-medium transition-all duration-300 whitespace-nowrap text-sm sm:text-base ${
-                activeTab === tab.id
-                  ? 'bg-gradient-to-r from-primary-500 to-emerald-500 text-white shadow-lg shadow-primary-500/30 scale-105'
-                  : 'glass-card text-gray-600 hover:text-gray-900 hover:shadow-md hover:-translate-y-0.5'
-              }`}
-              style={{ animationDelay: `${0.1 * (index + 1)}s` }}
-            >
-              <span className={`text-base sm:text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
-              <span>{tab.label}</span>
-              {tab.count !== undefined && tab.count > 0 && (
-                <span className={`px-1.5 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold ${
+        <div className="-mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto scrollbar-hide animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <div className="flex gap-1.5 sm:gap-2 mb-6 sm:mb-8 pb-2">
+            {tabs.map((tab, index) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-medium transition-all duration-300 whitespace-nowrap text-sm sm:text-base ${
                   activeTab === tab.id
-                    ? 'bg-white/20 text-white'
-                    : 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-600'
-                }`}>
-                  {tab.count}
-                </span>
-              )}
-            </button>
-          ))}
+                    ? 'bg-gradient-to-r from-primary-500 to-emerald-500 text-white shadow-lg shadow-primary-500/30 scale-105'
+                    : 'glass-card text-gray-600 hover:text-gray-900 hover:shadow-md hover:-translate-y-0.5'
+                }`}
+                style={{ animationDelay: `${0.1 * (index + 1)}s` }}
+              >
+                <tab.IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`} />
+                <span className="hidden xs:inline sm:inline">{tab.label}</span>
+                {tab.count !== undefined && tab.count > 0 && (
+                  <span className={`px-1.5 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold ${
+                    activeTab === tab.id
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-600'
+                  }`}>
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Barre de recherche pour historique/favoris - Enhanced */}
