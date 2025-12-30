@@ -94,9 +94,27 @@
     "notesPlaceholder": "Notes optionnelles..."
   },
   "goals": {
+    "title": "Vos Objectifs",
+    "subtitle": "Suivez votre progression vers vos objectifs",
     "newGoal": "+ Nouvel objectif",
     "noGoals": "Aucun objectif défini",
-    "createGoal": "Créer un objectif"
+    "noGoalsDesc": "Définissez vos objectifs pour rester motivé",
+    "createGoal": "Créer un objectif",
+    "profileBased": "Objectifs basés sur votre profil",
+    "profileBasedDesc": "Ces objectifs sont calculés automatiquement",
+    "customGoals": "Vos objectifs personnalisés",
+    "addCustom": "Ajoutez vos propres objectifs",
+    "addCustomDesc": "Créez des objectifs personnalisés pour suivre votre progression",
+    "weightGoal": "Objectif Poids",
+    "caloriesGoal": "Calories quotidiennes",
+    "proteinGoal": "Protéines quotidiennes",
+    "fromProfile": "Depuis votre profil",
+    "dailyTarget": "Objectif journalier",
+    "tolose": "à perdre",
+    "togain": "à prendre",
+    "remaining": "restantes",
+    "excess": "en excès",
+    "achieved": "Objectif atteint!"
   },
   "goalForm": {
     "type": "Type d'objectif",
@@ -129,7 +147,10 @@
       "weekly": "Hebdomadaire",
       "monthly": "Mensuel"
     },
-    "deleteConfirm": "Supprimer cet objectif ?"
+    "deleteConfirm": "Supprimer cet objectif ?",
+    "completed": "Atteint!",
+    "onTrack": "Objectif atteint!",
+    "remaining": "restants"
   },
   "actions": {
     "addActivity": "+ Activité",

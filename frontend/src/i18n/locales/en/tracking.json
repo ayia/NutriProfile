@@ -94,9 +94,27 @@
     "notesPlaceholder": "Optional notes..."
   },
   "goals": {
+    "title": "Your Goals",
+    "subtitle": "Track your progress towards your goals",
     "newGoal": "+ New goal",
     "noGoals": "No goals set",
-    "createGoal": "Create a goal"
+    "noGoalsDesc": "Set your goals to stay motivated",
+    "createGoal": "Create a goal",
+    "profileBased": "Goals based on your profile",
+    "profileBasedDesc": "These goals are calculated automatically",
+    "customGoals": "Your custom goals",
+    "addCustom": "Add your own goals",
+    "addCustomDesc": "Create custom goals to track your progress",
+    "weightGoal": "Weight Goal",
+    "caloriesGoal": "Daily Calories",
+    "proteinGoal": "Daily Protein",
+    "fromProfile": "From your profile",
+    "dailyTarget": "Daily target",
+    "tolose": "to lose",
+    "togain": "to gain",
+    "remaining": "remaining",
+    "excess": "in excess",
+    "achieved": "Goal achieved!"
   },
   "goalForm": {
     "type": "Goal type",
@@ -129,7 +147,10 @@
       "weekly": "Weekly",
       "monthly": "Monthly"
     },
-    "deleteConfirm": "Delete this goal?"
+    "deleteConfirm": "Delete this goal?",
+    "completed": "Achieved!",
+    "onTrack": "Goal achieved!",
+    "remaining": "remaining"
   },
   "actions": {
     "addActivity": "+ Activity",

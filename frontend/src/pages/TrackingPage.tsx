@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { trackingApi } from '@/services/trackingApi'
+import { profileApi } from '@/services/profileApi'
 import { useAuthStore } from '@/store/authStore'
 import { tokenStorage } from '@/services/api'
 import { ProgressChart } from '@/components/tracking/ProgressChart'
@@ -63,6 +64,13 @@ export function TrackingPage() {
   const weightsQuery = useQuery({
     queryKey: ['weight'],
     queryFn: () => trackingApi.getWeightLogs(),
+    enabled: canFetch,
+  })
+
+  // Récupérer le profil pour les objectifs intelligents
+  const profileQuery = useQuery({
+    queryKey: ['profile'],
+    queryFn: profileApi.getProfile,
     enabled: canFetch,
   })
 
@@ -621,8 +629,13 @@ export function TrackingPage() {
 
         {/* Objectifs - Data */}
         {activeTab === 'goals' && summary && (
-          <div className="space-y-4">
-            <div className="flex justify-end animate-fade-in">
+          <div className="space-y-6">
+            {/* Header avec bouton */}
+            <div className="flex items-center justify-between animate-fade-in">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">{t('goals.title', 'Vos Objectifs')}</h2>
+                <p className="text-gray-500 text-sm mt-1">{t('goals.subtitle', 'Suivez votre progression vers vos objectifs')}</p>
+              </div>
               <button
                 onClick={() => setActiveModal('goal')}
                 className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-2xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
@@ -631,13 +644,170 @@ export function TrackingPage() {
               </button>
             </div>
 
-            {summary.goals.length === 0 && (
+            {/* Objectifs automatiques basés sur le profil */}
+            {profileQuery.data && (
+              <div className="glass-card p-6 reveal animate-fade-in-up">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+                    <span className="text-2xl">✨</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">{t('goals.profileBased', 'Objectifs basés sur votre profil')}</h3>
+                    <p className="text-sm text-gray-500">{t('goals.profileBasedDesc', 'Ces objectifs sont calculés automatiquement')}</p>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Objectif Poids */}
+                  {profileQuery.data.target_weight_kg && profileQuery.data.weight_kg && (
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-200 p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+                          <span className="text-xl">⚖️</span>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-900">{t('goals.weightGoal', 'Objectif Poids')}</h4>
+                          <span className="text-xs text-indigo-600 font-medium">{t('goals.fromProfile', 'Depuis votre profil')}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-baseline gap-2 mb-3">
+                        <span className="text-3xl font-bold text-gray-900">{profileQuery.data.weight_kg}</span>
+                        <span className="text-gray-400">→</span>
+                        <span className="text-2xl font-bold text-indigo-600">{profileQuery.data.target_weight_kg}</span>
+                        <span className="text-sm text-gray-400">kg</span>
+                      </div>
+                      <div className="relative h-3 bg-white/60 rounded-full overflow-hidden shadow-inner">
+                        {(() => {
+                          const current = profileQuery.data.weight_kg || 0
+                          const target = profileQuery.data.target_weight_kg || current
+                          const diff = Math.abs(current - target)
+                          const startWeight = current > target ? target : current
+                          const progress = diff === 0 ? 100 : Math.min(100, Math.max(0, ((current - startWeight) / diff) * 100))
+                          const isLosingWeight = current > target
+                          return (
+                            <div
+                              className={`h-full rounded-full transition-all duration-700 ${
+                                isLosingWeight
+                                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500'
+                                  : 'bg-gradient-to-r from-green-500 to-emerald-500'
+                              }`}
+                              style={{ width: `${isLosingWeight ? 100 - progress : progress}%` }}
+                            />
+                          )
+                        })()}
+                      </div>
+                      <div className="mt-2 text-sm text-gray-600">
+                        {profileQuery.data.weight_kg > profileQuery.data.target_weight_kg
+                          ? `${(profileQuery.data.weight_kg - profileQuery.data.target_weight_kg).toFixed(1)} kg ${t('goals.tolose', 'à perdre')}`
+                          : profileQuery.data.weight_kg < profileQuery.data.target_weight_kg
+                          ? `${(profileQuery.data.target_weight_kg - profileQuery.data.weight_kg).toFixed(1)} kg ${t('goals.togain', 'à prendre')}`
+                          : `🎉 ${t('goals.achieved', 'Objectif atteint!')}`
+                        }
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Objectif Calories */}
+                  {profileQuery.data.daily_calories && (
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg">
+                          <span className="text-xl">🔥</span>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-900">{t('goals.caloriesGoal', 'Calories quotidiennes')}</h4>
+                          <span className="text-xs text-orange-600 font-medium">{t('goals.dailyTarget', 'Objectif journalier')}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-baseline gap-2 mb-3">
+                        <span className="text-3xl font-bold text-gray-900">{summary.today.calories_consumed}</span>
+                        <span className="text-gray-400">/</span>
+                        <span className="text-xl font-medium text-orange-600">{profileQuery.data.daily_calories}</span>
+                        <span className="text-sm text-gray-400">kcal</span>
+                      </div>
+                      <div className="relative h-3 bg-white/60 rounded-full overflow-hidden shadow-inner">
+                        <div
+                          className={`h-full rounded-full transition-all duration-700 ${
+                            summary.today.calories_consumed > profileQuery.data.daily_calories
+                              ? 'bg-gradient-to-r from-red-500 to-rose-500'
+                              : 'bg-gradient-to-r from-orange-500 to-amber-500'
+                          }`}
+                          style={{ width: `${Math.min(100, (summary.today.calories_consumed / profileQuery.data.daily_calories) * 100)}%` }}
+                        />
+                      </div>
+                      <div className="mt-2 text-sm text-gray-600">
+                        {summary.today.calories_consumed < profileQuery.data.daily_calories
+                          ? `${profileQuery.data.daily_calories - summary.today.calories_consumed} kcal ${t('goals.remaining', 'restantes')}`
+                          : `${summary.today.calories_consumed - profileQuery.data.daily_calories} kcal ${t('goals.excess', 'en excès')}`
+                        }
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Objectif Protéines */}
+                  {profileQuery.data.protein_g && (
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-200 p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-lg">
+                          <span className="text-xl">🥩</span>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-900">{t('goals.proteinGoal', 'Protéines quotidiennes')}</h4>
+                          <span className="text-xs text-rose-600 font-medium">{t('goals.dailyTarget', 'Objectif journalier')}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-baseline gap-2 mb-3">
+                        <span className="text-3xl font-bold text-gray-900">{summary.today.protein_g || 0}</span>
+                        <span className="text-gray-400">/</span>
+                        <span className="text-xl font-medium text-rose-600">{profileQuery.data.protein_g}</span>
+                        <span className="text-sm text-gray-400">g</span>
+                      </div>
+                      <div className="relative h-3 bg-white/60 rounded-full overflow-hidden shadow-inner">
+                        <div
+                          className="h-full bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transition-all duration-700"
+                          style={{ width: `${Math.min(100, ((summary.today.protein_g || 0) / profileQuery.data.protein_g) * 100)}%` }}
+                        />
+                      </div>
+                      <div className="mt-2 text-sm text-gray-600">
+                        {(summary.today.protein_g || 0) < profileQuery.data.protein_g
+                          ? `${profileQuery.data.protein_g - (summary.today.protein_g || 0)}g ${t('goals.remaining', 'restantes')}`
+                          : `🎉 ${t('goals.achieved', 'Objectif atteint!')}`
+                        }
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Objectifs personnalisés créés par l'utilisateur */}
+            {summary.goals.length > 0 && (
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span>🎯</span> {t('goals.customGoals', 'Vos objectifs personnalisés')}
+                </h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {summary.goals.map((goal, index) => (
+                    <div
+                      key={goal.id}
+                      className="reveal"
+                      style={{ animationDelay: `${0.1 * (index + 1)}s` }}
+                    >
+                      <GoalCard goal={goal} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Message si pas d'objectifs personnalisés et pas de profil */}
+            {summary.goals.length === 0 && !profileQuery.data && (
               <div className="glass-card p-12 text-center animate-fade-in-up">
                 <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-4xl">🎯</span>
                 </div>
                 <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('goals.noGoals')}</h4>
-                <p className="text-gray-500 mb-6">Définissez vos objectifs pour rester motivé</p>
+                <p className="text-gray-500 mb-6">{t('goals.noGoalsDesc', 'Définissez vos objectifs pour rester motivé')}</p>
                 <Button onClick={() => setActiveModal('goal')} className="gap-2">
                   <span>➕</span>
                   {t('goals.createGoal')}
@@ -645,17 +815,23 @@ export function TrackingPage() {
               </div>
             )}
 
-            <div className="grid md:grid-cols-2 gap-4">
-              {summary.goals.map((goal, index) => (
-                <div
-                  key={goal.id}
-                  className="reveal"
-                  style={{ animationDelay: `${0.1 * (index + 1)}s` }}
-                >
-                  <GoalCard goal={goal} />
+            {/* Encouragement pour créer des objectifs personnalisés */}
+            {summary.goals.length === 0 && profileQuery.data && (
+              <div className="glass-card p-6 text-center animate-fade-in-up border-dashed border-2 border-gray-300">
+                <div className="flex items-center justify-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">➕</span>
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-900">{t('goals.addCustom', 'Ajoutez vos propres objectifs')}</h4>
+                    <p className="text-sm text-gray-500">{t('goals.addCustomDesc', 'Créez des objectifs personnalisés pour suivre votre progression')}</p>
+                  </div>
+                  <Button onClick={() => setActiveModal('goal')} variant="outline" className="ml-auto">
+                    {t('goals.createGoal')}
+                  </Button>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
         )}
 
