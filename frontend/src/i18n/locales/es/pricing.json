@@ -48,5 +48,46 @@
     "exportPdf": "Exportar PDF",
     "mealPlans": "Planes de comidas IA",
     "apiAccess": "Acceso API (proximamente)"
+  },
+  "socialProof": {
+    "users": "usuarios activos",
+    "guarantee": "Garantia de devolucion de 30 dias"
+  },
+  "trustBadges": {
+    "moneyBack": "Devolucion en 30 dias",
+    "cancelAnytime": "Cancela cuando quieras",
+    "noHiddenFees": "Sin costes ocultos"
+  },
+  "comparison": {
+    "title": "Compara todas las funciones",
+    "feature": "Funcion",
+    "unlimited": "Ilimitado",
+    "features": {
+      "photoAnalysis": "Analisis de fotos",
+      "recipes": "Generacion de recetas",
+      "aiCoach": "Coach IA",
+      "history": "Historial",
+      "pdfExport": "Exportar PDF",
+      "prioritySupport": "Soporte prioritario"
+    }
+  },
+  "testimonials": {
+    "title": "Lo que dicen nuestros usuarios",
+    "user1": {
+      "role": "Perdio 12kg en 4 meses",
+      "text": "NutriProfile cambio completamente mi relacion con la comida. El analisis de fotos es increiblemente preciso!"
+    },
+    "user2": {
+      "role": "Entusiasta del fitness",
+      "text": "El coach IA me da consejos personalizados que realmente funcionan. Vale cada centimo de la suscripcion premium."
+    },
+    "user3": {
+      "role": "Profesional ocupado",
+      "text": "Por fin una app que no lleva horas. Escaneo mis comidas en segundos y sigo todo sin esfuerzo."
+    }
+  },
+  "guarantee": {
+    "title": "100% Satisfaccion garantizada",
+    "description": "Prueba NutriProfile Premium sin riesgos. Si no estas completamente satisfecho en 30 dias, te devolvemos el dinero completo, sin preguntas."
   }
 }

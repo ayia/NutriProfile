@@ -48,5 +48,46 @@
     "exportPdf": "PDF export",
     "mealPlans": "AI meal plans",
     "apiAccess": "API access (coming soon)"
+  },
+  "socialProof": {
+    "users": "active users",
+    "guarantee": "30-day money-back guarantee"
+  },
+  "trustBadges": {
+    "moneyBack": "30-day money-back",
+    "cancelAnytime": "Cancel anytime",
+    "noHiddenFees": "No hidden fees"
+  },
+  "comparison": {
+    "title": "Compare all features",
+    "feature": "Feature",
+    "unlimited": "Unlimited",
+    "features": {
+      "photoAnalysis": "Photo analysis",
+      "recipes": "Recipe generation",
+      "aiCoach": "AI Coach",
+      "history": "History",
+      "pdfExport": "PDF export",
+      "prioritySupport": "Priority support"
+    }
+  },
+  "testimonials": {
+    "title": "What our users say",
+    "user1": {
+      "role": "Lost 12kg in 4 months",
+      "text": "NutriProfile completely changed my relationship with food. The photo analysis is incredibly accurate!"
+    },
+    "user2": {
+      "role": "Fitness enthusiast",
+      "text": "The AI coach gives me personalized advice that really works. Worth every penny of the premium subscription."
+    },
+    "user3": {
+      "role": "Busy professional",
+      "text": "Finally an app that doesn't take hours. I scan my meals in seconds and track everything effortlessly."
+    }
+  },
+  "guarantee": {
+    "title": "100% Satisfaction Guaranteed",
+    "description": "Try NutriProfile Premium risk-free. If you're not completely satisfied within 30 days, we'll refund you in full, no questions asked."
   }
 }

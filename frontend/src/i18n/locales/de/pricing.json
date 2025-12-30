@@ -48,5 +48,46 @@
     "exportPdf": "PDF-Export",
     "mealPlans": "KI-Speiseplane",
     "apiAccess": "API-Zugang (bald verfugbar)"
+  },
+  "socialProof": {
+    "users": "aktive Benutzer",
+    "guarantee": "30-Tage-Geld-zuruck-Garantie"
+  },
+  "trustBadges": {
+    "moneyBack": "30-Tage-Geld-zuruck",
+    "cancelAnytime": "Jederzeit kundbar",
+    "noHiddenFees": "Keine versteckten Gebuhren"
+  },
+  "comparison": {
+    "title": "Alle Funktionen vergleichen",
+    "feature": "Funktion",
+    "unlimited": "Unbegrenzt",
+    "features": {
+      "photoAnalysis": "Fotoanalyse",
+      "recipes": "Rezeptgenerierung",
+      "aiCoach": "KI-Coach",
+      "history": "Verlauf",
+      "pdfExport": "PDF-Export",
+      "prioritySupport": "Prioritats-Support"
+    }
+  },
+  "testimonials": {
+    "title": "Was unsere Benutzer sagen",
+    "user1": {
+      "role": "12kg in 4 Monaten verloren",
+      "text": "NutriProfile hat meine Beziehung zum Essen komplett verandert. Die Fotoanalyse ist unglaublich genau!"
+    },
+    "user2": {
+      "role": "Fitness-Enthusiast",
+      "text": "Der KI-Coach gibt mir personalisierte Ratschlage, die wirklich funktionieren. Jeden Cent des Premium-Abos wert."
+    },
+    "user3": {
+      "role": "Beschaftigter Profi",
+      "text": "Endlich eine App, die nicht Stunden dauert. Ich scanne meine Mahlzeiten in Sekunden und tracke alles muhelos."
+    }
+  },
+  "guarantee": {
+    "title": "100% Zufriedenheitsgarantie",
+    "description": "Probieren Sie NutriProfile Premium risikofrei. Wenn Sie innerhalb von 30 Tagen nicht vollstandig zufrieden sind, erstatten wir Ihnen den vollen Betrag, ohne Fragen."
   }
 }

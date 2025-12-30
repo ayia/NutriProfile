@@ -48,5 +48,46 @@
     "exportPdf": "Exportar PDF",
     "mealPlans": "Planos de refeicoes IA",
     "apiAccess": "Acesso API (em breve)"
+  },
+  "socialProof": {
+    "users": "usuarios ativos",
+    "guarantee": "Garantia de reembolso de 30 dias"
+  },
+  "trustBadges": {
+    "moneyBack": "Reembolso em 30 dias",
+    "cancelAnytime": "Cancele a qualquer momento",
+    "noHiddenFees": "Sem taxas ocultas"
+  },
+  "comparison": {
+    "title": "Compare todas as funcionalidades",
+    "feature": "Funcionalidade",
+    "unlimited": "Ilimitado",
+    "features": {
+      "photoAnalysis": "Analise de fotos",
+      "recipes": "Geracao de receitas",
+      "aiCoach": "Coach IA",
+      "history": "Historico",
+      "pdfExport": "Exportar PDF",
+      "prioritySupport": "Suporte prioritario"
+    }
+  },
+  "testimonials": {
+    "title": "O que nossos usuarios dizem",
+    "user1": {
+      "role": "Perdeu 12kg em 4 meses",
+      "text": "NutriProfile mudou completamente minha relacao com a comida. A analise de fotos e incrivelmente precisa!"
+    },
+    "user2": {
+      "role": "Entusiasta de fitness",
+      "text": "O coach IA me da conselhos personalizados que realmente funcionam. Vale cada centavo da assinatura premium."
+    },
+    "user3": {
+      "role": "Profissional ocupado",
+      "text": "Finalmente um app que nao leva horas. Escanejo minhas refeicoes em segundos e acompanho tudo sem esforco."
+    }
+  },
+  "guarantee": {
+    "title": "100% Satisfacao garantida",
+    "description": "Experimente NutriProfile Premium sem riscos. Se voce nao estiver completamente satisfeito em 30 dias, devolvemos seu dinheiro integralmente, sem perguntas."
   }
 }

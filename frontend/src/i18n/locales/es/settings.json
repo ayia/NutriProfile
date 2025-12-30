@@ -78,6 +78,18 @@
     "tipsDesc": "Consejos de nuestro coach IA",
     "savePreferences": "Guardar preferencias"
   },
+  "gamification": {
+    "title": "Completar perfil",
+    "subtitle": "Completa tu perfil para desbloquear insignias y XP",
+    "progress": "Progreso",
+    "nextBadge": "{{points}}% más para desbloquear \"{{badge}}\"",
+    "badges": {
+      "starter": "Principiante",
+      "explorer": "Explorador",
+      "dedicated": "Dedicado",
+      "champion": "Campeón"
+    }
+  },
   "privacy": {
     "yourData": "Tus datos",
     "gdprNote": "De acuerdo con el RGPD, tienes derecho a acceder y descargar tus datos personales.",

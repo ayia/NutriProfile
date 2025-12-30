@@ -14,6 +14,26 @@
     "subtitle": "Créez votre profil nutritionnel pour recevoir des recommandations personnalisées basées sur vos objectifs et préférences.",
     "cta": "Créer mon profil"
   },
+  "newUser": {
+    "welcomeBadge": "Nouveau membre",
+    "welcomeTitle": "Bienvenue",
+    "welcomeSubtitle": "Vous êtes sur le point de commencer un parcours qui transformera vos habitudes alimentaires. Configurons votre profil personnalisé en seulement 2 minutes !",
+    "startCta": "Commencer mon parcours",
+    "stepsTitle": "Premiers pas",
+    "step1Title": "Créer votre profil",
+    "step1Desc": "Parlez-nous de vos objectifs, préférences et restrictions pour des recommandations personnalisées.",
+    "step1Cta": "Commencer maintenant",
+    "step2Title": "Scannez votre premier repas",
+    "step2Desc": "Prenez une photo de votre repas et notre IA l'analysera instantanément.",
+    "step3Title": "Suivez vos progrès",
+    "step3Desc": "Visualisez votre parcours avec des graphiques détaillés et des insights.",
+    "stepLocked": "Complétez d'abord l'étape 1",
+    "benefitsTitle": "Ce que vous débloquerez",
+    "benefit1": "Objectifs personnalisés",
+    "benefit2": "Analyse IA des repas",
+    "benefit3": "Recettes sur mesure",
+    "benefit4": "Récompenses & badges"
+  },
   "todaySummary": "Résumé du jour",
   "stats": {
     "caloriesConsumed": "Calories consommées",

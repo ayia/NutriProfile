@@ -78,6 +78,18 @@
     "tipsDesc": "نصائح وإرشادات من مدربنا الذكي",
     "savePreferences": "حفظ التفضيلات"
   },
+  "gamification": {
+    "title": "إكمال الملف الشخصي",
+    "subtitle": "أكمل ملفك الشخصي لفتح الشارات و XP",
+    "progress": "التقدم",
+    "nextBadge": "{{points}}% أكثر لفتح \"{{badge}}\"",
+    "badges": {
+      "starter": "مبتدئ",
+      "explorer": "مستكشف",
+      "dedicated": "ملتزم",
+      "champion": "بطل"
+    }
+  },
   "privacy": {
     "yourData": "بياناتك",
     "gdprNote": "وفقاً لقوانين حماية البيانات، لديك الحق في الوصول إلى بياناتك الشخصية وتحميلها.",

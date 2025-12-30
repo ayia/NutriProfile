@@ -14,6 +14,26 @@
     "subtitle": "Erstellen Sie Ihr Ernährungsprofil, um personalisierte Empfehlungen basierend auf Ihren Zielen und Vorlieben zu erhalten.",
     "cta": "Mein Profil erstellen"
   },
+  "newUser": {
+    "welcomeBadge": "Neues Mitglied",
+    "welcomeTitle": "Willkommen",
+    "welcomeSubtitle": "Sie stehen vor einer Reise, die Ihre Essgewohnheiten transformieren wird. Lassen Sie uns Ihr personalisiertes Profil in nur 2 Minuten einrichten!",
+    "startCta": "Meine Reise starten",
+    "stepsTitle": "Erste Schritte",
+    "step1Title": "Profil erstellen",
+    "step1Desc": "Erzählen Sie uns von Ihren Zielen, Vorlieben und Einschränkungen für personalisierte Empfehlungen.",
+    "step1Cta": "Jetzt starten",
+    "step2Title": "Erste Mahlzeit scannen",
+    "step2Desc": "Fotografieren Sie Ihre Mahlzeit und unsere KI analysiert sie sofort.",
+    "step3Title": "Fortschritt verfolgen",
+    "step3Desc": "Visualisieren Sie Ihre Reise mit detaillierten Diagrammen und Einblicken.",
+    "stepLocked": "Zuerst Schritt 1 abschließen",
+    "benefitsTitle": "Was Sie freischalten",
+    "benefit1": "Personalisierte Ziele",
+    "benefit2": "KI-Mahlzeitanalyse",
+    "benefit3": "Individuelle Rezepte",
+    "benefit4": "Belohnungen & Abzeichen"
+  },
   "todaySummary": "Zusammenfassung des Tages",
   "stats": {
     "caloriesConsumed": "Verbrauchte Kalorien",

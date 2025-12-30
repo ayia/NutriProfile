@@ -78,6 +78,18 @@
     "tipsDesc": "Tipps und Ratschläge von unserem KI-Coach",
     "savePreferences": "Einstellungen speichern"
   },
+  "gamification": {
+    "title": "Profilvollständigkeit",
+    "subtitle": "Vervollständigen Sie Ihr Profil, um Abzeichen und XP freizuschalten",
+    "progress": "Fortschritt",
+    "nextBadge": "{{points}}% mehr um \"{{badge}}\" freizuschalten",
+    "badges": {
+      "starter": "Anfänger",
+      "explorer": "Entdecker",
+      "dedicated": "Engagiert",
+      "champion": "Champion"
+    }
+  },
   "privacy": {
     "yourData": "Ihre Daten",
     "gdprNote": "Gemäß DSGVO haben Sie das Recht, auf Ihre persönlichen Daten zuzugreifen und sie herunterzuladen.",

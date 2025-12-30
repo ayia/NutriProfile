@@ -78,6 +78,18 @@
     "tipsDesc": "来自我们AI教练的建议",
     "savePreferences": "保存偏好"
   },
+  "gamification": {
+    "title": "档案完成度",
+    "subtitle": "完成您的档案以解锁徽章和XP",
+    "progress": "进度",
+    "nextBadge": "再增加{{points}}%即可解锁\"{{badge}}\"",
+    "badges": {
+      "starter": "新手",
+      "explorer": "探索者",
+      "dedicated": "专注者",
+      "champion": "冠军"
+    }
+  },
   "privacy": {
     "yourData": "您的数据",
     "gdprNote": "根据数据保护法规，您有权访问和下载您的个人数据。",

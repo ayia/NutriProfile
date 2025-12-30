@@ -48,5 +48,46 @@
     "exportPdf": "PDF导出",
     "mealPlans": "AI餐食计划",
     "apiAccess": "API访问（即将推出）"
+  },
+  "socialProof": {
+    "users": "活跃用户",
+    "guarantee": "30天退款保证"
+  },
+  "trustBadges": {
+    "moneyBack": "30天退款",
+    "cancelAnytime": "随时取消",
+    "noHiddenFees": "无隐藏费用"
+  },
+  "comparison": {
+    "title": "比较所有功能",
+    "feature": "功能",
+    "unlimited": "无限",
+    "features": {
+      "photoAnalysis": "照片分析",
+      "recipes": "食谱生成",
+      "aiCoach": "AI教练",
+      "history": "历史记录",
+      "pdfExport": "PDF导出",
+      "prioritySupport": "优先支持"
+    }
+  },
+  "testimonials": {
+    "title": "用户评价",
+    "user1": {
+      "role": "4个月减重12公斤",
+      "text": "NutriProfile彻底改变了我与食物的关系。照片分析非常准确！"
+    },
+    "user2": {
+      "role": "健身爱好者",
+      "text": "AI教练给我的个性化建议真的有效。高级订阅物超所值。"
+    },
+    "user3": {
+      "role": "忙碌的职业人士",
+      "text": "终于有一款不需要花费大量时间的应用。几秒钟扫描餐食，轻松追踪一切。"
+    }
+  },
+  "guarantee": {
+    "title": "100%满意保证",
+    "description": "无风险试用NutriProfile高级版。如果您在30天内不完全满意，我们将全额退款，无需任何理由。"
   }
 }

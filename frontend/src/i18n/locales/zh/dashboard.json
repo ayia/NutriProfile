@@ -14,6 +14,26 @@
     "subtitle": "创建您的营养档案，根据您的目标和偏好获取个性化建议。",
     "cta": "创建我的档案"
   },
+  "newUser": {
+    "welcomeBadge": "新成员",
+    "welcomeTitle": "欢迎",
+    "welcomeSubtitle": "您即将开始一段改变饮食习惯的旅程。让我们在2分钟内设置您的个性化档案！",
+    "startCta": "开始我的旅程",
+    "stepsTitle": "入门指南",
+    "step1Title": "创建您的档案",
+    "step1Desc": "告诉我们您的目标、偏好和限制，以获取个性化建议。",
+    "step1Cta": "立即开始",
+    "step2Title": "扫描您的第一餐",
+    "step2Desc": "拍摄您的餐食照片，我们的AI将立即分析。",
+    "step3Title": "追踪您的进度",
+    "step3Desc": "通过详细的图表和洞察查看您的旅程。",
+    "stepLocked": "请先完成第1步",
+    "benefitsTitle": "您将解锁的功能",
+    "benefit1": "个性化目标",
+    "benefit2": "AI餐食分析",
+    "benefit3": "定制食谱",
+    "benefit4": "奖励与徽章"
+  },
   "todaySummary": "今日摘要",
   "stats": {
     "caloriesConsumed": "已摄入卡路里",

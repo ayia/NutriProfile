@@ -14,6 +14,26 @@
     "subtitle": "Crea tu perfil nutricional para recibir recomendaciones personalizadas basadas en tus objetivos y preferencias.",
     "cta": "Crear mi perfil"
   },
+  "newUser": {
+    "welcomeBadge": "Nuevo miembro",
+    "welcomeTitle": "Bienvenido",
+    "welcomeSubtitle": "Estás a punto de comenzar un viaje que transformará tus hábitos alimenticios. ¡Configuremos tu perfil personalizado en solo 2 minutos!",
+    "startCta": "Comenzar mi viaje",
+    "stepsTitle": "Primeros pasos",
+    "step1Title": "Crear tu perfil",
+    "step1Desc": "Cuéntanos sobre tus objetivos, preferencias y restricciones para recomendaciones personalizadas.",
+    "step1Cta": "Empezar ahora",
+    "step2Title": "Escanear tu primera comida",
+    "step2Desc": "Toma una foto de tu comida y nuestra IA la analizará al instante.",
+    "step3Title": "Seguir tu progreso",
+    "step3Desc": "Visualiza tu viaje con gráficos detallados e insights.",
+    "stepLocked": "Completa primero el paso 1",
+    "benefitsTitle": "Lo que desbloquearás",
+    "benefit1": "Objetivos personalizados",
+    "benefit2": "Análisis IA de comidas",
+    "benefit3": "Recetas a medida",
+    "benefit4": "Recompensas e insignias"
+  },
   "todaySummary": "Resumen del día",
   "stats": {
     "caloriesConsumed": "Calorías consumidas",

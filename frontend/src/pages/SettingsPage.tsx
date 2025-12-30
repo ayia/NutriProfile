@@ -37,6 +37,11 @@ import {
   KeyRound,
   Cookie,
   CheckCircle,
+  Star,
+  Medal,
+  Crown,
+  Sparkles,
+  Zap,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -265,6 +270,41 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
   const [editSection, setEditSection] = useState<string | null>(null)
   const { register, handleSubmit, reset } = useForm<Partial<ProfileCreate>>()
 
+  // Calculate profile completion percentage and badges
+  const calculateCompletion = () => {
+    if (!profile) return { percentage: 0, completedBadges: [], nextBadge: null }
+
+    const fields = [
+      { filled: !!profile.age, category: 'basic' },
+      { filled: !!profile.height_cm, category: 'basic' },
+      { filled: !!profile.weight_kg, category: 'basic' },
+      { filled: !!profile.goal, category: 'goals' },
+      { filled: !!profile.activity_level, category: 'goals' },
+      { filled: !!profile.diet_type, category: 'diet' },
+      { filled: profile.allergies && profile.allergies.length > 0, category: 'diet' },
+      { filled: profile.medical_conditions && profile.medical_conditions.length > 0, category: 'health' },
+    ]
+
+    const filledCount = fields.filter(f => f.filled).length
+    const percentage = Math.round((filledCount / fields.length) * 100)
+
+    // Define badges
+    const allBadges = [
+      { id: 'starter', name: t('gamification.badges.starter'), icon: Star, color: 'from-yellow-400 to-amber-500', threshold: 25, xp: 10 },
+      { id: 'explorer', name: t('gamification.badges.explorer'), icon: Medal, color: 'from-blue-400 to-indigo-500', threshold: 50, xp: 25 },
+      { id: 'dedicated', name: t('gamification.badges.dedicated'), icon: Trophy, color: 'from-purple-400 to-pink-500', threshold: 75, xp: 50 },
+      { id: 'champion', name: t('gamification.badges.champion'), icon: Crown, color: 'from-amber-400 to-orange-500', threshold: 100, xp: 100 },
+    ]
+
+    const completedBadges = allBadges.filter(b => percentage >= b.threshold)
+    const nextBadge = allBadges.find(b => percentage < b.threshold)
+    const totalXP = completedBadges.reduce((sum, b) => sum + b.xp, 0)
+
+    return { percentage, completedBadges, nextBadge, totalXP, allBadges }
+  }
+
+  const { percentage, completedBadges, nextBadge, totalXP, allBadges } = calculateCompletion()
+
   if (isLoading) {
     return (
       <div className="p-8 space-y-8">
@@ -330,6 +370,84 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
 
   return (
     <div className="divide-y divide-gray-100">
+      {/* Gamification - Profile Completion */}
+      <div className="p-6 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 reveal">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Sparkles className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">{t('gamification.title')}</h3>
+            <p className="text-sm text-gray-500">{t('gamification.subtitle')}</p>
+          </div>
+          <div className="ml-auto flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full shadow-lg">
+            <Zap className="w-4 h-4 text-white" />
+            <span className="font-bold text-white">{totalXP} XP</span>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm font-medium text-gray-600">{t('gamification.progress')}</span>
+            <span className="text-sm font-bold text-indigo-600">{percentage}%</span>
+          </div>
+          <div className="h-4 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+            <div
+              className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out relative"
+              style={{ width: `${percentage}%` }}
+            >
+              <div className="absolute inset-0 bg-white/20 animate-pulse" />
+            </div>
+          </div>
+          {nextBadge && (
+            <p className="text-xs text-gray-500 mt-2">
+              {t('gamification.nextBadge', { badge: nextBadge.name, points: nextBadge.threshold - percentage })}
+            </p>
+          )}
+        </div>
+
+        {/* Badges */}
+        <div className="grid grid-cols-4 gap-3">
+          {allBadges?.map((badge) => {
+            const isUnlocked = completedBadges?.some(b => b.id === badge.id)
+            const BadgeIcon = badge.icon
+
+            return (
+              <div
+                key={badge.id}
+                className={`relative flex flex-col items-center p-3 rounded-xl transition-all ${
+                  isUnlocked
+                    ? 'bg-white shadow-lg hover:shadow-xl hover:-translate-y-1'
+                    : 'bg-gray-100/50 opacity-50'
+                }`}
+              >
+                <div
+                  className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
+                    isUnlocked
+                      ? `bg-gradient-to-br ${badge.color} shadow-lg`
+                      : 'bg-gray-300'
+                  }`}
+                >
+                  <BadgeIcon className={`w-6 h-6 ${isUnlocked ? 'text-white' : 'text-gray-400'}`} />
+                </div>
+                <span className={`text-xs font-medium text-center ${isUnlocked ? 'text-gray-700' : 'text-gray-400'}`}>
+                  {badge.name}
+                </span>
+                <span className={`text-xs ${isUnlocked ? 'text-indigo-500' : 'text-gray-400'}`}>
+                  +{badge.xp} XP
+                </span>
+                {isUnlocked && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center shadow">
+                    <CheckCircle className="w-3 h-3 text-white" />
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
       {sections.map((section, index) => (
         <div key={section.id} className="p-6 reveal" style={{ animationDelay: `${0.1 * (index + 1)}s` }}>
           <div className="flex items-center justify-between mb-6">
