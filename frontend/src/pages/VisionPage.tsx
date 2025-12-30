@@ -7,6 +7,19 @@ import { AnalysisResult } from '@/components/vision/AnalysisResult'
 import { FoodLogCard } from '@/components/vision/FoodLogCard'
 import { Button } from '@/components/ui/Button'
 import { UsageBanner } from '@/components/subscription/UsageBanner'
+import {
+  Camera,
+  BarChart3,
+  History,
+  Flame,
+  Dumbbell,
+  Wheat,
+  Droplet,
+  Droplets,
+  Utensils,
+  Calendar,
+  type LucideIcon,
+} from 'lucide-react'
 
 type Tab = 'scan' | 'today' | 'history'
 
@@ -52,10 +65,10 @@ export function VisionPage() {
     return () => observerRef.current?.disconnect()
   }, [activeTab, todayQuery.data, historyQuery.data])
 
-  const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: 'scan', label: t('tabs.scan'), icon: '📸' },
-    { id: 'today', label: t('tabs.today'), icon: '📊' },
-    { id: 'history', label: t('tabs.history'), icon: '📜' },
+  const tabs: { id: Tab; label: string; IconComponent: LucideIcon }[] = [
+    { id: 'scan', label: t('tabs.scan'), IconComponent: Camera },
+    { id: 'today', label: t('tabs.today'), IconComponent: BarChart3 },
+    { id: 'history', label: t('tabs.history'), IconComponent: History },
   ]
 
   const handleAnalysisComplete = (data: AnalysisData) => {
@@ -94,7 +107,7 @@ export function VisionPage() {
         {/* Header - Enhanced & Responsive */}
         <div className="mb-6 sm:mb-8 animate-fade-in">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 glass-card text-secondary-700 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
-            <span className="animate-pulse">📷</span>
+            <Camera className="w-4 h-4 animate-pulse" />
             {t('subtitle')}
           </div>
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
@@ -115,7 +128,7 @@ export function VisionPage() {
               }`}
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
-              <span className={`text-base sm:text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
+              <tab.IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`} />
               <span>{tab.label}</span>
             </button>
           ))}
@@ -131,7 +144,7 @@ export function VisionPage() {
               <div className="glass-card p-8 hover-lift">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-2xl">📸</span>
+                    <Camera className="w-6 h-6 text-white" />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900">{t('scan.title')}</h2>
                 </div>
@@ -176,7 +189,7 @@ export function VisionPage() {
               <div className="glass-card p-6 reveal" style={{ animationDelay: '0.2s' }}>
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-xl">📊</span>
+                    <BarChart3 className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900">{t('today.nutritionSummary')}</h3>
                 </div>
@@ -186,7 +199,7 @@ export function VisionPage() {
                   <div className="relative p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white border border-gray-100">
                     <div className="flex justify-between items-center mb-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl">🔥</span>
+                        <Flame className="w-6 h-6 text-orange-500" />
                         <span className="font-semibold text-gray-900">{t('today.calories')}</span>
                       </div>
                       <span className="text-lg font-bold text-gray-900">
@@ -211,12 +224,12 @@ export function VisionPage() {
                   {/* Macros - Grid - Responsive */}
                   <div className="grid grid-cols-3 gap-2 sm:gap-4">
                     {[
-                      { key: 'protein', icon: '💪', label: t('today.protein'), value: nutrition.total_protein, percent: nutrition.protein_percent, color: 'secondary' },
-                      { key: 'carbs', icon: '🌾', label: t('today.carbs'), value: nutrition.total_carbs, percent: nutrition.carbs_percent, color: 'warning' },
-                      { key: 'fat', icon: '🥑', label: t('today.fat'), value: nutrition.total_fat, percent: nutrition.fat_percent, color: 'accent' },
+                      { key: 'protein', IconComponent: Dumbbell, label: t('today.protein'), value: nutrition.total_protein, percent: nutrition.protein_percent, color: 'secondary', iconColor: 'text-blue-500' },
+                      { key: 'carbs', IconComponent: Wheat, label: t('today.carbs'), value: nutrition.total_carbs, percent: nutrition.carbs_percent, color: 'warning', iconColor: 'text-amber-500' },
+                      { key: 'fat', IconComponent: Droplet, label: t('today.fat'), value: nutrition.total_fat, percent: nutrition.fat_percent, color: 'accent', iconColor: 'text-purple-500' },
                     ].map((macro) => (
                       <div key={macro.key} className="glass-card p-4 text-center hover-lift">
-                        <span className="text-2xl block mb-2">{macro.icon}</span>
+                        <macro.IconComponent className={`w-6 h-6 mx-auto mb-2 ${macro.iconColor}`} />
                         <div className={`text-2xl font-bold text-${macro.color}-600`}>
                           {Math.round(macro.value * 10) / 10}g
                         </div>
@@ -235,7 +248,7 @@ export function VisionPage() {
                   <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg animate-pulse-soft">
-                        <span className="text-2xl">💧</span>
+                        <Droplets className="w-6 h-6 text-white" />
                       </div>
                       <div>
                         <div className="font-semibold text-gray-900">{t('today.water')}</div>
@@ -264,7 +277,7 @@ export function VisionPage() {
             <div className="space-y-4 reveal" style={{ animationDelay: '0.3s' }}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-accent-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-xl">🍽️</span>
+                  <Utensils className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">
                   {t('today.meals')} ({todayQuery.data?.meals.length || 0})
@@ -281,12 +294,12 @@ export function VisionPage() {
               {todayQuery.data?.meals.length === 0 && (
                 <div className="glass-card p-12 text-center">
                   <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-4xl">🍽️</span>
+                    <Utensils className="w-10 h-10 text-gray-400" />
                   </div>
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('today.noMeals')}</h4>
                   <p className="text-gray-500 mb-6">Scannez votre premier repas pour commencer</p>
                   <Button onClick={() => setActiveTab('scan')} className="gap-2">
-                    <span>📸</span>
+                    <Camera className="w-4 h-4" />
                     {t('today.scanFirst')}
                   </Button>
                 </div>
@@ -319,12 +332,12 @@ export function VisionPage() {
             {historyQuery.data?.length === 0 && (
               <div className="glass-card p-12 text-center animate-fade-in-up">
                 <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-4xl">📜</span>
+                  <History className="w-10 h-10 text-gray-400" />
                 </div>
                 <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('history.noHistory')}</h4>
                 <p className="text-gray-500 mb-6">Votre historique de repas apparaîtra ici</p>
                 <Button onClick={() => setActiveTab('scan')} className="gap-2">
-                  <span>📸</span>
+                  <Camera className="w-4 h-4" />
                   Commencer à scanner
                 </Button>
               </div>
@@ -344,7 +357,7 @@ export function VisionPage() {
                   style={{ animationDelay: `${0.05 * (index + 1)}s` }}
                 >
                   <div className="flex items-center gap-2 text-sm text-gray-500 mb-3 ml-1">
-                    <span className="text-lg">📅</span>
+                    <Calendar className="w-4 h-4" />
                     <span className="font-medium">{date}</span>
                   </div>
                   <FoodLogCard log={log} />

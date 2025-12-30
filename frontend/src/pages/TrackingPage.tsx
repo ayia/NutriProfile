@@ -13,6 +13,24 @@ import { GoalCard } from '@/components/tracking/GoalCard'
 import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
 import { ACTIVITY_TYPES } from '@/types/tracking'
+import {
+  BarChart3,
+  Activity,
+  Scale,
+  Target,
+  TrendingUp,
+  Droplets,
+  Calendar,
+  Trophy,
+  AlertTriangle,
+  RefreshCw,
+  Plus,
+  Flame,
+  MessageSquare,
+  Sparkles,
+  Dumbbell,
+  type LucideIcon,
+} from 'lucide-react'
 
 type Tab = 'overview' | 'activities' | 'weight' | 'goals'
 type Modal = 'activity' | 'weight' | 'goal' | 'water' | null
@@ -94,11 +112,11 @@ export function TrackingPage() {
     return () => observerRef.current?.disconnect()
   }, [activeTab, summaryQuery.data, activitiesQuery.data])
 
-  const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: 'overview', label: t('tabs.overview'), icon: '📊' },
-    { id: 'activities', label: t('tabs.activities'), icon: '🏃' },
-    { id: 'weight', label: t('tabs.weight'), icon: '⚖️' },
-    { id: 'goals', label: t('tabs.goals'), icon: '🎯' },
+  const tabs: { id: Tab; label: string; IconComponent: LucideIcon }[] = [
+    { id: 'overview', label: t('tabs.overview'), IconComponent: BarChart3 },
+    { id: 'activities', label: t('tabs.activities'), IconComponent: Activity },
+    { id: 'weight', label: t('tabs.weight'), IconComponent: Scale },
+    { id: 'goals', label: t('tabs.goals'), IconComponent: Target },
   ]
 
   const summary = summaryQuery.data
@@ -114,7 +132,7 @@ export function TrackingPage() {
         {/* Header */}
         <div className="mb-8 animate-fade-in">
           <div className="inline-flex items-center gap-2 px-4 py-2 glass-card text-accent-700 text-sm font-medium mb-4">
-            <span className="animate-pulse">🏃</span>
+            <Activity className="w-4 h-4 animate-pulse" />
             {t('subtitle')}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
@@ -135,7 +153,7 @@ export function TrackingPage() {
               }`}
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
-              <span className={`text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
+              <tab.IconComponent className={`w-5 h-5 ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`} />
               <span>{tab.label}</span>
             </button>
           ))}
@@ -189,7 +207,7 @@ export function TrackingPage() {
         {activeTab === 'overview' && summaryQuery.isError && (
           <div className="glass-card p-12 text-center animate-fade-in">
             <div className="w-20 h-20 bg-gradient-to-br from-error-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl">⚠️</span>
+              <AlertTriangle className="w-10 h-10 text-error-500" />
             </div>
             <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('error.title', 'Erreur de chargement')}</h4>
             <p className="text-gray-500 mb-6">{t('error.loadFailed', 'Impossible de charger les données. Veuillez réessayer.')}</p>
@@ -197,7 +215,7 @@ export function TrackingPage() {
               onClick={() => summaryQuery.refetch()}
               className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2 mx-auto"
             >
-              <span>🔄</span> {t('error.retry', 'Réessayer')}
+              <RefreshCw className="w-4 h-4" /> {t('error.retry', 'Réessayer')}
             </button>
           </div>
         )}
@@ -209,7 +227,7 @@ export function TrackingPage() {
             <div className="glass-card p-6 reveal animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-xl">📈</span>
+                  <TrendingUp className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">{t('today.title')}</h3>
               </div>
@@ -241,7 +259,7 @@ export function TrackingPage() {
                   </div>
                   <div className="text-[10px] sm:text-xs text-gray-500 mt-1">{t('today.waterMl')}</div>
                   <div className="text-[10px] sm:text-xs text-cyan-500 mt-1 sm:mt-2 font-medium flex items-center justify-center gap-1">
-                    <span className="animate-pulse">💧</span> {t('today.addWater')}
+                    <Droplets className="w-3 h-3 animate-pulse" /> {t('today.addWater')}
                   </div>
                 </button>
               </div>
@@ -253,7 +271,7 @@ export function TrackingPage() {
                 <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <span className="text-xl">📊</span>
+                      <BarChart3 className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900">{t('progress.title')}</h3>
                   </div>
@@ -277,19 +295,19 @@ export function TrackingPage() {
                 <div className="space-y-8">
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-primary-50 to-emerald-50 border border-primary-100">
                     <h4 className="text-sm font-semibold text-primary-700 mb-4 flex items-center gap-2">
-                      <span>🔥</span> {t('progress.calories')}
+                      <Flame className="w-4 h-4" /> {t('progress.calories')}
                     </h4>
                     <ProgressChart data={progress} metric="calories" color="#10B981" />
                   </div>
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-warning-50 to-amber-50 border border-warning-100">
                     <h4 className="text-sm font-semibold text-warning-700 mb-4 flex items-center gap-2">
-                      <span>🏃</span> {t('progress.activityMinutes')}
+                      <Activity className="w-4 h-4" /> {t('progress.activityMinutes')}
                     </h4>
                     <ProgressChart data={progress} metric="activity_minutes" color="#F59E0B" />
                   </div>
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100">
                     <h4 className="text-sm font-semibold text-indigo-700 mb-4 flex items-center gap-2">
-                      <span>⚖️</span> {t('progress.weight')}
+                      <Scale className="w-4 h-4" /> {t('progress.weight')}
                     </h4>
                     <ProgressChart data={progress} metric="weight" color="#6366F1" />
                   </div>
@@ -301,7 +319,7 @@ export function TrackingPage() {
             <div className="glass-card p-6 reveal" style={{ animationDelay: '0.4s' }}>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-gradient-to-br from-warning-400 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-xl">📅</span>
+                  <Calendar className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">{t('week.title')}</h3>
               </div>
@@ -356,7 +374,7 @@ export function TrackingPage() {
               <div className="glass-card p-6 reveal" style={{ animationDelay: '0.5s' }}>
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 bg-gradient-to-br from-accent-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-xl">🏆</span>
+                    <Trophy className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900">{t('activities.title')}</h3>
                 </div>
@@ -402,19 +420,19 @@ export function TrackingPage() {
                 onClick={() => setActiveModal('activity')}
                 className="flex-1 min-w-[140px] px-6 py-4 bg-gradient-to-r from-accent-500 to-amber-500 text-white rounded-2xl font-semibold shadow-lg shadow-accent-500/30 hover:shadow-xl hover:shadow-accent-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
               >
-                <span>🏃</span> {t('actions.addActivity')}
+                <Activity className="w-5 h-5" /> {t('actions.addActivity')}
               </button>
               <button
                 onClick={() => setActiveModal('weight')}
                 className="flex-1 min-w-[140px] px-6 py-4 glass-card text-gray-700 font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
               >
-                <span>⚖️</span> {t('actions.addWeight')}
+                <Scale className="w-5 h-5" /> {t('actions.addWeight')}
               </button>
               <button
                 onClick={() => setActiveModal('water')}
                 className="flex-1 min-w-[140px] px-6 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-2xl font-semibold shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
               >
-                <span>💧</span> {t('actions.addWater')}
+                <Droplets className="w-5 h-5" /> {t('actions.addWater')}
               </button>
             </div>
           </div>
@@ -428,7 +446,7 @@ export function TrackingPage() {
                 onClick={() => setActiveModal('activity')}
                 className="px-6 py-3 bg-gradient-to-r from-accent-500 to-amber-500 text-white rounded-2xl font-semibold shadow-lg shadow-accent-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
               >
-                <span>➕</span> {t('activities.newActivity')}
+                <Plus className="w-5 h-5" /> {t('activities.newActivity')}
               </button>
             </div>
 
@@ -442,12 +460,12 @@ export function TrackingPage() {
             {activitiesQuery.data?.length === 0 && (
               <div className="glass-card p-12 text-center animate-fade-in-up">
                 <div className="w-20 h-20 bg-gradient-to-br from-accent-100 to-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-4xl">🏃</span>
+                  <Activity className="w-10 h-10 text-accent-500" />
                 </div>
                 <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('activities.noActivities')}</h4>
                 <p className="text-gray-500 mb-6">Enregistrez vos activités pour suivre vos progrès</p>
                 <Button onClick={() => setActiveModal('activity')} className="gap-2">
-                  <span>➕</span>
+                  <Plus className="w-4 h-4" />
                   {t('activities.addActivity')}
                 </Button>
               </div>
@@ -475,7 +493,7 @@ export function TrackingPage() {
                         </span>
                       </div>
                       <div className="text-sm text-gray-500 flex items-center gap-2">
-                        <span>📅</span>
+                        <Calendar className="w-4 h-4" />
                         {new Date(activity.activity_date).toLocaleDateString(i18n.language, {
                           weekday: 'long',
                           day: 'numeric',
@@ -486,13 +504,13 @@ export function TrackingPage() {
                     <div className="text-right">
                       <div className="text-2xl font-bold text-gray-900">{activity.duration_minutes} <span className="text-sm font-normal text-gray-400">{t('common.min')}</span></div>
                       <div className="text-sm font-semibold text-accent-600 flex items-center justify-end gap-1">
-                        <span>🔥</span> {activity.calories_burned} {t('common.kcal')}
+                        <Flame className="w-4 h-4" /> {activity.calories_burned} {t('common.kcal')}
                       </div>
                     </div>
                   </div>
                   {activity.notes && (
-                    <div className="mt-4 text-sm text-gray-600 bg-gradient-to-r from-gray-50 to-white p-3 rounded-xl border border-gray-100">
-                      💬 {activity.notes}
+                    <div className="mt-4 text-sm text-gray-600 bg-gradient-to-r from-gray-50 to-white p-3 rounded-xl border border-gray-100 flex items-start gap-2">
+                      <MessageSquare className="w-4 h-4 mt-0.5 flex-shrink-0" /> {activity.notes}
                     </div>
                   )}
                 </div>
@@ -509,7 +527,7 @@ export function TrackingPage() {
                 onClick={() => setActiveModal('weight')}
                 className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl font-semibold shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
               >
-                <span>➕</span> {t('weight.newWeight')}
+                <Plus className="w-5 h-5" /> {t('weight.newWeight')}
               </button>
             </div>
 
@@ -517,7 +535,7 @@ export function TrackingPage() {
               <div className="glass-card p-6 animate-fade-in-up reveal" style={{ animationDelay: '0.1s' }}>
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-xl">📈</span>
+                    <TrendingUp className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900">{t('weight.title')}</h3>
                 </div>
@@ -535,12 +553,12 @@ export function TrackingPage() {
             {weightsQuery.data?.length === 0 && (
               <div className="glass-card p-12 text-center animate-fade-in-up">
                 <div className="w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-4xl">⚖️</span>
+                  <Scale className="w-10 h-10 text-indigo-500" />
                 </div>
                 <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('weight.noWeight')}</h4>
                 <p className="text-gray-500 mb-6">Enregistrez votre poids pour suivre votre progression</p>
                 <Button onClick={() => setActiveModal('weight')} className="gap-2">
-                  <span>➕</span>
+                  <Plus className="w-4 h-4" />
                   {t('weight.addWeight')}
                 </Button>
               </div>
@@ -559,7 +577,7 @@ export function TrackingPage() {
                   >
                     <div>
                       <div className="text-sm text-gray-500 flex items-center gap-2 mb-1">
-                        <span>📅</span>
+                        <Calendar className="w-4 h-4" />
                         {new Date(log.log_date).toLocaleDateString(i18n.language, {
                           weekday: 'long',
                           day: 'numeric',
@@ -614,7 +632,7 @@ export function TrackingPage() {
         {activeTab === 'goals' && summaryQuery.isError && (
           <div className="glass-card p-12 text-center animate-fade-in">
             <div className="w-20 h-20 bg-gradient-to-br from-error-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl">⚠️</span>
+              <AlertTriangle className="w-10 h-10 text-error-500" />
             </div>
             <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('error.title', 'Erreur de chargement')}</h4>
             <p className="text-gray-500 mb-6">{t('error.loadFailed', 'Impossible de charger les objectifs.')}</p>
@@ -622,7 +640,7 @@ export function TrackingPage() {
               onClick={() => summaryQuery.refetch()}
               className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2 mx-auto"
             >
-              <span>🔄</span> {t('error.retry', 'Réessayer')}
+              <RefreshCw className="w-4 h-4" /> {t('error.retry', 'Réessayer')}
             </button>
           </div>
         )}
@@ -640,7 +658,7 @@ export function TrackingPage() {
                 onClick={() => setActiveModal('goal')}
                 className="px-6 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-2xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
               >
-                <span>➕</span> {t('goals.newGoal')}
+                <Plus className="w-5 h-5" /> {t('goals.newGoal')}
               </button>
             </div>
 
@@ -649,7 +667,7 @@ export function TrackingPage() {
               <div className="glass-card p-6 reveal animate-fade-in-up">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-2xl">✨</span>
+                    <Sparkles className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-gray-900">{t('goals.profileBased', 'Objectifs basés sur votre profil')}</h3>
@@ -663,7 +681,7 @@ export function TrackingPage() {
                     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-200 p-5">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
-                          <span className="text-xl">⚖️</span>
+                          <Scale className="w-5 h-5 text-white" />
                         </div>
                         <div>
                           <h4 className="font-bold text-gray-900">{t('goals.weightGoal', 'Objectif Poids')}</h4>
@@ -712,7 +730,7 @@ export function TrackingPage() {
                     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 p-5">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg">
-                          <span className="text-xl">🔥</span>
+                          <Flame className="w-5 h-5 text-white" />
                         </div>
                         <div>
                           <h4 className="font-bold text-gray-900">{t('goals.caloriesGoal', 'Calories quotidiennes')}</h4>
@@ -749,7 +767,7 @@ export function TrackingPage() {
                     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-200 p-5">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-lg">
-                          <span className="text-xl">🥩</span>
+                          <Dumbbell className="w-5 h-5 text-white" />
                         </div>
                         <div>
                           <h4 className="font-bold text-gray-900">{t('goals.proteinGoal', 'Protéines quotidiennes')}</h4>
@@ -784,7 +802,7 @@ export function TrackingPage() {
             {summary.goals.length > 0 && (
               <div>
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <span>🎯</span> {t('goals.customGoals', 'Vos objectifs personnalisés')}
+                  <Target className="w-5 h-5 text-primary-500" /> {t('goals.customGoals', 'Vos objectifs personnalisés')}
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {summary.goals.map((goal, index) => (
@@ -804,12 +822,12 @@ export function TrackingPage() {
             {summary.goals.length === 0 && !profileQuery.data && (
               <div className="glass-card p-12 text-center animate-fade-in-up">
                 <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-4xl">🎯</span>
+                  <Target className="w-10 h-10 text-primary-500" />
                 </div>
                 <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('goals.noGoals')}</h4>
                 <p className="text-gray-500 mb-6">{t('goals.noGoalsDesc', 'Définissez vos objectifs pour rester motivé')}</p>
                 <Button onClick={() => setActiveModal('goal')} className="gap-2">
-                  <span>➕</span>
+                  <Plus className="w-4 h-4" />
                   {t('goals.createGoal')}
                 </Button>
               </div>
@@ -820,7 +838,7 @@ export function TrackingPage() {
               <div className="glass-card p-6 text-center animate-fade-in-up border-dashed border-2 border-gray-300">
                 <div className="flex items-center justify-center gap-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">➕</span>
+                    <Plus className="w-6 h-6 text-gray-500" />
                   </div>
                   <div className="text-left">
                     <h4 className="font-semibold text-gray-900">{t('goals.addCustom', 'Ajoutez vos propres objectifs')}</h4>
@@ -847,11 +865,10 @@ export function TrackingPage() {
                     activeModal === 'goal' ? 'bg-gradient-to-br from-primary-500 to-emerald-500' :
                     'bg-gradient-to-br from-cyan-500 to-blue-500'
                   }`}>
-                    <span className="text-2xl">
-                      {activeModal === 'activity' ? '🏃' :
-                       activeModal === 'weight' ? '⚖️' :
-                       activeModal === 'goal' ? '🎯' : '💧'}
-                    </span>
+                    {activeModal === 'activity' && <Activity className="w-6 h-6 text-white" />}
+                    {activeModal === 'weight' && <Scale className="w-6 h-6 text-white" />}
+                    {activeModal === 'goal' && <Target className="w-6 h-6 text-white" />}
+                    {activeModal === 'water' && <Droplets className="w-6 h-6 text-white" />}
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900">
                     {activeModal === 'activity' && t('modal.newActivity')}
