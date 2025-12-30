@@ -97,43 +97,43 @@ export function SettingsPage() {
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-br from-secondary-100/40 to-cyan-100/40 rounded-full blur-3xl -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* En-tête avec avatar - Enhanced */}
-        <div className="glass-card p-8 mb-8 animate-fade-in">
-          <div className="flex items-center gap-6">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-emerald-400 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
-              <div className="relative w-24 h-24 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-2xl flex items-center justify-center text-white text-4xl font-bold shadow-xl transform group-hover:scale-105 transition-transform">
+        {/* En-tête avec avatar - Enhanced & Responsive */}
+        <div className="glass-card p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 animate-fade-in">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
+            <div className="relative group flex-shrink-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-emerald-400 rounded-xl sm:rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl sm:rounded-2xl flex items-center justify-center text-white text-2xl sm:text-3xl md:text-4xl font-bold shadow-xl transform group-hover:scale-105 transition-transform">
                 {user?.name?.charAt(0).toUpperCase() || '?'}
               </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">{user?.name}</h1>
-              <p className="text-gray-500 mt-1">{user?.email}</p>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 truncate">{user?.name}</h1>
+              <p className="text-gray-500 mt-1 text-sm sm:text-base truncate">{user?.email}</p>
               {profileQuery.data?.goal && (
-                <span className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-medium rounded-full shadow-lg">
+                <span className="inline-flex items-center gap-1.5 sm:gap-2 mt-2 sm:mt-3 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-xs sm:text-sm font-medium rounded-full shadow-lg">
                   <span>🎯</span>
-                  {GOAL_LABELS[profileQuery.data.goal]}
+                  <span className="truncate max-w-[150px] sm:max-w-none">{GOAL_LABELS[profileQuery.data.goal]}</span>
                 </span>
               )}
             </div>
           </div>
         </div>
 
-        {/* Navigation par onglets - Enhanced */}
-        <div className="flex gap-3 mb-8 overflow-x-auto pb-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+        {/* Navigation par onglets - Enhanced & Responsive */}
+        <div className="flex gap-2 sm:gap-3 mb-6 sm:mb-8 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 animate-fade-in-up scrollbar-hide" style={{ animationDelay: '0.1s' }}>
           {tabs.map((tab, index) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-medium transition-all duration-300 whitespace-nowrap ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-medium transition-all duration-300 whitespace-nowrap text-sm sm:text-base ${
                 activeTab === tab.id
                   ? `bg-gradient-to-r ${tab.color} text-white shadow-lg scale-105`
                   : 'glass-card text-gray-600 hover:text-gray-900 hover:shadow-md hover:-translate-y-0.5'
               }`}
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
-              <span className={`text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
-              <span>{tab.label}</span>
+              <span className={`text-base sm:text-lg ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`}>{tab.icon}</span>
+              <span className="hidden xs:inline sm:inline">{tab.label}</span>
             </button>
           ))}
         </div>
