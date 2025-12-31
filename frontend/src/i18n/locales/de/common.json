@@ -65,6 +65,41 @@
     "freeToday": "{{count}} kostenlose Analysen übrig",
     "getUnlimited": "Unbegrenzt erhalten"
   },
+  "paywall": {
+    "discovered": "Sie haben eine Premium-Funktion entdeckt!",
+    "unlockTitle": "{{feature}} freischalten",
+    "usageInfo": "{{used}} von {{limit}} heute verwendet",
+    "unlockWith": "Mit Premium freischalten:",
+    "startFreeTrial": "14 Tage kostenlos testen",
+    "viewPlans": "Pläne ansehen",
+    "maybeLater": "Vielleicht später",
+    "cancelAnytime": "Jederzeit kündbar. Keine Verpflichtung.",
+    "features": {
+      "vision_analyses": {
+        "title": "Unbegrenzte Fotoanalysen",
+        "benefit1": "Scannen Sie alle Mahlzeiten ohne Limits",
+        "benefit2": "Genauere Lebensmittelerkennung",
+        "benefit3": "Vollständiger Analyseverlauf"
+      },
+      "recipe_generations": {
+        "title": "Personalisierte Rezepte",
+        "benefit1": "10+ Rezepte pro Woche generiert",
+        "benefit2": "An Ihre Ziele und Geschmack angepasst",
+        "benefit3": "PDF-Export Ihrer Lieblingsrezepte"
+      },
+      "coach_messages": {
+        "title": "Erweitertes KI-Coaching",
+        "benefit1": "Unbegrenzte personalisierte Beratung",
+        "benefit2": "Detaillierte Fortschrittsverfolgung",
+        "benefit3": "Tägliche angepasste Motivation"
+      }
+    },
+    "pricing": {
+      "from": "Ab",
+      "perMonth": "/Monat",
+      "savePercent": "-{{percent}}% jährlich"
+    }
+  },
   "pwa": {
     "title": "NutriProfile installieren",
     "description": "Installieren Sie NutriProfile auf Ihrem Gerät für schnellen Zugriff und ein besseres Erlebnis.",

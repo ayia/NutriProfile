@@ -65,6 +65,41 @@
     "freeToday": "{{count}} تحليلات مجانية متبقية",
     "getUnlimited": "احصل على غير محدود"
   },
+  "paywall": {
+    "discovered": "لقد اكتشفت ميزة بريميوم!",
+    "unlockTitle": "افتح {{feature}}",
+    "usageInfo": "استخدمت {{used}} من {{limit}} اليوم",
+    "unlockWith": "افتح مع بريميوم:",
+    "startFreeTrial": "جرّب 14 يوماً مجاناً",
+    "viewPlans": "عرض الخطط",
+    "maybeLater": "ربما لاحقاً",
+    "cancelAnytime": "إلغاء في أي وقت. بدون التزام.",
+    "features": {
+      "vision_analyses": {
+        "title": "تحليلات صور غير محدودة",
+        "benefit1": "امسح جميع وجباتك بدون حدود",
+        "benefit2": "كشف أكثر دقة للأطعمة",
+        "benefit3": "سجل تحليلات كامل"
+      },
+      "recipe_generations": {
+        "title": "وصفات مخصصة",
+        "benefit1": "10+ وصفات أسبوعياً",
+        "benefit2": "مصممة حسب أهدافك وذوقك",
+        "benefit3": "تصدير PDF لوصفاتك المفضلة"
+      },
+      "coach_messages": {
+        "title": "تدريب ذكي متقدم",
+        "benefit1": "نصائح شخصية غير محدودة",
+        "benefit2": "تتبع تقدم مفصل",
+        "benefit3": "تحفيز يومي مخصص"
+      }
+    },
+    "pricing": {
+      "from": "ابتداءً من",
+      "perMonth": "/شهر",
+      "savePercent": "-{{percent}}% سنوياً"
+    }
+  },
   "pwa": {
     "title": "تثبيت NutriProfile",
     "description": "قم بتثبيت NutriProfile على جهازك للوصول السريع وتجربة أفضل.",

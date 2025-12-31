@@ -65,6 +65,41 @@
     "freeToday": "{{count}} análisis gratuitos restantes",
     "getUnlimited": "Obtener ilimitado"
   },
+  "paywall": {
+    "discovered": "¡Has descubierto una función Premium!",
+    "unlockTitle": "Desbloquea {{feature}}",
+    "usageInfo": "{{used}} de {{limit}} usadas hoy",
+    "unlockWith": "Desbloquea con Premium:",
+    "startFreeTrial": "Prueba gratis 14 días",
+    "viewPlans": "Ver planes",
+    "maybeLater": "Quizás después",
+    "cancelAnytime": "Cancela cuando quieras. Sin compromiso.",
+    "features": {
+      "vision_analyses": {
+        "title": "Análisis de fotos ilimitados",
+        "benefit1": "Escanea todas tus comidas sin límites",
+        "benefit2": "Detección de alimentos más precisa",
+        "benefit3": "Historial completo de análisis"
+      },
+      "recipe_generations": {
+        "title": "Recetas personalizadas",
+        "benefit1": "10+ recetas generadas por semana",
+        "benefit2": "Adaptadas a tus objetivos y gustos",
+        "benefit3": "Exporta tus recetas favoritas en PDF"
+      },
+      "coach_messages": {
+        "title": "Coaching IA avanzado",
+        "benefit1": "Consejos personalizados ilimitados",
+        "benefit2": "Seguimiento detallado del progreso",
+        "benefit3": "Motivación diaria adaptada"
+      }
+    },
+    "pricing": {
+      "from": "Desde",
+      "perMonth": "/mes",
+      "savePercent": "-{{percent}}% anual"
+    }
+  },
   "pwa": {
     "title": "Instalar NutriProfile",
     "description": "Instala NutriProfile en tu dispositivo para un acceso rápido y una mejor experiencia.",

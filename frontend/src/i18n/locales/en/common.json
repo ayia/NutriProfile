@@ -95,6 +95,41 @@
     "freeToday": "{{count}} free analyses remaining",
     "getUnlimited": "Get unlimited"
   },
+  "paywall": {
+    "discovered": "You've discovered a Premium feature!",
+    "unlockTitle": "Unlock {{feature}}",
+    "usageInfo": "{{used}} of {{limit}} used today",
+    "unlockWith": "Unlock with Premium:",
+    "startFreeTrial": "Start 14-day free trial",
+    "viewPlans": "View plans",
+    "maybeLater": "Maybe later",
+    "cancelAnytime": "Cancel anytime. No commitment.",
+    "features": {
+      "vision_analyses": {
+        "title": "Unlimited photo analyses",
+        "benefit1": "Scan all your meals without limits",
+        "benefit2": "More accurate food detection",
+        "benefit3": "Complete analysis history"
+      },
+      "recipe_generations": {
+        "title": "Personalized recipes",
+        "benefit1": "10+ recipes generated per week",
+        "benefit2": "Tailored to your goals and taste",
+        "benefit3": "Export PDF of your favorite recipes"
+      },
+      "coach_messages": {
+        "title": "Advanced AI coaching",
+        "benefit1": "Unlimited personalized advice",
+        "benefit2": "Detailed progress tracking",
+        "benefit3": "Daily adapted motivation"
+      }
+    },
+    "pricing": {
+      "from": "From",
+      "perMonth": "/month",
+      "savePercent": "-{{percent}}% yearly"
+    }
+  },
   "pwa": {
     "title": "Install NutriProfile",
     "description": "Install NutriProfile on your device for quick access and a better experience.",

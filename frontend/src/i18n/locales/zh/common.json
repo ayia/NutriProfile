@@ -65,6 +65,41 @@
     "freeToday": "剩余{{count}}次免费分析",
     "getUnlimited": "获取无限"
   },
+  "paywall": {
+    "discovered": "您发现了一项高级功能！",
+    "unlockTitle": "解锁{{feature}}",
+    "usageInfo": "今日已使用 {{used}}/{{limit}}",
+    "unlockWith": "使用高级版解锁：",
+    "startFreeTrial": "免费试用14天",
+    "viewPlans": "查看方案",
+    "maybeLater": "稍后再说",
+    "cancelAnytime": "随时取消，无需承诺。",
+    "features": {
+      "vision_analyses": {
+        "title": "无限照片分析",
+        "benefit1": "无限制扫描所有餐食",
+        "benefit2": "更精准的食物识别",
+        "benefit3": "完整的分析历史记录"
+      },
+      "recipe_generations": {
+        "title": "个性化食谱",
+        "benefit1": "每周生成10+食谱",
+        "benefit2": "根据您的目标和口味定制",
+        "benefit3": "导出您喜爱的食谱PDF"
+      },
+      "coach_messages": {
+        "title": "高级AI教练",
+        "benefit1": "无限个性化建议",
+        "benefit2": "详细的进度追踪",
+        "benefit3": "每日定制激励"
+      }
+    },
+    "pricing": {
+      "from": "起价",
+      "perMonth": "/月",
+      "savePercent": "年付省{{percent}}%"
+    }
+  },
   "pwa": {
     "title": "安装 NutriProfile",
     "description": "在您的设备上安装 NutriProfile，快速访问，体验更佳。",
