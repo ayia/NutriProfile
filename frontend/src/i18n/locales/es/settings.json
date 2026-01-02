@@ -119,7 +119,8 @@
     "deleteConfirm": "Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.",
     "typeDelete": "Escribe",
     "toConfirm": "para confirmar",
-    "deletePlaceholder": "ELIMINAR"
+    "deletePlaceholder": "ELIMINAR",
+    "deleting": "Eliminando..."
   },
   "notifications": {
     "dailyReminder": "Recordatorio diario",

@@ -128,7 +128,7 @@ export function Header() {
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
               className="md:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
-              aria-label={showMobileMenu ? 'Close menu' : 'Open menu'}
+              aria-label={showMobileMenu ? t('menu.close') : t('menu.open')}
               aria-expanded={showMobileMenu}
             >
               {showMobileMenu ? (
@@ -248,11 +248,11 @@ export function Header() {
           >
             {/* Header du menu */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100">
-              <span className="text-lg font-semibold text-gray-900">Menu</span>
+              <span className="text-lg font-semibold text-gray-900">{t('menu.title')}</span>
               <button
                 onClick={() => setShowMobileMenu(false)}
                 className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
-                aria-label="Fermer le menu"
+                aria-label={t('menu.close')}
               >
                 <X className="w-5 h-5 text-gray-500" />
               </button>
@@ -274,7 +274,7 @@ export function Header() {
             {/* Navigation links */}
             <nav className="p-4">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                Navigation
+                {t('menu.navigation')}
               </p>
               <div className="space-y-1">
                 {mainNavLinks.map((link) => {

@@ -34,6 +34,12 @@
     "settings": "设置",
     "logout": "退出登录"
   },
+  "menu": {
+    "open": "打开菜单",
+    "close": "关闭菜单",
+    "title": "菜单",
+    "navigation": "导航"
+  },
   "footer": {
     "copyright": "© 2024 NutriProfile. 保留所有权利。",
     "privacy": "隐私政策",

@@ -1,13 +1,21 @@
 {
   "appName": "NutriProfile",
   "logout": "Déconnexion",
+  "home": "Accueil",
   "nav": {
     "dashboard": "Tableau de bord",
     "vision": "Vision IA",
     "recipes": "Recettes",
     "tracking": "Suivi",
     "settings": "Paramètres",
-    "profile": "Profil"
+    "profile": "Profil",
+    "home": "Accueil"
+  },
+  "menu": {
+    "open": "Ouvrir le menu",
+    "close": "Fermer le menu",
+    "title": "Menu",
+    "navigation": "Navigation"
   },
   "actions": {
     "save": "Enregistrer",

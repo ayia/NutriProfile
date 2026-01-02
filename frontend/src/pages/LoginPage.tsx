@@ -123,7 +123,7 @@ export function LoginPage() {
               {isLoggingIn ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Connexion...</span>
+                  <span>{t('login.submitting')}</span>
                 </>
               ) : (
                 t('login.submit')
@@ -170,11 +170,11 @@ export function LoginPage() {
         <div className="mt-8 flex justify-center gap-6 text-sm text-gray-400">
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4" />
-            <span>Connexion sécurisée</span>
+            <span>{t('login.secureLogin')}</span>
           </div>
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
-            <span>100% gratuit</span>
+            <span>{t('login.freeForever')}</span>
           </div>
         </div>
       </div>

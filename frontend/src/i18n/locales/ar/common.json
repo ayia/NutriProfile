@@ -34,6 +34,12 @@
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
   },
+  "menu": {
+    "open": "فتح القائمة",
+    "close": "إغلاق القائمة",
+    "title": "القائمة",
+    "navigation": "التنقل"
+  },
   "footer": {
     "copyright": "© 2024 NutriProfile. جميع الحقوق محفوظة.",
     "privacy": "الخصوصية",

@@ -291,7 +291,7 @@ export function VisionPage() {
               {todayQuery.isLoading && (
                 <div className="glass-card p-12 text-center">
                   <div className="w-16 h-16 border-4 border-secondary-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                  <p className="text-gray-500 mt-4 animate-pulse">Chargement...</p>
+                  <p className="text-gray-500 mt-4 animate-pulse">{t('today.loading')}</p>
                 </div>
               )}
 
@@ -301,7 +301,7 @@ export function VisionPage() {
                     <Utensils className="w-10 h-10 text-gray-400" />
                   </div>
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('today.noMeals')}</h4>
-                  <p className="text-gray-500 mb-6">Scannez votre premier repas pour commencer</p>
+                  <p className="text-gray-500 mb-6">{t('today.noMealsDescription')}</p>
                   <Button onClick={() => setActiveTab('scan')} className="gap-2">
                     <Camera className="w-4 h-4" />
                     {t('today.scanFirst')}
@@ -329,7 +329,7 @@ export function VisionPage() {
             {historyQuery.isLoading && (
               <div className="glass-card p-12 text-center animate-fade-in">
                 <div className="w-16 h-16 border-4 border-secondary-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                <p className="text-gray-500 mt-4 animate-pulse">Chargement de l'historique...</p>
+                <p className="text-gray-500 mt-4 animate-pulse">{t('history.loading')}</p>
               </div>
             )}
 
@@ -339,10 +339,10 @@ export function VisionPage() {
                   <History className="w-10 h-10 text-gray-400" />
                 </div>
                 <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('history.noHistory')}</h4>
-                <p className="text-gray-500 mb-6">Votre historique de repas apparaîtra ici</p>
+                <p className="text-gray-500 mb-6">{t('history.noHistoryDescription')}</p>
                 <Button onClick={() => setActiveTab('scan')} className="gap-2">
                   <Camera className="w-4 h-4" />
-                  Commencer à scanner
+                  {t('history.startScanning')}
                 </Button>
               </div>
             )}

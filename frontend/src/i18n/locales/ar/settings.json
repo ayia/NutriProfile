@@ -119,7 +119,8 @@
     "deleteConfirm": "هذا الإجراء لا رجعة فيه. سيتم حذف جميع بياناتك نهائياً.",
     "typeDelete": "اكتب",
     "toConfirm": "للتأكيد",
-    "deletePlaceholder": "حذف"
+    "deletePlaceholder": "حذف",
+    "deleting": "جاري الحذف..."
   },
   "notifications": {
     "dailyReminder": "تذكير يومي",

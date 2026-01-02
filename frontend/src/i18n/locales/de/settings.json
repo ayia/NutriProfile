@@ -119,7 +119,8 @@
     "deleteConfirm": "Diese Aktion ist unwiderruflich. Alle Ihre Daten werden dauerhaft gelöscht.",
     "typeDelete": "Geben Sie",
     "toConfirm": "zur Bestätigung ein",
-    "deletePlaceholder": "LÖSCHEN"
+    "deletePlaceholder": "LÖSCHEN",
+    "deleting": "Löschen..."
   },
   "notifications": {
     "dailyReminder": "Tägliche Erinnerung",

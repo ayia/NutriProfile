@@ -119,7 +119,8 @@
     "deleteConfirm": "Esta ação é irreversível. Todos os seus dados serão excluídos permanentemente.",
     "typeDelete": "Digite",
     "toConfirm": "para confirmar",
-    "deletePlaceholder": "EXCLUIR"
+    "deletePlaceholder": "EXCLUIR",
+    "deleting": "Excluindo..."
   },
   "notifications": {
     "dailyReminder": "Lembrete diário",

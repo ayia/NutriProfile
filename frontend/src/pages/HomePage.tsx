@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
-import { Camera, Target, Bot, BarChart3, ChefHat, Trophy, Rocket, Hand, Star, Utensils, CheckCircle, HeartPulse, Salad, Play } from '@/lib/icons'
+import { Camera, Target, Bot, BarChart3, ChefHat, Trophy, Rocket, Hand, Star, Utensils, CheckCircle, HeartPulse, Salad, Play, User } from '@/lib/icons'
 
 export function HomePage() {
   const { t } = useTranslation('home')
@@ -78,21 +78,21 @@ export function HomePage() {
     {
       name: t('testimonials.marie.name'),
       role: t('testimonials.marie.role'),
-      avatar: '👩',
+      avatarColor: 'from-pink-400 to-rose-500',
       text: t('testimonials.marie.text'),
       rating: 5,
     },
     {
       name: t('testimonials.thomas.name'),
       role: t('testimonials.thomas.role'),
-      avatar: '👨',
+      avatarColor: 'from-blue-400 to-indigo-500',
       text: t('testimonials.thomas.text'),
       rating: 5,
     },
     {
       name: t('testimonials.sophie.name'),
       role: t('testimonials.sophie.role'),
-      avatar: '👩‍🦰',
+      avatarColor: 'from-amber-400 to-orange-500',
       text: t('testimonials.sophie.text'),
       rating: 5,
     },
@@ -488,8 +488,8 @@ export function HomePage() {
                   <p className="text-gray-700 mb-6 italic text-lg leading-relaxed">"{testimonial.text}"</p>
                   {/* Author */}
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center text-3xl shadow-inner">
-                      {testimonial.avatar}
+                    <div className={`w-14 h-14 bg-gradient-to-br ${testimonial.avatarColor} rounded-full flex items-center justify-center shadow-lg`}>
+                      <User className="w-7 h-7 text-white" />
                     </div>
                     <div>
                       <div className="font-bold text-gray-900">{testimonial.name}</div>

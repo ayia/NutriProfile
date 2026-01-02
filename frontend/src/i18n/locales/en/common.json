@@ -46,7 +46,14 @@
     "tracking": "Tracking",
     "recipes": "Recipes",
     "settings": "Settings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "home": "Home"
+  },
+  "menu": {
+    "open": "Open menu",
+    "close": "Close menu",
+    "title": "Menu",
+    "navigation": "Navigation"
   },
   "units": {
     "kcal": "kcal",

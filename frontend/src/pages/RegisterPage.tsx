@@ -315,7 +315,7 @@ export function RegisterPage() {
               {isRegistering ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Création du compte...</span>
+                  <span>{t('register.submitting')}</span>
                 </>
               ) : (
                 t('register.submit')
@@ -374,11 +374,11 @@ export function RegisterPage() {
         <div className="mt-8 flex justify-center gap-6 text-sm text-gray-400">
           <div className="flex items-center gap-2">
             <Target className="w-4 h-4" />
-            <span>Suivi personnalisé</span>
+            <span>{t('register.personalizedTracking')}</span>
           </div>
           <div className="flex items-center gap-2">
             <Bot className="w-4 h-4" />
-            <span>IA nutritionnelle</span>
+            <span>{t('register.aiNutrition')}</span>
           </div>
         </div>
       </div>

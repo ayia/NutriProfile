@@ -34,6 +34,12 @@
     "settings": "Configuración",
     "logout": "Cerrar sesión"
   },
+  "menu": {
+    "open": "Abrir menú",
+    "close": "Cerrar menú",
+    "title": "Menú",
+    "navigation": "Navegación"
+  },
   "footer": {
     "copyright": "© 2024 NutriProfile. Todos los derechos reservados.",
     "privacy": "Privacidad",
