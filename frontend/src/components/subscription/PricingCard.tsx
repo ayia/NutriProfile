@@ -2,15 +2,16 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, Loader2, Crown, Zap, Gift, Sparkles } from '@/lib/icons'
 import { subscriptionApi } from '@/services/api'
-import type { PricingPlan, SubscriptionTier } from '@/types'
+import type { PricingPlan, SubscriptionTier, UsageLimits } from '@/types'
 
 interface PricingCardProps {
   plan: PricingPlan
   isYearly: boolean
   currentTier: SubscriptionTier
+  limits?: UsageLimits // Limites provenant de l'API pour synchronisation
 }
 
-export function PricingCard({ plan, isYearly, currentTier }: PricingCardProps) {
+export function PricingCard({ plan, isYearly, currentTier, limits }: PricingCardProps) {
   const { t } = useTranslation('pricing')
   const [loading, setLoading] = useState(false)
 
@@ -25,8 +26,57 @@ export function PricingCard({ plan, isYearly, currentTier }: PricingCardProps) {
     ? (plan.price_yearly / 12).toFixed(2)
     : null
 
-  // Use translated features instead of backend features
+  // Build translated features from API limits (synchronized with backend)
   const getTranslatedFeatures = (): string[] => {
+    // Si on a les limites de l'API, les utiliser (synchronisé avec backend)
+    if (limits) {
+      const features: string[] = []
+
+      // Vision analyses
+      if (limits.vision_analyses.limit === -1) {
+        features.push(t('features.visionAnalysesUnlimited'))
+      } else {
+        features.push(t('features.visionAnalyses', { count: limits.vision_analyses.limit }))
+      }
+
+      // Recipe generations
+      if (limits.recipe_generations.limit === -1) {
+        features.push(t('features.recipeGenerationsUnlimited'))
+      } else {
+        features.push(t('features.recipeGenerations', { count: limits.recipe_generations.limit }))
+      }
+
+      // Coach messages
+      if (limits.coach_messages.limit === -1) {
+        features.push(t('features.coachMessagesUnlimited'))
+      } else {
+        features.push(t('features.coachMessages', { count: limits.coach_messages.limit }))
+      }
+
+      // History days
+      if (limits.history_days.limit === -1) {
+        features.push(t('features.historyUnlimited'))
+      } else {
+        features.push(t('features.historyDays', { count: limits.history_days.limit }))
+      }
+
+      // Extra features by tier
+      if (plan.tier === 'free') {
+        features.push(t('features.basicTracking'))
+      } else if (plan.tier === 'premium') {
+        features.push(t('features.advancedStats'))
+        features.push(t('features.prioritySupport'))
+      } else if (plan.tier === 'pro') {
+        features.push(t('features.exportPdf'))
+        features.push(t('features.mealPlans'))
+        features.push(t('features.apiAccess'))
+        features.push(t('features.dedicatedSupport'))
+      }
+
+      return features
+    }
+
+    // Fallback: valeurs statiques si API non disponible
     switch (plan.tier) {
       case 'free':
         return [

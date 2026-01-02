@@ -7,13 +7,14 @@ import {
 import { Link } from 'react-router-dom'
 import { subscriptionApi } from '@/services/api'
 import { PricingCard } from '@/components/subscription/PricingCard'
-import type { PricingPlan, SubscriptionTier } from '@/types'
+import type { PricingPlan, SubscriptionTier, TierLimitsResponse } from '@/types'
 
 export default function PricingPage() {
   const { t } = useTranslation('pricing')
   const { t: tCommon } = useTranslation('common')
   const [plans, setPlans] = useState<PricingPlan[]>([])
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>('free')
+  const [tierLimits, setTierLimits] = useState<TierLimitsResponse | null>(null)
   const [isYearly, setIsYearly] = useState(true)
   const [loading, setLoading] = useState(true)
   const observerRef = useRef<IntersectionObserver | null>(null)
@@ -21,12 +22,14 @@ export default function PricingPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [pricingData, statusData] = await Promise.all([
+        const [pricingData, statusData, limitsData] = await Promise.all([
           subscriptionApi.getPricing(),
           subscriptionApi.getStatus(),
+          subscriptionApi.getLimits(),
         ])
         setPlans(pricingData.plans)
         setCurrentTier(statusData.tier)
+        setTierLimits(limitsData)
       } catch (error) {
         console.error('Failed to fetch pricing:', error)
       } finally {
@@ -35,6 +38,13 @@ export default function PricingPage() {
     }
     fetchData()
   }, [])
+
+  // Helper to format limit display for comparison table
+  const formatLimit = (limit: number, period: string): string => {
+    if (limit === -1) return t('comparison.unlimited')
+    const periodSuffix = period === 'day' ? '/day' : period === 'week' ? '/week' : ''
+    return `${limit}${periodSuffix}`
+  }
 
   // Scroll reveal animation
   useEffect(() => {
@@ -173,12 +183,13 @@ export default function PricingPage() {
                 plan={plan}
                 isYearly={isYearly}
                 currentTier={currentTier}
+                limits={tierLimits?.[plan.tier as keyof TierLimitsResponse]}
               />
             </div>
           ))}
         </div>
 
-        {/* Feature Comparison Table */}
+        {/* Feature Comparison Table - Synchronized with backend */}
         <div className="max-w-4xl mx-auto mb-20 reveal">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8">
             {t('comparison.title')}
@@ -196,10 +207,34 @@ export default function PricingPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {[
-                    { feature: t('comparison.features.photoAnalysis'), free: '3/day', premium: true, pro: true, icon: Camera },
-                    { feature: t('comparison.features.recipes'), free: '2/week', premium: '10/week', pro: true, icon: ChefHat },
-                    { feature: t('comparison.features.aiCoach'), free: '1/day', premium: '5/day', pro: true, icon: Bot },
-                    { feature: t('comparison.features.history'), free: '7 days', premium: '90 days', pro: true, icon: BarChart3 },
+                    {
+                      feature: t('comparison.features.photoAnalysis'),
+                      free: tierLimits ? formatLimit(tierLimits.free.vision_analyses.limit, tierLimits.free.vision_analyses.period) : '3/day',
+                      premium: tierLimits?.premium.vision_analyses.limit === -1,
+                      pro: tierLimits?.pro.vision_analyses.limit === -1,
+                      icon: Camera
+                    },
+                    {
+                      feature: t('comparison.features.recipes'),
+                      free: tierLimits ? formatLimit(tierLimits.free.recipe_generations.limit, tierLimits.free.recipe_generations.period) : '2/week',
+                      premium: tierLimits ? formatLimit(tierLimits.premium.recipe_generations.limit, tierLimits.premium.recipe_generations.period) : '10/week',
+                      pro: tierLimits?.pro.recipe_generations.limit === -1,
+                      icon: ChefHat
+                    },
+                    {
+                      feature: t('comparison.features.aiCoach'),
+                      free: tierLimits ? formatLimit(tierLimits.free.coach_messages.limit, tierLimits.free.coach_messages.period) : '1/day',
+                      premium: tierLimits ? formatLimit(tierLimits.premium.coach_messages.limit, tierLimits.premium.coach_messages.period) : '5/day',
+                      pro: tierLimits?.pro.coach_messages.limit === -1,
+                      icon: Bot
+                    },
+                    {
+                      feature: t('comparison.features.history'),
+                      free: tierLimits ? `${tierLimits.free.history_days.limit} days` : '7 days',
+                      premium: tierLimits ? `${tierLimits.premium.history_days.limit} days` : '90 days',
+                      pro: tierLimits?.pro.history_days.limit === -1,
+                      icon: BarChart3
+                    },
                     { feature: t('comparison.features.pdfExport'), free: false, premium: true, pro: true, icon: Download },
                     { feature: t('comparison.features.prioritySupport'), free: false, premium: true, pro: true, icon: Headphones },
                   ].map((row, index) => (
@@ -221,7 +256,10 @@ export default function PricingPage() {
                         {row.premium === false ? (
                           <X className="w-5 h-5 text-gray-300 mx-auto" />
                         ) : row.premium === true ? (
-                          <Check className="w-5 h-5 text-primary-500 mx-auto" />
+                          <div className="flex items-center justify-center gap-1">
+                            <Check className="w-5 h-5 text-primary-500" />
+                            <span className="text-primary-600 text-xs font-medium">{t('comparison.unlimited')}</span>
+                          </div>
                         ) : (
                           <span className="text-primary-600 text-sm font-medium">{row.premium}</span>
                         )}

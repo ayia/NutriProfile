@@ -44,11 +44,22 @@ export interface SubscriptionStatusResponse {
   is_active: boolean
 }
 
+export interface LimitInfo {
+  limit: number
+  period: 'day' | 'week' | 'total'
+}
+
 export interface UsageLimits {
-  vision_analyses: number
-  recipe_generations: number
-  coach_messages: number
-  history_days: number
+  vision_analyses: LimitInfo
+  recipe_generations: LimitInfo
+  coach_messages: LimitInfo
+  history_days: LimitInfo
+}
+
+export interface TierLimitsResponse {
+  free: UsageLimits
+  premium: UsageLimits
+  pro: UsageLimits
 }
 
 export interface UsageBase {

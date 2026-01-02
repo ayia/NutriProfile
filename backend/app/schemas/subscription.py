@@ -78,12 +78,25 @@ class UsageResponse(UsageBase):
         from_attributes = True
 
 
+class LimitInfo(BaseModel):
+    """Schema for a single limit with period."""
+    limit: int = Field(description="-1 for unlimited")
+    period: str = Field(description="day, week, or total")
+
+
 class UsageLimits(BaseModel):
-    """Schema for tier limits."""
-    vision_analyses: int = Field(description="-1 for unlimited")
-    recipe_generations: int = Field(description="-1 for unlimited")
-    coach_messages: int = Field(description="-1 for unlimited")
-    history_days: int = Field(description="-1 for unlimited")
+    """Schema for tier limits with periods."""
+    vision_analyses: LimitInfo
+    recipe_generations: LimitInfo
+    coach_messages: LimitInfo
+    history_days: LimitInfo
+
+
+class TierLimitsResponse(BaseModel):
+    """Schema for all tier limits endpoint."""
+    free: UsageLimits
+    premium: UsageLimits
+    pro: UsageLimits
 
 
 class UsageStatusResponse(BaseModel):

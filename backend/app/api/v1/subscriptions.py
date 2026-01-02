@@ -13,6 +13,8 @@ from app.schemas.subscription import (
     UsageStatusResponse,
     UsageLimits,
     UsageBase,
+    LimitInfo,
+    TierLimitsResponse,
     CheckoutRequest,
     CheckoutResponse,
     CustomerPortalResponse,
@@ -60,10 +62,10 @@ async def get_usage_status(
     return UsageStatusResponse(
         tier=SubscriptionTier(status["tier"]),
         limits=UsageLimits(
-            vision_analyses=limits["vision_analyses"],
-            recipe_generations=limits["recipe_generations"],
-            coach_messages=limits["coach_messages"],
-            history_days=limits["history_days"]
+            vision_analyses=LimitInfo(**limits["vision_analyses"]),
+            recipe_generations=LimitInfo(**limits["recipe_generations"]),
+            coach_messages=LimitInfo(**limits["coach_messages"]),
+            history_days=LimitInfo(**limits["history_days"])
         ),
         usage=UsageBase(
             vision_analyses=usage["vision_analyses"],
@@ -71,6 +73,27 @@ async def get_usage_status(
             coach_messages=usage["coach_messages"]
         ),
         reset_at=status["reset_at"]
+    )
+
+
+@router.get("/limits", response_model=TierLimitsResponse)
+async def get_all_tier_limits():
+    """
+    Retourne toutes les limites pour tous les tiers.
+    Utilisé par le frontend pour afficher les informations de pricing de manière synchronisée.
+    """
+    def convert_tier_limits(tier_data: dict) -> UsageLimits:
+        return UsageLimits(
+            vision_analyses=LimitInfo(**tier_data["vision_analyses"]),
+            recipe_generations=LimitInfo(**tier_data["recipe_generations"]),
+            coach_messages=LimitInfo(**tier_data["coach_messages"]),
+            history_days=LimitInfo(**tier_data["history_days"])
+        )
+
+    return TierLimitsResponse(
+        free=convert_tier_limits(TIER_LIMITS["free"]),
+        premium=convert_tier_limits(TIER_LIMITS["premium"]),
+        pro=convert_tier_limits(TIER_LIMITS["pro"])
     )
 
 

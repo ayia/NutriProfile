@@ -35,7 +35,8 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
   if (isLoading || !usage || dismissed) return null
 
   const used = usage.usage[action]
-  const limit = usage.limits[action]
+  const limitInfo = usage.limits[action]
+  const limit = limitInfo.limit // Extraire la valeur limite de LimitInfo
   const icon = featureIcons[action]
   const label = t(`usage.features.${action}`)
   const remaining = limit === -1 ? -1 : limit - used

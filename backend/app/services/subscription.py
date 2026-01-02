@@ -13,27 +13,43 @@ from app.config import get_settings
 settings = get_settings()
 
 
-# Limites par tier
+# Limites par tier avec périodes explicites
+# Structure: {"limit": valeur, "period": "day"|"week"|"total"}
+# -1 = illimité
 TIER_LIMITS = {
     "free": {
-        "vision_analyses": 3,       # par jour
-        "recipe_generations": 2,    # par jour
-        "coach_messages": 5,        # par jour
-        "history_days": 7,          # jours d'historique
+        "vision_analyses": {"limit": 3, "period": "day"},
+        "recipe_generations": {"limit": 2, "period": "week"},
+        "coach_messages": {"limit": 1, "period": "day"},
+        "history_days": {"limit": 7, "period": "total"},
     },
     "premium": {
-        "vision_analyses": -1,      # illimité
-        "recipe_generations": 10,   # par semaine
-        "coach_messages": 5,        # par jour
-        "history_days": 90,
+        "vision_analyses": {"limit": -1, "period": "day"},
+        "recipe_generations": {"limit": 10, "period": "week"},
+        "coach_messages": {"limit": 5, "period": "day"},
+        "history_days": {"limit": 90, "period": "total"},
     },
     "pro": {
-        "vision_analyses": -1,
-        "recipe_generations": -1,
-        "coach_messages": -1,
-        "history_days": -1,         # illimité
+        "vision_analyses": {"limit": -1, "period": "day"},
+        "recipe_generations": {"limit": -1, "period": "week"},
+        "coach_messages": {"limit": -1, "period": "day"},
+        "history_days": {"limit": -1, "period": "total"},
     }
 }
+
+
+def get_limit_value(tier: str, action: str) -> int:
+    """Extrait la valeur limite d'un tier/action."""
+    tier_limits = TIER_LIMITS.get(tier, TIER_LIMITS["free"])
+    limit_info = tier_limits.get(action, {"limit": 0, "period": "day"})
+    return limit_info["limit"] if isinstance(limit_info, dict) else limit_info
+
+
+def get_limit_period(tier: str, action: str) -> str:
+    """Extrait la période d'un tier/action."""
+    tier_limits = TIER_LIMITS.get(tier, TIER_LIMITS["free"])
+    limit_info = tier_limits.get(action, {"limit": 0, "period": "day"})
+    return limit_info["period"] if isinstance(limit_info, dict) else "day"
 
 
 class SubscriptionService:
@@ -115,18 +131,18 @@ class SubscriptionService:
             - limite: limite maximale (-1 = illimité)
         """
         tier = await self.get_user_tier(user_id)
-        limits = TIER_LIMITS.get(tier, TIER_LIMITS["free"])
-        limit = limits.get(action, 0)
+        limit = get_limit_value(tier, action)
+        period = get_limit_period(tier, action)
 
         # Si illimité
         if limit == -1:
             return True, 0, -1
 
-        # Pour les recettes, on compte sur la semaine
-        if action == "recipe_generations":
+        # Compter selon la période
+        if period == "week":
             used = await self.get_week_recipe_count(user_id)
         else:
-            # Pour les autres, on compte sur le jour
+            # Pour les autres (day), on compte sur le jour
             usage = await self.get_today_usage(user_id)
             used = getattr(usage, action, 0) if usage else 0
 
@@ -150,7 +166,7 @@ class SubscriptionService:
     async def get_usage_status(self, user_id: int) -> dict:
         """Retourne le statut complet d'usage pour un utilisateur."""
         tier = await self.get_user_tier(user_id)
-        limits = TIER_LIMITS.get(tier, TIER_LIMITS["free"])
+        tier_limits = TIER_LIMITS.get(tier, TIER_LIMITS["free"])
         usage = await self.get_today_usage(user_id)
 
         # Pour les recettes, on compte sur la semaine
@@ -158,7 +174,7 @@ class SubscriptionService:
 
         return {
             "tier": tier,
-            "limits": limits,
+            "limits": tier_limits,
             "usage": {
                 "vision_analyses": usage.vision_analyses if usage else 0,
                 "recipe_generations": week_recipes,
@@ -166,6 +182,11 @@ class SubscriptionService:
             },
             "reset_at": self._get_next_reset_time()
         }
+
+    @staticmethod
+    def get_all_tier_limits() -> dict:
+        """Retourne toutes les limites pour tous les tiers (pour l'API pricing)."""
+        return TIER_LIMITS
 
     def _get_next_reset_time(self) -> datetime:
         """Calcule le prochain reset (minuit UTC)."""
