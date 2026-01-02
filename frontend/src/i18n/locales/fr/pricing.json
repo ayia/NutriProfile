@@ -40,8 +40,9 @@
     "description": "Pour les passionnes de nutrition"
   },
   "features": {
+    "allUnlimited": "Tout illimité",
     "visionAnalyses": "{{count}} analyses photo par jour",
-    "visionAnalysesUnlimited": "Analyses photo illimitees",
+    "visionAnalysesUnlimited": "Analyses photo illimitées",
     "recipeGenerations": "{{count}} recettes par semaine",
     "recipeGenerationsUnlimited": "Recettes illimitees",
     "coachMessages": "{{count}} conseil coach par jour",

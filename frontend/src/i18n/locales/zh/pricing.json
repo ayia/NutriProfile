@@ -40,6 +40,7 @@
     "description": "适合营养爱好者"
   },
   "features": {
+    "allUnlimited": "全部无限制",
     "visionAnalyses": "每天{{count}}次照片分析",
     "visionAnalysesUnlimited": "无限照片分析",
     "recipeGenerations": "每周{{count}}个食谱",

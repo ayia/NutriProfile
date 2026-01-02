@@ -40,6 +40,7 @@
     "description": "For nutrition enthusiasts"
   },
   "features": {
+    "allUnlimited": "Everything unlimited",
     "visionAnalyses": "{{count}} photo analyses per day",
     "visionAnalysesUnlimited": "Unlimited photo analyses",
     "recipeGenerations": "{{count}} recipes per week",

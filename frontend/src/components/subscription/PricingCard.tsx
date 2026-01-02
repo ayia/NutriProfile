@@ -25,6 +25,42 @@ export function PricingCard({ plan, isYearly, currentTier }: PricingCardProps) {
     ? (plan.price_yearly / 12).toFixed(2)
     : null
 
+  // Use translated features instead of backend features
+  const getTranslatedFeatures = (): string[] => {
+    switch (plan.tier) {
+      case 'free':
+        return [
+          t('features.visionAnalyses', { count: 3 }),
+          t('features.recipeGenerations', { count: 2 }),
+          t('features.coachMessages', { count: 1 }),
+          t('features.historyDays', { count: 7 }),
+          t('features.basicTracking'),
+        ]
+      case 'premium':
+        return [
+          t('features.visionAnalysesUnlimited'),
+          t('features.recipeGenerations', { count: 10 }),
+          t('features.coachMessages', { count: 5 }),
+          t('features.historyDays', { count: 90 }),
+          t('features.advancedStats'),
+          t('features.prioritySupport'),
+        ]
+      case 'pro':
+        return [
+          t('features.allUnlimited'),
+          t('features.historyUnlimited'),
+          t('features.exportPdf'),
+          t('features.mealPlans'),
+          t('features.apiAccess'),
+          t('features.dedicatedSupport'),
+        ]
+      default:
+        return plan.features
+    }
+  }
+
+  const translatedFeatures = getTranslatedFeatures()
+
   const handleSubscribe = async () => {
     if (isFree || isCurrentPlan || !variantId) return
 
@@ -91,12 +127,12 @@ export function PricingCard({ plan, isYearly, currentTier }: PricingCardProps) {
           {plan.tier === 'free' && <Gift className="h-6 w-6 text-gray-500 dark:text-gray-400" />}
         </div>
         <h3 className={`text-2xl font-bold ${isPremium ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
-          {plan.name}
+          {t(`${plan.tier}.name`)}
         </h3>
       </div>
 
       <p className={`text-sm mb-6 ${isPremium ? 'text-white/80' : 'text-gray-600 dark:text-gray-400'}`}>
-        {plan.description}
+        {t(`${plan.tier}.description`)}
       </p>
 
       <div className="mb-6">
@@ -125,7 +161,7 @@ export function PricingCard({ plan, isYearly, currentTier }: PricingCardProps) {
       </div>
 
       <ul className="space-y-3 mb-8 flex-grow">
-        {plan.features.map((feature, index) => (
+        {translatedFeatures.map((feature, index) => (
           <li key={index} className="flex items-start gap-3">
             <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${
               isPremium ? 'bg-white/20' : 'bg-green-100 dark:bg-green-900/30'

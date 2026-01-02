@@ -40,8 +40,9 @@
     "description": "Para entusiastas de la nutricion"
   },
   "features": {
-    "visionAnalyses": "{{count}} analisis de fotos por dia",
-    "visionAnalysesUnlimited": "Analisis de fotos ilimitados",
+    "allUnlimited": "Todo ilimitado",
+    "visionAnalyses": "{{count}} análisis de fotos por día",
+    "visionAnalysesUnlimited": "Análisis de fotos ilimitados",
     "recipeGenerations": "{{count}} recetas por semana",
     "recipeGenerationsUnlimited": "Recetas ilimitadas",
     "coachMessages": "{{count}} consejos de coach por dia",
