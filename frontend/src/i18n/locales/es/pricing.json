@@ -85,8 +85,11 @@
   },
   "comparison": {
     "title": "Compara todas las funciones",
-    "feature": "Funcion",
+    "feature": "Función",
     "unlimited": "Ilimitado",
+    "perDay": "/día",
+    "perWeek": "/semana",
+    "days": "días",
     "features": {
       "photoAnalysis": "Analisis de fotos",
       "recipes": "Generacion de recetas",

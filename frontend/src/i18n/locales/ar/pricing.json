@@ -87,6 +87,9 @@
     "title": "قارن جميع الميزات",
     "feature": "الميزة",
     "unlimited": "غير محدود",
+    "perDay": "/يوم",
+    "perWeek": "/أسبوع",
+    "days": "أيام",
     "features": {
       "photoAnalysis": "تحليل الصور",
       "recipes": "إنشاء الوصفات",

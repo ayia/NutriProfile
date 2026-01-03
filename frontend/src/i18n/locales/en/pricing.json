@@ -87,6 +87,9 @@
     "title": "Compare all features",
     "feature": "Feature",
     "unlimited": "Unlimited",
+    "perDay": "/day",
+    "perWeek": "/week",
+    "days": "days",
     "features": {
       "photoAnalysis": "Photo analysis",
       "recipes": "Recipe generation",

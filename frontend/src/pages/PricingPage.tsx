@@ -42,8 +42,14 @@ export default function PricingPage() {
   // Helper to format limit display for comparison table
   const formatLimit = (limit: number, period: string): string => {
     if (limit === -1) return t('comparison.unlimited')
-    const periodSuffix = period === 'day' ? '/day' : period === 'week' ? '/week' : ''
+    const periodSuffix = period === 'day' ? t('comparison.perDay', '/jour') : period === 'week' ? t('comparison.perWeek', '/semaine') : ''
     return `${limit}${periodSuffix}`
+  }
+
+  // Helper to format days display
+  const formatDays = (days: number): string => {
+    if (days === -1) return t('comparison.unlimited')
+    return `${days} ${t('comparison.days', 'jours')}`
   }
 
   // Scroll reveal animation
@@ -209,29 +215,29 @@ export default function PricingPage() {
                   {[
                     {
                       feature: t('comparison.features.photoAnalysis'),
-                      free: tierLimits ? formatLimit(tierLimits.free.vision_analyses.limit, tierLimits.free.vision_analyses.period) : '3/day',
+                      free: tierLimits ? formatLimit(tierLimits.free.vision_analyses.limit, tierLimits.free.vision_analyses.period) : formatLimit(3, 'day'),
                       premium: tierLimits?.premium.vision_analyses.limit === -1,
                       pro: tierLimits?.pro.vision_analyses.limit === -1,
                       icon: Camera
                     },
                     {
                       feature: t('comparison.features.recipes'),
-                      free: tierLimits ? formatLimit(tierLimits.free.recipe_generations.limit, tierLimits.free.recipe_generations.period) : '2/week',
-                      premium: tierLimits ? formatLimit(tierLimits.premium.recipe_generations.limit, tierLimits.premium.recipe_generations.period) : '10/week',
+                      free: tierLimits ? formatLimit(tierLimits.free.recipe_generations.limit, tierLimits.free.recipe_generations.period) : formatLimit(2, 'week'),
+                      premium: tierLimits ? formatLimit(tierLimits.premium.recipe_generations.limit, tierLimits.premium.recipe_generations.period) : formatLimit(10, 'week'),
                       pro: tierLimits?.pro.recipe_generations.limit === -1,
                       icon: ChefHat
                     },
                     {
                       feature: t('comparison.features.aiCoach'),
-                      free: tierLimits ? formatLimit(tierLimits.free.coach_messages.limit, tierLimits.free.coach_messages.period) : '1/day',
-                      premium: tierLimits ? formatLimit(tierLimits.premium.coach_messages.limit, tierLimits.premium.coach_messages.period) : '5/day',
+                      free: tierLimits ? formatLimit(tierLimits.free.coach_messages.limit, tierLimits.free.coach_messages.period) : formatLimit(1, 'day'),
+                      premium: tierLimits ? formatLimit(tierLimits.premium.coach_messages.limit, tierLimits.premium.coach_messages.period) : formatLimit(5, 'day'),
                       pro: tierLimits?.pro.coach_messages.limit === -1,
                       icon: Bot
                     },
                     {
                       feature: t('comparison.features.history'),
-                      free: tierLimits ? `${tierLimits.free.history_days.limit} days` : '7 days',
-                      premium: tierLimits ? `${tierLimits.premium.history_days.limit} days` : '90 days',
+                      free: tierLimits ? formatDays(tierLimits.free.history_days.limit) : formatDays(7),
+                      premium: tierLimits ? formatDays(tierLimits.premium.history_days.limit) : formatDays(90),
                       pro: tierLimits?.pro.history_days.limit === -1,
                       icon: BarChart3
                     },

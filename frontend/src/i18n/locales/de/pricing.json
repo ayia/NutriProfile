@@ -87,6 +87,9 @@
     "title": "Alle Funktionen vergleichen",
     "feature": "Funktion",
     "unlimited": "Unbegrenzt",
+    "perDay": "/Tag",
+    "perWeek": "/Woche",
+    "days": "Tage",
     "features": {
       "photoAnalysis": "Fotoanalyse",
       "recipes": "Rezeptgenerierung",

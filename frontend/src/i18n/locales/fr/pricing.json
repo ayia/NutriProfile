@@ -84,9 +84,12 @@
     "noHiddenFees": "Sans frais caches"
   },
   "comparison": {
-    "title": "Comparez toutes les fonctionnalites",
-    "feature": "Fonctionnalite",
-    "unlimited": "Illimite",
+    "title": "Comparez toutes les fonctionnalités",
+    "feature": "Fonctionnalité",
+    "unlimited": "Illimité",
+    "perDay": "/jour",
+    "perWeek": "/semaine",
+    "days": "jours",
     "features": {
       "photoAnalysis": "Analyse photo",
       "recipes": "Generation de recettes",

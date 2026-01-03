@@ -87,6 +87,9 @@
     "title": "比较所有功能",
     "feature": "功能",
     "unlimited": "无限",
+    "perDay": "/天",
+    "perWeek": "/周",
+    "days": "天",
     "features": {
       "photoAnalysis": "照片分析",
       "recipes": "食谱生成",
