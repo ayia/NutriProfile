@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import {
   Clock,
   Users,
@@ -10,8 +12,12 @@ import {
   Droplet,
   CheckCircle,
   ArrowRight,
+  Lock,
+  Zap,
 } from 'lucide-react'
 import { getMealTypeIcon, MEAL_TYPE_COLORS } from '@/lib/icons'
+import { subscriptionApi } from '@/services/api'
+import { USAGE_QUERY_KEY } from '@/components/subscription/UsageBanner'
 
 interface RecipePreviewProps {
   mealType: string
@@ -31,6 +37,18 @@ export function RecipePreview({
   isGenerating,
 }: RecipePreviewProps) {
   const { t } = useTranslation('recipes')
+  const { t: tCommon } = useTranslation('common')
+
+  // Check usage limits
+  const usageQuery = useQuery({
+    queryKey: USAGE_QUERY_KEY,
+    queryFn: subscriptionApi.getUsage,
+    staleTime: 30 * 1000,
+  })
+
+  const recipeLimit = usageQuery.data?.limits.recipe_generations?.limit ?? 2
+  const recipeUsed = usageQuery.data?.usage.recipe_generations ?? 0
+  const isLimitReached = recipeLimit !== -1 && recipeUsed >= recipeLimit
 
   const MealIcon = getMealTypeIcon(mealType as 'breakfast' | 'lunch' | 'dinner' | 'snack')
   const mealColor = MEAL_TYPE_COLORS[mealType as keyof typeof MEAL_TYPE_COLORS] || 'text-gray-500'
@@ -143,16 +161,47 @@ export function RecipePreview({
           </ul>
         </div>
 
+        {/* Limit Reached Message */}
+        {isLimitReached && (
+          <div className="mb-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <Lock className="w-5 h-5 text-amber-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-amber-800 font-medium">{tCommon('usage.limitReached')}</p>
+                <p className="text-xs text-amber-600 mt-0.5">{tCommon('usage.comeBackTomorrow')}</p>
+              </div>
+              <Link
+                to="/pricing"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg transition-all flex-shrink-0"
+              >
+                <Zap className="w-4 h-4" />
+                <span className="hidden sm:inline">Premium</span>
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Generate button */}
         <button
           onClick={onGenerate}
-          disabled={isGenerating}
-          className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
+          disabled={isGenerating || isLimitReached}
+          className={`w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold shadow-lg transition-all ${
+            isLimitReached
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none'
+              : 'bg-gradient-to-r from-primary-500 to-emerald-500 text-white shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none'
+          }`}
         >
           {isGenerating ? (
             <>
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               {t('generate.generating')}
+            </>
+          ) : isLimitReached ? (
+            <>
+              <Lock className="w-5 h-5" />
+              {tCommon('usage.limitReached')}
             </>
           ) : (
             <>

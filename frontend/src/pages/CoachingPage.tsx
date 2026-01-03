@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useState, useRef, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import {
   RefreshCw,
   Trophy,
@@ -17,12 +18,22 @@ import {
   Activity,
   Clock,
   Utensils,
+  Send,
+  Zap,
+  Lock,
   type LucideIcon
 } from 'lucide-react'
-import { UsageBanner } from '@/components/subscription/UsageBanner'
-import { api } from '@/services/api'
+import { UsageBanner, USAGE_QUERY_KEY } from '@/components/subscription/UsageBanner'
+import { api, subscriptionApi } from '@/services/api'
 
-type Tab = 'tips' | 'challenges' | 'summary'
+type Tab = 'chat' | 'tips' | 'challenges' | 'summary'
+
+interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: Date
+}
 
 interface Tip {
   category: string
@@ -59,7 +70,80 @@ interface WeeklySummary {
 
 export function CoachingPage() {
   const { t } = useTranslation('coaching')
-  const [activeTab, setActiveTab] = useState<Tab>('tips')
+  const queryClient = useQueryClient()
+  const [activeTab, setActiveTab] = useState<Tab>('chat')
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
+  const [inputMessage, setInputMessage] = useState('')
+  const chatContainerRef = useRef<HTMLDivElement>(null)
+
+  // Usage query for checking limits
+  const usageQuery = useQuery({
+    queryKey: USAGE_QUERY_KEY,
+    queryFn: subscriptionApi.getUsage,
+    staleTime: 30 * 1000,
+  })
+
+  const coachLimit = usageQuery.data?.limits.coach_messages?.limit ?? 1
+  const coachUsed = usageQuery.data?.usage.coach_messages ?? 0
+  const isLimitReached = coachLimit !== -1 && coachUsed >= coachLimit
+  const isPremium = coachLimit === -1
+
+  // Chat mutation
+  const chatMutation = useMutation({
+    mutationFn: async (message: string) => {
+      const response = await api.post<{ response: string }>('/coaching/chat', { message })
+      return response.data
+    },
+    onSuccess: (data) => {
+      const assistantMessage: ChatMessage = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: data.response,
+        timestamp: new Date(),
+      }
+      setChatMessages(prev => [...prev, assistantMessage])
+      // Invalidate usage query to refresh limits
+      queryClient.invalidateQueries({ queryKey: USAGE_QUERY_KEY })
+    },
+  })
+
+  // Scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+    }
+  }, [chatMessages])
+
+  // Add welcome message on first load
+  useEffect(() => {
+    if (chatMessages.length === 0) {
+      setChatMessages([{
+        id: 'welcome',
+        role: 'assistant',
+        content: t('chat.welcome'),
+        timestamp: new Date(),
+      }])
+    }
+  }, [t])
+
+  const handleSendMessage = () => {
+    if (!inputMessage.trim() || chatMutation.isPending || isLimitReached) return
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: inputMessage.trim(),
+      timestamp: new Date(),
+    }
+    setChatMessages(prev => [...prev, userMessage])
+    setInputMessage('')
+    chatMutation.mutate(inputMessage.trim())
+  }
+
+  const handleSuggestionClick = (suggestion: string) => {
+    if (isLimitReached) return
+    setInputMessage(suggestion)
+  }
 
   const tipsQuery = useQuery({
     queryKey: ['coaching', 'tips'],
@@ -89,6 +173,7 @@ export function CoachingPage() {
   })
 
   const tabs: { id: Tab; label: string; IconComponent: LucideIcon }[] = [
+    { id: 'chat', label: t('tabs.chat'), IconComponent: MessageSquare },
     { id: 'tips', label: t('tabs.tips'), IconComponent: Lightbulb },
     { id: 'challenges', label: t('tabs.challenges'), IconComponent: Target },
     { id: 'summary', label: t('tabs.summary'), IconComponent: BarChart3 },
@@ -119,8 +204,8 @@ export function CoachingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
       {/* Background decorations */}
-      <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-primary-100/40 to-emerald-100/40 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-br from-accent-100/40 to-amber-100/40 rounded-full blur-3xl -z-10" />
+      <div className="absolute top-20 right-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gradient-to-br from-primary-100/40 to-emerald-100/40 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[280px] sm:h-[280px] md:w-[400px] md:h-[400px] bg-gradient-to-br from-accent-100/40 to-amber-100/40 rounded-full blur-3xl -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
@@ -168,6 +253,150 @@ export function CoachingPage() {
             </button>
           ))}
         </div>
+
+        {/* Chat Tab */}
+        {activeTab === 'chat' && (
+          <div className="glass-card p-4 sm:p-6 animate-fade-in-up">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">{t('chat.title')}</h2>
+                <p className="text-sm text-gray-500">{t('chat.subtitle')}</p>
+              </div>
+              {isPremium && (
+                <span className="px-3 py-1 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-xs font-bold rounded-full">
+                  {t('chat.premiumBadge')}
+                </span>
+              )}
+            </div>
+
+            {/* Chat Messages */}
+            <div
+              ref={chatContainerRef}
+              className="h-[400px] overflow-y-auto mb-4 space-y-4 p-4 bg-gray-50 rounded-xl"
+            >
+              {chatMessages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] p-3 rounded-2xl ${
+                      msg.role === 'user'
+                        ? 'bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-br-md'
+                        : 'bg-white shadow-sm border border-gray-100 text-gray-800 rounded-bl-md'
+                    }`}
+                  >
+                    {msg.role === 'assistant' && (
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-6 h-6 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-full flex items-center justify-center">
+                          <Brain className="w-3 h-3 text-white" />
+                        </div>
+                        <span className="text-xs font-medium text-primary-600">AI Coach</span>
+                      </div>
+                    )}
+                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                  </div>
+                </div>
+              ))}
+
+              {chatMutation.isPending && (
+                <div className="flex justify-start">
+                  <div className="bg-white shadow-sm border border-gray-100 p-3 rounded-2xl rounded-bl-md">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-full flex items-center justify-center">
+                        <Brain className="w-3 h-3 text-white animate-pulse" />
+                      </div>
+                      <span className="text-sm text-gray-500">{t('chat.thinking')}</span>
+                      <div className="flex gap-1">
+                        <span className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                        <span className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                        <span className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {chatMutation.isError && (
+                <div className="flex justify-start">
+                  <div className="bg-red-50 border border-red-200 p-3 rounded-2xl">
+                    <p className="text-sm text-red-600">{t('chat.error')}</p>
+                    <button
+                      onClick={() => chatMutation.reset()}
+                      className="text-xs text-red-700 underline mt-1"
+                    >
+                      {t('chat.retry')}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Limit Reached Message */}
+            {isLimitReached && (
+              <div className="mb-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+                    <Lock className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-amber-800 font-medium">{t('chat.limitReached')}</p>
+                  </div>
+                  <Link
+                    to="/pricing"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg transition-all"
+                  >
+                    <Zap className="w-4 h-4" />
+                    Premium
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Suggestions */}
+            {chatMessages.length <= 1 && !isLimitReached && (
+              <div className="mb-4">
+                <p className="text-xs font-medium text-gray-500 mb-2">{t('chat.suggestions.title')}</p>
+                <div className="flex flex-wrap gap-2">
+                  {['meal', 'calories', 'protein', 'tips'].map((key) => (
+                    <button
+                      key={key}
+                      onClick={() => handleSuggestionClick(t(`chat.suggestions.${key}`))}
+                      className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs text-gray-600 hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-colors"
+                    >
+                      {t(`chat.suggestions.${key}`)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Input */}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    handleSendMessage()
+                  }
+                }}
+                placeholder={t('chat.placeholder')}
+                disabled={isLimitReached || chatMutation.isPending}
+                className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={!inputMessage.trim() || isLimitReached || chatMutation.isPending}
+                className="px-4 py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Send className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Tips Tab */}
         {activeTab === 'tips' && (

@@ -3,9 +3,29 @@
   "subtitle": "Seu coach nutricional pessoal",
   "aiActive": "Coach IA Ativo",
   "tabs": {
+    "chat": "Chat",
     "tips": "Dicas",
     "challenges": "Desafios",
     "summary": "Resumo"
+  },
+  "chat": {
+    "title": "Converse com seu Coach",
+    "subtitle": "Pergunte-me qualquer coisa sobre nutrição",
+    "placeholder": "Faça uma pergunta sobre nutrição...",
+    "send": "Enviar",
+    "thinking": "Pensando...",
+    "error": "Não foi possível obter resposta",
+    "retry": "Tentar novamente",
+    "welcome": "Olá! Sou seu coach nutricional pessoal. Como posso ajudá-lo hoje?",
+    "suggestions": {
+      "title": "Tente perguntar:",
+      "meal": "O que devo comer no jantar?",
+      "calories": "Quantas calorias eu preciso?",
+      "protein": "Como posso aumentar minha ingestão de proteínas?",
+      "tips": "Me dê dicas para comer saudável"
+    },
+    "limitReached": "Você usou todas as suas mensagens de coach por hoje. Atualize para Premium para acesso ilimitado!",
+    "premiumBadge": "Ilimitado"
   },
   "tips": {
     "title": "Dicas do dia",

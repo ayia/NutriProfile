@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { trackingApi } from '@/services/trackingApi'
 import { profileApi } from '@/services/profileApi'
+import { subscriptionApi } from '@/services/api'
 import { useAuthStore } from '@/store/authStore'
 import { tokenStorage } from '@/services/api'
 import { ProgressChart } from '@/components/tracking/ProgressChart'
@@ -12,6 +14,7 @@ import { GoalForm } from '@/components/tracking/GoalForm'
 import { GoalCard } from '@/components/tracking/GoalCard'
 import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
+import { USAGE_QUERY_KEY } from '@/components/subscription/UsageBanner'
 import { ACTIVITY_TYPES } from '@/types/tracking'
 import {
   BarChart3,
@@ -29,6 +32,8 @@ import {
   MessageSquare,
   Sparkles,
   Dumbbell,
+  Lock,
+  Zap,
   getActivityIcon,
   type LucideIcon,
 } from '@/lib/icons'
@@ -40,13 +45,24 @@ export function TrackingPage() {
   const { t, i18n } = useTranslation('tracking')
   const [activeTab, setActiveTab] = useState<Tab>('overview')
   const [activeModal, setActiveModal] = useState<Modal>(null)
-  const [chartPeriod, setChartPeriod] = useState<7 | 14 | 30>(30)
+  const [chartPeriod, setChartPeriod] = useState<7 | 14 | 30>(7)
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   // Auth state - only fetch if authenticated with valid tokens
   const { isAuthenticated } = useAuthStore()
   const hasToken = !!tokenStorage.getAccessToken()
   const canFetch = isAuthenticated && hasToken
+
+  // Check subscription tier for advanced stats
+  const usageQuery = useQuery({
+    queryKey: USAGE_QUERY_KEY,
+    queryFn: subscriptionApi.getUsage,
+    staleTime: 30 * 1000,
+    enabled: canFetch,
+  })
+
+  // Check if user has premium (any limit is -1 means premium/pro)
+  const isPremium = usageQuery.data?.limits?.vision_analyses?.limit === -1
 
   const summaryQuery = useQuery({
     queryKey: ['tracking', 'summary'],
@@ -277,19 +293,27 @@ export function TrackingPage() {
                     <h3 className="text-xl font-bold text-gray-900">{t('progress.title')}</h3>
                   </div>
                   <div className="flex gap-2 bg-gray-100/80 backdrop-blur-sm p-1 rounded-xl">
-                    {([7, 14, 30] as const).map((days) => (
-                      <button
-                        key={days}
-                        onClick={() => setChartPeriod(days)}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                          chartPeriod === days
-                            ? 'bg-white text-gray-900 shadow-md'
-                            : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                      >
-                        {t(`progress.days${days}`)}
-                      </button>
-                    ))}
+                    {([7, 14, 30] as const).map((days) => {
+                      const isLocked = !isPremium && days > 7
+                      return (
+                        <button
+                          key={days}
+                          onClick={() => !isLocked && setChartPeriod(days)}
+                          disabled={isLocked}
+                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-1 ${
+                            chartPeriod === days
+                              ? 'bg-white text-gray-900 shadow-md'
+                              : isLocked
+                              ? 'text-gray-400 cursor-not-allowed'
+                              : 'text-gray-500 hover:text-gray-700'
+                          }`}
+                          title={isLocked ? t('advancedStats.locked') : undefined}
+                        >
+                          {t(`progress.days${days}`)}
+                          {isLocked && <Lock className="w-3 h-3 text-gray-400" />}
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
 
@@ -862,9 +886,26 @@ export function TrackingPage() {
                     </div>
                   )}
 
-                  {/* Objectif Protéines */}
+                  {/* Objectif Protéines - Premium Only */}
                   {profileQuery.data.protein_g && (
                     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-200 p-5">
+                      {/* Premium Lock Overlay */}
+                      {!isPremium && (
+                        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-4">
+                          <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center mb-3 shadow-lg">
+                            <Lock className="w-6 h-6 text-white" />
+                          </div>
+                          <p className="text-sm font-semibold text-gray-800 mb-1">{t('advancedStats.locked')}</p>
+                          <p className="text-xs text-gray-500 text-center mb-3">{t('advancedStats.subtitle')}</p>
+                          <Link
+                            to="/pricing"
+                            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg transition-all"
+                          >
+                            <Zap className="w-4 h-4" />
+                            {t('advancedStats.unlock')}
+                          </Link>
+                        </div>
+                      )}
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-lg">
                           <Dumbbell className="w-5 h-5 text-white" />

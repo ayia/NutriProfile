@@ -3,9 +3,29 @@
   "subtitle": "您的个人营养教练",
   "aiActive": "AI教练在线",
   "tabs": {
+    "chat": "聊天",
     "tips": "建议",
     "challenges": "挑战",
     "summary": "总结"
+  },
+  "chat": {
+    "title": "与教练聊天",
+    "subtitle": "向我询问任何营养问题",
+    "placeholder": "询问营养相关问题...",
+    "send": "发送",
+    "thinking": "思考中...",
+    "error": "无法获取回复",
+    "retry": "重试",
+    "welcome": "你好！我是您的个人营养教练。今天我能帮您什么？",
+    "suggestions": {
+      "title": "试着问：",
+      "meal": "晚餐我应该吃什么？",
+      "calories": "我需要多少卡路里？",
+      "protein": "如何增加蛋白质摄入？",
+      "tips": "给我一些健康饮食的建议"
+    },
+    "limitReached": "您今天的教练消息已用完。升级到高级版获取无限访问！",
+    "premiumBadge": "无限"
   },
   "tips": {
     "title": "今日建议",

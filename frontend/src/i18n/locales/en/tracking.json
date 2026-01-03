@@ -221,6 +221,17 @@
     "activityFailed": "Error adding activity",
     "goalFailed": "Error creating goal"
   },
+  "advancedStats": {
+    "title": "Advanced Statistics",
+    "subtitle": "Unlock detailed nutrition tracking",
+    "locked": "Premium Feature",
+    "unlock": "Unlock Advanced Stats",
+    "features": {
+      "macros": "Detailed macro tracking (protein, carbs, fat)",
+      "trends": "Long-term nutrition trends",
+      "insights": "AI-powered insights"
+    }
+  },
   "water": {
     "today": "Today",
     "goal": "Goal",

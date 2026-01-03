@@ -221,6 +221,17 @@
     "activityFailed": "Erreur lors de l'ajout de l'activité",
     "goalFailed": "Erreur lors de la création de l'objectif"
   },
+  "advancedStats": {
+    "title": "Statistiques Avancées",
+    "subtitle": "Débloquez le suivi nutritionnel détaillé",
+    "locked": "Fonctionnalité Premium",
+    "unlock": "Débloquer les Stats Avancées",
+    "features": {
+      "macros": "Suivi détaillé des macros (protéines, glucides, lipides)",
+      "trends": "Tendances nutritionnelles long terme",
+      "insights": "Insights propulsés par l'IA"
+    }
+  },
   "water": {
     "today": "Aujourd'hui",
     "goal": "Objectif",

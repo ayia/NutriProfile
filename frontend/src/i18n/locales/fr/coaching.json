@@ -3,9 +3,29 @@
   "subtitle": "Votre coach nutritionnel personnel",
   "aiActive": "Coach IA Actif",
   "tabs": {
+    "chat": "Chat",
     "tips": "Conseils",
     "challenges": "Défis",
     "summary": "Résumé"
+  },
+  "chat": {
+    "title": "Discutez avec votre Coach",
+    "subtitle": "Posez-moi vos questions sur la nutrition",
+    "placeholder": "Posez une question sur la nutrition...",
+    "send": "Envoyer",
+    "thinking": "Réflexion...",
+    "error": "Impossible d'obtenir une réponse",
+    "retry": "Réessayer",
+    "welcome": "Bonjour ! Je suis votre coach nutritionnel personnel. Comment puis-je vous aider aujourd'hui ?",
+    "suggestions": {
+      "title": "Essayez de demander :",
+      "meal": "Que dois-je manger ce soir ?",
+      "calories": "De combien de calories ai-je besoin ?",
+      "protein": "Comment augmenter mon apport en protéines ?",
+      "tips": "Donne-moi des conseils pour manger sainement"
+    },
+    "limitReached": "Vous avez utilisé tous vos messages coach pour aujourd'hui. Passez à Premium pour un accès illimité !",
+    "premiumBadge": "Illimité"
   },
   "tips": {
     "title": "Conseils du jour",

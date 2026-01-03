@@ -3,9 +3,29 @@
   "subtitle": "Ihr persönlicher Ernährungscoach",
   "aiActive": "KI-Coach Aktiv",
   "tabs": {
+    "chat": "Chat",
     "tips": "Tipps",
     "challenges": "Herausforderungen",
     "summary": "Zusammenfassung"
+  },
+  "chat": {
+    "title": "Chat mit Ihrem Coach",
+    "subtitle": "Fragen Sie mich alles über Ernährung",
+    "placeholder": "Stellen Sie eine Frage zur Ernährung...",
+    "send": "Senden",
+    "thinking": "Denke nach...",
+    "error": "Keine Antwort möglich",
+    "retry": "Erneut versuchen",
+    "welcome": "Hallo! Ich bin Ihr persönlicher Ernährungscoach. Wie kann ich Ihnen heute helfen?",
+    "suggestions": {
+      "title": "Versuchen Sie zu fragen:",
+      "meal": "Was soll ich zum Abendessen essen?",
+      "calories": "Wie viele Kalorien brauche ich?",
+      "protein": "Wie kann ich meine Proteinaufnahme erhöhen?",
+      "tips": "Gib mir Tipps für gesunde Ernährung"
+    },
+    "limitReached": "Sie haben alle Ihre Coach-Nachrichten für heute aufgebraucht. Upgraden Sie auf Premium für unbegrenzten Zugang!",
+    "premiumBadge": "Unbegrenzt"
   },
   "tips": {
     "title": "Tipps des Tages",
