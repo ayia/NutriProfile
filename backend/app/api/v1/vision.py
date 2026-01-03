@@ -27,7 +27,7 @@ from app.schemas.food_log import (
     AnalysisSaveRequest,
 )
 from app.agents.vision import get_vision_agent, VisionInput, validate_nutrition, calculate_health_report, FoodAnalysis
-from app.services.subscription import SubscriptionService
+from app.services.subscription import SubscriptionService, get_limit_value
 
 router = APIRouter()
 
@@ -479,8 +479,8 @@ async def get_food_logs(
     # Appliquer le filtre d'historique basé sur le tier
     sub_service = SubscriptionService(db)
     tier = await sub_service.get_user_tier(current_user.id)
-    tier_limits = await sub_service.get_tier_limits(tier)
-    history_days = tier_limits.get("history_days", 7)
+    # Utiliser get_limit_value pour extraire la valeur entière (pas le dict)
+    history_days = get_limit_value(tier, "history_days")
 
     query = select(FoodLog).where(FoodLog.user_id == current_user.id)
 
@@ -785,23 +785,17 @@ async def get_daily_meals(
     current_user: User = Depends(get_current_user),
 ):
     """Récupère les repas et le résumé nutritionnel d'une journée (limité par tier)."""
+    import logging
+    logger = logging.getLogger(__name__)
+
     # Vérifier si la date est dans la limite d'historique du tier
     sub_service = SubscriptionService(db)
     tier = await sub_service.get_user_tier(current_user.id)
-    tier_limits = await sub_service.get_tier_limits(tier)
-    history_days = tier_limits.get("history_days", 7)
+    # Utiliser get_limit_value pour extraire la valeur entière (pas le dict)
+    history_days = get_limit_value(tier, "history_days")
 
-    # Pour "aujourd'hui", utiliser la date du serveur (UTC) pour être cohérent
-    # avec le dashboard qui utilise aussi date.today() côté serveur
     server_today = date.today()
-
-    # Si la date demandée est proche d'aujourd'hui (±1 jour pour gérer les timezones),
-    # utiliser la date du serveur pour être cohérent avec le dashboard
-    if abs((target_date - server_today).days) <= 1:
-        # Utiliser la date du serveur pour "aujourd'hui" afin d'être cohérent avec le dashboard
-        effective_date = server_today
-    else:
-        effective_date = target_date
+    logger.info(f"[get_daily_meals] user_id={current_user.id}, target_date={target_date}, server_today={server_today}, tier={tier}, history_days={history_days}")
 
     # Vérifier si la date demandée est accessible
     if history_days != -1:
@@ -816,9 +810,10 @@ async def get_daily_meals(
                 }
             )
 
-    # Récupérer les repas avec la date effective
-    start = datetime.combine(effective_date, datetime.min.time())
-    end = datetime.combine(effective_date, datetime.max.time())
+    # Récupérer les repas pour la date demandée
+    start = datetime.combine(target_date, datetime.min.time())
+    end = datetime.combine(target_date, datetime.max.time())
+    logger.info(f"[get_daily_meals] Querying meals between {start} and {end}")
 
     meals_query = (
         select(FoodLog)
@@ -842,8 +837,10 @@ async def get_daily_meals(
     nutrition_result = await db.execute(nutrition_query)
     nutrition = nutrition_result.scalar_one_or_none()
 
+    logger.info(f"[get_daily_meals] Found {len(meals)} meals for user {current_user.id} on {target_date}")
+
     return DailyMealsResponse(
-        date=datetime.combine(effective_date, datetime.min.time()),
+        date=datetime.combine(target_date, datetime.min.time()),
         meals=meals,
         nutrition=nutrition,
     )
