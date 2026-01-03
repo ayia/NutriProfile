@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { trackingApi } from '@/services/trackingApi'
 import { subscriptionApi } from '@/services/api'
 import type { WeeklyChartDay } from '@/types/tracking'
-import { AlertTriangle, BarChart3, Lock, Sparkles } from '@/lib/icons'
+import { AlertTriangle, BarChart3, Lock, Crown } from '@/lib/icons'
 
 interface WeeklyChartProps {
   title?: string
@@ -198,11 +198,13 @@ export function WeeklyChart({ title }: WeeklyChartProps) {
               ) : (
                 <Link
                   to="/pricing"
-                  className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl border border-primary-100 hover:shadow-md transition-all group"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200 hover:shadow-lg hover:shadow-amber-500/20 hover:-translate-y-0.5 transition-all duration-300 group"
                 >
-                  <Lock className="w-4 h-4 text-primary-500" />
-                  <span className="text-sm text-primary-700">{t('weeklyChart.macros.locked')}</span>
-                  <Sparkles className="w-4 h-4 text-primary-500 group-hover:animate-pulse" />
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Lock className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-amber-800">{t('weeklyChart.macros.locked')}</span>
+                  <Crown className="w-4 h-4 text-amber-500 group-hover:animate-bounce" />
                 </Link>
               )
             )}
