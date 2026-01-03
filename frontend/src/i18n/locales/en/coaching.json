@@ -76,5 +76,35 @@
     "remaining": "{{count}} tips remaining today",
     "limitReached": "Limit reached",
     "upgrade": "Upgrade to Premium for more tips"
+  },
+  "tipMessages": {
+    "morning_hydration": "Start your day with a large glass of water to rehydrate your body after the night.",
+    "afternoon_lunch": "Don't forget to have a balanced lunch to maintain your energy.",
+    "lose_weight_veggies": "Prioritize vegetables and lean proteins to feel fuller longer.",
+    "gain_muscle_protein": "Make sure to consume enough protein after your workout.",
+    "activity_walk": "A 30-minute walk can improve your mood and digestion.",
+    "wellbeing_breathe": "Take a few minutes to breathe deeply and relax."
+  },
+  "tipActions": {
+    "drink_water": "Drink 500ml of water",
+    "plan_lunch": "Plan your lunch",
+    "add_veggies": "Add vegetables",
+    "protein_shake": "Prepare a protein shake",
+    "plan_walk": "Plan a walk",
+    "breathe_5min": "5 minutes of breathing"
+  },
+  "challengeMessages": {
+    "daily_meals_title": "Log 3 meals",
+    "daily_meals_desc": "Record your 3 main meals today",
+    "daily_water_title": "Drink 2L of water",
+    "daily_water_desc": "Reach your daily hydration goal",
+    "daily_activity_title": "30 min of activity",
+    "daily_activity_desc": "Do at least 30 minutes of exercise",
+    "weekly_streak_title": "7-day streak",
+    "weekly_streak_desc": "Maintain a logging streak for 7 days"
+  },
+  "progressMessages": {
+    "on_track": "You're on the right track! Keep it up.",
+    "start_logging": "Start logging your meals to track your progress."
   }
 }

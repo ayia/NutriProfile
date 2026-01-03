@@ -212,5 +212,21 @@
     "saveFailed": "Error al guardar",
     "activityFailed": "Error al agregar la actividad",
     "goalFailed": "Error al crear el objetivo"
+  },
+  "proFeatures": {
+    "title": "Funciones PRO",
+    "subtitle": "Desbloquea herramientas poderosas",
+    "pdfExport": {
+      "title": "Exportar PDF",
+      "description": "Exporta tus informes de progreso como PDF",
+      "benefit": "Informes semanales y mensuales"
+    },
+    "mealPlans": {
+      "title": "Planes de Comidas IA",
+      "description": "Planes de comidas personalizados generados por IA",
+      "benefit": "Basados en tus objetivos"
+    },
+    "unlock": "Actualizar a PRO",
+    "locked": "Función PRO"
   }
 }

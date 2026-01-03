@@ -76,5 +76,35 @@
     "remaining": "{{count}} conseils restants aujourd'hui",
     "limitReached": "Limite atteinte",
     "upgrade": "Passez à Premium pour plus de conseils"
+  },
+  "tipMessages": {
+    "morning_hydration": "Commencez votre journée avec un grand verre d'eau pour réhydrater votre corps après la nuit.",
+    "afternoon_lunch": "N'oubliez pas de prendre un déjeuner équilibré pour maintenir votre énergie.",
+    "lose_weight_veggies": "Privilégiez les légumes et protéines maigres pour vous sentir rassasié plus longtemps.",
+    "gain_muscle_protein": "Assurez-vous de consommer suffisamment de protéines après l'entraînement.",
+    "activity_walk": "Une marche de 30 minutes peut améliorer votre humeur et votre digestion.",
+    "wellbeing_breathe": "Prenez quelques minutes pour respirer profondément et vous détendre."
+  },
+  "tipActions": {
+    "drink_water": "Boire 500ml d'eau",
+    "plan_lunch": "Planifier le déjeuner",
+    "add_veggies": "Ajouter des légumes",
+    "protein_shake": "Préparer un shake protéiné",
+    "plan_walk": "Planifier une marche",
+    "breathe_5min": "5 minutes de respiration"
+  },
+  "challengeMessages": {
+    "daily_meals_title": "Logger 3 repas",
+    "daily_meals_desc": "Enregistrez vos 3 repas principaux aujourd'hui",
+    "daily_water_title": "Boire 2L d'eau",
+    "daily_water_desc": "Atteignez votre objectif d'hydratation quotidien",
+    "daily_activity_title": "30 min d'activité",
+    "daily_activity_desc": "Faites au moins 30 minutes d'exercice",
+    "weekly_streak_title": "Streak de 7 jours",
+    "weekly_streak_desc": "Maintenez un streak de logging pendant 7 jours"
+  },
+  "progressMessages": {
+    "on_track": "Vous êtes sur la bonne voie ! Continuez comme ça.",
+    "start_logging": "Commencez à logger vos repas pour suivre votre progression."
   }
 }

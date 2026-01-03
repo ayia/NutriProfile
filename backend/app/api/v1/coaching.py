@@ -106,42 +106,42 @@ async def get_tips(
     tips = []
     time_of_day = get_time_of_day()
 
-    # Conseil basé sur l'heure
+    # Conseil basé sur l'heure (using translation keys)
     if time_of_day == "morning":
         tips.append(TipResponse(
             category="hydratation",
-            message="Commencez votre journée avec un grand verre d'eau pour réhydrater votre corps après la nuit.",
+            message="morning_hydration",  # Translation key
             priority="high",
             emoji="💧",
-            action="Boire 500ml d'eau"
+            action="drink_water"  # Translation key
         ))
     elif time_of_day == "afternoon":
         if not nutrition or nutrition.meals_count < 2:
             tips.append(TipResponse(
                 category="repas",
-                message="N'oubliez pas de prendre un déjeuner équilibré pour maintenir votre énergie.",
+                message="afternoon_lunch",  # Translation key
                 priority="high",
                 emoji="🍽️",
-                action="Planifier le déjeuner"
+                action="plan_lunch"  # Translation key
             ))
 
-    # Conseil basé sur les objectifs
+    # Conseil basé sur les objectifs (using translation keys)
     if profile:
         if profile.goal == "lose_weight":
             tips.append(TipResponse(
                 category="nutrition",
-                message="Privilégiez les légumes et protéines maigres pour vous sentir rassasié plus longtemps.",
+                message="lose_weight_veggies",  # Translation key
                 priority="medium",
                 emoji="🥗",
-                action="Ajouter des légumes"
+                action="add_veggies"  # Translation key
             ))
         elif profile.goal == "gain_muscle":
             tips.append(TipResponse(
                 category="nutrition",
-                message="Assurez-vous de consommer suffisamment de protéines après l'entraînement.",
+                message="gain_muscle_protein",  # Translation key
                 priority="high",
                 emoji="💪",
-                action="Préparer un shake protéiné"
+                action="protein_shake"  # Translation key
             ))
 
     # Conseil activité
@@ -156,20 +156,20 @@ async def get_tips(
     if activity_minutes < 30:
         tips.append(TipResponse(
             category="activite",
-            message="Une marche de 30 minutes peut améliorer votre humeur et votre digestion.",
+            message="activity_walk",  # Translation key
             priority="medium",
             emoji="🚶",
-            action="Planifier une marche"
+            action="plan_walk"  # Translation key
         ))
 
-    # Conseil générique si pas assez
+    # Conseil générique si pas assez (using translation keys)
     if len(tips) < 3:
         tips.append(TipResponse(
             category="bien-etre",
-            message="Prenez quelques minutes pour respirer profondément et vous détendre.",
+            message="wellbeing_breathe",  # Translation key
             priority="low",
             emoji="🧘",
-            action="5 minutes de respiration"
+            action="breathe_5min"  # Translation key
         ))
 
     return tips[:5]  # Maximum 5 conseils
@@ -233,11 +233,11 @@ async def get_weekly_summary(
     streak = streak_result.scalar_one_or_none()
     streak_days = streak.current_count if streak else 0
 
-    # Message de progression
+    # Message de progression (using translation keys)
     if avg_calories > 0:
-        progress_message = "Vous êtes sur la bonne voie ! Continuez comme ça."
+        progress_message = "on_track"  # Translation key
     else:
-        progress_message = "Commencez à logger vos repas pour suivre votre progression."
+        progress_message = "start_logging"  # Translation key
 
     return WeeklySummaryResponse(
         avg_calories=round(avg_calories, 0),

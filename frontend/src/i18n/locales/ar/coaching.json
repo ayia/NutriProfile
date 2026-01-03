@@ -76,5 +76,35 @@
     "remaining": "{{count}} نصائح متبقية اليوم",
     "limitReached": "تم الوصول للحد الأقصى",
     "upgrade": "قم بالترقية للحصول على المزيد من النصائح"
+  },
+  "tipMessages": {
+    "morning_hydration": "ابدأ يومك بكوب كبير من الماء لترطيب جسمك بعد الليل.",
+    "afternoon_lunch": "لا تنسَ تناول غداء متوازن للحفاظ على طاقتك.",
+    "lose_weight_veggies": "أعطِ الأولوية للخضروات والبروتينات الخالية من الدهون للشعور بالشبع لفترة أطول.",
+    "gain_muscle_protein": "تأكد من تناول ما يكفي من البروتين بعد التمرين.",
+    "activity_walk": "المشي لمدة 30 دقيقة يمكن أن يحسن مزاجك وهضمك.",
+    "wellbeing_breathe": "خذ بضع دقائق للتنفس بعمق والاسترخاء."
+  },
+  "tipActions": {
+    "drink_water": "اشرب 500 مل من الماء",
+    "plan_lunch": "خطط للغداء",
+    "add_veggies": "أضف الخضروات",
+    "protein_shake": "حضّر مخفوق البروتين",
+    "plan_walk": "خطط للمشي",
+    "breathe_5min": "5 دقائق من التنفس"
+  },
+  "challengeMessages": {
+    "daily_meals_title": "سجل 3 وجبات",
+    "daily_meals_desc": "سجل وجباتك الثلاث الرئيسية اليوم",
+    "daily_water_title": "اشرب 2 لتر ماء",
+    "daily_water_desc": "حقق هدف الترطيب اليومي",
+    "daily_activity_title": "30 دقيقة نشاط",
+    "daily_activity_desc": "مارس 30 دقيقة على الأقل من التمارين",
+    "weekly_streak_title": "سلسلة 7 أيام",
+    "weekly_streak_desc": "حافظ على سلسلة تسجيل لمدة 7 أيام"
+  },
+  "progressMessages": {
+    "on_track": "أنت على الطريق الصحيح! استمر.",
+    "start_logging": "ابدأ بتسجيل وجباتك لتتبع تقدمك."
   }
 }

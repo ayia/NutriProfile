@@ -212,5 +212,21 @@
     "saveFailed": "خطأ في الحفظ",
     "activityFailed": "خطأ في إضافة النشاط",
     "goalFailed": "خطأ في إنشاء الهدف"
+  },
+  "proFeatures": {
+    "title": "ميزات PRO",
+    "subtitle": "افتح أدوات قوية",
+    "pdfExport": {
+      "title": "تصدير PDF",
+      "description": "صدّر تقارير تقدمك كملفات PDF",
+      "benefit": "تقارير أسبوعية وشهرية"
+    },
+    "mealPlans": {
+      "title": "خطط وجبات بالذكاء الاصطناعي",
+      "description": "خطط وجبات مخصصة تم إنشاؤها بواسطة الذكاء الاصطناعي",
+      "benefit": "بناءً على أهدافك"
+    },
+    "unlock": "الترقية إلى PRO",
+    "locked": "ميزة PRO"
   }
 }

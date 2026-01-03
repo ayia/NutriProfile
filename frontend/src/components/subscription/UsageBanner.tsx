@@ -90,7 +90,7 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
                   ))}
                 </div>
                 <span className="text-xs text-gray-500">
-                  {remaining}/{limit} {t('usage.remainingToday')}
+                  {remaining}/{limit} {action === 'recipe_generations' ? t('usage.remainingThisWeek') : t('usage.remainingToday')}
                 </span>
               </div>
             </div>
@@ -190,7 +190,7 @@ export function UsageBanner({ action = 'vision_analyses', showAlways = false, co
             ) : isLow ? (
               <>{t('usage.remaining')} <span className="font-semibold">{remaining}</span> {label} {t('usage.remaining', { count: remaining })}</>
             ) : (
-              <>{remaining} {label} {t('usage.remainingToday')}</>
+              <>{remaining} {label} {action === 'recipe_generations' ? t('usage.remainingThisWeek') : t('usage.remainingToday')}</>
             )}
           </p>
 

@@ -451,10 +451,10 @@ export function CoachingPage() {
                 <div className="flex items-start gap-3">
                   <span className="text-2xl flex-shrink-0">{tip.emoji}</span>
                   <div className="flex-1">
-                    <p className="text-gray-800 font-medium">{tip.message}</p>
+                    <p className="text-gray-800 font-medium">{t(`tipMessages.${tip.message}`, tip.message)}</p>
                     {tip.action && (
                       <button className="mt-2 text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1">
-                        <span>→</span> {tip.action}
+                        <span>→</span> {t(`tipActions.${tip.action}`, tip.action)}
                       </button>
                     )}
                   </div>
@@ -510,7 +510,7 @@ export function CoachingPage() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-bold text-gray-900">{challenge.title}</h3>
+                      <h3 className="font-bold text-gray-900">{t(`challengeMessages.${challenge.id}_title`, challenge.title)}</h3>
                       <div className="flex items-center gap-2">
                         <span className={`text-xs px-2 py-1 rounded-full ${getDifficultyBadge(challenge.difficulty)}`}>
                           {t(`difficulty.${challenge.difficulty}`)}
@@ -521,7 +521,7 @@ export function CoachingPage() {
                         </span>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-500 mb-3">{challenge.description}</p>
+                    <p className="text-sm text-gray-500 mb-3">{t(`challengeMessages.${challenge.id}_desc`, challenge.description)}</p>
 
                     {/* Progress bar */}
                     <div className="relative">
@@ -584,7 +584,7 @@ export function CoachingPage() {
               <>
                 {/* Progress message */}
                 <div className="glass-card p-6 bg-gradient-to-r from-primary-50 to-emerald-50">
-                  <p className="text-lg font-medium text-primary-800">{summaryQuery.data.progress_message}</p>
+                  <p className="text-lg font-medium text-primary-800">{t(`progressMessages.${summaryQuery.data.progress_message}`, summaryQuery.data.progress_message)}</p>
                 </div>
 
                 {/* Stats grid */}

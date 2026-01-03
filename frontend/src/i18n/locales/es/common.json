@@ -65,6 +65,7 @@
     "comeBackTomorrow": "Vuelve mañana o pasa a Premium.",
     "remaining": "Solo",
     "remainingToday": "restantes hoy",
+    "remainingThisWeek": "restantes esta semana",
     "remaining_one": "restante",
     "remaining_other": "restantes",
     "upgradeToPremium": "Pasar a Premium",
@@ -126,6 +127,13 @@
   },
   "coach": {
     "openChat": "Chatear con el Coach IA"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "¡Ups! La página que buscas no existe o ha sido movida.",
+    "goHome": "Volver al Inicio",
+    "goBack": "Volver Atrás",
+    "helpfulLinks": "Aquí hay algunos enlaces útiles:"
   },
   "tour": {
     "skip": "Saltar tour",

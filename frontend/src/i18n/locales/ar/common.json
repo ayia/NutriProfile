@@ -65,6 +65,7 @@
     "comeBackTomorrow": "عد غداً أو قم بالترقية إلى بريميوم.",
     "remaining": "تبقى فقط",
     "remainingToday": "متبقية اليوم",
+    "remainingThisWeek": "متبقية هذا الأسبوع",
     "remaining_one": "متبقية",
     "remaining_other": "متبقية",
     "upgradeToPremium": "الترقية إلى بريميوم",
@@ -126,6 +127,13 @@
   },
   "coach": {
     "openChat": "تحدث مع المدرب الذكي"
+  },
+  "notFound": {
+    "title": "الصفحة غير موجودة",
+    "description": "عفواً! الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    "goHome": "العودة للرئيسية",
+    "goBack": "رجوع",
+    "helpfulLinks": "إليك بعض الروابط المفيدة:"
   },
   "tour": {
     "skip": "تخطي الجولة",

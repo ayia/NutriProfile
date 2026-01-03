@@ -245,5 +245,21 @@
       "invalidAmount": "Veuillez entrer une quantité valide",
       "maxAmount": "Maximum 5000 ml par entrée"
     }
+  },
+  "proFeatures": {
+    "title": "Fonctionnalités PRO",
+    "subtitle": "Débloquez des outils puissants",
+    "pdfExport": {
+      "title": "Export PDF",
+      "description": "Exportez vos rapports de progression en PDF",
+      "benefit": "Rapports hebdo & mensuels"
+    },
+    "mealPlans": {
+      "title": "Plans Repas IA",
+      "description": "Plans de repas personnalisés générés par l'IA",
+      "benefit": "Basés sur vos objectifs"
+    },
+    "unlock": "Passer à PRO",
+    "locked": "Fonctionnalité PRO"
   }
 }

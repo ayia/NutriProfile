@@ -76,5 +76,35 @@
     "remaining": "今日剩余{{count}}条建议",
     "limitReached": "已达限制",
     "upgrade": "升级到高级版获取更多建议"
+  },
+  "tipMessages": {
+    "morning_hydration": "早晨喝一大杯水，帮助身体在夜间休息后补充水分。",
+    "afternoon_lunch": "别忘了吃一顿均衡的午餐来保持精力。",
+    "lose_weight_veggies": "优先选择蔬菜和瘦肉蛋白，让你保持更长时间的饱腹感。",
+    "gain_muscle_protein": "确保在训练后摄入足够的蛋白质。",
+    "activity_walk": "30分钟的散步可以改善你的心情和消化。",
+    "wellbeing_breathe": "花几分钟时间深呼吸和放松。"
+  },
+  "tipActions": {
+    "drink_water": "喝500毫升水",
+    "plan_lunch": "计划午餐",
+    "add_veggies": "添加蔬菜",
+    "protein_shake": "准备蛋白奶昔",
+    "plan_walk": "计划散步",
+    "breathe_5min": "5分钟呼吸练习"
+  },
+  "challengeMessages": {
+    "daily_meals_title": "记录3餐",
+    "daily_meals_desc": "今天记录你的3顿正餐",
+    "daily_water_title": "喝2升水",
+    "daily_water_desc": "达到每日补水目标",
+    "daily_activity_title": "30分钟活动",
+    "daily_activity_desc": "至少运动30分钟",
+    "weekly_streak_title": "7天连续",
+    "weekly_streak_desc": "保持7天的记录连续"
+  },
+  "progressMessages": {
+    "on_track": "你在正确的轨道上！继续保持。",
+    "start_logging": "开始记录你的饮食来追踪进展。"
   }
 }

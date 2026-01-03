@@ -76,5 +76,35 @@
     "remaining": "{{count}} Tipps heute übrig",
     "limitReached": "Limit erreicht",
     "upgrade": "Upgraden Sie auf Premium für mehr Tipps"
+  },
+  "tipMessages": {
+    "morning_hydration": "Starten Sie den Tag mit einem großen Glas Wasser, um Ihren Körper nach der Nacht zu rehydrieren.",
+    "afternoon_lunch": "Vergessen Sie nicht, ein ausgewogenes Mittagessen zu sich zu nehmen, um Ihre Energie zu erhalten.",
+    "lose_weight_veggies": "Bevorzugen Sie Gemüse und mageres Protein, um länger satt zu bleiben.",
+    "gain_muscle_protein": "Achten Sie darauf, nach dem Training ausreichend Protein zu sich zu nehmen.",
+    "activity_walk": "Ein 30-minütiger Spaziergang kann Ihre Stimmung und Verdauung verbessern.",
+    "wellbeing_breathe": "Nehmen Sie sich ein paar Minuten Zeit zum tiefen Atmen und Entspannen."
+  },
+  "tipActions": {
+    "drink_water": "500ml Wasser trinken",
+    "plan_lunch": "Mittagessen planen",
+    "add_veggies": "Gemüse hinzufügen",
+    "protein_shake": "Proteinshake zubereiten",
+    "plan_walk": "Spaziergang planen",
+    "breathe_5min": "5 Minuten Atemübungen"
+  },
+  "challengeMessages": {
+    "daily_meals_title": "3 Mahlzeiten protokollieren",
+    "daily_meals_desc": "Erfassen Sie heute Ihre 3 Hauptmahlzeiten",
+    "daily_water_title": "2L Wasser trinken",
+    "daily_water_desc": "Erreichen Sie Ihr tägliches Hydrationsziel",
+    "daily_activity_title": "30 Min. Aktivität",
+    "daily_activity_desc": "Machen Sie mindestens 30 Minuten Sport",
+    "weekly_streak_title": "7-Tage-Serie",
+    "weekly_streak_desc": "Halten Sie 7 Tage lang eine Protokoll-Serie"
+  },
+  "progressMessages": {
+    "on_track": "Sie sind auf dem richtigen Weg! Weiter so.",
+    "start_logging": "Beginnen Sie, Ihre Mahlzeiten zu protokollieren, um Ihren Fortschritt zu verfolgen."
   }
 }

@@ -76,5 +76,35 @@
     "remaining": "{{count}} dicas restantes hoje",
     "limitReached": "Limite atingido",
     "upgrade": "Atualize para Premium para mais dicas"
+  },
+  "tipMessages": {
+    "morning_hydration": "Comece o dia com um grande copo de água para reidratar seu corpo após a noite.",
+    "afternoon_lunch": "Não esqueça de fazer um almoço equilibrado para manter sua energia.",
+    "lose_weight_veggies": "Priorize vegetais e proteínas magras para se sentir saciado por mais tempo.",
+    "gain_muscle_protein": "Certifique-se de consumir proteína suficiente após o treino.",
+    "activity_walk": "Uma caminhada de 30 minutos pode melhorar seu humor e digestão.",
+    "wellbeing_breathe": "Reserve alguns minutos para respirar profundamente e relaxar."
+  },
+  "tipActions": {
+    "drink_water": "Beber 500ml de água",
+    "plan_lunch": "Planejar o almoço",
+    "add_veggies": "Adicionar vegetais",
+    "protein_shake": "Preparar shake de proteína",
+    "plan_walk": "Planejar uma caminhada",
+    "breathe_5min": "5 minutos de respiração"
+  },
+  "challengeMessages": {
+    "daily_meals_title": "Registrar 3 refeições",
+    "daily_meals_desc": "Registre suas 3 refeições principais hoje",
+    "daily_water_title": "Beber 2L de água",
+    "daily_water_desc": "Atinja sua meta diária de hidratação",
+    "daily_activity_title": "30 min de atividade",
+    "daily_activity_desc": "Faça pelo menos 30 minutos de exercício",
+    "weekly_streak_title": "Sequência de 7 dias",
+    "weekly_streak_desc": "Mantenha uma sequência de registro por 7 dias"
+  },
+  "progressMessages": {
+    "on_track": "Você está no caminho certo! Continue assim.",
+    "start_logging": "Comece a registrar suas refeições para acompanhar seu progresso."
   }
 }

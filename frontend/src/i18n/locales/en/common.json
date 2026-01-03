@@ -96,6 +96,7 @@
     "comeBackTomorrow": "Come back tomorrow or upgrade to Premium.",
     "remaining": "Only",
     "remainingToday": "remaining today",
+    "remainingThisWeek": "remaining this week",
     "remaining_one": "remaining",
     "remaining_other": "remaining",
     "upgradeToPremium": "Upgrade to Premium",
@@ -169,6 +170,13 @@
   },
   "coach": {
     "openChat": "Chat with AI Coach"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "Oops! The page you're looking for doesn't exist or has been moved.",
+    "goHome": "Back to Home",
+    "goBack": "Go Back",
+    "helpfulLinks": "Here are some helpful links:"
   },
   "tour": {
     "skip": "Skip tour",

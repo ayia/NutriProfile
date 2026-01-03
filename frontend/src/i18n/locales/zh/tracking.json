@@ -212,5 +212,21 @@
     "saveFailed": "保存失败",
     "activityFailed": "添加活动失败",
     "goalFailed": "创建目标失败"
+  },
+  "proFeatures": {
+    "title": "PRO 功能",
+    "subtitle": "解锁强大工具",
+    "pdfExport": {
+      "title": "PDF 导出",
+      "description": "将您的进度报告导出为 PDF",
+      "benefit": "每周和每月报告"
+    },
+    "mealPlans": {
+      "title": "AI 餐饮计划",
+      "description": "AI 生成的个性化餐饮计划",
+      "benefit": "基于您的目标"
+    },
+    "unlock": "升级到 PRO",
+    "locked": "PRO 功能"
   }
 }

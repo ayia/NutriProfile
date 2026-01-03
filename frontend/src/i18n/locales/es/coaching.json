@@ -76,5 +76,35 @@
     "remaining": "{{count}} consejos restantes hoy",
     "limitReached": "Límite alcanzado",
     "upgrade": "Pasa a Premium para más consejos"
+  },
+  "tipMessages": {
+    "morning_hydration": "Comienza tu día con un gran vaso de agua para rehidratar tu cuerpo después de la noche.",
+    "afternoon_lunch": "No olvides tomar un almuerzo equilibrado para mantener tu energía.",
+    "lose_weight_veggies": "Prioriza verduras y proteínas magras para sentirte lleno por más tiempo.",
+    "gain_muscle_protein": "Asegúrate de consumir suficiente proteína después del entrenamiento.",
+    "activity_walk": "Una caminata de 30 minutos puede mejorar tu estado de ánimo y digestión.",
+    "wellbeing_breathe": "Tómate unos minutos para respirar profundamente y relajarte."
+  },
+  "tipActions": {
+    "drink_water": "Beber 500ml de agua",
+    "plan_lunch": "Planificar el almuerzo",
+    "add_veggies": "Añadir verduras",
+    "protein_shake": "Preparar batido de proteínas",
+    "plan_walk": "Planificar una caminata",
+    "breathe_5min": "5 minutos de respiración"
+  },
+  "challengeMessages": {
+    "daily_meals_title": "Registrar 3 comidas",
+    "daily_meals_desc": "Registra tus 3 comidas principales hoy",
+    "daily_water_title": "Beber 2L de agua",
+    "daily_water_desc": "Alcanza tu objetivo de hidratación diaria",
+    "daily_activity_title": "30 min de actividad",
+    "daily_activity_desc": "Haz al menos 30 minutos de ejercicio",
+    "weekly_streak_title": "Racha de 7 días",
+    "weekly_streak_desc": "Mantén una racha de registro durante 7 días"
+  },
+  "progressMessages": {
+    "on_track": "¡Vas por buen camino! Sigue así.",
+    "start_logging": "Comienza a registrar tus comidas para seguir tu progreso."
   }
 }

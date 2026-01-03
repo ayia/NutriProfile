@@ -65,6 +65,7 @@
     "comeBackTomorrow": "Kommen Sie morgen wieder oder upgraden Sie auf Premium.",
     "remaining": "Nur noch",
     "remainingToday": "heute übrig",
+    "remainingThisWeek": "diese Woche übrig",
     "remaining_one": "übrig",
     "remaining_other": "übrig",
     "upgradeToPremium": "Auf Premium upgraden",
@@ -126,6 +127,13 @@
   },
   "coach": {
     "openChat": "Mit dem KI-Coach chatten"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "description": "Ups! Die gesuchte Seite existiert nicht oder wurde verschoben.",
+    "goHome": "Zur Startseite",
+    "goBack": "Zurück",
+    "helpfulLinks": "Hier sind einige hilfreiche Links:"
   },
   "tour": {
     "skip": "Tour überspringen",

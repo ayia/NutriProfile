@@ -34,6 +34,8 @@ import {
   Dumbbell,
   Lock,
   Zap,
+  FileDown,
+  Crown,
   getActivityIcon,
   type LucideIcon,
 } from '@/lib/icons'
@@ -63,6 +65,8 @@ export function TrackingPage() {
 
   // Check if user has premium (any limit is -1 means premium/pro)
   const isPremium = usageQuery.data?.limits?.vision_analyses?.limit === -1
+  // Check if user is PRO tier (for PDF export and meal plans)
+  const isPro = usageQuery.data?.tier === 'pro'
 
   const summaryQuery = useQuery({
     queryKey: ['tracking', 'summary'],
@@ -463,6 +467,78 @@ export function TrackingPage() {
                 <Droplets className="w-5 h-5" /> {t('actions.addWater')}
               </button>
             </div>
+
+            {/* PRO Features Section - Only show for non-PRO users */}
+            {!isPro && (
+              <div className="glass-card p-6 reveal" style={{ animationDelay: '0.7s' }}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+                    <Crown className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">{t('proFeatures.title')}</h3>
+                    <p className="text-sm text-gray-500">{t('proFeatures.subtitle')}</p>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* PDF Export Card */}
+                  <Link
+                    to="/pro"
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-50 to-emerald-50 border border-primary-200 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all group"
+                  >
+                    <div className="absolute top-3 right-3">
+                      <span className="px-2 py-1 bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
+                        <Lock className="w-3 h-3" /> PRO
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-emerald-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <FileDown className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900">{t('proFeatures.pdfExport.title')}</h4>
+                        <p className="text-xs text-gray-500">{t('proFeatures.pdfExport.benefit')}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600">{t('proFeatures.pdfExport.description')}</p>
+                  </Link>
+
+                  {/* AI Meal Plans Card */}
+                  <Link
+                    to="/pro"
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all group"
+                  >
+                    <div className="absolute top-3 right-3">
+                      <span className="px-2 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
+                        <Lock className="w-3 h-3" /> PRO
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <Calendar className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900">{t('proFeatures.mealPlans.title')}</h4>
+                        <p className="text-xs text-gray-500">{t('proFeatures.mealPlans.benefit')}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600">{t('proFeatures.mealPlans.description')}</p>
+                  </Link>
+                </div>
+
+                {/* Upgrade CTA */}
+                <div className="mt-4 text-center">
+                  <Link
+                    to="/pricing"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-purple-500/30 hover:-translate-y-0.5 transition-all"
+                  >
+                    <Zap className="w-5 h-5" />
+                    {t('proFeatures.unlock')}
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

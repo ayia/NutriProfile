@@ -86,6 +86,7 @@
     "comeBackTomorrow": "Revenez demain ou passez à Premium.",
     "remaining": "Plus que",
     "remainingToday": "restantes aujourd'hui",
+    "remainingThisWeek": "restantes cette semaine",
     "remaining_one": "restante",
     "remaining_other": "restantes",
     "upgradeToPremium": "Passer à Premium",
@@ -159,6 +160,13 @@
   },
   "coach": {
     "openChat": "Discuter avec le Coach IA"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "Oups ! La page que vous recherchez n'existe pas ou a été déplacée.",
+    "goHome": "Retour à l'accueil",
+    "goBack": "Revenir en arrière",
+    "helpfulLinks": "Voici quelques liens utiles :"
   },
   "tour": {
     "skip": "Passer le tour",

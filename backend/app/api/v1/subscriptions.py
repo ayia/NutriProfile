@@ -306,3 +306,58 @@ async def cancel_subscription(
         "message": "Subscription will be cancelled at the end of the current period",
         "ends_at": subscription.current_period_end
     }
+
+
+# ============== TEST/DEBUG ENDPOINTS (For QA Testing Only) ==============
+
+@router.post("/debug/set-tier")
+async def debug_set_tier(
+    tier: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    DEBUG ONLY: Set subscription tier for testing purposes.
+    This endpoint should be removed or protected in production.
+
+    Usage: POST /subscriptions/debug/set-tier?tier=premium
+    Valid tiers: free, premium, pro
+    """
+    from sqlalchemy import update
+
+    valid_tiers = ["free", "premium", "pro"]
+    if tier not in valid_tiers:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid tier. Must be one of: {valid_tiers}"
+        )
+
+    # Update user tier using direct SQL update
+    await db.execute(
+        update(User).where(User.id == current_user.id).values(subscription_tier=tier)
+    )
+    await db.commit()
+
+    return {
+        "message": f"Tier updated to {tier}",
+        "user_id": current_user.id,
+        "email": current_user.email,
+        "new_tier": tier
+    }
+
+
+@router.post("/debug/reset-usage")
+async def debug_reset_usage(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    DEBUG ONLY: Reset all usage counters for testing purposes.
+    """
+    service = SubscriptionService(db)
+    await service.reset_usage(current_user.id)
+
+    return {
+        "message": "Usage counters reset",
+        "user_id": current_user.id
+    }

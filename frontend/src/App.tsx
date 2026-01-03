@@ -17,6 +17,7 @@ import { TermsPage } from '@/pages/TermsPage'
 import { PrivacyPage } from '@/pages/PrivacyPage'
 import { RefundPage } from '@/pages/RefundPage'
 import { CoachingPage } from '@/pages/CoachingPage'
+import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import { ProfileRequiredRoute } from '@/components/auth/ProfileRequiredRoute'
 
@@ -105,6 +106,7 @@ function App() {
         <Route path="terms" element={<TermsPage />} />
         <Route path="privacy" element={<PrivacyPage />} />
         <Route path="refund" element={<RefundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
     </>

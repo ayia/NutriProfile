@@ -212,5 +212,21 @@
     "saveFailed": "Fehler beim Speichern",
     "activityFailed": "Fehler beim Hinzufügen der Aktivität",
     "goalFailed": "Fehler beim Erstellen des Ziels"
+  },
+  "proFeatures": {
+    "title": "PRO Funktionen",
+    "subtitle": "Leistungsstarke Tools freischalten",
+    "pdfExport": {
+      "title": "PDF Export",
+      "description": "Exportieren Sie Ihre Fortschrittsberichte als PDF",
+      "benefit": "Wöchentliche & monatliche Berichte"
+    },
+    "mealPlans": {
+      "title": "KI Essenspläne",
+      "description": "Personalisierte Essenspläne von KI generiert",
+      "benefit": "Basierend auf Ihren Zielen"
+    },
+    "unlock": "Auf PRO upgraden",
+    "locked": "PRO Funktion"
   }
 }

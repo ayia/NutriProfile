@@ -410,6 +410,17 @@ class SubscriptionService:
 
             return response.status_code == 200
 
+    async def reset_usage(self, user_id: int) -> None:
+        """
+        DEBUG ONLY: Reset all usage counters for a user.
+        Deletes all UsageTracking records for the user.
+        """
+        from sqlalchemy import delete
+        await self.db.execute(
+            delete(UsageTracking).where(UsageTracking.user_id == user_id)
+        )
+        await self.db.commit()
+
 
 # Mapping price_id -> tier (à configurer avec vos vrais IDs Paddle)
 PRICE_TO_TIER = {

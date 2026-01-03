@@ -212,5 +212,21 @@
     "saveFailed": "Erro ao salvar",
     "activityFailed": "Erro ao adicionar a atividade",
     "goalFailed": "Erro ao criar o objetivo"
+  },
+  "proFeatures": {
+    "title": "Recursos PRO",
+    "subtitle": "Desbloqueie ferramentas poderosas",
+    "pdfExport": {
+      "title": "Exportar PDF",
+      "description": "Exporte seus relatórios de progresso como PDF",
+      "benefit": "Relatórios semanais e mensais"
+    },
+    "mealPlans": {
+      "title": "Planos de Refeições IA",
+      "description": "Planos de refeições personalizados gerados por IA",
+      "benefit": "Baseados em seus objetivos"
+    },
+    "unlock": "Atualizar para PRO",
+    "locked": "Recurso PRO"
   }
 }

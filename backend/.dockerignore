@@ -1,33 +1,51 @@
-# Fichiers de configuration locale
-.env
-.env.local
-.env.development
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-venv/
+# Virtual environment
 .venv/
-env/
+venv/
 ENV/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# Python cache
+__pycache__/
+*.py[cod]
+*.class
+*.so
 
-# Tests
+# Testing
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Données locales
-*.db
-data/
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# Fly.io
-fly.toml
+# Environment files
+.env
+.env.local
+*.local
+
+# Database files (local dev)
+*.db
+nutriprofile.db
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+tmp/
+temp/
+*.tmp
+nul
+
+# Git
+.git/
+.gitignore
+
+# Tests - keep test files but not test data
+
