@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, Loader2, Crown, Zap, Gift, Sparkles } from '@/lib/icons'
 import { subscriptionApi } from '@/services/api'
-import type { PricingPlan, SubscriptionTier, UsageLimits } from '@/types'
+import type { PricingPlan, SubscriptionTier, FullTierLimits } from '@/types'
 
 interface PricingCardProps {
   plan: PricingPlan
   isYearly: boolean
   currentTier: SubscriptionTier
-  limits?: UsageLimits // Limites provenant de l'API pour synchronisation
+  limits?: FullTierLimits // Limites complètes provenant de l'API pour synchronisation
 }
 
 export function PricingCard({ plan, isYearly, currentTier, limits }: PricingCardProps) {
@@ -34,43 +34,55 @@ export function PricingCard({ plan, isYearly, currentTier, limits }: PricingCard
 
       // Vision analyses
       if (limits.vision_analyses.limit === -1) {
-        features.push(t('features.visionAnalysesUnlimited'))
+        features.push(t('features.vision_unlimited'))
       } else {
-        features.push(t('features.visionAnalyses', { count: limits.vision_analyses.limit }))
+        features.push(t(`features.vision_${limits.vision_analyses.limit}`))
       }
 
       // Recipe generations
       if (limits.recipe_generations.limit === -1) {
-        features.push(t('features.recipeGenerationsUnlimited'))
+        features.push(t('features.recipes_unlimited'))
       } else {
-        features.push(t('features.recipeGenerations', { count: limits.recipe_generations.limit }))
+        features.push(t(`features.recipes_${limits.recipe_generations.limit}`))
       }
 
       // Coach messages
       if (limits.coach_messages.limit === -1) {
-        features.push(t('features.coachMessagesUnlimited'))
+        features.push(t('features.coach_unlimited'))
       } else {
-        features.push(t('features.coachMessages', { count: limits.coach_messages.limit }))
+        features.push(t(`features.coach_${limits.coach_messages.limit}`))
       }
 
       // History days
       if (limits.history_days.limit === -1) {
-        features.push(t('features.historyUnlimited'))
+        features.push(t('features.history_unlimited'))
       } else {
-        features.push(t('features.historyDays', { count: limits.history_days.limit }))
+        features.push(t(`features.history_${limits.history_days.limit}`))
       }
 
-      // Extra features by tier
+      // Boolean features - only show if enabled (limit === 1)
+      if (limits.advanced_stats?.limit === 1) {
+        features.push(t('features.advanced_stats'))
+      }
+      if (limits.priority_support?.limit === 1) {
+        features.push(t('features.priority_support'))
+      }
+      if (limits.export_pdf?.limit === 1) {
+        features.push(t('features.export_pdf'))
+      }
+      if (limits.meal_plans?.limit === 1) {
+        features.push(t('features.meal_plans'))
+      }
+      if (limits.dedicated_support?.limit === 1) {
+        features.push(t('features.dedicated_support'))
+      }
+      if (limits.api_access?.limit === 1) {
+        features.push(t('features.api_access'))
+      }
+
+      // Basic tracking only for free tier
       if (plan.tier === 'free') {
         features.push(t('features.basicTracking'))
-      } else if (plan.tier === 'premium') {
-        features.push(t('features.advancedStats'))
-        features.push(t('features.prioritySupport'))
-      } else if (plan.tier === 'pro') {
-        features.push(t('features.exportPdf'))
-        features.push(t('features.mealPlans'))
-        features.push(t('features.apiAccess'))
-        features.push(t('features.dedicatedSupport'))
       }
 
       return features
@@ -80,29 +92,30 @@ export function PricingCard({ plan, isYearly, currentTier, limits }: PricingCard
     switch (plan.tier) {
       case 'free':
         return [
-          t('features.visionAnalyses', { count: 3 }),
-          t('features.recipeGenerations', { count: 2 }),
-          t('features.coachMessages', { count: 1 }),
-          t('features.historyDays', { count: 7 }),
+          t('features.vision_3'),
+          t('features.recipes_2'),
+          t('features.coach_1'),
+          t('features.history_7'),
           t('features.basicTracking'),
         ]
       case 'premium':
         return [
-          t('features.visionAnalysesUnlimited'),
-          t('features.recipeGenerations', { count: 10 }),
-          t('features.coachMessages', { count: 5 }),
-          t('features.historyDays', { count: 90 }),
-          t('features.advancedStats'),
-          t('features.prioritySupport'),
+          t('features.vision_unlimited'),
+          t('features.recipes_10'),
+          t('features.coach_5'),
+          t('features.history_90'),
+          t('features.advanced_stats'),
+          t('features.priority_support'),
         ]
       case 'pro':
         return [
-          t('features.allUnlimited'),
-          t('features.historyUnlimited'),
-          t('features.exportPdf'),
-          t('features.mealPlans'),
-          t('features.apiAccess'),
-          t('features.dedicatedSupport'),
+          t('features.vision_unlimited'),
+          t('features.recipes_unlimited'),
+          t('features.coach_unlimited'),
+          t('features.history_unlimited'),
+          t('features.export_pdf'),
+          t('features.meal_plans'),
+          t('features.dedicated_support'),
         ]
       default:
         return plan.features

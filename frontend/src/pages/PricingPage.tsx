@@ -7,14 +7,14 @@ import {
 import { Link } from 'react-router-dom'
 import { subscriptionApi } from '@/services/api'
 import { PricingCard } from '@/components/subscription/PricingCard'
-import type { PricingPlan, SubscriptionTier, TierLimitsResponse } from '@/types'
+import type { PricingPlan, SubscriptionTier, FullTierLimitsResponse } from '@/types'
 
 export default function PricingPage() {
   const { t } = useTranslation('pricing')
   const { t: tCommon } = useTranslation('common')
   const [plans, setPlans] = useState<PricingPlan[]>([])
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>('free')
-  const [tierLimits, setTierLimits] = useState<TierLimitsResponse | null>(null)
+  const [tierLimits, setTierLimits] = useState<FullTierLimitsResponse | null>(null)
   const [isYearly, setIsYearly] = useState(true)
   const [loading, setLoading] = useState(true)
   const observerRef = useRef<IntersectionObserver | null>(null)
@@ -183,7 +183,7 @@ export default function PricingPage() {
                 plan={plan}
                 isYearly={isYearly}
                 currentTier={currentTier}
-                limits={tierLimits?.[plan.tier as keyof TierLimitsResponse]}
+                limits={tierLimits?.[plan.tier as keyof FullTierLimitsResponse]}
               />
             </div>
           ))}
@@ -235,8 +235,20 @@ export default function PricingPage() {
                       pro: tierLimits?.pro.history_days.limit === -1,
                       icon: BarChart3
                     },
-                    { feature: t('comparison.features.pdfExport'), free: false, premium: true, pro: true, icon: Download },
-                    { feature: t('comparison.features.prioritySupport'), free: false, premium: true, pro: true, icon: Headphones },
+                    {
+                      feature: t('comparison.features.pdfExport'),
+                      free: false,
+                      premium: tierLimits ? tierLimits.premium.export_pdf?.limit === 1 : false,
+                      pro: tierLimits ? tierLimits.pro.export_pdf?.limit === 1 : true,
+                      icon: Download
+                    },
+                    {
+                      feature: t('comparison.features.prioritySupport'),
+                      free: false,
+                      premium: tierLimits ? tierLimits.premium.priority_support?.limit === 1 : true,
+                      pro: tierLimits ? tierLimits.pro.priority_support?.limit === 1 : true,
+                      icon: Headphones
+                    },
                   ].map((row, index) => (
                     <tr key={index} className="hover:bg-gray-50 transition-colors">
                       <td className="py-4 px-6 flex items-center gap-3">

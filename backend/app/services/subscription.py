@@ -14,28 +14,59 @@ settings = get_settings()
 
 
 # Limites par tier avec périodes explicites
-# Structure: {"limit": valeur, "period": "day"|"week"|"total"}
-# -1 = illimité
+# Structure: {"limit": valeur, "period": "day"|"week"|"total"|"boolean"}
+# -1 = illimité, 0 = désactivé, 1 = activé (pour boolean)
 TIER_LIMITS = {
     "free": {
+        # Limites d'usage quotidiennes/hebdomadaires
         "vision_analyses": {"limit": 3, "period": "day"},
         "recipe_generations": {"limit": 2, "period": "week"},
         "coach_messages": {"limit": 1, "period": "day"},
         "history_days": {"limit": 7, "period": "total"},
+        # Fonctionnalités exclusives (0 = non disponible, 1 = disponible)
+        "export_pdf": {"limit": 0, "period": "boolean"},
+        "meal_plans": {"limit": 0, "period": "boolean"},
+        "advanced_stats": {"limit": 0, "period": "boolean"},
+        "priority_support": {"limit": 0, "period": "boolean"},
+        "dedicated_support": {"limit": 0, "period": "boolean"},
+        "api_access": {"limit": 0, "period": "boolean"},
     },
     "premium": {
+        # Limites d'usage quotidiennes/hebdomadaires
         "vision_analyses": {"limit": -1, "period": "day"},
         "recipe_generations": {"limit": 10, "period": "week"},
         "coach_messages": {"limit": 5, "period": "day"},
         "history_days": {"limit": 90, "period": "total"},
+        # Fonctionnalités exclusives
+        "export_pdf": {"limit": 0, "period": "boolean"},
+        "meal_plans": {"limit": 0, "period": "boolean"},
+        "advanced_stats": {"limit": 1, "period": "boolean"},
+        "priority_support": {"limit": 1, "period": "boolean"},
+        "dedicated_support": {"limit": 0, "period": "boolean"},
+        "api_access": {"limit": 0, "period": "boolean"},
     },
     "pro": {
+        # Limites d'usage quotidiennes/hebdomadaires
         "vision_analyses": {"limit": -1, "period": "day"},
         "recipe_generations": {"limit": -1, "period": "week"},
         "coach_messages": {"limit": -1, "period": "day"},
         "history_days": {"limit": -1, "period": "total"},
+        # Fonctionnalités exclusives
+        "export_pdf": {"limit": 1, "period": "boolean"},
+        "meal_plans": {"limit": 1, "period": "boolean"},
+        "advanced_stats": {"limit": 1, "period": "boolean"},
+        "priority_support": {"limit": 1, "period": "boolean"},
+        "dedicated_support": {"limit": 1, "period": "boolean"},
+        "api_access": {"limit": 0, "period": "boolean"},  # Bientôt disponible
     }
 }
+
+
+def has_feature(tier: str, feature: str) -> bool:
+    """Vérifie si un tier a accès à une fonctionnalité boolean."""
+    tier_limits = TIER_LIMITS.get(tier, TIER_LIMITS["free"])
+    feature_info = tier_limits.get(feature, {"limit": 0, "period": "boolean"})
+    return feature_info.get("limit", 0) == 1
 
 
 def get_limit_value(tier: str, action: str) -> int:

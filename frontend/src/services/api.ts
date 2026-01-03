@@ -8,7 +8,7 @@ import type {
   UsageStatusResponse,
   LimitCheckResult,
   PricingResponse,
-  TierLimitsResponse,
+  FullTierLimitsResponse,
 } from '@/types'
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1'
@@ -218,8 +218,8 @@ export const subscriptionApi = {
     return response.data
   },
 
-  getLimits: async (): Promise<TierLimitsResponse> => {
-    const response = await api.get<TierLimitsResponse>('/subscriptions/limits')
+  getLimits: async (): Promise<FullTierLimitsResponse> => {
+    const response = await api.get<FullTierLimitsResponse>('/subscriptions/limits')
     return response.data
   },
 

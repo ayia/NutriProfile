@@ -80,8 +80,8 @@ class UsageResponse(UsageBase):
 
 class LimitInfo(BaseModel):
     """Schema for a single limit with period."""
-    limit: int = Field(description="-1 for unlimited")
-    period: str = Field(description="day, week, or total")
+    limit: int = Field(description="-1 for unlimited, 0 for disabled, 1 for enabled (boolean)")
+    period: str = Field(description="day, week, total, or boolean")
 
 
 class UsageLimits(BaseModel):
@@ -92,11 +92,37 @@ class UsageLimits(BaseModel):
     history_days: LimitInfo
 
 
+class FeatureLimits(BaseModel):
+    """Schema for feature availability per tier."""
+    export_pdf: LimitInfo
+    meal_plans: LimitInfo
+    advanced_stats: LimitInfo
+    priority_support: LimitInfo
+    dedicated_support: LimitInfo
+    api_access: LimitInfo
+
+
+class FullTierLimits(BaseModel):
+    """Schema for complete tier limits including usage and features."""
+    # Usage limits
+    vision_analyses: LimitInfo
+    recipe_generations: LimitInfo
+    coach_messages: LimitInfo
+    history_days: LimitInfo
+    # Feature availability
+    export_pdf: LimitInfo
+    meal_plans: LimitInfo
+    advanced_stats: LimitInfo
+    priority_support: LimitInfo
+    dedicated_support: LimitInfo
+    api_access: LimitInfo
+
+
 class TierLimitsResponse(BaseModel):
     """Schema for all tier limits endpoint."""
-    free: UsageLimits
-    premium: UsageLimits
-    pro: UsageLimits
+    free: FullTierLimits
+    premium: FullTierLimits
+    pro: FullTierLimits
 
 
 class UsageStatusResponse(BaseModel):

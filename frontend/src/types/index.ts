@@ -46,7 +46,7 @@ export interface SubscriptionStatusResponse {
 
 export interface LimitInfo {
   limit: number
-  period: 'day' | 'week' | 'total'
+  period: 'day' | 'week' | 'total' | 'boolean'
 }
 
 export interface UsageLimits {
@@ -54,6 +54,22 @@ export interface UsageLimits {
   recipe_generations: LimitInfo
   coach_messages: LimitInfo
   history_days: LimitInfo
+}
+
+// Full tier limits including boolean features
+export interface FullTierLimits extends UsageLimits {
+  export_pdf: LimitInfo
+  meal_plans: LimitInfo
+  advanced_stats: LimitInfo
+  priority_support: LimitInfo
+  dedicated_support: LimitInfo
+  api_access: LimitInfo
+}
+
+export interface FullTierLimitsResponse {
+  free: FullTierLimits
+  premium: FullTierLimits
+  pro: FullTierLimits
 }
 
 export interface TierLimitsResponse {

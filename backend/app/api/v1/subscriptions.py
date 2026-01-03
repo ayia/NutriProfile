@@ -15,6 +15,7 @@ from app.schemas.subscription import (
     UsageBase,
     LimitInfo,
     TierLimitsResponse,
+    FullTierLimits,
     CheckoutRequest,
     CheckoutResponse,
     CustomerPortalResponse,
@@ -82,12 +83,20 @@ async def get_all_tier_limits():
     Retourne toutes les limites pour tous les tiers.
     Utilisé par le frontend pour afficher les informations de pricing de manière synchronisée.
     """
-    def convert_tier_limits(tier_data: dict) -> UsageLimits:
-        return UsageLimits(
+    def convert_tier_limits(tier_data: dict) -> FullTierLimits:
+        return FullTierLimits(
+            # Usage limits
             vision_analyses=LimitInfo(**tier_data["vision_analyses"]),
             recipe_generations=LimitInfo(**tier_data["recipe_generations"]),
             coach_messages=LimitInfo(**tier_data["coach_messages"]),
-            history_days=LimitInfo(**tier_data["history_days"])
+            history_days=LimitInfo(**tier_data["history_days"]),
+            # Feature availability
+            export_pdf=LimitInfo(**tier_data["export_pdf"]),
+            meal_plans=LimitInfo(**tier_data["meal_plans"]),
+            advanced_stats=LimitInfo(**tier_data["advanced_stats"]),
+            priority_support=LimitInfo(**tier_data["priority_support"]),
+            dedicated_support=LimitInfo(**tier_data["dedicated_support"]),
+            api_access=LimitInfo(**tier_data["api_access"]),
         )
 
     return TierLimitsResponse(
@@ -165,61 +174,102 @@ async def get_customer_portal(
     return CustomerPortalResponse(portal_url=portal_url)
 
 
+def _generate_features_from_limits(tier: str) -> list[str]:
+    """
+    Génère la liste des features à partir de TIER_LIMITS.
+    Assure la synchronisation entre les limites techniques et l'affichage.
+    """
+    limits = TIER_LIMITS.get(tier, TIER_LIMITS["free"])
+    features = []
+
+    # Vision analyses
+    vision = limits["vision_analyses"]["limit"]
+    if vision == -1:
+        features.append("vision_unlimited")
+    else:
+        features.append(f"vision_{vision}")
+
+    # Recipe generations
+    recipes = limits["recipe_generations"]["limit"]
+    if recipes == -1:
+        features.append("recipes_unlimited")
+    else:
+        features.append(f"recipes_{recipes}")
+
+    # Coach messages
+    coach = limits["coach_messages"]["limit"]
+    if coach == -1:
+        features.append("coach_unlimited")
+    else:
+        features.append(f"coach_{coach}")
+
+    # History days
+    history = limits["history_days"]["limit"]
+    if history == -1:
+        features.append("history_unlimited")
+    else:
+        features.append(f"history_{history}")
+
+    # Boolean features (only add if enabled)
+    if limits["advanced_stats"]["limit"] == 1:
+        features.append("advanced_stats")
+
+    if limits["priority_support"]["limit"] == 1:
+        features.append("priority_support")
+
+    if limits["dedicated_support"]["limit"] == 1:
+        features.append("dedicated_support")
+
+    if limits["export_pdf"]["limit"] == 1:
+        features.append("export_pdf")
+
+    if limits["meal_plans"]["limit"] == 1:
+        features.append("meal_plans")
+
+    if limits["api_access"]["limit"] == 1:
+        features.append("api_access")
+
+    return features
+
+
 @router.get("/pricing", response_model=PricingResponse)
 async def get_pricing():
-    """Retourne les plans tarifaires disponibles."""
+    """
+    Retourne les plans tarifaires disponibles.
+    Les features sont générées dynamiquement depuis TIER_LIMITS pour garantir la synchronisation.
+    """
     plans = [
         PricingPlan(
             tier=SubscriptionTier.FREE,
-            name="Gratuit",
-            description="Pour découvrir NutriProfile",
+            name="free",
+            description="free_description",
             price_monthly=0,
             price_yearly=0,
             variant_id_monthly="",
             variant_id_yearly="",
-            features=[
-                "3 analyses photo par jour",
-                "2 recettes par semaine",
-                "1 conseil coach par jour",
-                "Historique 7 jours",
-                "Suivi calories de base"
-            ],
+            features=_generate_features_from_limits("free"),
             popular=False
         ),
         PricingPlan(
             tier=SubscriptionTier.PREMIUM,
-            name="Premium",
-            description="Pour les utilisateurs réguliers",
+            name="premium",
+            description="premium_description",
             price_monthly=4.99,
             price_yearly=39.99,
             variant_id_monthly=settings.PADDLE_PREMIUM_MONTHLY_PRICE_ID,
             variant_id_yearly=settings.PADDLE_PREMIUM_YEARLY_PRICE_ID,
-            features=[
-                "Analyses photo illimitées",
-                "10 recettes par semaine",
-                "5 conseils coach par jour",
-                "Historique 90 jours",
-                "Statistiques avancées",
-                "Support prioritaire"
-            ],
+            features=_generate_features_from_limits("premium"),
             popular=True
         ),
         PricingPlan(
             tier=SubscriptionTier.PRO,
-            name="Pro",
-            description="Pour les passionnés de nutrition",
+            name="pro",
+            description="pro_description",
             price_monthly=9.99,
             price_yearly=79.99,
             variant_id_monthly=settings.PADDLE_PRO_MONTHLY_PRICE_ID,
             variant_id_yearly=settings.PADDLE_PRO_YEARLY_PRICE_ID,
-            features=[
-                "Tout illimité",
-                "Historique complet",
-                "Export PDF (bientôt)",
-                "Plans repas IA (bientôt)",
-                "API access (bientôt)",
-                "Support dédié"
-            ],
+            features=_generate_features_from_limits("pro"),
             popular=False
         )
     ]
