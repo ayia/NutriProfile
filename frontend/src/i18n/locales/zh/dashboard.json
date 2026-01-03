@@ -169,7 +169,8 @@
     "macros": {
       "protein": "蛋白质",
       "carbs": "碳水化合物",
-      "fat": "脂肪"
+      "fat": "脂肪",
+      "locked": "升级查看宏量营养素"
     },
     "stats": {
       "averagePerDay": "日均",

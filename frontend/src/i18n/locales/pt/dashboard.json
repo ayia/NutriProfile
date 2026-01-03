@@ -169,7 +169,8 @@
     "macros": {
       "protein": "Proteína",
       "carbs": "Carboidratos",
-      "fat": "Gordura"
+      "fat": "Gordura",
+      "locked": "Atualize para ver macros"
     },
     "stats": {
       "averagePerDay": "Média/dia",

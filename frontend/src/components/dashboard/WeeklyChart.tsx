@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { trackingApi } from '@/services/trackingApi'
+import { subscriptionApi } from '@/services/api'
 import type { WeeklyChartDay } from '@/types/tracking'
-import { AlertTriangle, BarChart3 } from '@/lib/icons'
+import { AlertTriangle, BarChart3, Lock, Sparkles } from '@/lib/icons'
 
 interface WeeklyChartProps {
   title?: string
@@ -16,6 +18,16 @@ export function WeeklyChart({ title }: WeeklyChartProps) {
     queryFn: trackingApi.getWeeklyChartData,
     refetchInterval: 60000,
   })
+
+  // Get user's subscription tier to check advanced_stats access
+  const { data: usage } = useQuery({
+    queryKey: ['usage'],
+    queryFn: subscriptionApi.getUsage,
+    staleTime: 30 * 1000,
+  })
+
+  // Check if user has access to advanced stats (premium or pro)
+  const hasAdvancedStats = usage?.limits?.advanced_stats?.limit === 1
 
   const data: WeeklyChartDay[] = chartData?.days || []
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
@@ -168,20 +180,31 @@ export function WeeklyChart({ title }: WeeklyChartProps) {
               </p>
             </div>
             {activeDay && activeDay.calories > 0 && (
-              <div className="flex gap-4">
-                <div className="text-center">
-                  <div className="text-lg font-semibold text-secondary-600">{activeDay.protein || 0}g</div>
-                  <div className="text-xs text-neutral-500">{t('weeklyChart.macros.protein')}</div>
+              hasAdvancedStats ? (
+                <div className="flex gap-4">
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-secondary-600">{activeDay.protein || 0}g</div>
+                    <div className="text-xs text-neutral-500">{t('weeklyChart.macros.protein')}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-amber-600">{activeDay.carbs || 0}g</div>
+                    <div className="text-xs text-neutral-500">{t('weeklyChart.macros.carbs')}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-rose-600">{activeDay.fat || 0}g</div>
+                    <div className="text-xs text-neutral-500">{t('weeklyChart.macros.fat')}</div>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-lg font-semibold text-amber-600">{activeDay.carbs || 0}g</div>
-                  <div className="text-xs text-neutral-500">{t('weeklyChart.macros.carbs')}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-semibold text-rose-600">{activeDay.fat || 0}g</div>
-                  <div className="text-xs text-neutral-500">{t('weeklyChart.macros.fat')}</div>
-                </div>
-              </div>
+              ) : (
+                <Link
+                  to="/pricing"
+                  className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl border border-primary-100 hover:shadow-md transition-all group"
+                >
+                  <Lock className="w-4 h-4 text-primary-500" />
+                  <span className="text-sm text-primary-700">{t('weeklyChart.macros.locked')}</span>
+                  <Sparkles className="w-4 h-4 text-primary-500 group-hover:animate-pulse" />
+                </Link>
+              )
             )}
           </div>
         </div>

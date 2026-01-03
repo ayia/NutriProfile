@@ -169,7 +169,8 @@
     "macros": {
       "protein": "Protéines",
       "carbs": "Glucides",
-      "fat": "Lipides"
+      "fat": "Lipides",
+      "locked": "Passez Premium pour les macros"
     },
     "stats": {
       "averagePerDay": "Moyenne/jour",

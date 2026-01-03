@@ -126,9 +126,9 @@ class TierLimitsResponse(BaseModel):
 
 
 class UsageStatusResponse(BaseModel):
-    """Schema for usage status endpoint."""
+    """Schema for usage status endpoint with full tier limits."""
     tier: SubscriptionTier
-    limits: UsageLimits
+    limits: FullTierLimits
     usage: UsageBase
     reset_at: datetime | None = None
 

@@ -11,7 +11,6 @@ from app.services.subscription import SubscriptionService, TIER_LIMITS
 from app.schemas.subscription import (
     SubscriptionStatusResponse,
     UsageStatusResponse,
-    UsageLimits,
     UsageBase,
     LimitInfo,
     TierLimitsResponse,
@@ -53,7 +52,7 @@ async def get_usage_status(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Retourne l'utilisation actuelle et les limites."""
+    """Retourne l'utilisation actuelle et les limites complètes (incluant fonctionnalités)."""
     service = SubscriptionService(db)
     status = await service.get_usage_status(current_user.id)
 
@@ -62,11 +61,19 @@ async def get_usage_status(
 
     return UsageStatusResponse(
         tier=SubscriptionTier(status["tier"]),
-        limits=UsageLimits(
+        limits=FullTierLimits(
+            # Usage limits
             vision_analyses=LimitInfo(**limits["vision_analyses"]),
             recipe_generations=LimitInfo(**limits["recipe_generations"]),
             coach_messages=LimitInfo(**limits["coach_messages"]),
-            history_days=LimitInfo(**limits["history_days"])
+            history_days=LimitInfo(**limits["history_days"]),
+            # Feature availability
+            export_pdf=LimitInfo(**limits["export_pdf"]),
+            meal_plans=LimitInfo(**limits["meal_plans"]),
+            advanced_stats=LimitInfo(**limits["advanced_stats"]),
+            priority_support=LimitInfo(**limits["priority_support"]),
+            dedicated_support=LimitInfo(**limits["dedicated_support"]),
+            api_access=LimitInfo(**limits["api_access"]),
         ),
         usage=UsageBase(
             vision_analyses=usage["vision_analyses"],

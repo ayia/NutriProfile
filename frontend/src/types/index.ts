@@ -86,7 +86,7 @@ export interface UsageBase {
 
 export interface UsageStatusResponse {
   tier: SubscriptionTier
-  limits: UsageLimits
+  limits: FullTierLimits
   usage: UsageBase
   reset_at: string | null
 }

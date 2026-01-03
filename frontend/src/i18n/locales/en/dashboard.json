@@ -169,7 +169,8 @@
     "macros": {
       "protein": "Protein",
       "carbs": "Carbs",
-      "fat": "Fat"
+      "fat": "Fat",
+      "locked": "Upgrade for macros"
     },
     "stats": {
       "averagePerDay": "Average/day",

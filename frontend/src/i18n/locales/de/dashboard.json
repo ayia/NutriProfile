@@ -169,7 +169,8 @@
     "macros": {
       "protein": "Protein",
       "carbs": "Kohlenhydrate",
-      "fat": "Fett"
+      "fat": "Fett",
+      "locked": "Premium für Makros upgraden"
     },
     "stats": {
       "averagePerDay": "Durchschnitt/Tag",
