@@ -28,9 +28,14 @@ export function VisionPage() {
   const { t, i18n } = useTranslation('vision')
   const [activeTab, setActiveTab] = useState<Tab>('scan')
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null)
+  // Helper to get UTC date string (YYYY-MM-DD)
+  const getUTCDateString = (date: Date) => {
+    return date.toISOString().split('T')[0]
+  }
+
   const [selectedDate, setSelectedDate] = useState(() => {
-    const today = new Date()
-    return today.toISOString().split('T')[0]
+    // Use UTC date to match server-side storage
+    return getUTCDateString(new Date())
   })
   const observerRef = useRef<IntersectionObserver | null>(null)
 
@@ -180,7 +185,7 @@ export function VisionPage() {
                 </div>
                 <Button
                   variant="ghost"
-                  onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+                  onClick={() => setSelectedDate(getUTCDateString(new Date()))}
                   className="!bg-white/60 hover:!bg-white/80 !border-gray-200"
                 >
                   {t('today.button')}

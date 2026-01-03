@@ -791,9 +791,21 @@ async def get_daily_meals(
     tier_limits = await sub_service.get_tier_limits(tier)
     history_days = tier_limits.get("history_days", 7)
 
+    # Pour "aujourd'hui", utiliser la date du serveur (UTC) pour être cohérent
+    # avec le dashboard qui utilise aussi date.today() côté serveur
+    server_today = date.today()
+
+    # Si la date demandée est proche d'aujourd'hui (±1 jour pour gérer les timezones),
+    # utiliser la date du serveur pour être cohérent avec le dashboard
+    if abs((target_date - server_today).days) <= 1:
+        # Utiliser la date du serveur pour "aujourd'hui" afin d'être cohérent avec le dashboard
+        effective_date = server_today
+    else:
+        effective_date = target_date
+
     # Vérifier si la date demandée est accessible
     if history_days != -1:
-        min_allowed_date = date.today() - timedelta(days=history_days)
+        min_allowed_date = server_today - timedelta(days=history_days)
         if target_date < min_allowed_date:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -804,9 +816,9 @@ async def get_daily_meals(
                 }
             )
 
-    # Récupérer les repas
-    start = datetime.combine(target_date, datetime.min.time())
-    end = datetime.combine(target_date, datetime.max.time())
+    # Récupérer les repas avec la date effective
+    start = datetime.combine(effective_date, datetime.min.time())
+    end = datetime.combine(effective_date, datetime.max.time())
 
     meals_query = (
         select(FoodLog)
@@ -831,7 +843,7 @@ async def get_daily_meals(
     nutrition = nutrition_result.scalar_one_or_none()
 
     return DailyMealsResponse(
-        date=datetime.combine(target_date, datetime.min.time()),
+        date=datetime.combine(effective_date, datetime.min.time()),
         meals=meals,
         nutrition=nutrition,
     )
