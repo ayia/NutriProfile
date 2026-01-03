@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { trackingApi } from '@/services/trackingApi'
 import { profileApi } from '@/services/profileApi'
 import { subscriptionApi } from '@/services/api'
@@ -43,9 +43,23 @@ import {
 type Tab = 'overview' | 'activities' | 'weight' | 'goals'
 type Modal = 'activity' | 'weight' | 'goal' | 'water' | null
 
+// Valid tab names for URL parameter
+const VALID_TABS: Tab[] = ['overview', 'activities', 'weight', 'goals']
+
 export function TrackingPage() {
   const { t, i18n } = useTranslation('tracking')
-  const [activeTab, setActiveTab] = useState<Tab>('overview')
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // Get initial tab from URL query parameter, defaulting to 'overview'
+  const getInitialTab = (): Tab => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam && VALID_TABS.includes(tabParam as Tab)) {
+      return tabParam as Tab
+    }
+    return 'overview'
+  }
+
+  const [activeTab, setActiveTab] = useState<Tab>(getInitialTab)
   const [activeModal, setActiveModal] = useState<Modal>(null)
   const [chartPeriod, setChartPeriod] = useState<7 | 14 | 30>(7)
   const observerRef = useRef<IntersectionObserver | null>(null)
@@ -113,6 +127,28 @@ export function TrackingPage() {
     enabled: canFetch,
   })
 
+  // Sync URL with tab state
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam && VALID_TABS.includes(tabParam as Tab)) {
+      if (tabParam !== activeTab) {
+        setActiveTab(tabParam as Tab)
+      }
+    }
+  }, [searchParams])
+
+  // Update URL when tab changes
+  const handleTabChange = (tab: Tab) => {
+    setActiveTab(tab)
+    if (tab === 'overview') {
+      // Remove tab param for default tab
+      searchParams.delete('tab')
+    } else {
+      searchParams.set('tab', tab)
+    }
+    setSearchParams(searchParams, { replace: true })
+  }
+
   // Scroll reveal animation
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -166,7 +202,7 @@ export function TrackingPage() {
           {tabs.map((tab, index) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-medium transition-all duration-300 whitespace-nowrap text-sm sm:text-base ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-accent-500 to-amber-500 text-white shadow-lg shadow-accent-500/30 scale-105'

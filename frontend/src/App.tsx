@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { Layout } from '@/components/layout/Layout'
 import { PWAInstallPrompt } from '@/components/pwa/PWAInstallPrompt'
-import { HomePage } from '@/pages/HomePage'
+import { HomeRedirect } from '@/components/auth/HomeRedirect'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
@@ -27,7 +27,7 @@ function App() {
       <PWAInstallPrompt />
       <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<HomePage />} />
+        <Route index element={<HomeRedirect />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
         <Route path="forgot-password" element={<ForgotPasswordPage />} />
