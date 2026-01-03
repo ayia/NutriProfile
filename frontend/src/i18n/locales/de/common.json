@@ -124,6 +124,9 @@
     "close": "Schließen",
     "next": "Weiter"
   },
+  "coach": {
+    "openChat": "Mit dem KI-Coach chatten"
+  },
   "tour": {
     "skip": "Tour überspringen",
     "finish": "Beenden",

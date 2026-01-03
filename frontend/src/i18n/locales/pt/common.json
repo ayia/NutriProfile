@@ -124,6 +124,9 @@
     "close": "Fechar",
     "next": "Próximo"
   },
+  "coach": {
+    "openChat": "Conversar com o Coach IA"
+  },
   "tour": {
     "skip": "Pular tour",
     "finish": "Finalizar",

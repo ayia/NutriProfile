@@ -91,8 +91,24 @@ async def get_activities(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Récupère les activités de l'utilisateur."""
+    """Récupère les activités de l'utilisateur (limité par tier)."""
+    from app.services.subscription import SubscriptionService
+
+    # Appliquer le filtre d'historique basé sur le tier
+    sub_service = SubscriptionService(db)
+    tier = await sub_service.get_user_tier(current_user.id)
+    tier_limits = await sub_service.get_tier_limits(tier)
+    history_days = tier_limits.get("history_days", {}).get("limit", 7)
+
     query = select(ActivityLog).where(ActivityLog.user_id == current_user.id)
+
+    # Appliquer la limite d'historique si pas illimité (-1)
+    if history_days != -1:
+        min_date = datetime.combine(
+            date.today() - timedelta(days=history_days),
+            datetime.min.time()
+        )
+        query = query.where(ActivityLog.activity_date >= min_date)
 
     if start_date:
         query = query.where(ActivityLog.activity_date >= datetime.combine(start_date, datetime.min.time()))
@@ -197,13 +213,26 @@ async def get_weight_logs(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Récupère l'historique de poids."""
-    query = (
-        select(WeightLog)
-        .where(WeightLog.user_id == current_user.id)
-        .order_by(WeightLog.log_date.desc())
-        .limit(limit)
-    )
+    """Récupère l'historique de poids (limité par tier)."""
+    from app.services.subscription import SubscriptionService
+
+    # Appliquer le filtre d'historique basé sur le tier
+    sub_service = SubscriptionService(db)
+    tier = await sub_service.get_user_tier(current_user.id)
+    tier_limits = await sub_service.get_tier_limits(tier)
+    history_days = tier_limits.get("history_days", {}).get("limit", 7)
+
+    query = select(WeightLog).where(WeightLog.user_id == current_user.id)
+
+    # Appliquer la limite d'historique si pas illimité (-1)
+    if history_days != -1:
+        min_date = datetime.combine(
+            date.today() - timedelta(days=history_days),
+            datetime.min.time()
+        )
+        query = query.where(WeightLog.log_date >= min_date)
+
+    query = query.order_by(WeightLog.log_date.desc()).limit(limit)
 
     result = await db.execute(query)
     return result.scalars().all()

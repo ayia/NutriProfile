@@ -1,11 +1,15 @@
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { CoachResponse } from '@/types/dashboard'
-import { HeartPulse, AlertCircle, AlertTriangle, CheckCircle, Sparkles } from 'lucide-react'
+import { HeartPulse, AlertCircle, AlertTriangle, CheckCircle, Sparkles, MessageCircle, ArrowRight } from 'lucide-react'
 
 interface CoachCardProps {
   advice: CoachResponse
 }
 
 export function CoachCard({ advice }: CoachCardProps) {
+  const { t } = useTranslation('common')
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high':
@@ -78,6 +82,18 @@ export function CoachCard({ advice }: CoachCardProps) {
           </div>
         </div>
       )}
+
+      {/* CTA to full coaching page */}
+      <div className="px-4 pb-4">
+        <Link
+          to="/coaching"
+          className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-primary-500 to-emerald-500 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-primary-500/30 hover:-translate-y-0.5 transition-all group"
+        >
+          <MessageCircle className="w-5 h-5" />
+          <span>{t('coach.openChat')}</span>
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
     </div>
   )
 }

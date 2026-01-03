@@ -167,6 +167,9 @@
     "emailSent": "Email sent",
     "copied": "Copied to clipboard"
   },
+  "coach": {
+    "openChat": "Chat with AI Coach"
+  },
   "tour": {
     "skip": "Skip tour",
     "finish": "Finish",

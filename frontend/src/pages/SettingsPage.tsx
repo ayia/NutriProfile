@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { profileApi } from '@/services/profileApi'
+import { subscriptionApi } from '@/services/api'
 import { useAuth } from '@/hooks/useAuth'
 import { Input } from '@/components/ui/Input'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
@@ -1367,12 +1368,29 @@ function PreferencesSection() {
 function SubscriptionSettings() {
   const { t } = useTranslation('settings')
 
-  // Mock data - In production, this would come from an API
-  const currentTier = 'free' as 'free' | 'premium' | 'pro'
+  // Fetch real usage data from API
+  const { data: usageData, isLoading } = useQuery({
+    queryKey: ['usage'],
+    queryFn: subscriptionApi.getUsage,
+    staleTime: 30 * 1000, // 30 seconds
+    refetchOnWindowFocus: true,
+  })
+
+  // Use real data from API or defaults
+  const currentTier = (usageData?.tier || 'free') as 'free' | 'premium' | 'pro'
   const usage = {
-    visionAnalyses: { used: 2, limit: 3 },
-    recipeGeneration: { used: 1, limit: 2 },
-    coachMessages: { used: 0, limit: 1 },
+    visionAnalyses: {
+      used: usageData?.usage?.vision_analyses || 0,
+      limit: usageData?.limits?.vision_analyses?.limit ?? 3,
+    },
+    recipeGeneration: {
+      used: usageData?.usage?.recipe_generations || 0,
+      limit: usageData?.limits?.recipe_generations?.limit ?? 2,
+    },
+    coachMessages: {
+      used: usageData?.usage?.coach_messages || 0,
+      limit: usageData?.limits?.coach_messages?.limit ?? 1,
+    },
   }
 
   const tierLimits = {
@@ -1394,6 +1412,22 @@ function SubscriptionSettings() {
       coachMessages: -1,
       historyDays: -1,
     },
+  }
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="p-6 space-y-6">
+        <div className="animate-pulse">
+          <div className="h-12 bg-gray-200 rounded-xl mb-6"></div>
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-14 bg-gray-100 rounded-xl"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const features = [

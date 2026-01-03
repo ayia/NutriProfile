@@ -157,6 +157,9 @@
     "emailSent": "Email envoye",
     "copied": "Copie dans le presse-papiers"
   },
+  "coach": {
+    "openChat": "Discuter avec le Coach IA"
+  },
   "tour": {
     "skip": "Passer le tour",
     "finish": "Terminer",

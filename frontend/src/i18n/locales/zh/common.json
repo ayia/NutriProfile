@@ -124,6 +124,9 @@
     "close": "关闭",
     "next": "下一步"
   },
+  "coach": {
+    "openChat": "与AI教练聊天"
+  },
   "tour": {
     "skip": "跳过导览",
     "finish": "完成",
