@@ -510,7 +510,7 @@ export function CoachingPage() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-bold text-gray-900">{t(`challengeMessages.${challenge.id}_title`, challenge.title)}</h3>
+                      <h3 className="font-bold text-gray-900">{t(`challengeMessages.${challenge.title}`, challenge.title)}</h3>
                       <div className="flex items-center gap-2">
                         <span className={`text-xs px-2 py-1 rounded-full ${getDifficultyBadge(challenge.difficulty)}`}>
                           {t(`difficulty.${challenge.difficulty}`)}
@@ -521,7 +521,7 @@ export function CoachingPage() {
                         </span>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-500 mb-3">{t(`challengeMessages.${challenge.id}_desc`, challenge.description)}</p>
+                    <p className="text-sm text-gray-500 mb-3">{t(`challengeMessages.${challenge.description}`, challenge.description)}</p>
 
                     {/* Progress bar */}
                     <div className="relative">

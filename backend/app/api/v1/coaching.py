@@ -291,12 +291,12 @@ async def get_challenges(
 
     challenges = []
 
-    # Défi repas
+    # Défi repas (using translation keys - frontend translates via challengeMessages.daily_meals_title/desc)
     meals_today = nutrition.meals_count if nutrition else 0
     challenges.append(ChallengeResponse(
         id="daily_meals",
-        title="Logger 3 repas",
-        description="Enregistrez vos 3 repas principaux aujourd'hui",
+        title="daily_meals_title",  # Translation key
+        description="daily_meals_desc",  # Translation key
         category="nutrition",
         difficulty="easy",
         points=50,
@@ -306,12 +306,12 @@ async def get_challenges(
         emoji="🍽️"
     ))
 
-    # Défi hydratation
+    # Défi hydratation (using translation keys)
     water_today = nutrition.water_ml if nutrition else 0
     challenges.append(ChallengeResponse(
         id="daily_water",
-        title="Boire 2L d'eau",
-        description="Atteignez votre objectif d'hydratation quotidien",
+        title="daily_water_title",  # Translation key
+        description="daily_water_desc",  # Translation key
         category="hydratation",
         difficulty="medium",
         points=30,
@@ -321,11 +321,11 @@ async def get_challenges(
         emoji="💧"
     ))
 
-    # Défi activité
+    # Défi activité (using translation keys)
     challenges.append(ChallengeResponse(
         id="daily_activity",
-        title="30 min d'activité",
-        description="Faites au moins 30 minutes d'exercice",
+        title="daily_activity_title",  # Translation key
+        description="daily_activity_desc",  # Translation key
         category="activite",
         difficulty="medium",
         points=75,
@@ -335,7 +335,7 @@ async def get_challenges(
         emoji="🏃"
     ))
 
-    # Défi streak
+    # Défi streak (using translation keys)
     streak_query = select(Streak).where(and_(
         Streak.user_id == current_user.id,
         Streak.streak_type == "logging",
@@ -346,8 +346,8 @@ async def get_challenges(
 
     challenges.append(ChallengeResponse(
         id="weekly_streak",
-        title="Streak de 7 jours",
-        description="Maintenez un streak de logging pendant 7 jours",
+        title="weekly_streak_title",  # Translation key
+        description="weekly_streak_desc",  # Translation key
         category="regularity",
         difficulty="hard",
         points=200,
