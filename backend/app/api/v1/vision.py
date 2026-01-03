@@ -837,12 +837,42 @@ async def get_daily_meals(
     nutrition_result = await db.execute(nutrition_query)
     nutrition = nutrition_result.scalar_one_or_none()
 
+    # Récupérer le profil pour les objectifs
+    profile_query = select(Profile).where(Profile.user_id == current_user.id)
+    profile_result = await db.execute(profile_query)
+    profile = profile_result.scalar_one_or_none()
+
     logger.info(f"[get_daily_meals] Found {len(meals)} meals for user {current_user.id} on {target_date}")
+
+    # Construire la réponse nutrition enrichie avec les objectifs du profil
+    nutrition_response = None
+    if nutrition:
+        # Récupérer les objectifs du profil
+        target_calories = profile.daily_calories if profile and profile.daily_calories else 2000
+        target_protein = profile.protein_g if profile and profile.protein_g else 100
+        target_carbs = profile.carbs_g if profile and profile.carbs_g else 250
+        target_fat = profile.fat_g if profile and profile.fat_g else 70
+
+        nutrition_response = DailyNutritionResponse(
+            id=nutrition.id,
+            date=nutrition.date,
+            total_calories=nutrition.total_calories or 0,
+            total_protein=nutrition.total_protein or 0,
+            total_carbs=nutrition.total_carbs or 0,
+            total_fat=nutrition.total_fat or 0,
+            total_fiber=nutrition.total_fiber or 0,
+            target_calories=target_calories,
+            target_protein=target_protein,
+            target_carbs=target_carbs,
+            target_fat=target_fat,
+            meals_count=nutrition.meals_count or 0,
+            water_ml=nutrition.water_ml or 0,
+        )
 
     return DailyMealsResponse(
         date=datetime.combine(target_date, datetime.min.time()),
         meals=meals,
-        nutrition=nutrition,
+        nutrition=nutrition_response,
     )
 
 
