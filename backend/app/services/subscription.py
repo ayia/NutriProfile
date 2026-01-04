@@ -1,7 +1,7 @@
 """Service de gestion des abonnements et du suivi d'usage."""
 
 import logging
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from typing import Tuple
 import httpx
 from sqlalchemy import select
@@ -13,6 +13,9 @@ from app.config import get_settings
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
+
+# Trial duration in days
+TRIAL_DURATION_DAYS = 14
 
 
 # Limites par tier avec périodes explicites
@@ -92,12 +95,85 @@ class SubscriptionService:
         self.db = db
 
     async def get_user_tier(self, user_id: int) -> str:
-        """Récupère le tier d'abonnement de l'utilisateur."""
-        result = await self.db.execute(
-            select(User.subscription_tier).where(User.id == user_id)
-        )
-        tier = result.scalar_one_or_none()
-        return tier or "free"
+        """
+        Récupère le tier effectif de l'utilisateur.
+        Prend en compte: subscription payée > trial actif > free
+        """
+        return await self.get_effective_tier(user_id)
+
+    async def get_effective_tier(self, user_id: int) -> str:
+        """
+        Détermine le tier effectif de l'utilisateur.
+
+        Ordre de priorité:
+        1. Subscription payée active (premium/pro) → tier de la subscription
+        2. Trial actif (trial_ends_at > now) → "premium"
+        3. Sinon → "free"
+        """
+        user = await self.db.get(User, user_id)
+        if not user:
+            return "free"
+
+        # 1. Vérifier subscription payée active
+        subscription = await self.get_subscription(user_id)
+        if subscription and subscription.status == SubscriptionStatus.ACTIVE:
+            if subscription.tier in [SubscriptionTier.PREMIUM, SubscriptionTier.PRO]:
+                return subscription.tier.value
+
+        # 2. Vérifier trial actif
+        if user.trial_ends_at:
+            now = datetime.now(timezone.utc)
+            if now < user.trial_ends_at:
+                return "premium"
+
+        # 3. Défaut: subscription_tier ou free
+        return user.subscription_tier or "free"
+
+    async def is_trial_active(self, user_id: int) -> bool:
+        """Vérifie si l'utilisateur est en période trial."""
+        user = await self.db.get(User, user_id)
+        if not user or not user.trial_ends_at:
+            return False
+
+        # Si l'utilisateur a une subscription payée active, le trial ne compte pas
+        subscription = await self.get_subscription(user_id)
+        if subscription and subscription.status == SubscriptionStatus.ACTIVE:
+            if subscription.tier in [SubscriptionTier.PREMIUM, SubscriptionTier.PRO]:
+                return False
+
+        now = datetime.now(timezone.utc)
+        return now < user.trial_ends_at
+
+    async def get_trial_days_remaining(self, user_id: int) -> int | None:
+        """Retourne le nombre de jours restants dans le trial, ou None si pas de trial."""
+        user = await self.db.get(User, user_id)
+        if not user or not user.trial_ends_at:
+            return None
+
+        # Si l'utilisateur a une subscription payée active, pas de trial
+        subscription = await self.get_subscription(user_id)
+        if subscription and subscription.status == SubscriptionStatus.ACTIVE:
+            if subscription.tier in [SubscriptionTier.PREMIUM, SubscriptionTier.PRO]:
+                return None
+
+        now = datetime.now(timezone.utc)
+        if now >= user.trial_ends_at:
+            return 0
+
+        delta = user.trial_ends_at - now
+        return max(0, delta.days)
+
+    async def get_trial_info(self, user_id: int) -> dict:
+        """Retourne les informations complètes sur le trial."""
+        user = await self.db.get(User, user_id)
+        is_trial = await self.is_trial_active(user_id)
+        days_remaining = await self.get_trial_days_remaining(user_id)
+
+        return {
+            "is_trial": is_trial,
+            "trial_ends_at": user.trial_ends_at.isoformat() if user and user.trial_ends_at else None,
+            "days_remaining": days_remaining
+        }
 
     async def get_tier_limits(self, tier: str) -> dict:
         """Retourne les limites pour un tier donné."""

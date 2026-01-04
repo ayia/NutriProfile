@@ -42,6 +42,10 @@ export interface SubscriptionStatusResponse {
   renews_at: string | null
   cancel_at_period_end: boolean
   is_active: boolean
+  // Trial info
+  is_trial: boolean
+  trial_ends_at: string | null
+  days_remaining: number | null
 }
 
 export interface LimitInfo {
@@ -89,6 +93,9 @@ export interface UsageStatusResponse {
   limits: FullTierLimits
   usage: UsageBase
   reset_at: string | null
+  // Trial info
+  is_trial: boolean
+  trial_days_remaining: number | null
 }
 
 export interface LimitCheckResult {

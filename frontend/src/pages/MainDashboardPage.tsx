@@ -14,6 +14,7 @@ import { ProfileSummaryBanner } from '@/components/dashboard/ProfileSummaryBanne
 import { WaterForm } from '@/components/tracking/WaterForm'
 import { Button } from '@/components/ui/Button'
 import { DashboardTour } from '@/components/onboarding/DashboardTour'
+import { TrialBanner } from '@/components/subscription/TrialBanner'
 import {
   Zap,
   Trophy,
@@ -83,6 +84,9 @@ export function MainDashboardPage() {
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
       {/* Tour guidé pour les nouveaux utilisateurs */}
       <DashboardTour />
+
+      {/* Bannière de trial Premium 14 jours */}
+      <TrialBanner />
 
       {/* Bannière de profil personnalisée */}
       {personalization && (

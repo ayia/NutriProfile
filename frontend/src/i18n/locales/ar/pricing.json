@@ -1,4 +1,13 @@
 {
+  "trial": {
+    "title": "{{days}} أيام متبقية في تجربتك المميزة",
+    "titleExpired": "انتهت تجربتك المميزة",
+    "description": "استمتع بجميع الميزات المميزة",
+    "upgrade": "الترقية إلى المميز",
+    "upgradeShort": "ترقية",
+    "daysRemaining": "{{count}} يوم متبقي",
+    "daysRemaining_other": "{{count}} أيام متبقية"
+  },
   "title": "اختر خطتك",
   "subtitle": "افتح الإمكانات الكاملة لـ NutriProfile مع خططنا المميزة. إلغاء في أي وقت.",
   "monthly": "شهري",

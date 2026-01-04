@@ -59,6 +59,10 @@ class SubscriptionStatusResponse(BaseModel):
     renews_at: datetime | None = None
     cancel_at_period_end: bool = False
     is_active: bool = True
+    # Trial info
+    is_trial: bool = False
+    trial_ends_at: datetime | None = None
+    days_remaining: int | None = None
 
 
 # ============== Usage Tracking Schemas ==============
@@ -131,6 +135,9 @@ class UsageStatusResponse(BaseModel):
     limits: FullTierLimits
     usage: UsageBase
     reset_at: datetime | None = None
+    # Trial info
+    is_trial: bool = False
+    trial_days_remaining: int | None = None
 
 
 class LimitCheckResult(BaseModel):

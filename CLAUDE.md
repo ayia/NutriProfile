@@ -2,10 +2,10 @@
 
 Application web de profilage nutritionnel avec architecture multi-agents LLM.
 
-## État du Projet (Décembre 2025)
+## État du Projet (Janvier 2026)
 
-**Phase actuelle**: Monétisation - Implémentation système de paiement
-**Statut**: Application fonctionnelle, prête pour monétisation
+**Phase actuelle**: Monétisation - Système de paiement actif
+**Statut**: Application fonctionnelle avec système freemium + trial
 
 ### Fonctionnalités Implémentées
 - Authentification JWT complète
@@ -16,13 +16,14 @@ Application web de profilage nutritionnel avec architecture multi-agents LLM.
 - Coach IA personnalisé
 - Gamification (badges, streaks, niveaux 1-50)
 - Dashboard statistiques
-- Multi-langue (FR/EN)
-
-### À Implémenter (Monétisation)
+- Multi-langue (7 langues: FR/EN/DE/ES/PT/ZH/AR)
 - Système de paiement Lemon Squeezy
 - Limites par tier (gratuit/premium/pro)
-- Export PDF
-- Plans alimentaires IA
+- Trial 14 jours Premium à l'inscription
+
+### À Implémenter
+- Export PDF (Pro)
+- Plans alimentaires IA (Pro)
 - Intégration objets connectés
 
 ## Stack Technique
@@ -42,6 +43,65 @@ Application web de profilage nutritionnel avec architecture multi-agents LLM.
 - JAMAIS déployer sans health check endpoint
 - Chaque agent LLM doit avoir un fallback et un score de confiance
 - Les limites freemium doivent être vérifiées côté backend
+- TOUJOURS vérifier le trial avant de vérifier les limites
+
+## Système de Monétisation
+
+### Modèle Freemium + Trial
+
+```
+FLOW UTILISATEUR:
+1. Inscription → 14 jours Premium GRATUIT automatique
+2. Pendant trial → Accès complet aux features Premium
+3. Après 14 jours → Retombe sur tier Free (limites appliquées)
+4. L'utilisateur peut upgrade à tout moment via Lemon Squeezy
+```
+
+### Tiers et Limites
+
+| Feature | Free | Premium (5€/mois) | Pro (10€/mois) |
+|---------|------|-------------------|----------------|
+| Analyses photo/jour | 3 | Illimité | Illimité |
+| Recettes/semaine | 2 | 10 | Illimité |
+| Coach IA/jour | 1 | 5 | Illimité |
+| Historique | 7 jours | 90 jours | Illimité |
+| Stats avancées | ❌ | ✅ | ✅ |
+| Export PDF | ❌ | ❌ | ✅ |
+| Plans repas IA | ❌ | ❌ | ✅ |
+
+### Règles Backend Trial
+
+```python
+# Ordre de vérification du tier dans get_effective_tier():
+1. Vérifier si trial actif (trial_ends_at > now) → return "premium"
+2. Vérifier si subscription payée active → return subscription.tier
+3. Sinon → return "free"
+
+# À l'inscription (auth.py):
+- Créer User avec subscription_tier="free"
+- Définir trial_ends_at = now + 14 jours
+- L'utilisateur bénéficie des limites Premium pendant 14 jours
+```
+
+### Champs Base de Données
+
+```sql
+-- Table users
+trial_ends_at TIMESTAMP WITH TIME ZONE  -- Fin du trial (14 jours après inscription)
+
+-- Table subscriptions (pour abonnements payés)
+tier VARCHAR(20)           -- free/premium/pro
+status VARCHAR(20)         -- active/cancelled/expired
+current_period_end TIMESTAMP
+ls_subscription_id VARCHAR  -- ID Lemon Squeezy
+```
+
+### Règles Frontend Trial
+
+- Afficher bannière countdown quand trial actif
+- Montrer jours restants dans le header/settings
+- Après expiration, afficher modal upgrade
+- Ne JAMAIS afficher "trial" si l'utilisateur a un abonnement payé
 
 ## Règles d'Internationalisation (i18n)
 

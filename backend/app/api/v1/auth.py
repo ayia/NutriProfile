@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta, timezone
+
+from app.services.subscription import TRIAL_DURATION_DAYS
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -126,11 +128,14 @@ async def register(
                 detail="Un compte avec cet email existe déjà",
             )
 
-        # Créer l'utilisateur
+        # Créer l'utilisateur avec trial 14 jours Premium
+        trial_ends_at = datetime.now(timezone.utc) + timedelta(days=TRIAL_DURATION_DAYS)
         user = User(
             email=user_data.email,
             hashed_password=get_password_hash(user_data.password),
             name=user_data.name,
+            subscription_tier="free",  # Tier par défaut
+            trial_ends_at=trial_ends_at,  # Trial 14 jours Premium
         )
         db.add(user)
         await db.commit()

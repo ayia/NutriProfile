@@ -38,12 +38,22 @@ async def get_subscription_status(
     service = SubscriptionService(db)
     subscription = await service.get_subscription(current_user.id)
 
+    # Obtenir le tier effectif (inclut le trial)
+    effective_tier = await service.get_effective_tier(current_user.id)
+
+    # Obtenir les informations de trial
+    trial_info = await service.get_trial_info(current_user.id)
+
     return SubscriptionStatusResponse(
-        tier=SubscriptionTier(current_user.subscription_tier),
+        tier=SubscriptionTier(effective_tier),
         status=SubscriptionStatus(subscription.status.value) if subscription else None,
         renews_at=subscription.current_period_end if subscription else None,
         cancel_at_period_end=subscription.cancel_at_period_end if subscription else False,
-        is_active=subscription.status.value == "active" if subscription else True
+        is_active=subscription.status.value == "active" if subscription else True,
+        # Trial info
+        is_trial=trial_info["is_trial"],
+        trial_ends_at=current_user.trial_ends_at if current_user.trial_ends_at else None,
+        days_remaining=trial_info["days_remaining"]
     )
 
 
@@ -58,6 +68,9 @@ async def get_usage_status(
 
     limits = status["limits"]
     usage = status["usage"]
+
+    # Obtenir les informations de trial
+    trial_info = await service.get_trial_info(current_user.id)
 
     return UsageStatusResponse(
         tier=SubscriptionTier(status["tier"]),
@@ -80,7 +93,10 @@ async def get_usage_status(
             recipe_generations=usage["recipe_generations"],
             coach_messages=usage["coach_messages"]
         ),
-        reset_at=status["reset_at"]
+        reset_at=status["reset_at"],
+        # Trial info
+        is_trial=trial_info["is_trial"],
+        trial_days_remaining=trial_info["days_remaining"]
     )
 
 

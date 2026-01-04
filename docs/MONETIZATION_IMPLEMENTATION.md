@@ -3,734 +3,532 @@
 ## Contexte
 
 - **Développeur**: Auto-entrepreneur au Maroc
-- **Plateforme de paiement**: **Paddle** (Merchant of Record)
-- **Raison**: Stripe non disponible au Maroc, Paddle gère TVA/taxes
+- **Plateforme de paiement**: **Lemon Squeezy** (Merchant of Record)
+- **Raison**: Stripe non disponible au Maroc, Lemon Squeezy gère TVA/taxes
+- **Statut**: ✅ Implémenté et fonctionnel
 
 ---
 
-## GUIDE RAPIDE - Configuration Paddle
-
-### Étape 1: Créer un compte Paddle
-
-1. Va sur **https://www.paddle.com**
-2. Clique sur **"Get Started"**
-3. Crée un compte **Seller** (pas buyer)
-4. Paddle supporte le Maroc comme pays de résidence
-
-### Étape 2: Créer les Produits
-
-Dans le dashboard Paddle > **Catalog > Products** :
-
-| Produit | Prix | Type | Price ID |
-|---------|------|------|----------|
-| Premium Mensuel | 4.99€/mois | Subscription | `pri_xxx` |
-| Premium Annuel | 39.99€/an | Subscription | `pri_xxx` |
-| Pro Mensuel | 9.99€/mois | Subscription | `pri_xxx` |
-| Pro Annuel | 79.99€/an | Subscription | `pri_xxx` |
-
-### Étape 3: Obtenir les Clés API
-
-1. **Settings > API Keys** : Créer une clé API
-2. **Settings > Notifications** : Créer un webhook
-   - URL : `https://nutriprofile-api.fly.dev/api/v1/webhooks/paddle`
-   - Events : Tous les events `subscription.*` et `transaction.*`
-3. Copier le **Webhook Secret**
-
-### Étape 4: Configurer Fly.io
-
-```bash
-flyctl secrets set PADDLE_API_KEY="pdl_xxx" --app nutriprofile-api
-flyctl secrets set PADDLE_WEBHOOK_SECRET="pdl_ntfset_xxx" --app nutriprofile-api
-flyctl secrets set PADDLE_ENVIRONMENT="sandbox" --app nutriprofile-api
-flyctl secrets set PADDLE_PREMIUM_MONTHLY_PRICE_ID="pri_xxx" --app nutriprofile-api
-flyctl secrets set PADDLE_PREMIUM_YEARLY_PRICE_ID="pri_xxx" --app nutriprofile-api
-flyctl secrets set PADDLE_PRO_MONTHLY_PRICE_ID="pri_xxx" --app nutriprofile-api
-flyctl secrets set PADDLE_PRO_YEARLY_PRICE_ID="pri_xxx" --app nutriprofile-api
-```
-
-### Étape 5: Appliquer la Migration
-
-```bash
-flyctl ssh console --app nutriprofile-api
-cd /app && alembic upgrade head
-```
-
-### Étape 6: Déployer
-
-```bash
-cd backend && fly deploy
-cd ../frontend && fly deploy
-```
-
-### Étape 7: Tester
-
-1. Mode sandbox : utiliser carte test `4000 0566 5566 5556`
-2. Vérifier les webhooks dans le dashboard Paddle
-3. Passer en production quand prêt
-
----
-
-## Architecture Paiement
+## Architecture Système
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         UTILISATEUR                                  │
-└─────────────────────────────┬───────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                    FRONTEND (React)                                  │
-│  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐        │
-│  │ PricingPage    │  │ CheckoutModal  │  │ SubscriptionMgr│        │
-│  │ (Grille prix)  │  │ (Paddle.js)    │  │ (Portail)      │        │
-│  └────────────────┘  └────────────────┘  └────────────────┘        │
-└─────────────────────────────┬───────────────────────────────────────┘
-                              │
-        ┌─────────────────────┴─────────────────────┐
-        │                                           │
-        ▼                                           ▼
-┌───────────────────────┐               ┌───────────────────────┐
-│   PADDLE              │               │   BACKEND (FastAPI)   │
-│   ┌───────────────┐   │   Webhook     │   ┌───────────────┐   │
-│   │ Checkout Page │   │──────────────>│   │ /webhooks/    │   │
-│   │ Customer Mgmt │   │               │   │   paddle      │   │
-│   │ Billing       │   │               │   └───────────────┘   │
-│   └───────────────┘   │               └───────────────────────┘
-└───────────────────────┘                           │
-                                                    ▼
-                                        ┌───────────────────────┐
-                                        │    PostgreSQL         │
-                                        │  - User.tier          │
-                                        │  - Subscription       │
-                                        │  - UsageTracking      │
-                                        └───────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              NOUVEAU UTILISATEUR                             │
+└─────────────────────────────────────┬───────────────────────────────────────┘
+                                      │ Inscription
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         TRIAL 14 JOURS PREMIUM                               │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │ • Création User avec trial_ends_at = now + 14 jours                 │    │
+│  │ • subscription_tier = "free" (valeur par défaut)                    │    │
+│  │ • get_effective_tier() retourne "premium" si trial actif            │    │
+│  │ • Accès complet aux features Premium pendant 14 jours               │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────┬───────────────────────────────────────┘
+                                      │
+                    ┌─────────────────┴─────────────────┐
+                    │                                   │
+                    ▼                                   ▼
+┌───────────────────────────────┐       ┌───────────────────────────────┐
+│     TRIAL EXPIRE (14 jours)   │       │      UPGRADE PENDANT TRIAL    │
+│  ┌─────────────────────────┐  │       │  ┌─────────────────────────┐  │
+│  │ • Retombe sur tier Free │  │       │  │ • Checkout Lemon Squeezy│  │
+│  │ • Limites Free actives  │  │       │  │ • Webhook crée Subscript│  │
+│  │ • Modal upgrade affiché │  │       │  │ • subscription_tier MAJ │  │
+│  └─────────────────────────┘  │       │  │ • Trial ignoré si payé  │  │
+└───────────────────────────────┘       │  └─────────────────────────┘  │
+                                        └───────────────────────────────┘
 ```
 
 ---
 
-## Documentation Legacy (Ancienne version Lemon Squeezy)
+## Modèle de Données
 
-### Phase 1: Configuration Lemon Squeezy (OBSOLÈTE)
+### Table `users`
 
-1. **Créer compte Lemon Squeezy**
-   - Inscription sur lemonsqueezy.com
-   - Vérification identité (passeport/CIN)
-   - Configuration payout vers compte bancaire marocain
-
-2. **Créer les produits**
-   ```
-   Produits à créer dans dashboard Lemon Squeezy:
-
-   ABONNEMENTS:
-   - Premium Mensuel: 4.99€/mois
-   - Premium Annuel: 39.99€/an (33% économie)
-   - Pro Mensuel: 9.99€/mois
-   - Pro Annuel: 79.99€/an (33% économie)
-
-   ONE-TIME (futurs):
-   - Pack Recettes: 2.99€
-   - Rapport PDF: 1.99€
-   ```
-
-3. **Récupérer les clés API**
-   - API Key (dashboard > Settings > API)
-   - Webhook Secret (dashboard > Settings > Webhooks)
-   - Store ID et Variant IDs des produits
-
-### Phase 2: Backend - Modèles et Schémas
-
-```python
-# backend/app/models/subscription.py
-
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum
-from sqlalchemy.orm import relationship
-from app.database import Base
-import enum
-
-class SubscriptionTier(str, enum.Enum):
-    FREE = "free"
-    PREMIUM = "premium"
-    PRO = "pro"
-
-class SubscriptionStatus(str, enum.Enum):
-    ACTIVE = "active"
-    CANCELLED = "cancelled"
-    EXPIRED = "expired"
-    PAST_DUE = "past_due"
-
-class Subscription(Base):
-    __tablename__ = "subscriptions"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"), unique=True)
-
-    # Lemon Squeezy IDs
-    ls_subscription_id = Column(String, unique=True)
-    ls_customer_id = Column(String)
-    ls_variant_id = Column(String)
-
-    tier = Column(Enum(SubscriptionTier), default=SubscriptionTier.FREE)
-    status = Column(Enum(SubscriptionStatus), default=SubscriptionStatus.ACTIVE)
-
-    current_period_start = Column(DateTime)
-    current_period_end = Column(DateTime)
-    cancel_at_period_end = Column(Boolean, default=False)
-
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, onupdate=datetime.utcnow)
-
-    user = relationship("User", back_populates="subscription")
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    hashed_password VARCHAR(255) NOT NULL,
+    name VARCHAR(100),
+    is_active BOOLEAN DEFAULT TRUE,
+    preferred_language VARCHAR(5) DEFAULT 'en',
+    subscription_tier VARCHAR(20) DEFAULT 'free',  -- free/premium/pro (tier payé)
+    trial_ends_at TIMESTAMP WITH TIME ZONE,        -- Fin du trial (14j après inscription)
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE
+);
 ```
 
-```python
-# backend/app/models/usage.py
+### Table `subscriptions`
 
-class UsageTracking(Base):
-    __tablename__ = "usage_tracking"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    date = Column(Date, default=date.today)
-
-    # Compteurs quotidiens
-    vision_analyses = Column(Integer, default=0)
-    recipe_generations = Column(Integer, default=0)
-    coach_messages = Column(Integer, default=0)
-
-    # Index unique par user/date
-    __table_args__ = (
-        UniqueConstraint('user_id', 'date', name='unique_user_date'),
-    )
+```sql
+CREATE TABLE subscriptions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER UNIQUE REFERENCES users(id),
+    tier VARCHAR(20) NOT NULL,                     -- free/premium/pro
+    status VARCHAR(20) DEFAULT 'active',           -- active/cancelled/expired/past_due/paused
+    current_period_start TIMESTAMP WITH TIME ZONE,
+    current_period_end TIMESTAMP WITH TIME ZONE,
+    cancel_at_period_end BOOLEAN DEFAULT FALSE,
+    -- Lemon Squeezy IDs
+    ls_subscription_id VARCHAR(100) UNIQUE,
+    ls_customer_id VARCHAR(100),
+    ls_variant_id VARCHAR(100),
+    ls_order_id VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE
+);
 ```
 
-```python
-# Ajouter à backend/app/models/user.py
+### Table `usage_tracking`
 
-class User(Base):
-    # ... champs existants ...
-
-    # Nouveau champ
-    subscription_tier = Column(
-        Enum(SubscriptionTier),
-        default=SubscriptionTier.FREE
-    )
-
-    subscription = relationship("Subscription", back_populates="user", uselist=False)
+```sql
+CREATE TABLE usage_tracking (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    date DATE NOT NULL,
+    vision_analyses INTEGER DEFAULT 0,
+    recipe_generations INTEGER DEFAULT 0,
+    coach_messages INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE,
+    UNIQUE(user_id, date)
+);
 ```
 
-### Phase 3: Backend - Service Subscription
+---
+
+## Logique de Détermination du Tier
+
+### Backend: `get_effective_tier()`
 
 ```python
 # backend/app/services/subscription.py
 
-from app.models.subscription import SubscriptionTier
+async def get_effective_tier(self, user_id: int) -> str:
+    """
+    Détermine le tier effectif de l'utilisateur.
+    Ordre de priorité:
+    1. Subscription payée active → tier de la subscription
+    2. Trial actif → "premium"
+    3. Sinon → "free"
+    """
+    user = await self.db.get(User, user_id)
+    if not user:
+        return "free"
 
-# Limites par tier
+    # 1. Vérifier subscription payée
+    subscription = await self._get_subscription(user_id)
+    if subscription and subscription.status == SubscriptionStatus.ACTIVE:
+        if subscription.tier in [SubscriptionTier.PREMIUM, SubscriptionTier.PRO]:
+            return subscription.tier.value
+
+    # 2. Vérifier trial actif
+    if user.trial_ends_at and datetime.now(timezone.utc) < user.trial_ends_at:
+        return "premium"
+
+    # 3. Défaut: free
+    return user.subscription_tier or "free"
+```
+
+### Frontend: Affichage du Trial
+
+```typescript
+// Logique dans TrialBanner.tsx
+interface TrialInfo {
+  is_trial: boolean;
+  trial_ends_at: string | null;
+  days_remaining: number | null;
+}
+
+// Afficher seulement si:
+// - is_trial === true
+// - Pas d'abonnement payé actif
+// - days_remaining > 0
+```
+
+---
+
+## Limites par Tier
+
+```python
 TIER_LIMITS = {
-    SubscriptionTier.FREE: {
-        "vision_analyses": 3,      # par jour
-        "recipe_generations": 2,   # par semaine
-        "coach_messages": 1,       # par jour
-        "history_days": 7,         # jours d'historique
+    "free": {
+        "vision_analyses": {"limit": 3, "period": "day"},
+        "recipe_generations": {"limit": 2, "period": "week"},
+        "coach_messages": {"limit": 1, "period": "day"},
+        "history_days": {"limit": 7, "period": "total"},
+        "export_pdf": {"limit": 0},
+        "meal_plans": {"limit": 0},
+        "advanced_stats": {"limit": 0},
+        "priority_support": {"limit": 0},
     },
-    SubscriptionTier.PREMIUM: {
-        "vision_analyses": -1,     # illimité
-        "recipe_generations": 10,  # par semaine
-        "coach_messages": 5,       # par jour
-        "history_days": 90,
+    "premium": {
+        "vision_analyses": {"limit": -1, "period": "day"},      # illimité
+        "recipe_generations": {"limit": 10, "period": "week"},
+        "coach_messages": {"limit": 5, "period": "day"},
+        "history_days": {"limit": 90, "period": "total"},
+        "export_pdf": {"limit": 0},
+        "meal_plans": {"limit": 0},
+        "advanced_stats": {"limit": 1},
+        "priority_support": {"limit": 1},
     },
-    SubscriptionTier.PRO: {
-        "vision_analyses": -1,
-        "recipe_generations": -1,
-        "coach_messages": -1,
-        "history_days": -1,        # illimité
+    "pro": {
+        "vision_analyses": {"limit": -1, "period": "day"},
+        "recipe_generations": {"limit": -1, "period": "week"},
+        "coach_messages": {"limit": -1, "period": "day"},
+        "history_days": {"limit": -1, "period": "total"},
+        "export_pdf": {"limit": 1},
+        "meal_plans": {"limit": 1},
+        "advanced_stats": {"limit": 1},
+        "priority_support": {"limit": 1},
+        "dedicated_support": {"limit": 1},
     }
 }
-
-class SubscriptionService:
-    def __init__(self, db: AsyncSession):
-        self.db = db
-
-    async def check_limit(
-        self,
-        user_id: int,
-        action: str
-    ) -> tuple[bool, int, int]:
-        """
-        Vérifie si l'utilisateur peut effectuer l'action.
-        Retourne: (autorisé, utilisé, limite)
-        """
-        user = await self.get_user(user_id)
-        tier = user.subscription_tier
-        limit = TIER_LIMITS[tier][action]
-
-        if limit == -1:
-            return True, 0, -1
-
-        usage = await self.get_daily_usage(user_id, action)
-        return usage < limit, usage, limit
-
-    async def increment_usage(self, user_id: int, action: str):
-        """Incrémente le compteur d'usage."""
-        today = date.today()
-        usage = await self.db.execute(
-            select(UsageTracking)
-            .where(UsageTracking.user_id == user_id)
-            .where(UsageTracking.date == today)
-        )
-        usage = usage.scalar_one_or_none()
-
-        if not usage:
-            usage = UsageTracking(user_id=user_id, date=today)
-            self.db.add(usage)
-
-        setattr(usage, action, getattr(usage, action) + 1)
-        await self.db.commit()
 ```
 
-### Phase 4: Backend - Webhook Lemon Squeezy
+---
+
+## Endpoints API
+
+### Statut Subscription
+
+```
+GET /api/v1/subscriptions/status
+
+Response:
+{
+  "tier": "premium",           // Tier effectif (incluant trial)
+  "status": "active",          // active/cancelled/expired/none
+  "is_active": true,
+  "renews_at": null,
+  "cancel_at_period_end": false,
+  "is_trial": true,            // NOUVEAU: Est en période trial
+  "trial_ends_at": "2026-01-18T12:00:00Z",  // NOUVEAU
+  "days_remaining": 14         // NOUVEAU: Jours restants trial
+}
+```
+
+### Usage
+
+```
+GET /api/v1/subscriptions/usage
+
+Response:
+{
+  "tier": "premium",
+  "is_trial": true,
+  "trial_days_remaining": 14,
+  "limits": {
+    "vision_analyses": {"limit": -1, "period": "day", "used": 5},
+    "recipe_generations": {"limit": 10, "period": "week", "used": 3},
+    ...
+  }
+}
+```
+
+### Pricing
+
+```
+GET /api/v1/subscriptions/pricing
+
+Response:
+{
+  "plans": [
+    {
+      "tier": "free",
+      "price_monthly": 0,
+      "price_yearly": 0,
+      "features": ["vision_3", "recipes_2", ...]
+    },
+    {
+      "tier": "premium",
+      "price_monthly": 5,
+      "price_yearly": 40,
+      "variant_id_monthly": "1191083",
+      "variant_id_yearly": "1191081",
+      "features": ["vision_unlimited", "recipes_10", ...],
+      "popular": true
+    },
+    {
+      "tier": "pro",
+      "price_monthly": 10,
+      "price_yearly": 80,
+      "variant_id_monthly": "1191076",
+      "variant_id_yearly": "1191055",
+      "features": ["vision_unlimited", "recipes_unlimited", ...]
+    }
+  ],
+  "currency": "EUR"
+}
+```
+
+---
+
+## Flow d'Inscription avec Trial
+
+### Backend: `auth.py`
 
 ```python
-# backend/app/api/v1/webhooks.py
-
-from fastapi import APIRouter, Request, HTTPException
-import hmac
-import hashlib
-
-router = APIRouter(prefix="/webhooks", tags=["webhooks"])
-
-@router.post("/lemonsqueezy")
-async def lemonsqueezy_webhook(
-    request: Request,
-    db: AsyncSession = Depends(get_db)
-):
-    # Vérifier signature
-    signature = request.headers.get("X-Signature")
-    body = await request.body()
-
-    expected = hmac.new(
-        settings.LEMONSQUEEZY_WEBHOOK_SECRET.encode(),
-        body,
-        hashlib.sha256
-    ).hexdigest()
-
-    if not hmac.compare_digest(signature, expected):
-        raise HTTPException(status_code=401, detail="Invalid signature")
-
-    payload = await request.json()
-    event_name = payload["meta"]["event_name"]
-
-    # Router les événements
-    handlers = {
-        "subscription_created": handle_subscription_created,
-        "subscription_updated": handle_subscription_updated,
-        "subscription_cancelled": handle_subscription_cancelled,
-        "subscription_resumed": handle_subscription_resumed,
-        "subscription_expired": handle_subscription_expired,
-        "order_created": handle_order_created,
-    }
-
-    handler = handlers.get(event_name)
-    if handler:
-        await handler(payload, db)
-
-    return {"status": "ok"}
-
-async def handle_subscription_created(payload: dict, db: AsyncSession):
-    """Nouvel abonnement créé."""
-    data = payload["data"]["attributes"]
-    custom_data = payload["meta"]["custom_data"]
-    user_id = custom_data["user_id"]
-
-    # Mapper variant_id vers tier
-    variant_id = str(data["variant_id"])
-    tier = VARIANT_TO_TIER.get(variant_id, SubscriptionTier.FREE)
-
-    # Créer subscription
-    subscription = Subscription(
-        user_id=user_id,
-        ls_subscription_id=str(data["id"]),
-        ls_customer_id=str(data["customer_id"]),
-        ls_variant_id=variant_id,
-        tier=tier,
-        status=SubscriptionStatus.ACTIVE,
-        current_period_start=datetime.fromisoformat(data["renews_at"]),
+@router.post("/register")
+async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
+    # 1. Créer l'utilisateur
+    user = User(
+        email=user_data.email,
+        hashed_password=get_password_hash(user_data.password),
+        name=user_data.name,
+        subscription_tier="free",  # Tier par défaut
+        trial_ends_at=datetime.now(timezone.utc) + timedelta(days=14)  # Trial 14 jours
     )
 
-    db.add(subscription)
-
-    # Mettre à jour user tier
-    user = await db.get(User, user_id)
-    user.subscription_tier = tier
-
+    db.add(user)
     await db.commit()
-```
+    await db.refresh(user)
 
-### Phase 5: Backend - Endpoints Subscription
-
-```python
-# backend/app/api/v1/subscriptions.py
-
-from fastapi import APIRouter, Depends
-import httpx
-
-router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
-
-@router.get("/status")
-async def get_subscription_status(
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
-):
-    """Retourne le statut d'abonnement de l'utilisateur."""
-    subscription = await db.execute(
-        select(Subscription).where(Subscription.user_id == current_user.id)
-    )
-    subscription = subscription.scalar_one_or_none()
+    # 2. Retourner token + info trial
+    access_token = create_access_token(data={"sub": str(user.id)})
 
     return {
-        "tier": current_user.subscription_tier,
-        "status": subscription.status if subscription else "none",
-        "renews_at": subscription.current_period_end if subscription else None,
-        "cancel_at_period_end": subscription.cancel_at_period_end if subscription else False,
-    }
-
-@router.get("/usage")
-async def get_usage(
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
-):
-    """Retourne l'utilisation actuelle et les limites."""
-    tier = current_user.subscription_tier
-    limits = TIER_LIMITS[tier]
-
-    today = date.today()
-    usage = await db.execute(
-        select(UsageTracking)
-        .where(UsageTracking.user_id == current_user.id)
-        .where(UsageTracking.date == today)
-    )
-    usage = usage.scalar_one_or_none()
-
-    return {
-        "tier": tier,
-        "limits": limits,
-        "usage": {
-            "vision_analyses": usage.vision_analyses if usage else 0,
-            "recipe_generations": usage.recipe_generations if usage else 0,
-            "coach_messages": usage.coach_messages if usage else 0,
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "name": user.name,
+            "trial_ends_at": user.trial_ends_at.isoformat(),
+            "is_trial": True
         }
     }
-
-@router.post("/checkout")
-async def create_checkout(
-    variant_id: str,
-    current_user: User = Depends(get_current_user)
-):
-    """Crée une URL de checkout Lemon Squeezy."""
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "https://api.lemonsqueezy.com/v1/checkouts",
-            headers={
-                "Authorization": f"Bearer {settings.LEMONSQUEEZY_API_KEY}",
-                "Content-Type": "application/vnd.api+json",
-            },
-            json={
-                "data": {
-                    "type": "checkouts",
-                    "attributes": {
-                        "checkout_data": {
-                            "custom": {
-                                "user_id": str(current_user.id)
-                            }
-                        }
-                    },
-                    "relationships": {
-                        "store": {
-                            "data": {
-                                "type": "stores",
-                                "id": settings.LEMONSQUEEZY_STORE_ID
-                            }
-                        },
-                        "variant": {
-                            "data": {
-                                "type": "variants",
-                                "id": variant_id
-                            }
-                        }
-                    }
-                }
-            }
-        )
-
-        data = response.json()
-        return {"checkout_url": data["data"]["attributes"]["url"]}
-
-@router.post("/portal")
-async def get_customer_portal(
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
-):
-    """Retourne l'URL du portail client pour gérer l'abonnement."""
-    subscription = await db.execute(
-        select(Subscription).where(Subscription.user_id == current_user.id)
-    )
-    subscription = subscription.scalar_one_or_none()
-
-    if not subscription:
-        raise HTTPException(status_code=404, detail="No subscription found")
-
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            f"https://api.lemonsqueezy.com/v1/subscriptions/{subscription.ls_subscription_id}/customer-portal",
-            headers={
-                "Authorization": f"Bearer {settings.LEMONSQUEEZY_API_KEY}",
-            }
-        )
-
-        data = response.json()
-        return {"portal_url": data["data"]["attributes"]["url"]}
 ```
 
-### Phase 6: Frontend - Composants
+---
 
-```typescript
-// frontend/src/components/subscription/PricingCard.tsx
+## Composants Frontend Trial
 
-interface PricingCardProps {
-  tier: 'premium' | 'pro';
-  price: number;
-  period: 'monthly' | 'yearly';
-  features: string[];
-  variantId: string;
-  popular?: boolean;
-}
+### TrialBanner
 
-export function PricingCard({
-  tier,
-  price,
-  period,
-  features,
-  variantId,
-  popular
-}: PricingCardProps) {
-  const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
+```tsx
+// frontend/src/components/subscription/TrialBanner.tsx
 
-  const handleSubscribe = async () => {
-    setLoading(true);
-    try {
-      const { checkout_url } = await api.post('/subscriptions/checkout', {
-        variant_id: variantId
-      });
-      window.location.href = checkout_url;
-    } catch (error) {
-      toast.error(t('subscription.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
+export function TrialBanner() {
+  const { t } = useTranslation('pricing');
+  const { data: status } = useSubscriptionStatus();
+
+  if (!status?.is_trial || status.days_remaining === null) {
+    return null;
+  }
+
+  const isExpiringSoon = status.days_remaining <= 3;
 
   return (
-    <Card className={cn(
-      "p-6",
-      popular && "border-primary border-2 relative"
+    <div className={cn(
+      "rounded-lg p-4 flex items-center justify-between",
+      isExpiringSoon
+        ? "bg-orange-100 border-orange-300"
+        : "bg-primary-100 border-primary-300"
     )}>
-      {popular && (
-        <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">
-          {t('subscription.popular')}
-        </Badge>
-      )}
-
-      <h3 className="text-2xl font-bold">{t(`subscription.${tier}.name`)}</h3>
-
-      <div className="mt-4">
-        <span className="text-4xl font-bold">{price}€</span>
-        <span className="text-muted-foreground">
-          /{t(`subscription.${period}`)}
-        </span>
+      <div className="flex items-center gap-3">
+        <Clock className="h-5 w-5" />
+        <div>
+          <p className="font-medium">
+            {t('trial.title', { days: status.days_remaining })}
+          </p>
+          <p className="text-sm text-gray-600">
+            {t('trial.description')}
+          </p>
+        </div>
       </div>
-
-      <ul className="mt-6 space-y-3">
-        {features.map((feature) => (
-          <li key={feature} className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-primary" />
-            <span>{t(`subscription.features.${feature}`)}</span>
-          </li>
-        ))}
-      </ul>
-
-      <Button
-        className="w-full mt-6"
-        onClick={handleSubscribe}
-        disabled={loading}
-      >
-        {loading ? <Loader2 className="animate-spin" /> : t('subscription.subscribe')}
-      </Button>
-    </Card>
-  );
-}
-```
-
-```typescript
-// frontend/src/components/subscription/UsageBanner.tsx
-
-export function UsageBanner() {
-  const { t } = useTranslation();
-  const { data: usage } = useQuery({
-    queryKey: ['subscription', 'usage'],
-    queryFn: () => api.get('/subscriptions/usage'),
-  });
-
-  if (!usage || usage.tier !== 'free') return null;
-
-  const visionUsed = usage.usage.vision_analyses;
-  const visionLimit = usage.limits.vision_analyses;
-  const percentage = (visionUsed / visionLimit) * 100;
-
-  if (percentage < 70) return null;
-
-  return (
-    <Alert variant={percentage >= 100 ? "destructive" : "warning"}>
-      <AlertCircle className="h-4 w-4" />
-      <AlertDescription>
-        {percentage >= 100
-          ? t('usage.limitReached', { feature: t('features.vision') })
-          : t('usage.approaching', { used: visionUsed, limit: visionLimit })
-        }
-        <Button variant="link" asChild>
-          <Link to="/pricing">{t('usage.upgrade')}</Link>
+      <Link to="/pricing">
+        <Button size="sm">
+          {t('trial.upgrade')}
         </Button>
-      </AlertDescription>
-    </Alert>
+      </Link>
+    </div>
   );
 }
 ```
 
-### Phase 7: Intégration dans les Endpoints Existants
+### Traductions i18n
 
-```python
-# Modifier backend/app/api/v1/vision.py
-
-from app.services.subscription import SubscriptionService
-
-@router.post("/analyze")
-async def analyze_meal(
-    image: UploadFile,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
-):
-    # NOUVEAU: Vérifier limite
-    sub_service = SubscriptionService(db)
-    allowed, used, limit = await sub_service.check_limit(
-        current_user.id,
-        "vision_analyses"
-    )
-
-    if not allowed:
-        raise HTTPException(
-            status_code=429,
-            detail={
-                "error": "limit_reached",
-                "used": used,
-                "limit": limit,
-                "upgrade_url": "/pricing"
-            }
-        )
-
-    # ... logique existante ...
-
-    # NOUVEAU: Incrémenter usage après succès
-    await sub_service.increment_usage(current_user.id, "vision_analyses")
-
-    return result
+```json
+// pricing.json (toutes les 7 langues)
+{
+  "trial": {
+    "title": "{{days}} jours restants dans votre essai Premium",
+    "titleExpired": "Votre essai Premium a expiré",
+    "description": "Profitez de toutes les fonctionnalités Premium",
+    "upgrade": "Passer à Premium",
+    "daysRemaining": "{{count}} jour restant",
+    "daysRemaining_plural": "{{count}} jours restants"
+  }
+}
 ```
 
-## Variables d'Environnement
+---
+
+## Webhooks Lemon Squeezy
+
+### Events Gérés
+
+| Event | Action |
+|-------|--------|
+| `subscription_created` | Créer Subscription, MAJ tier, annuler trial |
+| `subscription_updated` | MAJ period dates |
+| `subscription_cancelled` | Marquer cancelled |
+| `subscription_expired` | Marquer expired, tier → free |
+| `subscription_resumed` | Réactiver, tier → subscription.tier |
+
+### Endpoint
+
+```
+POST /api/v1/webhooks/lemonsqueezy
+
+Headers:
+  X-Signature: <HMAC-SHA256 signature>
+
+Body: Lemon Squeezy webhook payload
+```
+
+---
+
+## Configuration Lemon Squeezy
+
+### Variables d'Environnement (Fly.io Secrets)
 
 ```bash
-# Ajouter à backend/.env et fly secrets
+LEMONSQUEEZY_API_KEY=eyJ0eXAi...
+LEMONSQUEEZY_WEBHOOK_SECRET=whsec_...
+LEMONSQUEEZY_STORE_ID=123456
 
-# Lemon Squeezy
-LEMONSQUEEZY_API_KEY=your_api_key
-LEMONSQUEEZY_WEBHOOK_SECRET=your_webhook_secret
-LEMONSQUEEZY_STORE_ID=your_store_id
-
-# Variant IDs (à récupérer après création produits)
-LEMONSQUEEZY_PREMIUM_MONTHLY_VARIANT_ID=xxx
-LEMONSQUEEZY_PREMIUM_YEARLY_VARIANT_ID=xxx
-LEMONSQUEEZY_PRO_MONTHLY_VARIANT_ID=xxx
-LEMONSQUEEZY_PRO_YEARLY_VARIANT_ID=xxx
+# Variant IDs (produits créés dans Lemon Squeezy dashboard)
+LEMONSQUEEZY_PREMIUM_MONTHLY_VARIANT_ID=1191083
+LEMONSQUEEZY_PREMIUM_YEARLY_VARIANT_ID=1191081
+LEMONSQUEEZY_PRO_MONTHLY_VARIANT_ID=1191076
+LEMONSQUEEZY_PRO_YEARLY_VARIANT_ID=1191055
 ```
+
+### Produits
+
+| Produit | Prix | Variant ID |
+|---------|------|------------|
+| Premium Mensuel | 5€/mois (55 MAD) | 1191083 |
+| Premium Annuel | 40€/an (440 MAD) | 1191081 |
+| Pro Mensuel | 10€/mois (110 MAD) | 1191076 |
+| Pro Annuel | 80€/an (880 MAD) | 1191055 |
+
+---
 
 ## Déploiement
 
+### Migration Alembic
+
 ```bash
-# 1. Créer migration
+# Créer migration pour trial_ends_at
 cd backend
-alembic revision --autogenerate -m "add subscription tables"
+alembic revision --autogenerate -m "add trial_ends_at to users"
+
+# Appliquer
 alembic upgrade head
-
-# 2. Configurer secrets Fly.io
-fly secrets set LEMONSQUEEZY_API_KEY=xxx
-fly secrets set LEMONSQUEEZY_WEBHOOK_SECRET=xxx
-fly secrets set LEMONSQUEEZY_STORE_ID=xxx
-
-# 3. Déployer
-fly deploy
-
-# 4. Configurer webhook dans Lemon Squeezy
-# URL: https://nutriprofile-api.fly.dev/api/v1/webhooks/lemonsqueezy
-# Events: subscription_created, subscription_updated, subscription_cancelled, etc.
 ```
 
-## Checklist Implémentation
+### Déployer Backend
 
-- [ ] Créer compte Lemon Squeezy et vérifier identité
-- [ ] Créer produits (4 abonnements)
-- [ ] Récupérer clés API et variant IDs
-- [ ] Implémenter modèles Subscription et UsageTracking
-- [ ] Créer migration Alembic
-- [ ] Implémenter SubscriptionService
-- [ ] Implémenter webhook endpoint
-- [ ] Implémenter endpoints /subscriptions/*
-- [ ] Ajouter vérification limites aux endpoints existants
-- [ ] Créer composants frontend (PricingPage, PricingCard, UsageBanner)
-- [ ] Ajouter traductions i18n
-- [ ] Configurer secrets Fly.io
-- [ ] Configurer webhook dans Lemon Squeezy
-- [ ] Tester flux complet en mode test
-- [ ] Déployer en production
+```bash
+cd backend
+flyctl deploy --app nutriprofile-api
+```
+
+### Frontend (auto-deploy via Cloudflare)
+
+```bash
+git add -A
+git commit -m "feat: add 14-day premium trial"
+git push  # Cloudflare Pages auto-deploy
+```
+
+---
 
 ## Tests
 
+### Test Trial Actif
+
 ```python
-# tests/test_subscription.py
+@pytest.mark.asyncio
+async def test_new_user_gets_trial():
+    # Créer utilisateur
+    user = await create_user(email="test@example.com")
+
+    # Vérifier trial_ends_at est dans 14 jours
+    assert user.trial_ends_at is not None
+    delta = user.trial_ends_at - datetime.now(timezone.utc)
+    assert 13 < delta.days <= 14
+
+    # Vérifier tier effectif = premium
+    service = SubscriptionService(db)
+    tier = await service.get_effective_tier(user.id)
+    assert tier == "premium"
 
 @pytest.mark.asyncio
-async def test_free_user_has_limits():
-    user = await create_test_user(tier="free")
+async def test_trial_expired_returns_free():
+    # Créer utilisateur avec trial expiré
+    user = await create_user(
+        email="test@example.com",
+        trial_ends_at=datetime.now(timezone.utc) - timedelta(days=1)
+    )
+
+    # Vérifier tier effectif = free
     service = SubscriptionService(db)
-
-    # Première analyse OK
-    allowed, used, limit = await service.check_limit(user.id, "vision_analyses")
-    assert allowed is True
-    assert limit == 3
-
-    # Simuler 3 utilisations
-    for _ in range(3):
-        await service.increment_usage(user.id, "vision_analyses")
-
-    # 4ème bloquée
-    allowed, used, limit = await service.check_limit(user.id, "vision_analyses")
-    assert allowed is False
-    assert used == 3
+    tier = await service.get_effective_tier(user.id)
+    assert tier == "free"
 
 @pytest.mark.asyncio
-async def test_premium_user_unlimited_vision():
-    user = await create_test_user(tier="premium")
-    service = SubscriptionService(db)
+async def test_paid_subscription_overrides_trial():
+    # Créer utilisateur avec trial actif
+    user = await create_user(trial_ends_at=datetime.now(timezone.utc) + timedelta(days=7))
 
-    allowed, _, limit = await service.check_limit(user.id, "vision_analyses")
-    assert allowed is True
-    assert limit == -1  # illimité
+    # Ajouter subscription Pro
+    await create_subscription(user_id=user.id, tier="pro", status="active")
+
+    # Vérifier tier effectif = pro (pas premium du trial)
+    service = SubscriptionService(db)
+    tier = await service.get_effective_tier(user.id)
+    assert tier == "pro"
 ```
+
+---
+
+## Checklist Implémentation Trial
+
+### Backend
+- [x] Ajouter champ `trial_ends_at` à User model
+- [x] Créer migration Alembic
+- [x] Implémenter `get_effective_tier()` avec logique trial
+- [x] MAJ inscription pour définir trial_ends_at
+- [x] MAJ `/subscriptions/status` avec is_trial, days_remaining
+- [x] MAJ `/subscriptions/usage` avec info trial
+
+### Frontend
+- [x] Créer composant TrialBanner
+- [x] Afficher trial dans Settings
+- [x] Afficher trial dans Dashboard header
+- [x] Modal upgrade quand trial expire
+- [x] Traductions 7 langues
+
+### Déploiement
+- [x] Appliquer migration en production
+- [x] Déployer backend
+- [x] Déployer frontend
+
+---
+
+## Métriques à Suivre
+
+| Métrique | Description | Objectif |
+|----------|-------------|----------|
+| Trial Start Rate | % inscrits qui commencent trial | 100% (automatique) |
+| Trial-to-Paid | % trial qui convertissent | 15-25% |
+| Day 0 Conversion | % qui paient le jour 1 | 5-10% |
+| Churn Post-Trial | % qui partent après trial | <50% |

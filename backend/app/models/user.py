@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from sqlalchemy import String, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -33,6 +34,13 @@ class User(Base):
         String(20),
         default="free",
         nullable=False
+    )
+
+    # Trial period - 14 days Premium for new users
+    trial_ends_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        doc="When the 14-day trial period ends"
     )
 
     created_at: Mapped[datetime] = mapped_column(

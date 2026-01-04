@@ -1,4 +1,13 @@
 {
+  "trial": {
+    "title": "{{days}} days left in your Premium trial",
+    "titleExpired": "Your Premium trial has expired",
+    "description": "Enjoy all Premium features",
+    "upgrade": "Upgrade to Premium",
+    "upgradeShort": "Upgrade",
+    "daysRemaining": "{{count}} day left",
+    "daysRemaining_other": "{{count}} days left"
+  },
   "title": "Choose your plan",
   "subtitle": "Unlock the full potential of NutriProfile with our premium plans. Cancel anytime.",
   "monthly": "Monthly",

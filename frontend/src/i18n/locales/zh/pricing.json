@@ -1,4 +1,13 @@
 {
+  "trial": {
+    "title": "您的高级试用还剩{{days}}天",
+    "titleExpired": "您的高级试用已到期",
+    "description": "享受所有高级功能",
+    "upgrade": "升级到高级版",
+    "upgradeShort": "升级",
+    "daysRemaining": "还剩{{count}}天",
+    "daysRemaining_other": "还剩{{count}}天"
+  },
   "title": "选择您的计划",
   "subtitle": "通过我们的高级计划解锁NutriProfile的全部潜力。随时取消。",
   "monthly": "月付",
