@@ -1,5 +1,6 @@
 """Service de gestion des abonnements et du suivi d'usage."""
 
+import logging
 from datetime import date, datetime, timedelta
 from typing import Tuple
 import httpx
@@ -10,6 +11,7 @@ from app.models.subscription import Subscription, UsageTracking, SubscriptionTie
 from app.models.user import User
 from app.config import get_settings
 
+logger = logging.getLogger(__name__)
 settings = get_settings()
 
 
@@ -323,60 +325,74 @@ class SubscriptionService:
         api_key = getattr(settings, 'LEMONSQUEEZY_API_KEY', '')
         store_id = getattr(settings, 'LEMONSQUEEZY_STORE_ID', '')
 
+        logger.info(f"Creating checkout for user {user_id} with variant {variant_id}")
+        logger.info(f"API key present: {bool(api_key)}, Store ID: {store_id}")
+
         if not api_key or not store_id:
+            logger.error("Missing LEMONSQUEEZY_API_KEY or LEMONSQUEEZY_STORE_ID")
             return None
 
         # Récupérer l'email de l'utilisateur
         user = await self.db.get(User, user_id)
         if not user:
+            logger.error(f"User {user_id} not found")
             return None
 
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                "https://api.lemonsqueezy.com/v1/checkouts",
-                headers={
-                    "Authorization": f"Bearer {api_key}",
-                    "Accept": "application/vnd.api+json",
-                    "Content-Type": "application/vnd.api+json",
-                },
-                json={
-                    "data": {
-                        "type": "checkouts",
-                        "attributes": {
-                            "checkout_data": {
-                                "email": user.email,
-                                "name": user.name if hasattr(user, 'name') and user.name else None,
-                                "custom": {
-                                    "user_id": str(user_id)
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    "https://api.lemonsqueezy.com/v1/checkouts",
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Accept": "application/vnd.api+json",
+                        "Content-Type": "application/vnd.api+json",
+                    },
+                    json={
+                        "data": {
+                            "type": "checkouts",
+                            "attributes": {
+                                "checkout_data": {
+                                    "email": user.email,
+                                    "name": user.name if hasattr(user, 'name') and user.name else None,
+                                    "custom": {
+                                        "user_id": str(user_id)
+                                    }
+                                },
+                                "product_options": {
+                                    "redirect_url": "https://nutriprofile.pages.dev/dashboard?checkout=success",
                                 }
                             },
-                            "product_options": {
-                                "redirect_url": "https://nutriprofile.pages.dev/dashboard?checkout=success",
-                            }
-                        },
-                        "relationships": {
-                            "store": {
-                                "data": {
-                                    "type": "stores",
-                                    "id": store_id
-                                }
-                            },
-                            "variant": {
-                                "data": {
-                                    "type": "variants",
-                                    "id": variant_id
+                            "relationships": {
+                                "store": {
+                                    "data": {
+                                        "type": "stores",
+                                        "id": store_id
+                                    }
+                                },
+                                "variant": {
+                                    "data": {
+                                        "type": "variants",
+                                        "id": variant_id
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            )
+                )
 
-            if response.status_code in [200, 201]:
-                data = response.json()
-                # Lemon Squeezy retourne l'URL de checkout dans attributes.url
-                checkout_url = data.get("data", {}).get("attributes", {}).get("url")
-                return checkout_url
+                logger.info(f"Lemon Squeezy response status: {response.status_code}")
+
+                if response.status_code in [200, 201]:
+                    data = response.json()
+                    # Lemon Squeezy retourne l'URL de checkout dans attributes.url
+                    checkout_url = data.get("data", {}).get("attributes", {}).get("url")
+                    logger.info(f"Checkout URL created: {checkout_url[:50]}..." if checkout_url else "No URL in response")
+                    return checkout_url
+                else:
+                    logger.error(f"Lemon Squeezy error {response.status_code}: {response.text}")
+                    return None
+        except Exception as e:
+            logger.error(f"Checkout creation failed: {str(e)}")
             return None
 
     async def get_customer_portal_url(self, user_id: int) -> str | None:

@@ -117,5 +117,6 @@
   "guarantee": {
     "title": "100% Satisfacao garantida",
     "description": "Experimente NutriProfile Premium sem riscos. Se voce nao estiver completamente satisfeito em 30 dias, devolvemos seu dinheiro integralmente, sem perguntas."
-  }
+  },
+  "checkoutError": "Serviço de pagamento indisponível. Por favor, tente novamente."
 }

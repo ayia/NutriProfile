@@ -117,5 +117,6 @@
   "guarantee": {
     "title": "100%满意保证",
     "description": "无风险试用NutriProfile高级版。如果您在30天内不完全满意，我们将全额退款，无需任何理由。"
-  }
+  },
+  "checkoutError": "支付服务不可用，请重试。"
 }

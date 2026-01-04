@@ -262,8 +262,8 @@ async def get_pricing():
             tier=SubscriptionTier.PREMIUM,
             name="premium",
             description="premium_description",
-            price_monthly=55,  # 55 MAD (~5 EUR)
-            price_yearly=440,  # 440 MAD (~40 EUR) - 33% savings
+            price_monthly=5,    # 5 EUR (Lemon Squeezy charge en MAD équivalent)
+            price_yearly=40,    # 40 EUR - 33% savings
             variant_id_monthly=settings.LEMONSQUEEZY_PREMIUM_MONTHLY_VARIANT_ID,
             variant_id_yearly=settings.LEMONSQUEEZY_PREMIUM_YEARLY_VARIANT_ID,
             features=_generate_features_from_limits("premium"),
@@ -273,8 +273,8 @@ async def get_pricing():
             tier=SubscriptionTier.PRO,
             name="pro",
             description="pro_description",
-            price_monthly=110,  # 110 MAD (~10 EUR)
-            price_yearly=880,   # 880 MAD (~80 EUR) - 33% savings
+            price_monthly=10,   # 10 EUR (Lemon Squeezy charge en MAD équivalent)
+            price_yearly=80,    # 80 EUR - 33% savings
             variant_id_monthly=settings.LEMONSQUEEZY_PRO_MONTHLY_VARIANT_ID,
             variant_id_yearly=settings.LEMONSQUEEZY_PRO_YEARLY_VARIANT_ID,
             features=_generate_features_from_limits("pro"),
@@ -282,7 +282,7 @@ async def get_pricing():
         )
     ]
 
-    return PricingResponse(plans=plans, currency="MAD")
+    return PricingResponse(plans=plans, currency="EUR")
 
 
 @router.post("/cancel")
