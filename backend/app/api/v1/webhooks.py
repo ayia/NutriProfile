@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.config import get_settings
-from app.services.subscription import SubscriptionService, get_tier_from_price
+from app.services.subscription import SubscriptionService
 
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 logger = logging.getLogger(__name__)
@@ -358,6 +358,20 @@ def verify_paddle_signature(body: bytes, signature: str, ts: str) -> bool:
     ).hexdigest()
 
     return hmac.compare_digest(signature, expected)
+
+
+def get_tier_from_price(price_id: str) -> str:
+    """Retourne le tier correspondant à un price_id Paddle (DEPRECATED)."""
+    # Paddle est deprecated, mais gardé pour compatibilité
+    if price_id == settings.PADDLE_PREMIUM_MONTHLY_PRICE_ID:
+        return "premium"
+    if price_id == settings.PADDLE_PREMIUM_YEARLY_PRICE_ID:
+        return "premium"
+    if price_id == settings.PADDLE_PRO_MONTHLY_PRICE_ID:
+        return "pro"
+    if price_id == settings.PADDLE_PRO_YEARLY_PRICE_ID:
+        return "pro"
+    return "free"
 
 
 @router.post("/paddle")
