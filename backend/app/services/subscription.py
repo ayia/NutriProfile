@@ -14,8 +14,8 @@ from app.config import get_settings
 logger = logging.getLogger(__name__)
 settings = get_settings()
 
-# Trial duration in days
-TRIAL_DURATION_DAYS = 14
+# Trial duration in days (7 days optimal for health/fitness apps - 45% conversion rate)
+TRIAL_DURATION_DAYS = 7
 
 
 # Limites par tier avec périodes explicites
