@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     # Hugging Face
     HUGGINGFACE_TOKEN: str = ""
 
-    # Paddle (Payment Gateway - Merchant of Record)
+    # Paddle (Payment Gateway - Merchant of Record) - DEPRECATED, use Lemon Squeezy
     PADDLE_API_KEY: str = ""
     PADDLE_WEBHOOK_SECRET: str = ""
     PADDLE_ENVIRONMENT: str = "sandbox"  # "sandbox" ou "production"
@@ -38,6 +38,15 @@ class Settings(BaseSettings):
     PADDLE_PREMIUM_YEARLY_PRICE_ID: str = ""
     PADDLE_PRO_MONTHLY_PRICE_ID: str = ""
     PADDLE_PRO_YEARLY_PRICE_ID: str = ""
+
+    # Lemon Squeezy (Payment Gateway - Merchant of Record)
+    LEMONSQUEEZY_API_KEY: str = ""
+    LEMONSQUEEZY_WEBHOOK_SECRET: str = ""
+    LEMONSQUEEZY_STORE_ID: str = ""
+    LEMONSQUEEZY_PREMIUM_MONTHLY_VARIANT_ID: str = ""
+    LEMONSQUEEZY_PREMIUM_YEARLY_VARIANT_ID: str = ""
+    LEMONSQUEEZY_PRO_MONTHLY_VARIANT_ID: str = ""
+    LEMONSQUEEZY_PRO_YEARLY_VARIANT_ID: str = ""
 
     # CORS - stocké comme string, converti en liste via computed_field
     CORS_ORIGINS_RAW: str = "https://nutriprofile.pages.dev,https://1bfa8b06.nutriprofile.pages.dev,https://ba2a146d.nutriprofile.pages.dev,http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:5176,http://localhost:5177,http://localhost:5178,http://localhost:3000"

@@ -244,6 +244,7 @@ async def get_pricing():
     """
     Retourne les plans tarifaires disponibles.
     Les features sont générées dynamiquement depuis TIER_LIMITS pour garantir la synchronisation.
+    Utilise Lemon Squeezy comme payment gateway.
     """
     plans = [
         PricingPlan(
@@ -261,10 +262,10 @@ async def get_pricing():
             tier=SubscriptionTier.PREMIUM,
             name="premium",
             description="premium_description",
-            price_monthly=4.99,
-            price_yearly=39.99,
-            variant_id_monthly=settings.PADDLE_PREMIUM_MONTHLY_PRICE_ID,
-            variant_id_yearly=settings.PADDLE_PREMIUM_YEARLY_PRICE_ID,
+            price_monthly=55,  # 55 MAD (~5 EUR)
+            price_yearly=440,  # 440 MAD (~40 EUR) - 33% savings
+            variant_id_monthly=settings.LEMONSQUEEZY_PREMIUM_MONTHLY_VARIANT_ID,
+            variant_id_yearly=settings.LEMONSQUEEZY_PREMIUM_YEARLY_VARIANT_ID,
             features=_generate_features_from_limits("premium"),
             popular=True
         ),
@@ -272,16 +273,16 @@ async def get_pricing():
             tier=SubscriptionTier.PRO,
             name="pro",
             description="pro_description",
-            price_monthly=9.99,
-            price_yearly=79.99,
-            variant_id_monthly=settings.PADDLE_PRO_MONTHLY_PRICE_ID,
-            variant_id_yearly=settings.PADDLE_PRO_YEARLY_PRICE_ID,
+            price_monthly=110,  # 110 MAD (~10 EUR)
+            price_yearly=880,   # 880 MAD (~80 EUR) - 33% savings
+            variant_id_monthly=settings.LEMONSQUEEZY_PRO_MONTHLY_VARIANT_ID,
+            variant_id_yearly=settings.LEMONSQUEEZY_PRO_YEARLY_VARIANT_ID,
             features=_generate_features_from_limits("pro"),
             popular=False
         )
     ]
 
-    return PricingResponse(plans=plans, currency="EUR")
+    return PricingResponse(plans=plans, currency="MAD")
 
 
 @router.post("/cancel")

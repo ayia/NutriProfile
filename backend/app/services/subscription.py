@@ -238,27 +238,30 @@ class SubscriptionService:
         self,
         user_id: int,
         tier: str,
-        paddle_subscription_id: str | None = None,
-        paddle_customer_id: str | None = None,
-        paddle_price_id: str | None = None,
-        paddle_transaction_id: str | None = None,
+        ls_subscription_id: str | None = None,
+        ls_customer_id: str | None = None,
+        ls_variant_id: str | None = None,
+        ls_order_id: str | None = None,
         status: str = "active",
+        period_start: datetime | None = None,
         period_end: datetime | None = None
     ) -> Subscription:
-        """Crée ou met à jour un abonnement."""
+        """Crée ou met à jour un abonnement avec Lemon Squeezy."""
         subscription = await self.get_subscription(user_id)
 
         if subscription:
             subscription.tier = SubscriptionTier(tier)
             subscription.status = SubscriptionStatus(status)
-            if paddle_subscription_id:
-                subscription.paddle_subscription_id = paddle_subscription_id
-            if paddle_customer_id:
-                subscription.paddle_customer_id = paddle_customer_id
-            if paddle_price_id:
-                subscription.paddle_price_id = paddle_price_id
-            if paddle_transaction_id:
-                subscription.paddle_transaction_id = paddle_transaction_id
+            if ls_subscription_id:
+                subscription.ls_subscription_id = ls_subscription_id
+            if ls_customer_id:
+                subscription.ls_customer_id = ls_customer_id
+            if ls_variant_id:
+                subscription.ls_variant_id = ls_variant_id
+            if ls_order_id:
+                subscription.ls_order_id = ls_order_id
+            if period_start:
+                subscription.current_period_start = period_start
             if period_end:
                 subscription.current_period_end = period_end
         else:
@@ -266,10 +269,11 @@ class SubscriptionService:
                 user_id=user_id,
                 tier=SubscriptionTier(tier),
                 status=SubscriptionStatus(status),
-                paddle_subscription_id=paddle_subscription_id,
-                paddle_customer_id=paddle_customer_id,
-                paddle_price_id=paddle_price_id,
-                paddle_transaction_id=paddle_transaction_id,
+                ls_subscription_id=ls_subscription_id,
+                ls_customer_id=ls_customer_id,
+                ls_variant_id=ls_variant_id,
+                ls_order_id=ls_order_id,
+                current_period_start=period_start,
                 current_period_end=period_end
             )
             self.db.add(subscription)
@@ -303,20 +307,23 @@ class SubscriptionService:
         await self.db.refresh(subscription)
         return subscription
 
-    # ============== Paddle Integration ==============
+    # ============== Lemon Squeezy Integration ==============
 
-    def _get_paddle_base_url(self) -> str:
-        """Retourne l'URL de base Paddle selon l'environnement."""
-        env = getattr(settings, 'PADDLE_ENVIRONMENT', 'sandbox')
-        if env == "production":
-            return "https://api.paddle.com"
-        return "https://sandbox-api.paddle.com"
+    async def create_checkout_url(self, user_id: int, variant_id: str) -> str | None:
+        """
+        Crée une URL de checkout Lemon Squeezy.
 
-    async def create_checkout_url(self, user_id: int, price_id: str) -> str | None:
-        """Crée une URL de checkout Paddle."""
-        api_key = getattr(settings, 'PADDLE_API_KEY', '')
+        Args:
+            user_id: ID de l'utilisateur
+            variant_id: ID du variant Lemon Squeezy
 
-        if not api_key:
+        Returns:
+            URL de checkout ou None si échec
+        """
+        api_key = getattr(settings, 'LEMONSQUEEZY_API_KEY', '')
+        store_id = getattr(settings, 'LEMONSQUEEZY_STORE_ID', '')
+
+        if not api_key or not store_id:
             return None
 
         # Récupérer l'email de l'utilisateur
@@ -324,91 +331,105 @@ class SubscriptionService:
         if not user:
             return None
 
-        base_url = self._get_paddle_base_url()
-
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                f"{base_url}/transactions",
+                "https://api.lemonsqueezy.com/v1/checkouts",
                 headers={
                     "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json",
+                    "Accept": "application/vnd.api+json",
+                    "Content-Type": "application/vnd.api+json",
                 },
                 json={
-                    "items": [
-                        {
-                            "price_id": price_id,
-                            "quantity": 1
+                    "data": {
+                        "type": "checkouts",
+                        "attributes": {
+                            "checkout_data": {
+                                "email": user.email,
+                                "name": user.name if hasattr(user, 'name') and user.name else None,
+                                "custom": {
+                                    "user_id": str(user_id)
+                                }
+                            },
+                            "product_options": {
+                                "redirect_url": "https://nutriprofile.pages.dev/dashboard?checkout=success",
+                            }
+                        },
+                        "relationships": {
+                            "store": {
+                                "data": {
+                                    "type": "stores",
+                                    "id": store_id
+                                }
+                            },
+                            "variant": {
+                                "data": {
+                                    "type": "variants",
+                                    "id": variant_id
+                                }
+                            }
                         }
-                    ],
-                    "customer_id": user.paddle_customer_id if hasattr(user, 'paddle_customer_id') and user.paddle_customer_id else None,
-                    "custom_data": {
-                        "user_id": str(user_id)
-                    },
-                    "checkout": {
-                        "url": f"https://nutriprofile.fly.dev/checkout/success?user_id={user_id}"
                     }
                 }
             )
 
             if response.status_code in [200, 201]:
                 data = response.json()
-                # Paddle retourne l'URL de checkout dans la réponse
-                checkout_url = data.get("data", {}).get("checkout", {}).get("url")
+                # Lemon Squeezy retourne l'URL de checkout dans attributes.url
+                checkout_url = data.get("data", {}).get("attributes", {}).get("url")
                 return checkout_url
             return None
 
     async def get_customer_portal_url(self, user_id: int) -> str | None:
-        """Récupère l'URL du portail client Paddle."""
+        """
+        Récupère l'URL du portail client Lemon Squeezy.
+
+        Lemon Squeezy génère un customer portal URL dans les données d'abonnement.
+        """
         subscription = await self.get_subscription(user_id)
-        if not subscription or not subscription.paddle_subscription_id:
+        if not subscription or not subscription.ls_subscription_id:
             return None
 
-        api_key = getattr(settings, 'PADDLE_API_KEY', '')
+        api_key = getattr(settings, 'LEMONSQUEEZY_API_KEY', '')
         if not api_key:
             return None
 
-        base_url = self._get_paddle_base_url()
-
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{base_url}/subscriptions/{subscription.paddle_subscription_id}",
+                f"https://api.lemonsqueezy.com/v1/subscriptions/{subscription.ls_subscription_id}",
                 headers={
                     "Authorization": f"Bearer {api_key}",
+                    "Accept": "application/vnd.api+json",
                 }
             )
 
             if response.status_code == 200:
                 data = response.json()
-                # Paddle fournit un management_urls dans la subscription
-                management_urls = data.get("data", {}).get("management_urls", {})
-                return management_urls.get("update_payment_method") or management_urls.get("cancel")
+                # Lemon Squeezy fournit urls.update_payment_method et urls.customer_portal
+                urls = data.get("data", {}).get("attributes", {}).get("urls", {})
+                return urls.get("customer_portal") or urls.get("update_payment_method")
             return None
 
-    async def cancel_paddle_subscription(self, user_id: int) -> bool:
-        """Annule un abonnement Paddle."""
+    async def cancel_lemonsqueezy_subscription(self, user_id: int) -> bool:
+        """Annule un abonnement Lemon Squeezy."""
         subscription = await self.get_subscription(user_id)
-        if not subscription or not subscription.paddle_subscription_id:
+        if not subscription or not subscription.ls_subscription_id:
             return False
 
-        api_key = getattr(settings, 'PADDLE_API_KEY', '')
+        api_key = getattr(settings, 'LEMONSQUEEZY_API_KEY', '')
         if not api_key:
             return False
 
-        base_url = self._get_paddle_base_url()
-
         async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f"{base_url}/subscriptions/{subscription.paddle_subscription_id}/cancel",
+            # Lemon Squeezy utilise DELETE pour annuler (ou PATCH pour cancel at period end)
+            response = await client.delete(
+                f"https://api.lemonsqueezy.com/v1/subscriptions/{subscription.ls_subscription_id}",
                 headers={
                     "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "effective_from": "next_billing_period"
+                    "Accept": "application/vnd.api+json",
                 }
             )
 
-            return response.status_code == 200
+            return response.status_code in [200, 204]
 
     async def reset_usage(self, user_id: int) -> None:
         """
@@ -422,27 +443,26 @@ class SubscriptionService:
         await self.db.commit()
 
 
-# Mapping price_id -> tier (à configurer avec vos vrais IDs Paddle)
-PRICE_TO_TIER = {
-    # Ces IDs seront remplacés par les vrais Price IDs Paddle
-    # Format: pri_xxxxxxxxxxxxx
+# Mapping variant_id -> tier (Lemon Squeezy)
+VARIANT_TO_TIER = {
+    # Ces IDs seront remplis par les settings au runtime
 }
 
 
-def get_tier_from_price(price_id: str) -> str:
-    """Retourne le tier correspondant à un price_id Paddle."""
+def get_tier_from_variant(variant_id: str) -> str:
+    """Retourne le tier correspondant à un variant_id Lemon Squeezy."""
     # Vérifier d'abord le mapping statique
-    if price_id in PRICE_TO_TIER:
-        return PRICE_TO_TIER[price_id]
+    if variant_id in VARIANT_TO_TIER:
+        return VARIANT_TO_TIER[variant_id]
 
     # Sinon, vérifier par les settings
-    if price_id == settings.PADDLE_PREMIUM_MONTHLY_PRICE_ID:
+    if variant_id == settings.LEMONSQUEEZY_PREMIUM_MONTHLY_VARIANT_ID:
         return "premium"
-    if price_id == settings.PADDLE_PREMIUM_YEARLY_PRICE_ID:
+    if variant_id == settings.LEMONSQUEEZY_PREMIUM_YEARLY_VARIANT_ID:
         return "premium"
-    if price_id == settings.PADDLE_PRO_MONTHLY_PRICE_ID:
+    if variant_id == settings.LEMONSQUEEZY_PRO_MONTHLY_VARIANT_ID:
         return "pro"
-    if price_id == settings.PADDLE_PRO_YEARLY_PRICE_ID:
+    if variant_id == settings.LEMONSQUEEZY_PRO_YEARLY_VARIANT_ID:
         return "pro"
 
     return "free"

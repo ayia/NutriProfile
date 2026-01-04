@@ -32,11 +32,17 @@ class Subscription(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), unique=True, nullable=False)
 
-    # Paddle IDs (Merchant of Record)
+    # Paddle IDs (Merchant of Record) - DEPRECATED, kept for migration
     paddle_subscription_id: Mapped[str | None] = mapped_column(String(100), unique=True, nullable=True)
     paddle_customer_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
     paddle_price_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
     paddle_transaction_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
+
+    # Lemon Squeezy IDs (Merchant of Record) - Active payment gateway
+    ls_subscription_id: Mapped[str | None] = mapped_column(String(100), unique=True, nullable=True)
+    ls_customer_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    ls_variant_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    ls_order_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
     # Subscription details
     tier: Mapped[SubscriptionTier] = mapped_column(
