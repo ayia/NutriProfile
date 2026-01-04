@@ -148,7 +148,7 @@ export function UpgradeModal({ isOpen, onClose, feature, used, limit }: UpgradeM
               className="flex items-center justify-center gap-2 w-full py-3.5 px-4 bg-gradient-to-r from-primary-500 to-emerald-500 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary-500/30 hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-5 h-5" />
-              {t('paywall.startFreeTrial')}
+              {t('paywall.viewPlans')}
             </Link>
             <button
               onClick={onClose}

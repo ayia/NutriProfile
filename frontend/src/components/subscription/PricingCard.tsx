@@ -153,8 +153,7 @@ export function PricingCard({ plan, isYearly, currentTier, limits }: PricingCard
   const getButtonText = () => {
     if (isCurrentPlan) return t('currentPlan')
     if (isFree) return t('freePlan')
-    // Use trial CTA for better conversion
-    return t('startFreeTrial')
+    return t('subscribe')
   }
 
   return (
@@ -275,10 +274,10 @@ export function PricingCard({ plan, isYearly, currentTier, limits }: PricingCard
         )}
       </button>
 
-      {/* Free trial disclaimer under CTA */}
+      {/* Cancel anytime disclaimer under CTA */}
       {!isFree && !isCurrentPlan && (
         <p className={`mt-3 text-center text-xs ${isPremium ? 'text-white/60' : 'text-gray-500 dark:text-gray-400'}`}>
-          {t('trialDisclaimer')}
+          {t('cancelAnytime')}
         </p>
       )}
     </div>
