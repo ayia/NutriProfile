@@ -153,7 +153,7 @@ export function PricingCard({ plan, isYearly, currentTier, limits }: PricingCard
   const getButtonText = () => {
     if (isCurrentPlan) return t('currentPlan')
     if (isFree) return t('freePlan')
-    return t('subscribe')
+    return t('tryFree', 'Essayer 7 jours gratuit')
   }
 
   return (
