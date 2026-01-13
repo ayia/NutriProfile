@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { FoodLog } from '@/types/foodLog'
 import { getMealTypeIcon, MEAL_TYPE_COLORS, Trash2, Edit } from '@/lib/icons'
+import { EditFoodItemModal, type FoodItem, type FoodItemUpdate } from './EditFoodItemModal'
 
 interface FoodLogCardProps {
   log: FoodLog
@@ -15,8 +17,10 @@ interface FoodLogCardProps {
 export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
   const { t } = useTranslation('vision')
   const [showDetails, setShowDetails] = useState(false)
+  const [editingItem, setEditingItem] = useState<FoodItem | null>(null)
   const queryClient = useQueryClient()
 
+  // Delete entire log
   const deleteMutation = useMutation({
     mutationFn: () => visionApi.deleteLog(log.id),
     onSuccess: () => {
@@ -24,12 +28,80 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       invalidationGroups.mealAnalysis.forEach(key => {
         queryClient.invalidateQueries({ queryKey: key, refetchType: 'all' })
       })
+      toast.success(t('foodLog.deleted'))
     },
     onError: (error) => {
       console.error('Delete error:', error)
-      alert(t('foodLog.deleteError'))
+      toast.error(t('foodLog.deleteError'))
     },
   })
+
+  // Update individual food item
+  const updateItemMutation = useMutation({
+    mutationFn: async (data: FoodItemUpdate) => {
+      if (!editingItem?.id) throw new Error('No item ID')
+      return await visionApi.updateItem(editingItem.id, data)
+    },
+    onSuccess: () => {
+      // Invalidate all related queries to refresh data
+      invalidationGroups.mealAnalysis.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
+      setEditingItem(null)
+      toast.success(t('itemUpdated'))
+    },
+    onError: (error) => {
+      console.error('Update item error:', error)
+      toast.error(t('updateError'))
+    },
+  })
+
+  // Delete individual food item
+  const deleteItemMutation = useMutation({
+    mutationFn: async (itemId: number) => {
+      await visionApi.deleteItem(itemId)
+    },
+    onSuccess: () => {
+      // Invalidate all related queries
+      invalidationGroups.mealAnalysis.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
+      toast.success(t('itemDeleted'))
+    },
+    onError: (error) => {
+      console.error('Delete item error:', error)
+      toast.error(t('deleteError'))
+    },
+  })
+
+  // Open edit modal for an item
+  const handleEditItem = (item: FoodLog['items'][0]) => {
+    setEditingItem({
+      id: item.id,
+      name: item.name,
+      quantity: item.quantity,
+      unit: item.unit,
+      calories: item.calories,
+      protein: item.protein,
+      carbs: item.carbs,
+      fat: item.fat,
+      fiber: item.fiber,
+      source: item.source,
+      confidence: item.confidence,
+    })
+  }
+
+  // Save edited item
+  const handleSaveEdit = async (update: FoodItemUpdate) => {
+    await updateItemMutation.mutateAsync(update)
+  }
+
+  // Delete item with confirmation
+  const handleDeleteItem = (itemId: number) => {
+    if (confirm(t('confirmDeleteItem'))) {
+      deleteItemMutation.mutate(itemId)
+    }
+  }
 
   const formatTime = (dateStr: string) => {
     return new Date(dateStr).toLocaleTimeString('fr-FR', {
@@ -116,18 +188,41 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
           {log.items.map((item) => (
             <div
               key={item.id}
-              className="flex items-center justify-between text-sm py-1"
+              className="flex items-center justify-between text-sm py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors group"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-1">
                 {item.source === 'manual' && (
-                  <Edit className="w-3 h-3 text-gray-400" />
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+                    {t('userCorrected')}
+                  </span>
                 )}
-                <span className="font-medium">{item.name}</span>
+                <span className="font-medium capitalize">{item.name}</span>
                 <span className="text-gray-500">
                   {item.quantity} {item.unit}
                 </span>
               </div>
-              <div className="text-gray-600">{item.calories} kcal</div>
+              <div className="flex items-center gap-3">
+                <span className="text-gray-600">{item.calories} kcal</span>
+                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleEditItem(item)}
+                    className="h-7 w-7 p-0"
+                  >
+                    <Edit className="w-3 h-3 text-gray-500 hover:text-primary-600" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleDeleteItem(item.id)}
+                    disabled={deleteItemMutation.isPending}
+                    className="h-7 w-7 p-0"
+                  >
+                    <Trash2 className="w-3 h-3 text-gray-500 hover:text-red-500" />
+                  </Button>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -162,6 +257,14 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
           </Button>
         </div>
       </div>
+
+      {/* Edit Food Item Modal */}
+      <EditFoodItemModal
+        item={editingItem}
+        onClose={() => setEditingItem(null)}
+        onSave={handleSaveEdit}
+        isLoading={updateItemMutation.isPending}
+      />
     </div>
   )
 }

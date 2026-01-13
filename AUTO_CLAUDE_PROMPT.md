@@ -643,6 +643,716 @@ function convertToGrams(quantity: number, unit: string): number {
 
 ---
 
+## 🧪 Phase 6: Tests Unitaires et d'Intégration
+
+### 6.1 Configuration Tests
+
+**Setup**: Le projet utilise **Vitest** + **React Testing Library**
+
+**Vérifier**: `frontend/package.json` doit contenir:
+```json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
+  },
+  "devDependencies": {
+    "vitest": "^1.x",
+    "@testing-library/react": "^14.x",
+    "@testing-library/jest-dom": "^6.x",
+    "@testing-library/user-event": "^14.x",
+    "@vitest/ui": "^1.x",
+    "@vitest/coverage-v8": "^1.x"
+  }
+}
+```
+
+**Créer**: `frontend/vitest.config.ts` (si n'existe pas)
+```typescript
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: ['node_modules/', 'src/test/']
+    }
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  }
+})
+```
+
+**Créer**: `frontend/src/test/setup.ts`
+```typescript
+import '@testing-library/jest-dom'
+import { cleanup } from '@testing-library/react'
+import { afterEach, vi } from 'vitest'
+
+// Cleanup après chaque test
+afterEach(() => {
+  cleanup()
+})
+
+// Mock i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      changeLanguage: () => new Promise(() => {}),
+      language: 'fr'
+    }
+  }),
+  initReactI18next: {
+    type: '3rdParty',
+    init: () => {}
+  }
+}))
+
+// Mock IntersectionObserver
+global.IntersectionObserver = class IntersectionObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  takeRecords() { return [] }
+  unobserve() {}
+}
+```
+
+---
+
+### 6.2 Tests pour `nutritionReference.ts`
+
+**Créer**: `frontend/src/data/__tests__/nutritionReference.test.ts`
+
+```typescript
+import { describe, it, expect } from 'vitest'
+import {
+  calculateNutrition,
+  convertToGrams,
+  NUTRITION_REFERENCE,
+  DEFAULT_NUTRITION
+} from '../nutritionReference'
+
+describe('nutritionReference', () => {
+  describe('calculateNutrition', () => {
+    it('calcule correctement pour un aliment connu en grammes', () => {
+      // Pâtes: 131 cal/100g
+      const result = calculateNutrition('pâtes', 200, 'g')
+
+      expect(result.calories).toBe(262) // 131 * 2
+      expect(result.protein).toBe(10.0) // 5 * 2
+      expect(result.carbs).toBe(50.0)   // 25 * 2
+      expect(result.fat).toBe(2.2)      // 1.1 * 2
+    })
+
+    it('calcule correctement pour une portion', () => {
+      // Portion = 150g par défaut
+      const result = calculateNutrition('riz', 1, 'portion')
+
+      // Riz: 130 cal/100g × 1.5
+      expect(result.calories).toBe(195)
+      expect(result.protein).toBe(4.1)
+      expect(result.carbs).toBe(42.0)
+    })
+
+    it('utilise les valeurs par défaut pour aliment inconnu', () => {
+      const result = calculateNutrition('aliment_inexistant', 100, 'g')
+
+      expect(result.calories).toBe(DEFAULT_NUTRITION.calories)
+      expect(result.protein).toBe(DEFAULT_NUTRITION.protein)
+    })
+
+    it('gère les quantités décimales', () => {
+      const result = calculateNutrition('poulet', 75.5, 'g')
+
+      expect(result.calories).toBe(125) // Math.round(165 * 0.755)
+    })
+
+    it('est case-insensitive pour le nom', () => {
+      const result1 = calculateNutrition('POULET', 100, 'g')
+      const result2 = calculateNutrition('poulet', 100, 'g')
+      const result3 = calculateNutrition('Poulet', 100, 'g')
+
+      expect(result1).toEqual(result2)
+      expect(result2).toEqual(result3)
+    })
+  })
+
+  describe('convertToGrams', () => {
+    it('convertit correctement les unités', () => {
+      expect(convertToGrams(100, 'g')).toBe(100)
+      expect(convertToGrams(100, 'ml')).toBe(100)
+      expect(convertToGrams(1, 'portion')).toBe(150)
+      expect(convertToGrams(1, 'piece')).toBe(100)
+      expect(convertToGrams(1, 'cup')).toBe(240)
+      expect(convertToGrams(1, 'tbsp')).toBe(15)
+      expect(convertToGrams(2, 'tbsp')).toBe(30)
+    })
+
+    it('gère les unités inconnues avec valeur par défaut', () => {
+      expect(convertToGrams(1, 'unité_inconnue')).toBe(100)
+    })
+  })
+
+  describe('NUTRITION_REFERENCE', () => {
+    it('contient au minimum 15 aliments', () => {
+      const foodCount = Object.keys(NUTRITION_REFERENCE).length
+      expect(foodCount).toBeGreaterThanOrEqual(15)
+    })
+
+    it('tous les aliments ont les champs requis', () => {
+      Object.entries(NUTRITION_REFERENCE).forEach(([name, nutrition]) => {
+        expect(nutrition).toHaveProperty('calories')
+        expect(nutrition).toHaveProperty('protein')
+        expect(nutrition).toHaveProperty('carbs')
+        expect(nutrition).toHaveProperty('fat')
+        expect(nutrition).toHaveProperty('fiber')
+
+        // Valeurs positives
+        expect(nutrition.calories).toBeGreaterThan(0)
+        expect(nutrition.protein).toBeGreaterThanOrEqual(0)
+      })
+    })
+  })
+})
+```
+
+---
+
+### 6.3 Tests pour `EditFoodItemModal.tsx`
+
+**Créer**: `frontend/src/components/vision/__tests__/EditFoodItemModal.test.tsx`
+
+```typescript
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { EditFoodItemModal } from '../EditFoodItemModal'
+import type { FoodItem } from '@/types/foodLog'
+
+const mockItem: FoodItem = {
+  id: 1,
+  name: 'Riz',
+  quantity: '200',
+  unit: 'g',
+  calories: 260,
+  protein: 5.4,
+  carbs: 56,
+  fat: 0.6,
+  fiber: 0.8,
+  source: 'ai',
+  confidence: 0.85,
+  is_verified: false
+}
+
+describe('EditFoodItemModal', () => {
+  it('affiche le modal quand item est fourni', () => {
+    const onClose = vi.fn()
+    const onSave = vi.fn()
+
+    render(
+      <EditFoodItemModal
+        item={mockItem}
+        onClose={onClose}
+        onSave={onSave}
+        isLoading={false}
+      />
+    )
+
+    expect(screen.getByText('vision.editFood')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Riz')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('200')).toBeInTheDocument()
+  })
+
+  it('ne rend rien quand item est null', () => {
+    const onClose = vi.fn()
+    const onSave = vi.fn()
+
+    const { container } = render(
+      <EditFoodItemModal
+        item={null}
+        onClose={onClose}
+        onSave={onSave}
+        isLoading={false}
+      />
+    )
+
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('appelle onSave avec les données modifiées', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    const onSave = vi.fn().mockResolvedValue(undefined)
+
+    render(
+      <EditFoodItemModal
+        item={mockItem}
+        onClose={onClose}
+        onSave={onSave}
+        isLoading={false}
+      />
+    )
+
+    // Modifier le nom
+    const nameInput = screen.getByDisplayValue('Riz')
+    await user.clear(nameInput)
+    await user.type(nameInput, 'Pâtes')
+
+    // Modifier la quantité
+    const quantityInput = screen.getByDisplayValue('200')
+    await user.clear(quantityInput)
+    await user.type(quantityInput, '150')
+
+    // Soumettre
+    const saveButton = screen.getByText('common.save')
+    await user.click(saveButton)
+
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'Pâtes',
+          quantity: '150'
+        })
+      )
+    })
+  })
+
+  it('recalcule la nutrition en temps réel', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    const onSave = vi.fn()
+
+    render(
+      <EditFoodItemModal
+        item={mockItem}
+        onClose={onClose}
+        onSave={onSave}
+        isLoading={false}
+      />
+    )
+
+    // Modifier le nom pour "pâtes"
+    const nameInput = screen.getByDisplayValue('Riz')
+    await user.clear(nameInput)
+    await user.type(nameInput, 'pâtes')
+
+    // Vérifier que la nutrition est recalculée
+    await waitFor(() => {
+      // Pâtes 200g = 262 cal (131*2)
+      expect(screen.getByText(/262/)).toBeInTheDocument()
+    })
+  })
+
+  it('appelle onClose au clic sur Annuler', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    const onSave = vi.fn()
+
+    render(
+      <EditFoodItemModal
+        item={mockItem}
+        onClose={onClose}
+        onSave={onSave}
+        isLoading={false}
+      />
+    )
+
+    const cancelButton = screen.getByText('common.cancel')
+    await user.click(cancelButton)
+
+    expect(onClose).toHaveBeenCalled()
+  })
+
+  it('désactive le bouton pendant le chargement', () => {
+    const onClose = vi.fn()
+    const onSave = vi.fn()
+
+    render(
+      <EditFoodItemModal
+        item={mockItem}
+        onClose={onClose}
+        onSave={onSave}
+        isLoading={true}
+      />
+    )
+
+    const saveButton = screen.getByText('common.saving')
+    expect(saveButton).toBeDisabled()
+  })
+
+  it('gère le changement d\'unité', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    const onSave = vi.fn()
+
+    render(
+      <EditFoodItemModal
+        item={mockItem}
+        onClose={onClose}
+        onSave={onSave}
+        isLoading={false}
+      />
+    )
+
+    // Ouvrir le select d'unité
+    const unitSelect = screen.getByRole('combobox')
+    await user.click(unitSelect)
+
+    // Sélectionner "portion"
+    const portionOption = screen.getByText('vision.portion')
+    await user.click(portionOption)
+
+    // Vérifier que la nutrition est recalculée pour une portion (150g)
+    await waitFor(() => {
+      expect(screen.getByText(/195/)).toBeInTheDocument() // 130*1.5
+    })
+  })
+})
+```
+
+---
+
+### 6.4 Tests d'Intégration avec API
+
+**Créer**: `frontend/src/components/vision/__tests__/EditFoodItemIntegration.test.tsx`
+
+```typescript
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import userEvent from '@testing-library/user-event'
+import { FoodLogCard } from '../FoodLogCard'
+import { visionApi } from '@/services/api'
+import type { FoodLog } from '@/types/foodLog'
+
+// Mock de l'API
+vi.mock('@/services/api', () => ({
+  visionApi: {
+    updateItem: vi.fn(),
+    deleteItem: vi.fn()
+  }
+}))
+
+const mockLog: FoodLog = {
+  id: 1,
+  user_id: 1,
+  meal_type: 'lunch',
+  meal_date: '2024-01-15T12:00:00Z',
+  description: 'Déjeuner',
+  items: [
+    {
+      id: 1,
+      name: 'Riz',
+      quantity: '200',
+      unit: 'g',
+      calories: 260,
+      protein: 5.4,
+      carbs: 56,
+      fat: 0.6,
+      fiber: 0.8,
+      source: 'ai',
+      confidence: 0.85,
+      is_verified: false
+    }
+  ],
+  total_calories: 260,
+  total_protein: 5.4,
+  total_carbs: 56,
+  total_fat: 0.6,
+  confidence_score: 0.85,
+  model_used: 'Qwen',
+  user_corrected: false,
+  image_analyzed: true
+}
+
+describe('EditFoodItemIntegration', () => {
+  let queryClient: QueryClient
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false }
+      }
+    })
+    vi.clearAllMocks()
+  })
+
+  const renderWithProviders = (ui: React.ReactElement) => {
+    return render(
+      <QueryClientProvider client={queryClient}>
+        {ui}
+      </QueryClientProvider>
+    )
+  }
+
+  it('édite un aliment et met à jour via l\'API', async () => {
+    const user = userEvent.setup()
+
+    // Mock de la réponse API
+    const updatedItem = { ...mockLog.items[0], name: 'Pâtes', source: 'manual' }
+    vi.mocked(visionApi.updateItem).mockResolvedValue(updatedItem)
+
+    renderWithProviders(<FoodLogCard log={mockLog} />)
+
+    // Expand pour voir les items
+    const expandButton = screen.getByRole('button', { name: /expand/i })
+    await user.click(expandButton)
+
+    // Cliquer sur Edit
+    const editButton = screen.getByRole('button', { name: /edit/i })
+    await user.click(editButton)
+
+    // Modifier le nom
+    const nameInput = screen.getByDisplayValue('Riz')
+    await user.clear(nameInput)
+    await user.type(nameInput, 'Pâtes')
+
+    // Sauvegarder
+    const saveButton = screen.getByText('common.save')
+    await user.click(saveButton)
+
+    // Vérifier l'appel API
+    await waitFor(() => {
+      expect(visionApi.updateItem).toHaveBeenCalledWith(
+        1,
+        expect.objectContaining({
+          name: 'Pâtes'
+        })
+      )
+    })
+
+    // Vérifier l'invalidation du cache
+    await waitFor(() => {
+      expect(queryClient.getQueryState(['foodLogs'])?.isInvalidated).toBe(true)
+    })
+  })
+
+  it('gère les erreurs API gracieusement', async () => {
+    const user = userEvent.setup()
+
+    // Mock d'une erreur API
+    vi.mocked(visionApi.updateItem).mockRejectedValue(new Error('Network error'))
+
+    renderWithProviders(<FoodLogCard log={mockLog} />)
+
+    // Expand et edit
+    await user.click(screen.getByRole('button', { name: /expand/i }))
+    await user.click(screen.getByRole('button', { name: /edit/i }))
+
+    // Modifier et sauvegarder
+    const nameInput = screen.getByDisplayValue('Riz')
+    await user.clear(nameInput)
+    await user.type(nameInput, 'Pâtes')
+    await user.click(screen.getByText('common.save'))
+
+    // Vérifier le message d'erreur
+    await waitFor(() => {
+      expect(screen.getByText('vision.updateError')).toBeInTheDocument()
+    })
+  })
+
+  it('supprime un aliment avec confirmation', async () => {
+    const user = userEvent.setup()
+
+    // Mock de window.confirm
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    vi.mocked(visionApi.deleteItem).mockResolvedValue()
+
+    renderWithProviders(<FoodLogCard log={mockLog} />)
+
+    // Expand et delete
+    await user.click(screen.getByRole('button', { name: /expand/i }))
+    await user.click(screen.getByRole('button', { name: /delete/i }))
+
+    // Vérifier l'appel API
+    await waitFor(() => {
+      expect(visionApi.deleteItem).toHaveBeenCalledWith(1)
+    })
+
+    // Vérifier le message de succès
+    await waitFor(() => {
+      expect(screen.getByText('vision.itemDeleted')).toBeInTheDocument()
+    })
+  })
+})
+```
+
+---
+
+### 6.5 Tests End-to-End (E2E) - Optionnel
+
+**Setup**: Utiliser **Playwright** pour tests E2E
+
+**Créer**: `frontend/e2e/vision-editing.spec.ts`
+
+```typescript
+import { test, expect } from '@playwright/test'
+
+test.describe('Vision Editing Feature', () => {
+  test.beforeEach(async ({ page }) => {
+    // Login
+    await page.goto('/login')
+    await page.fill('input[name="email"]', 'test@example.com')
+    await page.fill('input[name="password"]', 'password123')
+    await page.click('button[type="submit"]')
+
+    // Attendre la redirection
+    await page.waitForURL('/dashboard')
+  })
+
+  test('édite un aliment détecté par IA', async ({ page }) => {
+    // Aller à Vision
+    await page.click('a[href="/vision"]')
+
+    // Sélectionner l'onglet Today
+    await page.click('button:has-text("Today")')
+
+    // Trouver un food log et expand
+    await page.click('button[aria-label="Expand meal details"]')
+
+    // Cliquer sur Edit du premier item
+    await page.click('button[aria-label="Edit food item"]').first()
+
+    // Vérifier que le modal s'ouvre
+    await expect(page.locator('dialog')).toBeVisible()
+
+    // Modifier le nom
+    await page.fill('input[name="name"]', 'Pâtes')
+
+    // Vérifier que la nutrition est recalculée
+    await expect(page.locator('text=/262.*kcal/')).toBeVisible()
+
+    // Sauvegarder
+    await page.click('button:has-text("Sauvegarder")')
+
+    // Vérifier le toast de succès
+    await expect(page.locator('text="Aliment mis à jour"')).toBeVisible()
+
+    // Vérifier le badge "Corrigé"
+    await expect(page.locator('text="Corrigé par l\'utilisateur"')).toBeVisible()
+  })
+
+  test('calcule automatiquement la nutrition en temps réel', async ({ page }) => {
+    await page.goto('/vision')
+
+    // Ouvrir le modal d'édition
+    // ... (même setup que ci-dessus)
+
+    // Changer l'unité de g à portion
+    await page.selectOption('select[name="unit"]', 'portion')
+
+    // Vérifier que les calories changent immédiatement
+    // portion = 150g, donc 130*1.5 = 195 cal pour riz
+    await expect(page.locator('text=/195.*kcal/')).toBeVisible()
+  })
+})
+```
+
+---
+
+### 6.6 Commandes de Test
+
+**Ajouter dans**: `frontend/package.json`
+
+```json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  }
+}
+```
+
+**Exécution**:
+```bash
+# Tests unitaires
+npm run test
+
+# Tests avec UI interactive
+npm run test:ui
+
+# Coverage report
+npm run test:coverage
+
+# E2E tests
+npm run test:e2e
+```
+
+---
+
+### 6.7 Objectifs de Couverture
+
+| Métrique | Objectif Minimum |
+|----------|------------------|
+| Statements | 80% |
+| Branches | 75% |
+| Functions | 80% |
+| Lines | 80% |
+
+**Fichiers prioritaires**:
+- `nutritionReference.ts` → 95%+
+- `EditFoodItemModal.tsx` → 85%+
+- `FoodLogCard.tsx` (partie editing) → 80%+
+
+---
+
+### 6.8 CI/CD Integration
+
+**Créer**: `.github/workflows/test.yml`
+
+```yaml
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: cd frontend && npm ci
+
+      - name: Run tests
+        run: cd frontend && npm run test:coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./frontend/coverage/coverage-final.json
+```
+
+---
+
 ## ✅ Critères d'Acceptation
 
 ### Fonctionnel
@@ -663,6 +1373,15 @@ function convertToGrams(quantity: number, unit: string): number {
 - [ ] React Query pour cache invalidation
 - [ ] Tests de mutation optimistes si possible
 - [ ] Pas de console.log en production
+
+### Tests (CRITIQUE)
+- [ ] Configuration Vitest opérationnelle
+- [ ] `nutritionReference.test.ts` passe tous les tests (10+)
+- [ ] `EditFoodItemModal.test.tsx` passe tous les tests (8+)
+- [ ] Tests d'intégration API passent (3+)
+- [ ] Couverture de code ≥80% sur fichiers critiques
+- [ ] `npm run test` passe sans erreurs
+- [ ] Coverage report généré avec `npm run test:coverage`
 
 ### UX/UI
 - [ ] Modal responsive (full-screen mobile < 768px)
@@ -709,13 +1428,26 @@ Le projet suit une approche **mobile-first**. Le modal doit être:
 
 ## 📝 Livrables Attendus
 
+### Code Production
 1. **Composant**: `EditFoodItemModal.tsx` (complet, testé, responsive)
 2. **Intégration**: Modifications dans `AnalysisResult.tsx`
 3. **Intégration**: Modifications dans `FoodLogCard.tsx`
-4. **Données**: `nutritionReference.ts` avec table complète
+4. **Données**: `nutritionReference.ts` avec table complète (20+ aliments)
 5. **Traductions**: Fichiers i18n mis à jour pour les 7 langues
-6. **Tests**: Tests unitaires pour `calculateNutrition()` et le composant modal
-7. **Documentation**: README mis à jour avec exemples d'utilisation
+
+### Tests
+6. **Configuration**: `vitest.config.ts` + `src/test/setup.ts`
+7. **Tests Unitaires**:
+   - `nutritionReference.test.ts` (10+ tests, couverture 95%+)
+   - `EditFoodItemModal.test.tsx` (8+ tests, couverture 85%+)
+8. **Tests Intégration**: `EditFoodItemIntegration.test.tsx` (3+ tests)
+9. **Tests E2E** (optionnel): `vision-editing.spec.ts` avec Playwright
+10. **Coverage Report**: Atteindre 80%+ sur les fichiers critiques
+
+### Documentation & CI/CD
+11. **README**: Section "Édition d'aliments" avec exemples
+12. **CI/CD**: Workflow GitHub Actions pour tests automatiques
+13. **CHANGELOG**: Entrée décrivant la nouvelle feature
 
 ---
 

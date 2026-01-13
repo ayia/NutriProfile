@@ -11,6 +11,11 @@ Application web de profilage nutritionnel avec architecture multi-agents LLM.
 - Authentification JWT complète
 - Profil nutritionnel (BMR/TDEE Mifflin-St Jeor)
 - Analyse photo repas (BLIP-2, LLaVA)
+- **Édition aliments détectés par IA** (nouveau)
+  - Autocomplete intelligent avec 30+ aliments
+  - Calcul nutrition automatique en temps réel
+  - Édition pré/post-sauvegarde avec synchronisation cache
+  - Suppression individuelle d'aliments
 - Génération recettes IA (Mistral, Llama, Mixtral)
 - Suivi activité + poids
 - Coach IA personnalisé
@@ -20,6 +25,10 @@ Application web de profilage nutritionnel avec architecture multi-agents LLM.
 - Système de paiement Lemon Squeezy
 - Limites par tier (gratuit/premium/pro)
 - Trial 14 jours Premium à l'inscription
+- **Tests automatisés** (nouveau)
+  - Configuration Vitest avec 80%+ coverage
+  - 51 tests unitaires et d'intégration
+  - Mocks i18n, React Query, sonner
 
 ### À Implémenter
 - Export PDF (Pro)
@@ -313,6 +322,11 @@ nutriprofile/
 
 ## Documentation
 
+- @docs/DEVELOPMENT_GUIDE.md - **Guide de développement complet** (nouveau)
+  - Méthodologie décomposition features complexes
+  - Standards code, tests, i18n, responsive
+  - Exemples pratiques avec Vision Food Editing
+  - Checklist pré-commit complète
 - @docs/ARCHITECTURE.md - Architecture technique détaillée
 - @docs/AGENTS.md - Système multi-agents IA
 - @docs/API.md - Documentation API
@@ -327,8 +341,154 @@ nutriprofile/
 
 ## Workflow Développement
 
+### Méthodologie Générale
+
 1. Lire la documentation pertinente avant toute implémentation
-2. Créer schéma Pydantic → modèle SQLAlchemy → endpoint → test
-3. Vérifier les limites freemium dans chaque endpoint concerné
-4. Tester localement avant déploiement
-5. Mettre à jour la documentation après changements majeurs
+2. Pour le backend: Créer schéma Pydantic → modèle SQLAlchemy → endpoint → test
+3. Pour le frontend: Créer composants → intégrations → traductions i18n → tests
+4. Vérifier les limites freemium dans chaque endpoint concerné
+5. Tester localement avant déploiement
+6. Mettre à jour la documentation après changements majeurs
+
+### Workflow Features Complexes (Auto Claude)
+
+Pour les features complexes nécessitant plusieurs fichiers et étapes, suivre ce processus pour éviter la boucle infinie "Révision humaine" → "En cours":
+
+#### 1. Analyse et Décomposition
+
+**AVANT** de coder, décomposer la feature en tâches Auto Claude exécutables:
+
+**Contraintes strictes par tâche:**
+- Maximum 2,000 mots de description
+- 1-2 phases maximum
+- Maximum 5 fichiers modifiés
+- Dépendances claires entre tâches
+- Critères de succès mesurables
+
+**Exemple de décomposition (Vision Food Editing):**
+```
+Tâche 1: Base de données nutrition (800 mots, 1 fichier, standalone)
+  └─> nutritionReference.ts avec 30+ aliments
+
+Tâche 2: Composant modal (1,200 mots, 1 fichier, dépend de Tâche 1)
+  └─> EditFoodItemModal.tsx avec autocomplete
+
+Tâche 3A: Intégration pré-save (900 mots, 1 fichier, dépend de Tâche 2)
+  └─> AnalysisResult.tsx (state local)
+
+Tâche 3B: Intégration post-save (1,000 mots, 1 fichier, dépend de Tâche 2)
+  └─> FoodLogCard.tsx (API + cache)
+
+Tâche 4: Traductions (500 mots, 7 fichiers, parallèle)
+  └─> en/fr/de/es/pt/zh/ar/vision.json
+
+Tâche 5: Tests (1,800 mots, 5 fichiers, dépend de Tâches 1-3)
+  └─> vitest.config.ts + setup + 3 fichiers tests
+```
+
+#### 2. Implémentation par Tâche
+
+Pour chaque tâche:
+
+**a) Phase Planning (si nécessaire)**
+- Utiliser `/plan` mode pour les tâches complexes
+- Explorer le codebase
+- Clarifier l'approche avec l'utilisateur via AskUserQuestion
+- Sortir du plan mode avec ExitPlanMode
+
+**b) Phase Implémentation**
+- Créer/modifier les fichiers un par un
+- Tester au fur et à mesure
+- Corriger les erreurs immédiatement
+- Marquer la tâche complète avant de passer à la suivante
+
+**c) Phase Validation**
+- Tests unitaires passent (npm test)
+- Coverage atteint les seuils (80%+ statements/functions/lines, 75%+ branches)
+- Pas d'erreurs TypeScript
+- Traductions complètes pour les 7 langues
+
+#### 3. Standards de Code Frontend
+
+**Composants React:**
+- Toujours TypeScript avec types stricts
+- Props interfaces exportées
+- Hooks React Query pour les mutations/queries
+- Toast notifications avec sonner
+- i18n avec useTranslation (namespace approprié)
+- Responsive mobile-first (breakpoints Tailwind)
+
+**Tests:**
+- Vitest + React Testing Library
+- Mocks dans src/test/setup.ts
+- Nommer les tests en français (describe/it)
+- Coverage: 80%+ pour les nouveaux fichiers
+- Tests d'intégration avec mutations mockées
+
+**Patterns UI:**
+- Utiliser composants existants du projet (Button, Input, etc.)
+- Pattern modal natif (fixed inset-0, backdrop, Escape key)
+- Pas de dépendances externes inutiles (shadcn dialog/select)
+- Dark mode support (dark:bg-*, dark:text-*)
+
+#### 4. i18n Obligatoire
+
+**TOUTE** chaîne de texte visible doit être internationalisée:
+
+```tsx
+// ❌ MAUVAIS
+<h1>Edit food</h1>
+
+// ✅ BON
+const { t } = useTranslation('vision')
+<h1>{t('editFood')}</h1>
+```
+
+**Namespaces disponibles:**
+- `common` - Actions, navigation, unités, erreurs
+- `vision` - Analyse photo IA
+- `recipes` - Génération recettes
+- `dashboard` - Tableau de bord
+- `tracking` - Suivi activité/poids
+- `pricing` - Tarification
+- `auth` - Authentification
+
+**Langues obligatoires:** FR, EN, DE, ES, PT, ZH, AR
+
+#### 5. Checklist Pré-Commit
+
+Avant de marquer une feature complète:
+
+- [ ] Tous les tests passent (npm test)
+- [ ] Coverage atteint 80%+ sur les nouveaux fichiers
+- [ ] Aucun texte codé en dur (i18n complet)
+- [ ] Traductions pour les 7 langues
+- [ ] Responsive testé (375px, 768px, 1024px+)
+- [ ] Pas de console.log/debugger
+- [ ] Types TypeScript stricts
+- [ ] Documentation mise à jour (CLAUDE.md)
+
+#### 6. Exemple Complet
+
+Voir l'implémentation **Vision Food Editing** (Janvier 2026) comme référence:
+
+**Fichiers créés:**
+- `frontend/src/data/nutritionReference.ts` - Base nutrition
+- `frontend/src/components/vision/EditFoodItemModal.tsx` - Composant modal
+- `frontend/vitest.config.ts` - Config tests
+- `frontend/src/test/setup.ts` - Setup mocks
+- `frontend/src/data/__tests__/nutritionReference.test.ts` - 28 tests
+- `frontend/src/components/vision/__tests__/EditFoodItemModal.test.tsx` - 16 tests
+- `frontend/src/components/vision/__tests__/EditFoodItemIntegration.test.tsx` - 7 tests
+
+**Fichiers modifiés:**
+- `frontend/src/components/vision/AnalysisResult.tsx` - Intégration pré-save
+- `frontend/src/components/vision/FoodLogCard.tsx` - Intégration post-save
+- `frontend/src/i18n/locales/{en,fr,de,es,pt,zh,ar}/vision.json` - 17 clés
+- `frontend/package.json` - Scripts tests + dépendances
+
+**Résultats:**
+- 51 tests passés (100%)
+- Coverage: nutritionReference.ts (100%), EditFoodItemModal.tsx (98.49%)
+- Aucune erreur TypeScript
+- Feature complète et déployable

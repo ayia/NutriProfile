@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate, MealType } from '@/types/foodLog'
 import { Star, Sparkles, AlertTriangle, HeartPulse, Utensils, Camera, Edit, Loader2, Check, Info, ChevronDown, ThumbsUp, Meh, BarChart3, Lightbulb, Save, ArrowRight } from '@/lib/icons'
+import { EditFoodItemModal, type FoodItem } from './EditFoodItemModal'
 
 interface AnalysisResultProps {
   result: ImageAnalyzeResponse
@@ -41,11 +43,12 @@ const VERDICT_STYLE = {
 
 export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProps) {
   const { t } = useTranslation('vision')
-  const [editingItem, setEditingItem] = useState<number | null>(null)
-  const [editForm, setEditForm] = useState<FoodItemUpdate>({})
+  const [editingItem, setEditingItem] = useState<FoodItem | null>(null)
+  const [editingItemIndex, setEditingItemIndex] = useState<number | null>(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [expandedSection, setExpandedSection] = useState<'items' | 'health' | null>('health')
   const [isSaved, setIsSaved] = useState(!!result.food_log_id)
+  const [localItems, setLocalItems] = useState<DetectedItem[]>(result.items)
   const queryClient = useQueryClient()
 
   // Mutation pour sauvegarder le repas (utilise le nouvel endpoint sans reconsommer de crédit)
@@ -53,7 +56,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
     mutationFn: () => visionApi.saveMeal({
       meal_type: mealType,
       description: result.description,
-      items: result.items,
+      items: localItems, // Use local items (potentially edited)
       total_calories: result.total_calories,
       total_protein: result.total_protein,
       total_carbs: result.total_carbs,
@@ -69,6 +72,10 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
       })
       // Mettre à jour le result avec le food_log_id
       result.food_log_id = data.id
+      toast.success(t('result.mealSaved'))
+    },
+    onError: () => {
+      toast.error(t('result.saveError'))
     },
   })
 
@@ -81,9 +88,22 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
     }
   }, [result.health_report?.verdict])
 
+  // Recalculate totals from items
+  const calculateTotals = (items: DetectedItem[]) => {
+    return items.reduce(
+      (acc, item) => ({
+        total_calories: acc.total_calories + (item.calories || 0),
+        total_protein: acc.total_protein + (item.protein || 0),
+        total_carbs: acc.total_carbs + (item.carbs || 0),
+        total_fat: acc.total_fat + (item.fat || 0),
+      }),
+      { total_calories: 0, total_protein: 0, total_carbs: 0, total_fat: 0 }
+    )
+  }
+
+  // Open modal for editing an item
   const startEditing = (item: DetectedItem, index: number) => {
-    setEditingItem(index)
-    setEditForm({
+    setEditingItem({
       name: item.name,
       quantity: item.quantity,
       unit: item.unit,
@@ -91,16 +111,50 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
       protein: item.protein,
       carbs: item.carbs,
       fat: item.fat,
+      fiber: item.fiber,
+      source: item.source,
+      confidence: item.confidence,
     })
+    setEditingItemIndex(index)
   }
 
-  const saveEdit = () => {
-    // TODO: Implémenter la mise à jour via l'API
-    // Pour l'instant, on ferme simplement l'éditeur
-    invalidationGroups.mealAnalysis.forEach(key => {
-      queryClient.invalidateQueries({ queryKey: key })
-    })
+  // Save edited item (local state only, not API - this is pre-save)
+  const handleSaveEdit = async (update: FoodItemUpdate) => {
+    if (editingItemIndex === null) return
+
+    // Update the item in local state
+    const updatedItems = [...localItems]
+    updatedItems[editingItemIndex] = {
+      ...updatedItems[editingItemIndex],
+      ...update,
+      source: 'manual', // Mark as manually corrected
+    }
+
+    // Recalculate totals
+    const newTotals = calculateTotals(updatedItems)
+
+    // Update local state
+    setLocalItems(updatedItems)
+
+    // Update result object with new totals
+    result.items = updatedItems
+    result.total_calories = newTotals.total_calories
+    result.total_protein = newTotals.total_protein
+    result.total_carbs = newTotals.total_carbs
+    result.total_fat = newTotals.total_fat
+
+    // Close modal
     setEditingItem(null)
+    setEditingItemIndex(null)
+
+    // Show success message
+    toast.success(t('itemUpdated'))
+  }
+
+  // Close modal without saving
+  const handleCloseEdit = () => {
+    setEditingItem(null)
+    setEditingItemIndex(null)
   }
 
   const getConfidenceLabel = (confidence: number) => {
@@ -416,108 +470,51 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
 
           {expandedSection === 'items' && (
             <div className="px-4 pb-4 space-y-3">
-              {result.items.map((item, index) => (
+              {localItems.map((item, index) => (
                 <div
                   key={index}
                   className="border rounded-lg p-3 hover:border-primary-300 hover:shadow-sm transition-all"
                 >
-                  {editingItem === index ? (
-                    // Edit mode
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-3 gap-2">
-                        <Input
-                          value={editForm.name || ''}
-                          onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                          placeholder={t('result.edit.name')}
-                        />
-                        <Input
-                          value={editForm.quantity || ''}
-                          onChange={(e) => setEditForm({ ...editForm, quantity: e.target.value })}
-                          placeholder={t('result.edit.quantity')}
-                        />
-                        <Input
-                          value={editForm.unit || ''}
-                          onChange={(e) => setEditForm({ ...editForm, unit: e.target.value })}
-                          placeholder={t('result.edit.unit')}
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 gap-2">
-                        <Input
-                          type="number"
-                          value={editForm.calories || ''}
-                          onChange={(e) => setEditForm({ ...editForm, calories: parseInt(e.target.value) })}
-                          placeholder={t('result.macros.calories')}
-                        />
-                        <Input
-                          type="number"
-                          value={editForm.protein || ''}
-                          onChange={(e) => setEditForm({ ...editForm, protein: parseFloat(e.target.value) })}
-                          placeholder={t('result.macros.protein')}
-                        />
-                        <Input
-                          type="number"
-                          value={editForm.carbs || ''}
-                          onChange={(e) => setEditForm({ ...editForm, carbs: parseFloat(e.target.value) })}
-                          placeholder={t('result.macros.carbs')}
-                        />
-                        <Input
-                          type="number"
-                          value={editForm.fat || ''}
-                          onChange={(e) => setEditForm({ ...editForm, fat: parseFloat(e.target.value) })}
-                          placeholder={t('result.macros.fat')}
-                        />
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setEditingItem(null)}
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-medium text-gray-900 capitalize">{item.name}</span>
+                        <span className="text-sm text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                          {item.quantity} {item.unit}
+                        </span>
+                        {item.source === 'manual' && (
+                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+                            {t('userCorrected')}
+                          </span>
+                        )}
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                            item.confidence >= 0.8
+                              ? 'bg-green-100 text-green-700'
+                              : item.confidence >= 0.6
+                              ? 'bg-yellow-100 text-yellow-700'
+                              : 'bg-orange-100 text-orange-700'
+                          }`}
                         >
-                          {t('result.edit.cancel')}
-                        </Button>
-                        <Button size="sm" onClick={() => saveEdit()}>
-                          {t('result.edit.save')}
-                        </Button>
+                          {getConfidenceLabel(item.confidence)}
+                        </span>
+                      </div>
+                      <div className="flex gap-3 mt-2 text-sm">
+                        <span className="text-gray-700 font-medium">{item.calories} kcal</span>
+                        <span className="text-blue-600">{item.protein}g P</span>
+                        <span className="text-yellow-600">{item.carbs}g G</span>
+                        <span className="text-orange-600">{item.fat}g L</span>
                       </div>
                     </div>
-                  ) : (
-                    // Mode affichage amélioré
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-medium text-gray-900">{item.name}</span>
-                          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                            {item.quantity} {item.unit}
-                          </span>
-                          <span
-                            className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                              item.confidence >= 0.8
-                                ? 'bg-green-100 text-green-700'
-                                : item.confidence >= 0.6
-                                ? 'bg-yellow-100 text-yellow-700'
-                                : 'bg-orange-100 text-orange-700'
-                            }`}
-                          >
-                            {getConfidenceLabel(item.confidence)}
-                          </span>
-                        </div>
-                        <div className="flex gap-3 mt-2 text-sm">
-                          <span className="text-gray-700 font-medium">{item.calories} kcal</span>
-                          <span className="text-blue-600">{item.protein}g P</span>
-                          <span className="text-yellow-600">{item.carbs}g G</span>
-                          <span className="text-orange-600">{item.fat}g L</span>
-                        </div>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => startEditing(item, index)}
-                        className="text-gray-400 hover:text-primary-600"
-                      >
-                        <Edit className="w-4 h-4 mr-1" /> {t('result.modify')}
-                      </Button>
-                    </div>
-                  )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => startEditing(item, index)}
+                      className="text-gray-400 hover:text-primary-600"
+                    >
+                      <Edit className="w-4 h-4 mr-1" /> {t('result.modify')}
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -605,6 +602,14 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
           </p>
         )}
       </div>
+
+      {/* Edit Food Item Modal */}
+      <EditFoodItemModal
+        item={editingItem}
+        onClose={handleCloseEdit}
+        onSave={handleSaveEdit}
+        isLoading={false}
+      />
     </div>
   )
 }
