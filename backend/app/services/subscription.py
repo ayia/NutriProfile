@@ -123,7 +123,11 @@ class SubscriptionService:
         # 2. Vérifier trial actif
         if user.trial_ends_at:
             now = datetime.now(timezone.utc)
-            if now < user.trial_ends_at:
+            # S'assurer que trial_ends_at est timezone-aware (SQLite stocke sans TZ)
+            trial_ends = user.trial_ends_at
+            if trial_ends.tzinfo is None:
+                trial_ends = trial_ends.replace(tzinfo=timezone.utc)
+            if now < trial_ends:
                 return "premium"
 
         # 3. Défaut: subscription_tier ou free
@@ -142,7 +146,11 @@ class SubscriptionService:
                 return False
 
         now = datetime.now(timezone.utc)
-        return now < user.trial_ends_at
+        # S'assurer que trial_ends_at est timezone-aware (SQLite stocke sans TZ)
+        trial_ends = user.trial_ends_at
+        if trial_ends.tzinfo is None:
+            trial_ends = trial_ends.replace(tzinfo=timezone.utc)
+        return now < trial_ends
 
     async def get_trial_days_remaining(self, user_id: int) -> int | None:
         """Retourne le nombre de jours restants dans le trial, ou None si pas de trial."""
@@ -157,10 +165,15 @@ class SubscriptionService:
                 return None
 
         now = datetime.now(timezone.utc)
-        if now >= user.trial_ends_at:
+        # S'assurer que trial_ends_at est timezone-aware (SQLite stocke sans TZ)
+        trial_ends = user.trial_ends_at
+        if trial_ends.tzinfo is None:
+            trial_ends = trial_ends.replace(tzinfo=timezone.utc)
+
+        if now >= trial_ends:
             return 0
 
-        delta = user.trial_ends_at - now
+        delta = trial_ends - now
         return max(0, delta.days)
 
     async def get_trial_info(self, user_id: int) -> dict:

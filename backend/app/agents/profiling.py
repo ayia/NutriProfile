@@ -74,7 +74,7 @@ class ProfilingAgent(BaseAgent[ProfileInput, ProfileAnalysis]):
     name = "ProfilingAgent"
     capability = ModelCapability.PROFILING
     confidence_threshold = 0.7
-    text_model = "Qwen/Qwen2.5-72B-Instruct"
+    text_model = "Qwen/Qwen2.5-72B-Instruct"  # Qwen 72B -> Mistral 7B (API gratuite)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

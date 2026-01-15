@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/Input'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate, MealType } from '@/types/foodLog'
 import { Star, Sparkles, AlertTriangle, HeartPulse, Utensils, Camera, Edit, Loader2, Check, Info, ChevronDown, ThumbsUp, Meh, BarChart3, Lightbulb, Save, ArrowRight } from '@/lib/icons'
-import { EditFoodItemModal, type FoodItem } from './EditFoodItemModal'
+import { EditFoodItemModalEnhanced, type FoodItem } from './EditFoodItemModalEnhanced'
 
 interface AnalysisResultProps {
   result: ImageAnalyzeResponse
@@ -604,7 +604,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
       </div>
 
       {/* Edit Food Item Modal */}
-      <EditFoodItemModal
+      <EditFoodItemModalEnhanced
         item={editingItem}
         onClose={handleCloseEdit}
         onSave={handleSaveEdit}

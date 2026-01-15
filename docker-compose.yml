@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: nutriprofile-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./data/nutriprofile.db
+      - SECRET_KEY=dev-secret-key-change-in-production
+      - REFRESH_SECRET_KEY=dev-refresh-secret-key-change-in-production
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+      - LEMONSQUEEZY_API_KEY=${LEMONSQUEEZY_API_KEY}
+      - LEMONSQUEEZY_WEBHOOK_SECRET=${LEMONSQUEEZY_WEBHOOK_SECRET}
+      - CORS_ORIGINS=["http://localhost:5173","http://localhost:3000"]
+      - ENVIRONMENT=development
+      - DEBUG=true
+    volumes:
+      - ./backend:/app
+      - backend-data:/app/data
+    networks:
+      - nutriprofile-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: nutriprofile-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000/api/v1
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - nutriprofile-network
+    depends_on:
+      - backend
+
+volumes:
+  backend-data:
+
+networks:
+  nutriprofile-network:
+    driver: bridge

@@ -17,8 +17,8 @@ logger = structlog.get_logger()
 # Modèles utilisés pour la génération de recettes (2-3 modèles pour consensus)
 RECIPE_MODELS = [
     "Qwen/Qwen2.5-72B-Instruct",            # Modèle principal
-    "mistralai/Mistral-7B-Instruct-v0.2",   # Modèle secondaire
-    "meta-llama/Meta-Llama-3-70B-Instruct", # Modèle tertiaire
+    "Qwen/Qwen2.5-7B-Instruct",             # Modèle secondaire (remplace Mistral)
+    "meta-llama/Llama-3.1-8B-Instruct",     # Modèle tertiaire
 ]
 
 # Modèle de validation nutritionnelle

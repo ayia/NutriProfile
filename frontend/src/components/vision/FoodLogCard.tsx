@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { FoodLog } from '@/types/foodLog'
 import { getMealTypeIcon, MEAL_TYPE_COLORS, Trash2, Edit } from '@/lib/icons'
-import { EditFoodItemModal, type FoodItem, type FoodItemUpdate } from './EditFoodItemModal'
+import { EditFoodItemModalEnhanced, type FoodItem, type FoodItemUpdate } from './EditFoodItemModalEnhanced'
 
 interface FoodLogCardProps {
   log: FoodLog
@@ -259,7 +259,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       </div>
 
       {/* Edit Food Item Modal */}
-      <EditFoodItemModal
+      <EditFoodItemModalEnhanced
         item={editingItem}
         onClose={() => setEditingItem(null)}
         onSave={handleSaveEdit}

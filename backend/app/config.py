@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     # Hugging Face
     HUGGINGFACE_TOKEN: str = ""
 
+    # USDA FoodData Central API
+    USDA_API_KEY: str = ""
+
     # Paddle (Payment Gateway - Merchant of Record) - DEPRECATED, use Lemon Squeezy
     PADDLE_API_KEY: str = ""
     PADDLE_WEBHOOK_SECRET: str = ""

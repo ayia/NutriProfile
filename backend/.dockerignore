@@ -48,3 +48,16 @@ nul
 # Git
 .git/
 .gitignore
+
+# Embeddings & ML Cache (sera re-téléchargé dans le container)
+usda_embeddings.pkl
+.cache/
+*.pkl
+
+# HuggingFace cache local
+.huggingface/
+
+# Test scripts (pas nécessaires en prod)
+scripts/test_*.py
+scripts/check_*.py
+scripts/build_*.py

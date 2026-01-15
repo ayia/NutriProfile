@@ -160,7 +160,7 @@ class VisionAgent(BaseAgent[VisionInput, FoodAnalysis]):
     name = "VisionAgent"
     capability = ModelCapability.FOOD_DETECTION
     confidence_threshold = 0.5
-    vlm_model = "Qwen/Qwen2.5-VL-72B-Instruct"
+    vlm_model = "Qwen/Qwen2.5-VL-72B-Instruct"  # RESTORED - Perfect quality vision model
 
     async def process(self, input_data: VisionInput, model=None) -> AgentResponse:
         """

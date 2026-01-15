@@ -13,6 +13,7 @@ class ModelCapability(str, Enum):
     """Capacités des modèles."""
     RECIPE_GENERATION = "recipe_generation"
     NUTRITION_ANALYSIS = "nutrition_analysis"
+    NUTRITION_ESTIMATION = "nutrition_estimation"  # Estimation LLM pour aliments non référencés
     FOOD_DETECTION = "food_detection"
     COACHING = "coaching"
     PROFILING = "profiling"
@@ -32,12 +33,27 @@ class ModelInfo(BaseModel):
 
 
 # Registre des modèles disponibles
-# Updated 2025-12-27: Using models available on HuggingFace Router
+# Updated 2026-01-15: Restored Qwen models with valid HF token
 MODEL_REGISTRY: dict[str, ModelInfo] = {
-    # Modèles de texte principaux - Using Qwen and Llama models available on HF Router
-    "qwen-2.5-72b": ModelInfo(
+    # Modèles de texte principaux - Qwen (RESTORED - High quality)
+    "qwen-72b": ModelInfo(
         id="Qwen/Qwen2.5-72B-Instruct",
-        name="Qwen 2.5 72B Instruct",
+        name="Qwen 2.5 72B",
+        type=ModelType.TEXT,
+        capabilities=[
+            ModelCapability.RECIPE_GENERATION,
+            ModelCapability.NUTRITION_ANALYSIS,
+            ModelCapability.NUTRITION_ESTIMATION,
+            ModelCapability.COACHING,
+            ModelCapability.PROFILING,
+        ],
+        max_tokens=2000,
+        temperature=0.7,
+        priority=1,
+    ),
+    "qwen-7b": ModelInfo(
+        id="Qwen/Qwen2.5-7B-Instruct",
+        name="Qwen 2.5 7B",
         type=ModelType.TEXT,
         capabilities=[
             ModelCapability.RECIPE_GENERATION,
@@ -46,64 +62,25 @@ MODEL_REGISTRY: dict[str, ModelInfo] = {
             ModelCapability.PROFILING,
         ],
         max_tokens=1000,
-        temperature=0.7,
-        priority=1,
-    ),
-    "llama-3.1-70b": ModelInfo(
-        id="meta-llama/Llama-3.1-70B-Instruct",
-        name="Llama 3.1 70B Instruct",
-        type=ModelType.TEXT,
-        capabilities=[
-            ModelCapability.RECIPE_GENERATION,
-            ModelCapability.NUTRITION_ANALYSIS,
-            ModelCapability.COACHING,
-            ModelCapability.PROFILING,
-        ],
-        max_tokens=1000,
-        temperature=0.7,
-        priority=1,
-    ),
-    "mistral-nemo": ModelInfo(
-        id="mistralai/Mistral-Nemo-Instruct-2407",
-        name="Mistral Nemo 12B",
-        type=ModelType.TEXT,
-        capabilities=[
-            ModelCapability.RECIPE_GENERATION,
-            ModelCapability.NUTRITION_ANALYSIS,
-            ModelCapability.COACHING,
-        ],
-        max_tokens=800,
         temperature=0.7,
         priority=2,
-    ),
-    # Modèle de fallback texte
-    "phi-3-mini": ModelInfo(
-        id="microsoft/Phi-3-mini-4k-instruct",
-        name="Phi-3 Mini",
-        type=ModelType.TEXT,
-        capabilities=[
-            ModelCapability.RECIPE_GENERATION,
-            ModelCapability.COACHING,
-        ],
-        max_tokens=500,
-        temperature=0.8,
-        priority=3,
         is_fallback=True,
     ),
-    # Modèles de vision
-    "blip2": ModelInfo(
-        id="Salesforce/blip2-opt-2.7b",
-        name="BLIP-2",
+    # Modèles de vision - Qwen (RESTORED - Perfect quality)
+    "qwen-vl-72b": ModelInfo(
+        id="Qwen/Qwen2.5-VL-72B-Instruct",
+        name="Qwen 2.5 VL 72B",
         type=ModelType.VISION,
         capabilities=[ModelCapability.FOOD_DETECTION],
         priority=1,
     ),
-    "llava": ModelInfo(
-        id="llava-hf/llava-1.5-7b-hf",
-        name="LLaVA 1.5",
+    "qwen-vl-7b": ModelInfo(
+        id="Qwen/Qwen2-VL-7B-Instruct",
+        name="Qwen 2 VL 7B",
         type=ModelType.VISION,
         capabilities=[ModelCapability.FOOD_DETECTION],
-        priority=1,
+        priority=2,
+        is_fallback=True,
     ),
 }
 

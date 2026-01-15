@@ -59,6 +59,7 @@ import {
   Search,
   ScanLine,
   Edit,
+  Edit3,
   Trash2,
   Check,
   X,
@@ -66,6 +67,7 @@ import {
   Download,
   FileDown,
   Calculator,
+  Database,
 
   // Streaks & Gamification
   Zap,
@@ -468,7 +470,9 @@ export {
   Calculator,
   Search,
   Edit,
+  Edit3,
   Trash2,
+  Database,
   // Recipe & Food
   Egg,
   Salad,

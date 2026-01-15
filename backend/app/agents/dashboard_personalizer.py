@@ -18,7 +18,8 @@ logger = structlog.get_logger()
 # Modèles utilisés pour la personnalisation
 PERSONALIZER_MODELS = [
     "Qwen/Qwen2.5-72B-Instruct",
-    "mistralai/Mistral-7B-Instruct-v0.2",
+    "Qwen/Qwen2.5-7B-Instruct",        # Remplace Mistral
+    "meta-llama/Llama-3.1-8B-Instruct",  # Ajout d'un 3ème modèle
 ]
 
 # Conditions médicales et leurs priorités nutritionnelles
