@@ -628,9 +628,8 @@ export function EditFoodItemModalV2({
                     "absolute z-20 w-full mt-1",
                     "bg-white dark:bg-gray-800",
                     "border border-gray-200 dark:border-gray-700",
-                    "rounded-xl shadow-elevated",
-                    "max-h-56 overflow-y-auto",
-                    "animate-fade-in"
+                    "rounded-xl shadow-lg",
+                    "max-h-56 overflow-y-auto"
                   )}
                 >
                   {autocompleteResults.map((food, index) => {
@@ -761,7 +760,7 @@ export function EditFoodItemModalV2({
                       "border border-primary-200 dark:border-primary-700",
                       "hover:from-primary-100 hover:to-emerald-100",
                       "dark:hover:from-primary-900/40 dark:hover:to-emerald-900/40",
-                      "hover:shadow-soft active:scale-95",
+                      "hover:shadow-md active:scale-95",
                       "transition-all duration-200",
                       "disabled:opacity-50"
                     )}
@@ -790,7 +789,7 @@ export function EditFoodItemModalV2({
                 </button>
 
                 {showPortionPresets && (
-                  <div className="grid grid-cols-3 gap-2 animate-fade-in">
+                  <div className="grid grid-cols-3 gap-2">
                     {portionPresets.map(preset => {
                       const isSelected = formData.quantity === preset.grams.toString() && formData.unit === 'g'
                       return (
@@ -800,10 +799,10 @@ export function EditFoodItemModalV2({
                           disabled={isLoading}
                           className={cn(
                             "p-3 rounded-xl text-left min-h-[80px]",
-                            "border-2 transition-all duration-200 active:scale-98",
+                            "border-2 transition-all duration-200 active:scale-95",
                             isSelected
                               ? "border-primary-500 bg-primary-50 dark:bg-primary-900/30 ring-2 ring-primary-500/20"
-                              : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-soft"
+                              : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md"
                           )}
                         >
                           <div className={cn(
@@ -860,8 +859,8 @@ export function EditFoodItemModalV2({
                 {nutritionSource === 'local' ? (
                   <span className={cn(
                     "inline-flex items-center gap-1.5 px-3 py-1.5",
-                    "bg-success-100 dark:bg-success-900/30",
-                    "text-success-700 dark:text-success-300",
+                    "bg-green-100 dark:bg-green-900/30",
+                    "text-green-700 dark:text-green-300",
                     "text-xs font-medium rounded-full"
                   )}>
                     <Database className="w-3.5 h-3.5" />
@@ -880,8 +879,8 @@ export function EditFoodItemModalV2({
                 ) : (
                   <span className={cn(
                     "inline-flex items-center gap-1.5 px-3 py-1.5",
-                    "bg-accent-100 dark:bg-accent-900/30",
-                    "text-accent-700 dark:text-accent-300",
+                    "bg-orange-100 dark:bg-orange-900/30",
+                    "text-orange-700 dark:text-orange-300",
                     "text-xs font-medium rounded-full"
                   )}>
                     <Sparkles className="w-3.5 h-3.5" />
@@ -964,7 +963,7 @@ export function EditFoodItemModalV2({
                     </>
                   ) : (
                     <>
-                      <Check className="w-4 h-4 text-success-500" />
+                      <Check className="w-4 h-4 text-green-500" />
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                         {t('edit.nutritionAuto')}
                       </span>
@@ -977,13 +976,13 @@ export function EditFoodItemModalV2({
                   {/* Calories - Full width on mobile */}
                   <div className={cn(
                     "col-span-2 sm:col-span-1 p-4 rounded-xl",
-                    "bg-gradient-to-br from-accent-50 to-yellow-50",
-                    "dark:from-accent-900/20 dark:to-yellow-900/20",
-                    "border border-accent-200 dark:border-accent-800"
+                    "bg-gradient-to-br from-orange-50 to-yellow-50",
+                    "dark:from-orange-900/20 dark:to-yellow-900/20",
+                    "border border-orange-200 dark:border-orange-800"
                   )}>
                     <div className="flex items-center gap-2 mb-2">
-                      <Flame className="w-4 h-4 text-accent-500" />
-                      <label className="text-xs font-medium text-accent-700 dark:text-accent-300">
+                      <Flame className="w-4 h-4 text-orange-500" />
+                      <label className="text-xs font-medium text-orange-700 dark:text-orange-300">
                         {t('edit.calories')}
                       </label>
                     </div>
@@ -1002,7 +1001,7 @@ export function EditFoodItemModalV2({
                         className="w-full h-10 text-lg font-bold"
                       />
                     ) : (
-                      <span className="block text-2xl font-bold text-accent-600 dark:text-accent-400">
+                      <span className="block text-2xl font-bold text-orange-600 dark:text-orange-400">
                         {displayedNutrition.calories}
                         <span className="text-sm font-normal ml-1">kcal</span>
                       </span>
@@ -1078,12 +1077,12 @@ export function EditFoodItemModalV2({
                   {/* Fat */}
                   <div className={cn(
                     "p-3 rounded-xl",
-                    "bg-error-50 dark:bg-error-900/20",
-                    "border border-error-200 dark:border-error-800"
+                    "bg-red-50 dark:bg-red-900/20",
+                    "border border-red-200 dark:border-red-800"
                   )}>
                     <div className="flex items-center gap-1.5 mb-1.5">
-                      <Droplets className="w-3.5 h-3.5 text-error-500" />
-                      <label className="text-xs font-medium text-error-700 dark:text-error-300">
+                      <Droplets className="w-3.5 h-3.5 text-red-500" />
+                      <label className="text-xs font-medium text-red-700 dark:text-red-300">
                         {t('edit.fat')}
                       </label>
                     </div>
@@ -1102,7 +1101,7 @@ export function EditFoodItemModalV2({
                         className="w-full h-9 text-base"
                       />
                     ) : (
-                      <span className="block text-lg font-semibold text-error-600 dark:text-error-400">
+                      <span className="block text-lg font-semibold text-red-600 dark:text-red-400">
                         {displayedNutrition.fat}g
                       </span>
                     )}
@@ -1111,12 +1110,12 @@ export function EditFoodItemModalV2({
                   {/* Fiber */}
                   <div className={cn(
                     "p-3 rounded-xl",
-                    "bg-success-50 dark:bg-success-900/20",
-                    "border border-success-200 dark:border-success-800"
+                    "bg-green-50 dark:bg-green-900/20",
+                    "border border-green-200 dark:border-green-800"
                   )}>
                     <div className="flex items-center gap-1.5 mb-1.5">
-                      <span className="text-success-500 text-sm">F</span>
-                      <label className="text-xs font-medium text-success-700 dark:text-success-300">
+                      <span className="text-green-500 text-sm">F</span>
+                      <label className="text-xs font-medium text-green-700 dark:text-green-300">
                         {t('edit.fiber')}
                       </label>
                     </div>
@@ -1135,7 +1134,7 @@ export function EditFoodItemModalV2({
                         className="w-full h-9 text-base"
                       />
                     ) : (
-                      <span className="block text-lg font-semibold text-success-600 dark:text-success-400">
+                      <span className="block text-lg font-semibold text-green-600 dark:text-green-400">
                         {displayedNutrition.fiber}g
                       </span>
                     )}
@@ -1164,8 +1163,7 @@ export function EditFoodItemModalV2({
         <footer className={cn(
           "flex items-center gap-3 px-4 sm:px-6 py-4",
           "border-t border-gray-100 dark:border-gray-800",
-          "bg-white dark:bg-gray-900",
-          "safe-area-bottom"
+          "bg-white dark:bg-gray-900"
         )}>
           <Button
             type="button"
@@ -1184,7 +1182,7 @@ export function EditFoodItemModalV2({
               "flex-1 h-12 rounded-xl font-medium",
               "bg-gradient-to-r from-primary-500 to-emerald-500",
               "hover:from-primary-600 hover:to-emerald-600",
-              "shadow-glow hover:shadow-glow-lg",
+              "shadow-lg hover:shadow-xl",
               "transition-all duration-300"
             )}
           >

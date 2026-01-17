@@ -256,5 +256,8 @@
     "foodNotFound": "数据库中未找到该食物。请手动输入数值。",
     "decreaseQuantity": "减少数量",
     "increaseQuantity": "增加数量"
+  },
+  "bottomSheet": {
+    "moreOptions": "更多选项"
   }
 }

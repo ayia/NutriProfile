@@ -256,5 +256,8 @@
     "foodNotFound": "الطعام غير موجود في قاعدة البيانات. أدخل القيم يدويًا.",
     "decreaseQuantity": "تقليل الكمية",
     "increaseQuantity": "زيادة الكمية"
+  },
+  "bottomSheet": {
+    "moreOptions": "خيارات إضافية"
   }
 }

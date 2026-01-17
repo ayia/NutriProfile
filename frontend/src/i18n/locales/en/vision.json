@@ -248,5 +248,8 @@
     "foodNotFound": "Food not found in database. Enter values manually.",
     "decreaseQuantity": "Decrease quantity",
     "increaseQuantity": "Increase quantity"
+  },
+  "bottomSheet": {
+    "moreOptions": "More options"
   }
 }

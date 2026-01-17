@@ -256,5 +256,8 @@
     "foodNotFound": "Lebensmittel nicht in der Datenbank gefunden. Bitte Werte manuell eingeben.",
     "decreaseQuantity": "Menge verringern",
     "increaseQuantity": "Menge erhöhen"
+  },
+  "bottomSheet": {
+    "moreOptions": "Mehr Optionen"
   }
 }
