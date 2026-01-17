@@ -135,6 +135,60 @@
   "confirmDeleteItem": "Dieses Lebensmittel löschen?",
   "itemDeleted": "Lebensmittel erfolgreich gelöscht",
   "deleteError": "Fehler beim Löschen. Bitte versuchen Sie es erneut.",
+  "quickQuantity": {
+    "add": "Hinzufügen",
+    "subtract": "Entfernen"
+  },
+  "portions": {
+    "small": "Klein",
+    "medium": "Mittel",
+    "large": "Groß",
+    "presets": "Schnelle Portionen"
+  },
+  "recentFoods": {
+    "title": "Kürzlich verwendet",
+    "empty": "Keine kürzlichen Lebensmittel",
+    "usedTimes": "{{count}} mal verwendet"
+  },
+  "favorites": {
+    "title": "Favoriten",
+    "add": "Zu Favoriten hinzufügen",
+    "remove": "Aus Favoriten entfernen",
+    "added": "Zu Favoriten hinzugefügt",
+    "removed": "Aus Favoriten entfernt",
+    "empty": "Noch keine Favoriten"
+  },
+  "visualGuide": {
+    "title": "Portionsführer",
+    "fist": "Etwa 1 Faust",
+    "cupped_hand": "Etwa 1 hohle Hand",
+    "palm": "Etwa 1 Handfläche",
+    "thumb": "Etwa 1 Daumen",
+    "deck_of_cards": "Etwa die Größe eines Kartenspiels",
+    "tablespoon": "Etwa 1 Esslöffel",
+    "handful": "Etwa 1 Handvoll"
+  },
+  "categories": {
+    "grains": "Getreide & Stärke",
+    "proteins": "Proteine",
+    "vegetables": "Gemüse",
+    "fruits": "Obst",
+    "dairy": "Milchprodukte",
+    "legumes": "Hülsenfrüchte",
+    "nuts": "Nüsse & Samen",
+    "prepared": "Fertiggerichte",
+    "moroccan": "Marokkanische Spezialitäten",
+    "beverages": "Getränke",
+    "snacks": "Snacks",
+    "sauces": "Saucen & Gewürze"
+  },
+  "barcode": {
+    "scan": "Barcode scannen",
+    "scanning": "Scannen...",
+    "notFound": "Produkt nicht gefunden",
+    "found": "Produkt gefunden",
+    "permission": "Kameraberechtigung erforderlich"
+  },
   "errors": {
     "uploadFailed": "Hochladen fehlgeschlagen",
     "analysisFailed": "Analyse fehlgeschlagen",
@@ -169,5 +223,27 @@
       "cluttered": "Unordentlicher Hintergrund",
       "clutteredDesc": "Verwirrt die KI-Erkennung"
     }
+  },
+  "edit": {
+    "portionPresets": "Schnelle Portionen",
+    "portion": {
+      "small": "Klein",
+      "medium": "Mittel",
+      "large": "Groß"
+    },
+    "searchingNutrition": "Nährwerte werden gesucht...",
+    "source": {
+      "local": "Lokale Datenbank",
+      "ai": "KI-Schätzung"
+    },
+    "manualEntry": "Manuelle Eingabe",
+    "nutritionEditable": "Bearbeitbare Nährwerte",
+    "nutritionAuto": "Automatische Nährwerte",
+    "calories": "Kalorien",
+    "protein": "Protein",
+    "carbs": "Kohlenhydrate",
+    "fat": "Fett",
+    "fiber": "Ballaststoffe",
+    "foodNotFound": "Lebensmittel nicht in der Datenbank gefunden. Bitte Werte manuell eingeben."
   }
 }

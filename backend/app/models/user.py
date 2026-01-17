@@ -68,3 +68,6 @@ class User(Base):
     # Subscription relations
     subscription = relationship("Subscription", back_populates="user", uselist=False, cascade="all, delete-orphan")
     usage_tracking = relationship("UsageTracking", back_populates="user", cascade="all, delete-orphan")
+
+    # Favorite foods relation
+    favorite_foods = relationship("FavoriteFood", back_populates="user", cascade="all, delete-orphan")

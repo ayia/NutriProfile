@@ -85,6 +85,42 @@ class FoodItem(Base):
         return f"<FoodItem {self.name} - {self.quantity}{self.unit}>"
 
 
+class FavoriteFood(Base):
+    """Aliment favori de l'utilisateur pour accès rapide."""
+
+    __tablename__ = "favorite_foods"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+
+    # Identification de l'aliment
+    name = Column(String(200), nullable=False)  # Nom normalisé (lowercase)
+    display_name = Column(String(200), nullable=False)  # Nom affiché
+
+    # Valeurs nutritionnelles par défaut (pour 100g)
+    default_calories = Column(Integer, nullable=True)
+    default_protein = Column(Float, nullable=True)
+    default_carbs = Column(Float, nullable=True)
+    default_fat = Column(Float, nullable=True)
+
+    # Portion préférée
+    default_quantity = Column(String(50), nullable=True)
+    default_unit = Column(String(20), nullable=True)
+
+    # Compteur d'utilisation pour tri
+    use_count = Column(Integer, default=0)
+
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relations
+    user = relationship("User", back_populates="favorite_foods")
+
+    def __repr__(self):
+        return f"<FavoriteFood {self.name} - User {self.user_id}>"
+
+
 class DailyNutrition(Base):
     """Résumé nutritionnel journalier."""
 

@@ -168,3 +168,112 @@ export const MEAL_TYPE_ICONS: Record<MealType, string> = {
   dinner: '🌙',
   snack: '🍎',
 }
+
+// ========== Favorite Foods ==========
+
+export interface FavoriteFood {
+  id: number
+  name: string
+  display_name: string
+  default_calories: number | null
+  default_protein: number | null
+  default_carbs: number | null
+  default_fat: number | null
+  default_quantity: string | null
+  default_unit: string | null
+  use_count: number
+  created_at: string
+  updated_at: string
+}
+
+export interface FavoriteFoodCreate {
+  name: string
+  display_name?: string
+  default_calories?: number
+  default_protein?: number
+  default_carbs?: number
+  default_fat?: number
+  default_quantity?: string
+  default_unit?: string
+}
+
+export interface FavoriteFoodsResponse {
+  items: FavoriteFood[]
+  total: number
+}
+
+// ========== Recent Foods ==========
+
+export interface RecentFoodItem {
+  name: string
+  calories: number | null
+  protein: number | null
+  carbs: number | null
+  fat: number | null
+  last_used: string
+  use_count: number
+}
+
+export interface RecentFoodsResponse {
+  items: RecentFoodItem[]
+  total: number
+}
+
+// ========== Unit Types ==========
+
+export type FoodUnit = 'g' | 'ml' | 'portion' | 'piece' | 'cup' | 'tablespoon'
+
+export const FOOD_UNITS: FoodUnit[] = ['g', 'ml', 'portion', 'piece', 'cup', 'tablespoon']
+
+// ========== Portion Presets ==========
+
+export type PortionSize = 'small' | 'medium' | 'large'
+
+export interface PortionPreset {
+  size: PortionSize
+  quantity: number
+  unit: FoodUnit
+}
+
+// ========== Visual Portion Guide ==========
+
+export type VisualGuideType =
+  | 'fist'
+  | 'cupped_hand'
+  | 'palm'
+  | 'thumb'
+  | 'deck_of_cards'
+  | 'tablespoon'
+  | 'handful'
+
+// ========== Food Categories ==========
+
+export type FoodCategory =
+  | 'grains'
+  | 'proteins'
+  | 'vegetables'
+  | 'fruits'
+  | 'dairy'
+  | 'legumes'
+  | 'nuts'
+  | 'prepared'
+  | 'moroccan'
+  | 'beverages'
+  | 'snacks'
+  | 'sauces'
+
+// ========== Barcode Scanner ==========
+
+export interface BarcodeSearchResponse {
+  found: boolean
+  barcode: string
+  product_name: string | null
+  brand: string | null
+  serving_size: string | null
+  calories: number | null
+  protein: number | null
+  carbs: number | null
+  fat: number | null
+  fiber: number | null
+  image_url: string | null
+}

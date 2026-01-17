@@ -202,3 +202,59 @@ class DailyMealsResponse(BaseModel):
     date: datetime
     meals: list[FoodLogResponse]
     nutrition: DailyNutritionResponse | None = None
+
+
+# Favorite Foods Schemas
+
+class FavoriteFoodCreate(BaseModel):
+    """Création d'un aliment favori."""
+    name: str = Field(..., min_length=1, max_length=200, description="Nom normalisé de l'aliment")
+    display_name: str | None = Field(None, max_length=200, description="Nom affiché")
+    default_calories: int | None = None
+    default_protein: float | None = None
+    default_carbs: float | None = None
+    default_fat: float | None = None
+    default_quantity: str | None = None
+    default_unit: str | None = None
+
+
+class FavoriteFoodResponse(BaseModel):
+    """Réponse aliment favori."""
+    id: int
+    name: str
+    display_name: str
+    default_calories: int | None = None
+    default_protein: float | None = None
+    default_carbs: float | None = None
+    default_fat: float | None = None
+    default_quantity: str | None = None
+    default_unit: str | None = None
+    use_count: int = 0
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class FavoriteFoodsListResponse(BaseModel):
+    """Liste des aliments favoris."""
+    items: list[FavoriteFoodResponse]
+    total: int
+
+
+# Recent Foods Schemas
+
+class RecentFoodItem(BaseModel):
+    """Aliment récent."""
+    name: str
+    calories: int | None = None
+    protein: float | None = None
+    carbs: float | None = None
+    fat: float | None = None
+    last_used: datetime
+    use_count: int = 1
+
+
+class RecentFoodsResponse(BaseModel):
+    """Liste des aliments récents."""
+    items: list[RecentFoodItem]
+    total: int

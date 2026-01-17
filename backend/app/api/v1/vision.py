@@ -9,7 +9,7 @@ from app.database import get_db, async_session_maker
 from app.api.deps import get_current_user
 from app.models.user import User
 from app.models.profile import Profile
-from app.models.food_log import FoodLog, FoodItem as FoodItemModel, DailyNutrition
+from app.models.food_log import FoodLog, FoodItem as FoodItemModel, DailyNutrition, FavoriteFood
 from app.models.activity import ActivityLog, WeightLog
 from app.schemas.food_log import (
     ImageAnalyzeRequest,
@@ -26,6 +26,11 @@ from app.schemas.food_log import (
     WaterLogRequest,
     HealthReportResponse,
     AnalysisSaveRequest,
+    FavoriteFoodCreate,
+    FavoriteFoodResponse,
+    FavoriteFoodsListResponse,
+    RecentFoodItem,
+    RecentFoodsResponse,
 )
 from app.agents.vision import get_vision_agent, VisionInput, validate_nutrition, calculate_health_report, FoodAnalysis
 from app.services.subscription import SubscriptionService, get_limit_value
@@ -960,3 +965,263 @@ async def update_daily_nutrition(db: AsyncSession, user_id: int, target_date: da
     daily.meals_count = meals_count
 
     await db.commit()
+
+
+# =====================================================
+# RECENT FOODS ENDPOINTS
+# =====================================================
+
+@router.get("/recent-foods", response_model=RecentFoodsResponse)
+async def get_recent_foods(
+    limit: int = 20,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Récupère les aliments récemment utilisés par l'utilisateur.
+    Triés par date d'utilisation décroissante avec comptage d'utilisation.
+    """
+    from sqlalchemy import func as sql_func
+
+    # Sous-requête pour obtenir les aliments avec leur dernière utilisation et comptage
+    # On récupère les items des 30 derniers jours
+    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+
+    query = (
+        select(
+            FoodItemModel.name,
+            sql_func.max(FoodItemModel.calories).label("calories"),
+            sql_func.max(FoodItemModel.protein).label("protein"),
+            sql_func.max(FoodItemModel.carbs).label("carbs"),
+            sql_func.max(FoodItemModel.fat).label("fat"),
+            sql_func.max(FoodItemModel.created_at).label("last_used"),
+            sql_func.count(FoodItemModel.id).label("use_count"),
+        )
+        .join(FoodLog, FoodItemModel.food_log_id == FoodLog.id)
+        .where(and_(
+            FoodLog.user_id == current_user.id,
+            FoodItemModel.created_at >= thirty_days_ago,
+        ))
+        .group_by(FoodItemModel.name)
+        .order_by(sql_func.max(FoodItemModel.created_at).desc())
+        .limit(limit)
+    )
+
+    result = await db.execute(query)
+    rows = result.all()
+
+    items = [
+        RecentFoodItem(
+            name=row.name,
+            calories=row.calories,
+            protein=row.protein,
+            carbs=row.carbs,
+            fat=row.fat,
+            last_used=row.last_used,
+            use_count=row.use_count,
+        )
+        for row in rows
+    ]
+
+    return RecentFoodsResponse(items=items, total=len(items))
+
+
+# =====================================================
+# FAVORITE FOODS ENDPOINTS
+# =====================================================
+
+@router.get("/favorites", response_model=FavoriteFoodsListResponse)
+async def get_favorite_foods(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Récupère les aliments favoris de l'utilisateur."""
+    query = (
+        select(FavoriteFood)
+        .where(FavoriteFood.user_id == current_user.id)
+        .order_by(FavoriteFood.use_count.desc(), FavoriteFood.created_at.desc())
+    )
+    result = await db.execute(query)
+    favorites = result.scalars().all()
+
+    return FavoriteFoodsListResponse(
+        items=[FavoriteFoodResponse.model_validate(f) for f in favorites],
+        total=len(favorites)
+    )
+
+
+@router.post("/favorites", response_model=FavoriteFoodResponse, status_code=status.HTTP_201_CREATED)
+async def add_favorite_food(
+    data: FavoriteFoodCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Ajoute un aliment aux favoris."""
+    # Normaliser le nom (lowercase pour éviter doublons)
+    normalized_name = data.name.lower().strip()
+
+    # Vérifier si déjà en favoris
+    existing_query = select(FavoriteFood).where(and_(
+        FavoriteFood.user_id == current_user.id,
+        FavoriteFood.name == normalized_name,
+    ))
+    existing_result = await db.execute(existing_query)
+    existing = existing_result.scalar_one_or_none()
+
+    if existing:
+        # Incrémenter le compteur d'utilisation au lieu de créer un doublon
+        existing.use_count += 1
+        existing.updated_at = datetime.utcnow()
+        await db.commit()
+        await db.refresh(existing)
+        return existing
+
+    # Créer le favori
+    favorite = FavoriteFood(
+        user_id=current_user.id,
+        name=normalized_name,
+        display_name=data.display_name or data.name,
+        default_calories=data.default_calories,
+        default_protein=data.default_protein,
+        default_carbs=data.default_carbs,
+        default_fat=data.default_fat,
+        default_quantity=data.default_quantity,
+        default_unit=data.default_unit,
+        use_count=1,
+    )
+    db.add(favorite)
+    await db.commit()
+    await db.refresh(favorite)
+
+    return favorite
+
+
+@router.delete("/favorites/{food_name}")
+async def remove_favorite_food(
+    food_name: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Supprime un aliment des favoris."""
+    normalized_name = food_name.lower().strip()
+
+    query = select(FavoriteFood).where(and_(
+        FavoriteFood.user_id == current_user.id,
+        FavoriteFood.name == normalized_name,
+    ))
+    result = await db.execute(query)
+    favorite = result.scalar_one_or_none()
+
+    if not favorite:
+        raise HTTPException(status_code=404, detail="Favori non trouvé")
+
+    await db.delete(favorite)
+    await db.commit()
+
+    return {"message": "Favori supprimé", "name": food_name}
+
+
+@router.get("/favorites/check/{food_name}")
+async def check_favorite(
+    food_name: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Vérifie si un aliment est en favoris."""
+    normalized_name = food_name.lower().strip()
+
+    query = select(FavoriteFood).where(and_(
+        FavoriteFood.user_id == current_user.id,
+        FavoriteFood.name == normalized_name,
+    ))
+    result = await db.execute(query)
+    favorite = result.scalar_one_or_none()
+
+    return {"is_favorite": favorite is not None, "name": food_name}
+
+
+# ========== BARCODE SCANNER (Open Food Facts API) ==========
+
+class BarcodeSearchResponse(BaseModel):
+    """Réponse de recherche par code-barres."""
+    found: bool
+    barcode: str
+    product_name: str | None = None
+    brand: str | None = None
+    serving_size: str | None = None
+    calories: int | None = None
+    protein: float | None = None
+    carbs: float | None = None
+    fat: float | None = None
+    fiber: float | None = None
+    image_url: str | None = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+@router.get("/barcode/{barcode}", response_model=BarcodeSearchResponse)
+async def search_barcode(
+    barcode: str,
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Recherche un produit par code-barres via Open Food Facts API.
+
+    Cette API est gratuite et contient plus de 2 millions de produits.
+    """
+    import httpx
+
+    # Nettoyer le code-barres (garder seulement les chiffres)
+    clean_barcode = "".join(filter(str.isdigit, barcode))
+
+    if not clean_barcode or len(clean_barcode) < 8:
+        return BarcodeSearchResponse(
+            found=False,
+            barcode=barcode,
+        )
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            # API Open Food Facts
+            url = f"https://world.openfoodfacts.org/api/v2/product/{clean_barcode}.json"
+            response = await client.get(url, headers={
+                "User-Agent": "NutriProfile/1.0 (contact@nutriprofile.app)"
+            })
+
+            if response.status_code != 200:
+                return BarcodeSearchResponse(
+                    found=False,
+                    barcode=clean_barcode,
+                )
+
+            data = response.json()
+
+            if data.get("status") != 1 or "product" not in data:
+                return BarcodeSearchResponse(
+                    found=False,
+                    barcode=clean_barcode,
+                )
+
+            product = data["product"]
+            nutriments = product.get("nutriments", {})
+
+            # Extraire les valeurs nutritionnelles pour 100g
+            return BarcodeSearchResponse(
+                found=True,
+                barcode=clean_barcode,
+                product_name=product.get("product_name") or product.get("product_name_en"),
+                brand=product.get("brands"),
+                serving_size=product.get("serving_size"),
+                calories=int(nutriments.get("energy-kcal_100g", 0)) or int(nutriments.get("energy_100g", 0) / 4.184) if nutriments.get("energy_100g") else None,
+                protein=round(nutriments.get("proteins_100g", 0), 1) or None,
+                carbs=round(nutriments.get("carbohydrates_100g", 0), 1) or None,
+                fat=round(nutriments.get("fat_100g", 0), 1) or None,
+                fiber=round(nutriments.get("fiber_100g", 0), 1) if nutriments.get("fiber_100g") else None,
+                image_url=product.get("image_front_url") or product.get("image_url"),
+            )
+    except Exception as e:
+        print(f"Erreur Open Food Facts: {e}")
+        return BarcodeSearchResponse(
+            found=False,
+            barcode=clean_barcode,
+        )

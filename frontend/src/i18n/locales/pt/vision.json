@@ -135,6 +135,60 @@
   "confirmDeleteItem": "Excluir este alimento?",
   "itemDeleted": "Alimento excluído com sucesso",
   "deleteError": "Erro ao excluir. Por favor tente novamente.",
+  "quickQuantity": {
+    "add": "Adicionar",
+    "subtract": "Remover"
+  },
+  "portions": {
+    "small": "Pequena",
+    "medium": "Média",
+    "large": "Grande",
+    "presets": "Porções rápidas"
+  },
+  "recentFoods": {
+    "title": "Alimentos recentes",
+    "empty": "Nenhum alimento recente",
+    "usedTimes": "Usado {{count}} vezes"
+  },
+  "favorites": {
+    "title": "Favoritos",
+    "add": "Adicionar aos favoritos",
+    "remove": "Remover dos favoritos",
+    "added": "Adicionado aos favoritos",
+    "removed": "Removido dos favoritos",
+    "empty": "Nenhum favorito ainda"
+  },
+  "visualGuide": {
+    "title": "Guia de porções",
+    "fist": "Aproximadamente 1 punho",
+    "cupped_hand": "Aproximadamente 1 mão em concha",
+    "palm": "Aproximadamente 1 palma",
+    "thumb": "Aproximadamente 1 polegar",
+    "deck_of_cards": "Aproximadamente o tamanho de um baralho",
+    "tablespoon": "Aproximadamente 1 colher de sopa",
+    "handful": "Aproximadamente 1 punhado"
+  },
+  "categories": {
+    "grains": "Cereais e Amidos",
+    "proteins": "Proteínas",
+    "vegetables": "Vegetais",
+    "fruits": "Frutas",
+    "dairy": "Laticínios",
+    "legumes": "Leguminosas",
+    "nuts": "Nozes e Sementes",
+    "prepared": "Pratos Preparados",
+    "moroccan": "Especialidades Marroquinas",
+    "beverages": "Bebidas",
+    "snacks": "Lanches",
+    "sauces": "Molhos e Condimentos"
+  },
+  "barcode": {
+    "scan": "Escanear código de barras",
+    "scanning": "Escaneando...",
+    "notFound": "Produto não encontrado",
+    "found": "Produto encontrado",
+    "permission": "Permissão de câmera necessária"
+  },
   "errors": {
     "uploadFailed": "Falha ao enviar",
     "analysisFailed": "Falha na análise",
@@ -169,5 +223,27 @@
       "cluttered": "Fundo bagunçado",
       "clutteredDesc": "Confunde a detecção da IA"
     }
+  },
+  "edit": {
+    "portionPresets": "Porções rápidas",
+    "portion": {
+      "small": "Pequena",
+      "medium": "Média",
+      "large": "Grande"
+    },
+    "searchingNutrition": "Buscando valores nutricionais...",
+    "source": {
+      "local": "Banco de dados local",
+      "ai": "Estimativa IA"
+    },
+    "manualEntry": "Entrada manual",
+    "nutritionEditable": "Valores nutricionais editáveis",
+    "nutritionAuto": "Valores nutricionais automáticos",
+    "calories": "Calorias",
+    "protein": "Proteína",
+    "carbs": "Carboidratos",
+    "fat": "Gordura",
+    "fiber": "Fibra",
+    "foodNotFound": "Alimento não encontrado no banco de dados. Insira os valores manualmente."
   }
 }

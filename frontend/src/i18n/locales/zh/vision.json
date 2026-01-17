@@ -135,6 +135,60 @@
   "confirmDeleteItem": "删除此食物？",
   "itemDeleted": "食物已成功删除",
   "deleteError": "删除失败。请重试。",
+  "quickQuantity": {
+    "add": "增加",
+    "subtract": "减少"
+  },
+  "portions": {
+    "small": "小份",
+    "medium": "中份",
+    "large": "大份",
+    "presets": "快速份量"
+  },
+  "recentFoods": {
+    "title": "最近食物",
+    "empty": "没有最近食物",
+    "usedTimes": "使用了{{count}}次"
+  },
+  "favorites": {
+    "title": "收藏夹",
+    "add": "添加到收藏",
+    "remove": "从收藏移除",
+    "added": "已添加到收藏",
+    "removed": "已从收藏移除",
+    "empty": "暂无收藏"
+  },
+  "visualGuide": {
+    "title": "份量指南",
+    "fist": "约1个拳头",
+    "cupped_hand": "约1捧",
+    "palm": "约1个手掌",
+    "thumb": "约1个拇指",
+    "deck_of_cards": "约一副扑克牌大小",
+    "tablespoon": "约1汤匙",
+    "handful": "约1把"
+  },
+  "categories": {
+    "grains": "谷物和淀粉",
+    "proteins": "蛋白质",
+    "vegetables": "蔬菜",
+    "fruits": "水果",
+    "dairy": "乳制品",
+    "legumes": "豆类",
+    "nuts": "坚果和种子",
+    "prepared": "预制食品",
+    "moroccan": "摩洛哥特色",
+    "beverages": "饮料",
+    "snacks": "零食",
+    "sauces": "酱料和调味品"
+  },
+  "barcode": {
+    "scan": "扫描条形码",
+    "scanning": "扫描中...",
+    "notFound": "未找到产品",
+    "found": "找到产品",
+    "permission": "需要相机权限"
+  },
   "errors": {
     "uploadFailed": "上传失败",
     "analysisFailed": "分析失败",
@@ -169,5 +223,27 @@
       "cluttered": "杂乱的背景",
       "clutteredDesc": "干扰AI检测"
     }
+  },
+  "edit": {
+    "portionPresets": "快速份量",
+    "portion": {
+      "small": "小份",
+      "medium": "中份",
+      "large": "大份"
+    },
+    "searchingNutrition": "正在搜索营养信息...",
+    "source": {
+      "local": "本地数据库",
+      "ai": "AI估算"
+    },
+    "manualEntry": "手动输入",
+    "nutritionEditable": "可编辑营养值",
+    "nutritionAuto": "自动营养值",
+    "calories": "卡路里",
+    "protein": "蛋白质",
+    "carbs": "碳水化合物",
+    "fat": "脂肪",
+    "fiber": "纤维",
+    "foodNotFound": "数据库中未找到该食物。请手动输入数值。"
   }
 }

@@ -140,6 +140,60 @@
   "confirmDeleteItem": "Delete this food item?",
   "itemDeleted": "Food deleted successfully",
   "deleteError": "Error deleting. Please try again.",
+  "quickQuantity": {
+    "add": "Add",
+    "subtract": "Subtract"
+  },
+  "portions": {
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large",
+    "presets": "Quick portions"
+  },
+  "recentFoods": {
+    "title": "Recent foods",
+    "empty": "No recent foods",
+    "usedTimes": "Used {{count}} times"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "add": "Add to favorites",
+    "remove": "Remove from favorites",
+    "added": "Added to favorites",
+    "removed": "Removed from favorites",
+    "empty": "No favorites yet"
+  },
+  "visualGuide": {
+    "title": "Portion guide",
+    "fist": "About 1 fist",
+    "cupped_hand": "About 1 cupped handful",
+    "palm": "About 1 palm",
+    "thumb": "About 1 thumb",
+    "deck_of_cards": "About the size of a deck of cards",
+    "tablespoon": "About 1 tablespoon",
+    "handful": "About 1 handful"
+  },
+  "categories": {
+    "grains": "Grains & Starches",
+    "proteins": "Proteins",
+    "vegetables": "Vegetables",
+    "fruits": "Fruits",
+    "dairy": "Dairy",
+    "legumes": "Legumes",
+    "nuts": "Nuts & Seeds",
+    "prepared": "Prepared Foods",
+    "moroccan": "Moroccan Specialties",
+    "beverages": "Beverages",
+    "snacks": "Snacks",
+    "sauces": "Sauces & Condiments"
+  },
+  "barcode": {
+    "scan": "Scan barcode",
+    "scanning": "Scanning...",
+    "notFound": "Product not found",
+    "found": "Product found",
+    "permission": "Camera permission required"
+  },
   "photoTips": {
     "title": "Photo Tips",
     "subtitle": "Get better results with these tips",
@@ -166,5 +220,27 @@
       "cluttered": "Cluttered background",
       "clutteredDesc": "Confuses the AI detection"
     }
+  },
+  "edit": {
+    "portionPresets": "Quick portions",
+    "portion": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    },
+    "searchingNutrition": "Searching nutrition...",
+    "source": {
+      "local": "Local database",
+      "ai": "AI estimated"
+    },
+    "manualEntry": "Manual entry",
+    "nutritionEditable": "Editable nutrition values",
+    "nutritionAuto": "Automatic nutrition values",
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "fiber": "Fiber",
+    "foodNotFound": "Food not found in database. Enter values manually."
   }
 }

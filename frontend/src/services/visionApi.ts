@@ -9,6 +9,11 @@ import type {
   FoodItemUpdate,
   DailyMeals,
   AnalysisSaveRequest,
+  RecentFoodsResponse,
+  FavoriteFoodsResponse,
+  FavoriteFoodCreate,
+  FavoriteFood,
+  BarcodeSearchResponse,
 } from '@/types/foodLog'
 
 export const visionApi = {
@@ -78,6 +83,38 @@ export const visionApi = {
 
   addWater: async (date: string, amountMl: number): Promise<{ water_ml: number }> => {
     const response = await api.post(`/vision/daily/${date}/water`, { amount_ml: amountMl })
+    return response.data
+  },
+
+  // Recent Foods
+  getRecentFoods: async (limit = 20): Promise<RecentFoodsResponse> => {
+    const response = await api.get(`/vision/recent-foods?limit=${limit}`)
+    return response.data
+  },
+
+  // Favorites
+  getFavorites: async (): Promise<FavoriteFoodsResponse> => {
+    const response = await api.get('/vision/favorites')
+    return response.data
+  },
+
+  addFavorite: async (data: FavoriteFoodCreate): Promise<FavoriteFood> => {
+    const response = await api.post('/vision/favorites', data)
+    return response.data
+  },
+
+  removeFavorite: async (foodName: string): Promise<void> => {
+    await api.delete(`/vision/favorites/${encodeURIComponent(foodName)}`)
+  },
+
+  checkFavorite: async (foodName: string): Promise<{ is_favorite: boolean; name: string }> => {
+    const response = await api.get(`/vision/favorites/check/${encodeURIComponent(foodName)}`)
+    return response.data
+  },
+
+  // Barcode Scanner (Open Food Facts)
+  searchBarcode: async (barcode: string): Promise<BarcodeSearchResponse> => {
+    const response = await api.get(`/vision/barcode/${encodeURIComponent(barcode)}`)
     return response.data
   },
 }
