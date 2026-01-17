@@ -28,6 +28,7 @@ import {
   Droplet,
   Droplets,
   Utensils,
+  Beef,
 
   // Meal Types
   Sunrise,
@@ -429,6 +430,7 @@ export {
   Wheat,
   Droplet,
   Droplets,
+  Beef,
   Activity,
   Footprints,
   Bike,

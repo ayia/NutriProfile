@@ -531,8 +531,21 @@ textarea:focus-visible {
     box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
   }
 
+  .shadow-glow-lg {
+    box-shadow: 0 0 50px rgba(16, 185, 129, 0.4);
+  }
+
   .shadow-glow-accent {
     box-shadow: 0 0 30px rgba(249, 115, 22, 0.3);
+  }
+
+  /* Safe area padding for mobile devices with notches/home indicators */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0);
   }
 }
 
@@ -702,6 +715,45 @@ textarea:focus-visible {
 
 .animate-slide-up {
   animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Scale in animation for desktop modals */
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Fade in animation */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* Active scale effect for touchable elements */
+.active\:scale-98:active {
+  transform: scale(0.98);
+}
+
+.active\:scale-95:active {
+  transform: scale(0.95);
 }
 
 /* Reduced motion support */
