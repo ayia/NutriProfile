@@ -1,3 +1,4 @@
+// Build timestamp: 2026-01-17T15:30:00Z - Force Cloudflare rebuild with EditFoodItemModalV2
 import { useState, useEffect } from 'react'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
