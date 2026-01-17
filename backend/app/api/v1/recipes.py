@@ -415,7 +415,7 @@ async def add_favorite(
     current_user: Annotated[User, Depends(get_current_user)],
     db: AsyncSession = Depends(get_db),
 ) -> FavoriteResponse:
-    """Ajouter une recette aux favoris."""
+    """Ajouter une recette aux favoris (idempotent - retourne le favori existant si déjà ajouté)."""
     # Vérifier que la recette existe
     result = await db.execute(
         select(RecipeModel).where(RecipeModel.id == data.recipe_id)
@@ -438,9 +438,14 @@ async def add_favorite(
     existing = result.scalar_one_or_none()
 
     if existing:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Cette recette est déjà dans vos favoris",
+        # Idempotent: retourner le favori existant au lieu d'erreur 400
+        return FavoriteResponse(
+            id=existing.id,
+            recipe_id=existing.recipe_id,
+            notes=existing.notes,
+            rating=existing.rating,
+            created_at=existing.created_at,
+            recipe=RecipeResponse.model_validate(recipe),
         )
 
     favorite = FavoriteRecipe(

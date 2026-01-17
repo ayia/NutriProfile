@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { recipeApi } from '@/services/recipeApi'
@@ -19,6 +19,11 @@ export function RecipeCard({ recipe, initialFavorite = false, onViewDetails: _on
   const [showDetails, setShowDetails] = useState(false)
   const [isFavorite, setIsFavorite] = useState(initialFavorite)
   const queryClient = useQueryClient()
+
+  // Sync isFavorite state with initialFavorite prop when it changes
+  useEffect(() => {
+    setIsFavorite(initialFavorite)
+  }, [initialFavorite])
 
   const addFavorite = useMutation({
     mutationFn: () => recipeApi.addFavorite(recipe.id),
