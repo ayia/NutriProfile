@@ -127,6 +127,7 @@
   "coach": {
     "openChat": "Mit dem KI-Coach chatten"
   },
+  "waterAdded": "+{{amount}}ml Wasser hinzugefügt",
   "notFound": {
     "title": "Seite nicht gefunden",
     "description": "Ups! Die gesuchte Seite existiert nicht oder wurde verschoben.",

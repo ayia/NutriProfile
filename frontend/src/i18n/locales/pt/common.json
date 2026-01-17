@@ -127,6 +127,7 @@
   "coach": {
     "openChat": "Conversar com o Coach IA"
   },
+  "waterAdded": "+{{amount}}ml de água adicionados",
   "notFound": {
     "title": "Página não encontrada",
     "description": "Ops! A página que você procura não existe ou foi movida.",

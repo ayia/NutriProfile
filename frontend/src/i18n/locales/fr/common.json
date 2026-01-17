@@ -157,6 +157,7 @@
     "emailSent": "Email envoye",
     "copied": "Copie dans le presse-papiers"
   },
+  "waterAdded": "+{{amount}}ml d'eau ajoutés",
   "coach": {
     "openChat": "Discuter avec le Coach IA"
   },

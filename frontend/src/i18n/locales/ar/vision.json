@@ -15,15 +15,20 @@
     "nutritionSummary": "ملخص التغذية",
     "meals": "الوجبات",
     "noMeals": "لا توجد وجبات مسجلة",
+    "noMealsDescription": "امسح أول وجبة للبدء",
     "scanFirst": "امسح وجبة",
     "calories": "السعرات",
     "protein": "البروتين",
     "carbs": "الكربوهيدرات",
     "fat": "الدهون",
-    "water": "الماء"
+    "water": "الماء",
+    "loading": "جاري التحميل..."
   },
   "history": {
-    "noHistory": "لا يوجد سجل"
+    "noHistory": "لا يوجد سجل",
+    "noHistoryDescription": "سيظهر سجل وجباتك هنا",
+    "startScanning": "ابدأ المسح",
+    "loading": "جاري تحميل السجل..."
   },
   "common": {
     "loading": "جاري التحميل..."

@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate, MealType } from '@/types/foodLog'
 import { Star, Sparkles, AlertTriangle, HeartPulse, Utensils, Camera, Edit, Loader2, Check, Info, ChevronDown, ThumbsUp, Meh, BarChart3, Lightbulb, Save, ArrowRight } from '@/lib/icons'
-import { EditFoodItemModalEnhanced, type FoodItem } from './EditFoodItemModalEnhanced'
+import { EditFoodItemModalV2 } from './EditFoodItemModalV2'
+import type { FoodItem } from './EditFoodItemModal'
 
 interface AnalysisResultProps {
   result: ImageAnalyzeResponse
@@ -119,7 +119,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
   }
 
   // Save edited item (local state only, not API - this is pre-save)
-  const handleSaveEdit = async (update: FoodItemUpdate) => {
+  const handleSaveEdit = async (update: FoodItemUpdate): Promise<void> => {
     if (editingItemIndex === null) return
 
     // Update the item in local state
@@ -603,8 +603,8 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
         )}
       </div>
 
-      {/* Edit Food Item Modal */}
-      <EditFoodItemModalEnhanced
+      {/* Edit Food Item Modal - Uses V2 with extended features */}
+      <EditFoodItemModalV2
         item={editingItem}
         onClose={handleCloseEdit}
         onSave={handleSaveEdit}

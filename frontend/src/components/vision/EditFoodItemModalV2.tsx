@@ -143,7 +143,6 @@ export function EditFoodItemModalV2({
   // UI state
   const [showAutocomplete, setShowAutocomplete] = useState(false)
   const [showPortionPresets, setShowPortionPresets] = useState(true)
-  const [showVisualGuide, setShowVisualGuide] = useState(false)
   const [showBarcodeInput, setShowBarcodeInput] = useState(false)
   const [barcodeValue, setBarcodeValue] = useState('')
   const [isScanningBarcode, setIsScanningBarcode] = useState(false)
@@ -171,19 +170,19 @@ export function EditFoodItemModalV2({
 
   // Portion presets for current food
   const portionPresets = useMemo(() => {
-    return getPortionPresets(formData.name)
+    return getPortionPresets(formData.name || '')
   }, [formData.name])
 
   // Visual guide for current food
   const visualGuide = useMemo(() => {
-    const guide = getVisualGuide(formData.name)
+    const guide = getVisualGuide(formData.name || '')
     if (!guide) return null
     return VISUAL_GUIDES[guide]?.[i18n.language] || VISUAL_GUIDES[guide]?.['en']
   }, [formData.name, i18n.language])
 
   // Check if food is favorite
   const isFavorite = useMemo(() => {
-    return favoriteFoods.includes(formData.name.toLowerCase())
+    return favoriteFoods.includes((formData.name || '').toLowerCase())
   }, [favoriteFoods, formData.name])
 
   // Initialize form when item changes
@@ -268,14 +267,10 @@ export function EditFoodItemModalV2({
   // Quantity adjustment handlers
   const adjustQuantity = useCallback((delta: number) => {
     setFormData(prev => {
-      const current = parseFloat(prev.quantity) || 0
+      const current = parseFloat(prev.quantity || '0') || 0
       const newValue = Math.max(0, current + delta)
       return { ...prev, quantity: newValue.toString() }
     })
-  }, [])
-
-  const setQuantity = useCallback((value: number) => {
-    setFormData(prev => ({ ...prev, quantity: value.toString() }))
   }, [])
 
   // Handle portion preset selection

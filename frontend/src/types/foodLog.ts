@@ -42,7 +42,9 @@ export interface DetectedItem {
   protein: number
   carbs: number
   fat: number
+  fiber?: number
   confidence: number
+  source?: 'ai' | 'manual' | 'database'
 }
 
 export interface ImageAnalyzeRequest {
@@ -138,6 +140,7 @@ export interface FoodItemUpdate {
   protein?: number
   carbs?: number
   fat?: number
+  fiber?: number
   is_verified?: boolean
 }
 

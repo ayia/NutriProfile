@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import i18n from '@/i18n'
 import { toast } from 'sonner'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
@@ -15,13 +16,13 @@ interface ModalFoodItem {
   name: string
   quantity: string
   unit: string
-  calories?: number | null
-  protein?: number | null
-  carbs?: number | null
-  fat?: number | null
-  fiber?: number | null
+  calories?: number
+  protein?: number
+  carbs?: number
+  fat?: number
+  fiber?: number
   source?: 'ai' | 'manual' | 'database'
-  confidence?: number | null
+  confidence?: number
 }
 
 interface FoodLogCardProps {
@@ -115,13 +116,13 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       name: item.name,
       quantity: item.quantity,
       unit: item.unit,
-      calories: item.calories,
-      protein: item.protein,
-      carbs: item.carbs,
-      fat: item.fat,
-      fiber: item.fiber,
+      calories: item.calories ?? undefined,
+      protein: item.protein ?? undefined,
+      carbs: item.carbs ?? undefined,
+      fat: item.fat ?? undefined,
+      fiber: item.fiber ?? undefined,
       source: item.source,
-      confidence: item.confidence,
+      confidence: item.confidence ?? undefined,
     })
   }
 
@@ -132,11 +133,11 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       name: '',
       quantity: '100',
       unit: 'g',
-      calories: null,
-      protein: null,
-      carbs: null,
-      fat: null,
-      fiber: null,
+      calories: undefined,
+      protein: undefined,
+      carbs: undefined,
+      fat: undefined,
+      fiber: undefined,
       source: 'manual',
     })
   }
@@ -175,8 +176,22 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
     }
   }
 
+  // Map i18n language codes to locale codes for date formatting
+  const getLocale = () => {
+    const langMap: Record<string, string> = {
+      fr: 'fr-FR',
+      en: 'en-US',
+      de: 'de-DE',
+      es: 'es-ES',
+      pt: 'pt-PT',
+      zh: 'zh-CN',
+      ar: 'ar-SA',
+    }
+    return langMap[i18n.language] || 'en-US'
+  }
+
   const formatTime = (dateStr: string) => {
-    return new Date(dateStr).toLocaleTimeString('fr-FR', {
+    return new Date(dateStr).toLocaleTimeString(getLocale(), {
       hour: '2-digit',
       minute: '2-digit',
     })
@@ -237,19 +252,19 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
           <div className="text-lg font-semibold text-blue-600">
             {log.total_protein?.toFixed(1) || 0}g
           </div>
-          <div className="text-xs text-gray-500">prot</div>
+          <div className="text-xs text-gray-500">{t('result.macros.protein')}</div>
         </div>
         <div className="p-3 text-center">
           <div className="text-lg font-semibold text-yellow-600">
             {log.total_carbs?.toFixed(1) || 0}g
           </div>
-          <div className="text-xs text-gray-500">gluc</div>
+          <div className="text-xs text-gray-500">{t('result.macros.carbs')}</div>
         </div>
         <div className="p-3 text-center">
           <div className="text-lg font-semibold text-orange-600">
             {log.total_fat?.toFixed(1) || 0}g
           </div>
-          <div className="text-xs text-gray-500">lip</div>
+          <div className="text-xs text-gray-500">{t('result.macros.fat')}</div>
         </div>
       </div>
 
@@ -286,7 +301,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-gray-600">{item.calories} kcal</span>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                   <Button
                     size="sm"
                     variant="ghost"

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { visionApi } from '@/services/visionApi'
 import { ImageUploader, type AnalysisData } from '@/components/vision/ImageUploader'
 import { AnalysisResult } from '@/components/vision/AnalysisResult'
@@ -26,8 +27,10 @@ type Tab = 'scan' | 'today' | 'history'
 
 export function VisionPage() {
   const { t, i18n } = useTranslation('vision')
+  const tCommon = useTranslation('common').t
   const [activeTab, setActiveTab] = useState<Tab>('scan')
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null)
+  const queryClient = useQueryClient()
   // Helper to get UTC date string (YYYY-MM-DD)
   const getUTCDateString = (date: Date) => {
     return date.toISOString().split('T')[0]
@@ -49,6 +52,19 @@ export function VisionPage() {
     queryKey: ['foodLogs', 'history'],
     queryFn: () => visionApi.getLogs(undefined, undefined, 50),
     enabled: activeTab === 'history',
+  })
+
+  // Mutation for adding water with feedback
+  const addWaterMutation = useMutation({
+    mutationFn: (amount: number) => visionApi.addWater(selectedDate, amount),
+    onSuccess: (_, amount) => {
+      // Refresh today's data
+      queryClient.invalidateQueries({ queryKey: ['dailyMeals', selectedDate] })
+      toast.success(tCommon('waterAdded', { amount }))
+    },
+    onError: () => {
+      toast.error(tCommon('error'))
+    },
   })
 
   // Scroll reveal animation
@@ -268,12 +284,11 @@ export function VisionPage() {
                       {[250, 500].map((amount) => (
                         <button
                           key={amount}
-                          onClick={() => {
-                            visionApi.addWater(selectedDate, amount)
-                          }}
-                          className="px-4 py-2 bg-white/80 hover:bg-white border border-blue-200 rounded-xl text-blue-600 font-medium transition-all hover:shadow-md hover:-translate-y-0.5"
+                          onClick={() => addWaterMutation.mutate(amount)}
+                          disabled={addWaterMutation.isPending}
+                          className="px-4 py-2 bg-white/80 hover:bg-white border border-blue-200 rounded-xl text-blue-600 font-medium transition-all hover:shadow-md hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-wait"
                         >
-                          +{amount}ml
+                          {addWaterMutation.isPending ? '...' : `+${amount}ml`}
                         </button>
                       ))}
                     </div>
@@ -353,7 +368,18 @@ export function VisionPage() {
             )}
 
             {historyQuery.data?.map((log, index) => {
-              const date = new Date(log.meal_date).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
+              // Map i18n language to locale for date formatting
+              const langMap: Record<string, string> = {
+                fr: 'fr-FR',
+                en: 'en-US',
+                de: 'de-DE',
+                es: 'es-ES',
+                pt: 'pt-PT',
+                zh: 'zh-CN',
+                ar: 'ar-SA',
+              }
+              const locale = langMap[i18n.language] || 'en-US'
+              const date = new Date(log.meal_date).toLocaleDateString(locale, {
                 weekday: 'long',
                 day: 'numeric',
                 month: 'long',

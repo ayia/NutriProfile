@@ -167,6 +167,7 @@
     "emailSent": "Email sent",
     "copied": "Copied to clipboard"
   },
+  "waterAdded": "+{{amount}}ml of water added",
   "coach": {
     "openChat": "Chat with AI Coach"
   },

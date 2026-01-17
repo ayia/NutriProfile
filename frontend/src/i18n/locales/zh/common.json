@@ -127,6 +127,7 @@
   "coach": {
     "openChat": "与AI教练聊天"
   },
+  "waterAdded": "+{{amount}}毫升水已添加",
   "notFound": {
     "title": "页面未找到",
     "description": "糟糕！您要找的页面不存在或已被移动。",

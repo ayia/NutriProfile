@@ -15,15 +15,20 @@
     "nutritionSummary": "Nährwertzusammenfassung",
     "meals": "Mahlzeiten",
     "noMeals": "Keine Mahlzeiten erfasst",
+    "noMealsDescription": "Scannen Sie Ihre erste Mahlzeit, um zu beginnen",
     "scanFirst": "Mahlzeit scannen",
     "calories": "Kalorien",
     "protein": "Protein",
     "carbs": "Kohlenhydrate",
     "fat": "Fett",
-    "water": "Wasser"
+    "water": "Wasser",
+    "loading": "Laden..."
   },
   "history": {
-    "noHistory": "Kein Verlauf"
+    "noHistory": "Kein Verlauf",
+    "noHistoryDescription": "Ihr Mahlzeitenverlauf wird hier angezeigt",
+    "startScanning": "Scannen starten",
+    "loading": "Verlauf wird geladen..."
   },
   "common": {
     "loading": "Laden..."

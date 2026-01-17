@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -265,7 +265,7 @@ export function EditFoodItemModalEnhanced({
           {isSearching && (
             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Recherche des valeurs nutritionnelles...</span>
+              <span>{t('edit.searchingNutrition')}</span>
             </div>
           )}
 
@@ -273,18 +273,18 @@ export function EditFoodItemModalEnhanced({
           {searchResult && searchResult.found && !manualMode && (
             <div className="flex items-center gap-2">
               {searchResult.source === 'usda' ? (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-medium rounded-full">
                   <Database className="h-3 w-3" />
-                  USDA Database
+                  {t('edit.source.local')}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs font-medium rounded-full">
                   <Sparkles className="h-3 w-3" />
-                  IA Estimation
+                  {t('edit.source.ai')}
                 </span>
               )}
               <span className="text-xs text-gray-600 dark:text-gray-400">
-                Confiance: {Math.round(searchResult.confidence * 100)}%
+                {t('result.confidence')}: {Math.round(searchResult.confidence * 100)}%
               </span>
             </div>
           )}
@@ -295,7 +295,7 @@ export function EditFoodItemModalEnhanced({
               <div className="flex items-center gap-2">
                 <Edit3 className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                 <span className="text-sm text-gray-700 dark:text-gray-200">
-                  Saisie manuelle
+                  {t('edit.manualEntry')}
                 </span>
               </div>
               <button
@@ -323,12 +323,12 @@ export function EditFoodItemModalEnhanced({
                 {manualMode ? (
                   <>
                     <Edit3 className="h-4 w-4" />
-                    Valeurs Nutritionnelles (éditables)
+                    {t('edit.nutritionEditable')}
                   </>
                 ) : (
                   <>
                     <Check className="h-4 w-4 text-green-600" />
-                    Valeurs Nutritionnelles (auto-détectées)
+                    {t('edit.nutritionAuto')}
                   </>
                 )}
               </h4>
@@ -337,7 +337,7 @@ export function EditFoodItemModalEnhanced({
                 {/* Calories */}
                 <div>
                   <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    Calories
+                    {t('edit.calories')}
                   </label>
                   {manualMode ? (
                     <Input
@@ -363,7 +363,7 @@ export function EditFoodItemModalEnhanced({
                 {/* Protein */}
                 <div>
                   <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    Protéines
+                    {t('edit.protein')}
                   </label>
                   {manualMode ? (
                     <Input
@@ -389,7 +389,7 @@ export function EditFoodItemModalEnhanced({
                 {/* Carbs */}
                 <div>
                   <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    Glucides
+                    {t('edit.carbs')}
                   </label>
                   {manualMode ? (
                     <Input
@@ -415,7 +415,7 @@ export function EditFoodItemModalEnhanced({
                 {/* Fat */}
                 <div>
                   <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    Lipides
+                    {t('edit.fat')}
                   </label>
                   {manualMode ? (
                     <Input
@@ -441,7 +441,7 @@ export function EditFoodItemModalEnhanced({
                 {/* Fiber */}
                 <div className="col-span-2">
                   <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    Fibres
+                    {t('edit.fiber')}
                   </label>
                   {manualMode ? (
                     <Input
@@ -471,7 +471,7 @@ export function EditFoodItemModalEnhanced({
           {searchResult && !searchResult.found && !isSearching && (
             <div className="p-3 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
               <p className="text-sm text-orange-800 dark:text-orange-200">
-                Aliment non trouvé dans la base de données. Veuillez entrer les valeurs nutritionnelles manuellement.
+                {t('edit.foodNotFound')}
               </p>
             </div>
           )}

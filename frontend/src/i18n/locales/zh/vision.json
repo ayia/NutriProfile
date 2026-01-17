@@ -15,15 +15,20 @@
     "nutritionSummary": "营养摘要",
     "meals": "餐食",
     "noMeals": "暂无餐食记录",
+    "noMealsDescription": "扫描您的第一餐开始",
     "scanFirst": "扫描一餐",
     "calories": "卡路里",
     "protein": "蛋白质",
     "carbs": "碳水化合物",
     "fat": "脂肪",
-    "water": "水"
+    "water": "水",
+    "loading": "加载中..."
   },
   "history": {
-    "noHistory": "暂无历史"
+    "noHistory": "暂无历史",
+    "noHistoryDescription": "您的餐食历史将显示在这里",
+    "startScanning": "开始扫描",
+    "loading": "正在加载历史..."
   },
   "common": {
     "loading": "加载中..."

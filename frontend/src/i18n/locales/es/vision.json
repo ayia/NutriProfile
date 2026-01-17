@@ -15,15 +15,20 @@
     "nutritionSummary": "Resumen nutricional",
     "meals": "Comidas",
     "noMeals": "Sin comidas registradas",
+    "noMealsDescription": "Escanea tu primera comida para comenzar",
     "scanFirst": "Escanear una comida",
     "calories": "Calorías",
     "protein": "Proteína",
     "carbs": "Carbohidratos",
     "fat": "Grasa",
-    "water": "Agua"
+    "water": "Agua",
+    "loading": "Cargando..."
   },
   "history": {
-    "noHistory": "Sin historial"
+    "noHistory": "Sin historial",
+    "noHistoryDescription": "Tu historial de comidas aparecerá aquí",
+    "startScanning": "Comenzar a escanear",
+    "loading": "Cargando historial..."
   },
   "common": {
     "loading": "Cargando..."
