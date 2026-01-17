@@ -1,5 +1,6 @@
 from datetime import datetime, date, timedelta
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.rate_limiter import limiter, VISION_LIMIT
 from sqlalchemy import select, and_
