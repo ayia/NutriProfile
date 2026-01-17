@@ -1,5 +1,5 @@
 from datetime import datetime, date, timedelta
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.rate_limiter import limiter, VISION_LIMIT
 from sqlalchemy import select, and_
@@ -37,6 +37,7 @@ router = APIRouter()
 @limiter.limit(VISION_LIMIT)
 async def analyze_image(
     request: Request,
+    response: Response,
     body: ImageAnalyzeRequest,
     current_user: User = Depends(get_current_user),
 ):
