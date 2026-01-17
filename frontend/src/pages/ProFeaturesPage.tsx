@@ -21,8 +21,8 @@ export function ProFeaturesPage() {
       try {
         const usage = await subscriptionApi.getUsage()
         setIsPro(usage.tier === 'pro')
-      } catch (error) {
-        console.error('Error checking subscription:', error)
+      } catch {
+        // Subscription check failed silently
       } finally {
         setLoading(false)
       }
@@ -135,3 +135,5 @@ export function ProFeaturesPage() {
     </div>
   )
 }
+
+export default ProFeaturesPage

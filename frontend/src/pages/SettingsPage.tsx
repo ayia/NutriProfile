@@ -77,16 +77,13 @@ export function SettingsPage() {
 
   const updateProfileMutation = useMutation({
     mutationFn: (data: Partial<ProfileCreate>) => {
-      console.log('[updateProfileMutation] Sending to API:', data)
       return profileApi.updateProfile(data)
     },
-    onSuccess: (response) => {
-      console.log('[updateProfileMutation] Success, response:', response)
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] })
       toast.success(tCommon('toast.profileUpdated'))
     },
-    onError: (error) => {
-      console.error('[updateProfileMutation] Error:', error)
+    onError: () => {
       toast.error(tCommon('toast.saveError'))
     },
   })
@@ -333,7 +330,6 @@ function ProfileSettings({ profile, isLoading, onUpdate, isUpdating }: ProfileSe
   }
 
   const handleSave = (data: Partial<ProfileCreate>) => {
-    console.log('[ProfileSettings.handleSave] Saving data:', data)
     onUpdate(data)
     setEditSection(null)
     reset()
@@ -699,7 +695,6 @@ function HealthSectionForm({ profile, onSave, isUpdating }: HealthSectionFormPro
       medical_conditions: selectedConditions,
       medications: selectedMedications,
     }
-    console.log('[HealthSectionForm] Submitting data:', data)
     onSave(data)
   }
 
@@ -847,7 +842,6 @@ function DietSectionForm({ profile, onSave, isUpdating }: DietSectionFormProps) 
       diet_type: selectedDietType,
       allergies: selectedAllergies,
     }
-    console.log('[DietSectionForm] Submitting data:', data)
     onSave(data)
   }
 
@@ -1656,3 +1650,5 @@ function SubscriptionSettings() {
     </div>
   )
 }
+
+export default SettingsPage

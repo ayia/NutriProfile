@@ -261,7 +261,20 @@ async def get_pricing():
     Retourne les plans tarifaires disponibles.
     Les features sont générées dynamiquement depuis TIER_LIMITS pour garantir la synchronisation.
     Utilise Lemon Squeezy comme payment gateway.
+
+    Note: Résultat caché (TTL 1 heure) car les prix changent rarement.
     """
+    from app.core.cache import get_cache, pricing_cache_key
+
+    # Check cache first
+    cache = get_cache()
+    cache_key = pricing_cache_key()
+    cached_response = await cache.get(cache_key)
+
+    if cached_response is not None:
+        return PricingResponse(**cached_response)
+
+    # Cache miss - generate pricing
     plans = [
         PricingPlan(
             tier=SubscriptionTier.FREE,
@@ -298,7 +311,12 @@ async def get_pricing():
         )
     ]
 
-    return PricingResponse(plans=plans, currency="EUR")
+    response = PricingResponse(plans=plans, currency="EUR")
+
+    # Store in cache (1 hour TTL)
+    await cache.set(cache_key, response.dict(), ttl=3600)
+
+    return response
 
 
 @router.post("/cancel")

@@ -98,8 +98,8 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
         meal_type: selectedMealType,
         save_to_log: false,
       })
-    } catch (error) {
-      console.error('Error compressing image:', error)
+    } catch {
+      // Image compression failed silently
     }
   }, [selectedMealType, analyzeMutation, t])
 

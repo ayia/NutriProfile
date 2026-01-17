@@ -105,8 +105,7 @@ export function EditFoodItemModalEnhanced({
       if (!result.found) {
         setManualMode(true)
       }
-    } catch (error) {
-      console.error('Nutrition search error:', error)
+    } catch {
       setManualMode(true) // Fallback vers manuel en cas d'erreur
     } finally {
       setIsSearching(false)

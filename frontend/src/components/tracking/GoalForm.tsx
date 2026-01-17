@@ -33,8 +33,8 @@ export function GoalForm({ onSuccess, onCancel }: GoalFormProps) {
       })
       onSuccess?.()
     },
-    onError: (error) => {
-      console.error('Goal creation error:', error)
+    onError: () => {
+      // Goal creation failed - error shown in UI
     },
   })
 

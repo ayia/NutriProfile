@@ -32,18 +32,13 @@ export function ActivityForm({ onSuccess, onCancel }: ActivityFormProps) {
       })
       onSuccess?.()
     },
-    onError: (error: any) => {
-      console.error('Activity creation error:', error)
-      if (error?.response?.status === 401) {
-        console.error('Token expiré ou invalide - veuillez vous reconnecter')
-      }
+    onError: () => {
+      // Error handled by UI
     },
   })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('ActivityForm handleSubmit called', formData)
-    console.log('Mutation state:', { isPending: createMutation.isPending, isError: createMutation.isError })
     createMutation.reset() // Reset previous error state
     createMutation.mutate(formData)
   }

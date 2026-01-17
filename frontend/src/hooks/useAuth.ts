@@ -44,8 +44,8 @@ export function useAuth() {
       if (userData.preferred_language !== frontendLang) {
         try {
           await userApi.updateMe({ preferred_language: frontendLang })
-        } catch (error) {
-          console.error('Failed to sync language preference:', error)
+        } catch {
+          // Language sync failed silently
         }
       }
 

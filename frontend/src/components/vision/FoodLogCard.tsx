@@ -30,8 +30,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       })
       toast.success(t('foodLog.deleted'))
     },
-    onError: (error) => {
-      console.error('Delete error:', error)
+    onError: () => {
       toast.error(t('foodLog.deleteError'))
     },
   })
@@ -50,8 +49,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       setEditingItem(null)
       toast.success(t('itemUpdated'))
     },
-    onError: (error) => {
-      console.error('Update item error:', error)
+    onError: () => {
       toast.error(t('updateError'))
     },
   })
@@ -68,8 +66,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       })
       toast.success(t('itemDeleted'))
     },
-    onError: (error) => {
-      console.error('Delete item error:', error)
+    onError: () => {
       toast.error(t('deleteError'))
     },
   })

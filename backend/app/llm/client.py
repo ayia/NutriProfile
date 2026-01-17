@@ -13,7 +13,7 @@ logger = structlog.get_logger()
 class HuggingFaceClient:
     """Client pour l'API Hugging Face Inference."""
 
-    BASE_URL = "https://router.huggingface.co/hf-inference/models"
+    BASE_URL = "https://api-inference.huggingface.co/models"
     TIMEOUT = 60.0
 
     def __init__(self, token: str | None = None):

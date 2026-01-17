@@ -30,8 +30,8 @@ export default function PricingPage() {
         setPlans(pricingData.plans)
         setCurrentTier(statusData.tier)
         setTierLimits(limitsData)
-      } catch (error) {
-        console.error('Failed to fetch pricing:', error)
+      } catch {
+        // Pricing fetch failed silently
       } finally {
         setLoading(false)
       }

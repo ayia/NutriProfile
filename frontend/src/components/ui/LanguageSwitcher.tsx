@@ -39,8 +39,8 @@ export function LanguageSwitcher({ variant = 'dropdown', className = '' }: Langu
         })
         // Invalidate dashboard cache to refresh coach text with new language
         queryClient.invalidateQueries({ queryKey: ['dashboard'] })
-      } catch (error) {
-        console.error('Failed to update language preference:', error)
+      } catch {
+        // Language preference update failed silently
       }
     }
   }

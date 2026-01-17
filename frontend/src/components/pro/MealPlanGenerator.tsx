@@ -34,8 +34,8 @@ export function MealPlanGenerator({ isPro, onUpgradeClick }: MealPlanGeneratorPr
     try {
       const result = await mealPlansApi.generate(config)
       setMealPlan(result)
-    } catch (error) {
-      console.error('Generation error:', error)
+    } catch {
+      // Meal plan generation failed silently
     } finally {
       setLoading(false)
     }

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { OnboardingWizard } from '@/components/onboarding/OnboardingWizard'
 import { Leaf } from '@/lib/icons'
 
-export function OnboardingPage() {
+function OnboardingPage() {
   const { t } = useTranslation('onboarding')
 
   return (
@@ -34,3 +34,5 @@ export function OnboardingPage() {
     </div>
   )
 }
+
+export default OnboardingPage

@@ -1,0 +1,271 @@
+{
+  "Name": "NutriProfile_Full_Test",
+  "CreationDate": "2026-01-17",
+  "Commands": [
+    {
+      "Command": "store",
+      "Target": "http://localhost:5173",
+      "Value": "baseUrl"
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TEST 1: PAGE D'ACCUEIL ===",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "${baseUrl}",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "3000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "01_homepage",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "Homepage loaded - check screenshot",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TEST 2: PAGE INSCRIPTION ===",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "${baseUrl}/register",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "2000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "02_register_page",
+      "Value": ""
+    },
+    {
+      "Command": "store",
+      "Target": "test_uivision123@example.com",
+      "Value": "testEmail"
+    },
+    {
+      "Command": "type",
+      "Target": "css=input[type='email'], input[name='email'], input#email, input[placeholder*='mail'], input[placeholder*='Email']",
+      "Value": "${testEmail}"
+    },
+    {
+      "Command": "type",
+      "Target": "css=input[type='password'], input[name='password'], input#password",
+      "Value": "TestPassword123!"
+    },
+    {
+      "Command": "type",
+      "Target": "css=input[name='name'], input#name, input[placeholder*='nom'], input[placeholder*='Name'], input[placeholder*='Nom']",
+      "Value": "Test UIVision"
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "03_register_filled",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "css=button[type='submit'], form button",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "5000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "04_after_register",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TEST 3: PAGE LOGIN ===",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "${baseUrl}/login",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "2000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "05_login_page",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "css=input[type='email'], input[name='email'], input#email",
+      "Value": "${testEmail}"
+    },
+    {
+      "Command": "type",
+      "Target": "css=input[type='password'], input[name='password'], input#password",
+      "Value": "TestPassword123!"
+    },
+    {
+      "Command": "click",
+      "Target": "css=button[type='submit'], form button",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "5000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "06_after_login",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TEST 4: DASHBOARD ===",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "${baseUrl}/dashboard",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "3000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "07_dashboard",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TEST 5: PAGE VISION ===",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "${baseUrl}/vision",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "3000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "08_vision_page",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TEST 6: PAGE RECETTES ===",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "${baseUrl}/recipes",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "3000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "09_recipes_page",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TEST 7: PAGE TRACKING ===",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "${baseUrl}/tracking",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "3000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "10_tracking_page",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TEST 8: PAGE SETTINGS ===",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "${baseUrl}/settings",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "3000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "11_settings_page",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TEST 9: PAGE PRICING ===",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "${baseUrl}/pricing",
+      "Value": ""
+    },
+    {
+      "Command": "pause",
+      "Target": "3000",
+      "Value": ""
+    },
+    {
+      "Command": "captureScreenshot",
+      "Target": "12_pricing_page",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "=== TESTS TERMINES ===",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "Verifie les screenshots pour voir les resultats",
+      "Value": ""
+    }
+  ]
+}

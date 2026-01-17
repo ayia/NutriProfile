@@ -1,6 +1,7 @@
 from datetime import datetime, date, timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.rate_limiter import limiter, VISION_LIMIT
 from sqlalchemy import select, and_
 from sqlalchemy.orm import selectinload
 
@@ -33,8 +34,10 @@ router = APIRouter()
 
 
 @router.post("/analyze", response_model=ImageAnalyzeResponse)
+@limiter.limit(VISION_LIMIT)
 async def analyze_image(
-    request: ImageAnalyzeRequest,
+    request: Request,
+    body: ImageAnalyzeRequest,
     current_user: User = Depends(get_current_user),
 ):
     """
@@ -66,8 +69,8 @@ async def analyze_image(
     agent = get_vision_agent(language=current_user.preferred_language)
 
     vision_input = VisionInput(
-        image_base64=request.image_base64,
-        context=request.meal_type,
+        image_base64=body.image_base64,
+        context=body.meal_type,
     )
 
     try:
@@ -259,12 +262,12 @@ async def analyze_image(
         food_log_id = None
 
         # Sauvegarder si demandé (par défaut: True)
-        if request.save_to_log:
+        if body.save_to_log:
             # Protection anti-doublons: vérifier si un repas similaire existe dans les 5 dernières minutes
             five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
             duplicate_check = select(FoodLog).where(and_(
                 FoodLog.user_id == current_user.id,
-                FoodLog.meal_type == request.meal_type,
+                FoodLog.meal_type == body.meal_type,
                 FoodLog.total_calories == total_calories,
                 FoodLog.created_at >= five_minutes_ago,
             ))
@@ -277,7 +280,7 @@ async def analyze_image(
             else:
                 food_log = FoodLog(
                     user_id=current_user.id,
-                    meal_type=request.meal_type,
+                    meal_type=body.meal_type,
                     meal_date=datetime.utcnow(),
                     description=analysis.description,
                     image_analyzed=True,
@@ -317,7 +320,7 @@ async def analyze_image(
     # Créer un objet FoodAnalysis pour le calcul du rapport
     analysis_for_report = FoodAnalysis(
         items=validated_items,
-        meal_type=analysis.meal_type or request.meal_type,
+        meal_type=analysis.meal_type or body.meal_type,
         total_calories=total_calories,
         total_protein=total_protein,
         total_carbs=total_carbs,
@@ -369,7 +372,7 @@ async def analyze_image(
     return ImageAnalyzeResponse(
         success=True,
         description=analysis.description,
-        meal_type=analysis.meal_type or request.meal_type,
+        meal_type=analysis.meal_type or body.meal_type,
         items=detected_items,
         total_calories=total_calories,
         total_protein=round(total_protein, 1),
@@ -384,7 +387,7 @@ async def analyze_image(
 
 @router.post("/logs/save", response_model=FoodLogResponse)
 async def save_analysis(
-    request: AnalysisSaveRequest,
+    body: AnalysisSaveRequest,
     current_user: User = Depends(get_current_user),
 ):
     """
@@ -400,8 +403,8 @@ async def save_analysis(
         five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
         duplicate_check = select(FoodLog).where(and_(
             FoodLog.user_id == current_user.id,
-            FoodLog.meal_type == request.meal_type,
-            FoodLog.total_calories == request.total_calories,
+            FoodLog.meal_type == body.meal_type,
+            FoodLog.total_calories == body.total_calories,
             FoodLog.created_at >= five_minutes_ago,
         ))
         duplicate_result = await db.execute(duplicate_check)
@@ -420,23 +423,23 @@ async def save_analysis(
         # Créer le food log
         food_log = FoodLog(
             user_id=current_user.id,
-            meal_type=request.meal_type,
+            meal_type=body.meal_type,
             meal_date=datetime.utcnow(),
-            description=request.description,
+            description=body.description,
             image_analyzed=True,
-            detected_items=[item.model_dump() for item in request.items],
-            confidence_score=request.confidence,
-            model_used=request.model_used,
-            total_calories=request.total_calories,
-            total_protein=request.total_protein,
-            total_carbs=request.total_carbs,
-            total_fat=request.total_fat,
+            detected_items=[item.model_dump() for item in body.items],
+            confidence_score=body.confidence,
+            model_used=body.model_used,
+            total_calories=body.total_calories,
+            total_protein=body.total_protein,
+            total_carbs=body.total_carbs,
+            total_fat=body.total_fat,
         )
         db.add(food_log)
         await db.flush()
 
         # Créer les items individuels
-        for item in request.items:
+        for item in body.items:
             food_item = FoodItemModel(
                 food_log_id=food_log.id,
                 name=item.name,

@@ -377,6 +377,13 @@ NUTRITION_REFERENCE = {
     "yaourt": {"calories": 59, "protein": 10, "carbs": 3.6, "fat": 0.7, "unit": "100g"},
     "fromage": {"calories": 402, "protein": 25, "carbs": 1.3, "fat": 33, "unit": "100g"},
     "lait": {"calories": 42, "protein": 3.4, "carbs": 5, "fat": 1, "unit": "100ml"},
+
+    # Légumineuses
+    "pois chiches": {"calories": 164, "protein": 8.9, "carbs": 27.2, "fat": 2.6, "unit": "100g"},
+    "lentilles": {"calories": 116, "protein": 9, "carbs": 20, "fat": 0.4, "unit": "100g"},
+    "haricots": {"calories": 127, "protein": 8.7, "carbs": 23, "fat": 0.5, "unit": "100g"},
+    "haricots rouges": {"calories": 127, "protein": 8.7, "carbs": 23, "fat": 0.5, "unit": "100g"},
+    "haricots blancs": {"calories": 114, "protein": 8.3, "carbs": 21, "fat": 0.5, "unit": "100g"},
 }
 
 
@@ -387,24 +394,40 @@ def validate_nutrition(item: FoodItem) -> FoodItem:
     # Chercher une correspondance dans la référence
     for ref_name, ref_values in NUTRITION_REFERENCE.items():
         if ref_name in name_lower:
-            # Vérifier si les valeurs sont plausibles (tolérance de 50%)
-            if item.calories > ref_values["calories"] * 3:
-                # Valeur aberrante, utiliser la référence
-                try:
-                    qty = float(item.quantity)
-                    factor = qty / 100 if item.unit == "g" else 1
-                except ValueError:
-                    factor = 1
+            # Calculer le facteur de portion
+            try:
+                qty = float(item.quantity)
+                factor = qty / 100 if item.unit == "g" else 1
+            except ValueError:
+                factor = 1
 
+            # Valeurs attendues pour cette quantité
+            expected_calories = ref_values["calories"] * factor
+            expected_protein = ref_values["protein"] * factor
+            expected_carbs = ref_values["carbs"] * factor
+            expected_fat = ref_values["fat"] * factor
+
+            # Vérifier si les valeurs sont aberrantes (trop hautes OU trop basses)
+            # Tolérance: valeurs doivent être entre 0.3x et 3x les valeurs de référence
+            calories_ratio = item.calories / expected_calories if expected_calories > 0 else 1
+            protein_ratio = item.protein / expected_protein if expected_protein > 0 else 1
+
+            is_aberrant = (
+                calories_ratio < 0.3 or calories_ratio > 3 or
+                protein_ratio < 0.3 or protein_ratio > 3
+            )
+
+            if is_aberrant:
+                # Valeurs aberrantes détectées, utiliser la référence
                 return FoodItem(
                     name=item.name,
                     quantity=item.quantity,
                     unit=item.unit,
-                    calories=int(ref_values["calories"] * factor),
-                    protein=ref_values["protein"] * factor,
-                    carbs=ref_values["carbs"] * factor,
-                    fat=ref_values["fat"] * factor,
-                    confidence=item.confidence * 0.8,  # Réduire la confiance
+                    calories=int(expected_calories),
+                    protein=round(expected_protein, 1),
+                    carbs=round(expected_carbs, 1),
+                    fat=round(expected_fat, 1),
+                    confidence=item.confidence * 0.8,  # Réduire la confiance car corrigé
                 )
             break
 

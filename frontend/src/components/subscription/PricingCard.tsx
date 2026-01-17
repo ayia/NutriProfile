@@ -126,24 +126,19 @@ export function PricingCard({ plan, isYearly, currentTier, limits }: PricingCard
 
   const handleSubscribe = async () => {
     if (isFree || isCurrentPlan || !variantId) {
-      console.log('Subscribe blocked:', { isFree, isCurrentPlan, variantId })
       return
     }
 
     setLoading(true)
     try {
-      console.log('Creating checkout for variant:', variantId)
       const response = await subscriptionApi.createCheckout(variantId)
-      console.log('Checkout response:', response)
 
       if (response?.checkout_url) {
         window.location.href = response.checkout_url
       } else {
-        console.error('No checkout_url in response')
         alert(t('checkoutError', 'Payment service unavailable. Please try again.'))
       }
-    } catch (error) {
-      console.error('Checkout error:', error)
+    } catch {
       alert(t('checkoutError', 'Payment service unavailable. Please try again.'))
     } finally {
       setLoading(false)

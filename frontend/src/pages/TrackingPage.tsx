@@ -89,19 +89,6 @@ export function TrackingPage() {
     enabled: canFetch,
   })
 
-  // Debug: log query state
-  useEffect(() => {
-    console.log('summaryQuery state:', {
-      status: summaryQuery.status,
-      isLoading: summaryQuery.isLoading,
-      isFetching: summaryQuery.isFetching,
-      isError: summaryQuery.isError,
-      isSuccess: summaryQuery.isSuccess,
-      data: summaryQuery.data,
-      error: summaryQuery.error,
-    })
-  }, [summaryQuery.status, summaryQuery.data, summaryQuery.error])
-
   const progressQuery = useQuery({
     queryKey: ['tracking', 'progress', chartPeriod],
     queryFn: () => trackingApi.getProgressData(chartPeriod),

@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.subscription import Subscription, UsageTracking, SubscriptionTier, SubscriptionStatus
 from app.models.user import User
 from app.config import get_settings
+from app.core.cache import get_cache, tier_cache_key, pricing_cache_key, invalidate_user_tier_cache
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -109,29 +110,60 @@ class SubscriptionService:
         1. Subscription payée active (premium/pro) → tier de la subscription
         2. Trial actif (trial_ends_at > now) → "premium"
         3. Sinon → "free"
+
+        Note: Utilise le cache Redis (TTL 5 minutes) pour optimiser les requêtes fréquentes.
         """
+        # Check cache first
+        cache = get_cache()
+        cache_key = tier_cache_key(user_id)
+        cached_tier = await cache.get(cache_key)
+        if cached_tier is not None:
+            return cached_tier
+
+        # Cache miss - fetch from database
         user = await self.db.get(User, user_id)
         if not user:
-            return "free"
+            tier = "free"
+        else:
+            # 1. Vérifier subscription payée active
+            subscription = await self.get_subscription(user_id)
+            if subscription and subscription.status == SubscriptionStatus.ACTIVE:
+                if subscription.tier in [SubscriptionTier.PREMIUM, SubscriptionTier.PRO]:
+                    tier = subscription.tier.value
+                else:
+                    # 2. Vérifier trial actif
+                    if user.trial_ends_at:
+                        now = datetime.now(timezone.utc)
+                        # S'assurer que trial_ends_at est timezone-aware (SQLite stocke sans TZ)
+                        trial_ends = user.trial_ends_at
+                        if trial_ends.tzinfo is None:
+                            trial_ends = trial_ends.replace(tzinfo=timezone.utc)
+                        if now < trial_ends:
+                            tier = "premium"
+                        else:
+                            tier = user.subscription_tier or "free"
+                    else:
+                        tier = user.subscription_tier or "free"
+            else:
+                # 2. Vérifier trial actif
+                if user.trial_ends_at:
+                    now = datetime.now(timezone.utc)
+                    # S'assurer que trial_ends_at est timezone-aware (SQLite stocke sans TZ)
+                    trial_ends = user.trial_ends_at
+                    if trial_ends.tzinfo is None:
+                        trial_ends = trial_ends.replace(tzinfo=timezone.utc)
+                    if now < trial_ends:
+                        tier = "premium"
+                    else:
+                        # 3. Défaut: subscription_tier ou free
+                        tier = user.subscription_tier or "free"
+                else:
+                    # 3. Défaut: subscription_tier ou free
+                    tier = user.subscription_tier or "free"
 
-        # 1. Vérifier subscription payée active
-        subscription = await self.get_subscription(user_id)
-        if subscription and subscription.status == SubscriptionStatus.ACTIVE:
-            if subscription.tier in [SubscriptionTier.PREMIUM, SubscriptionTier.PRO]:
-                return subscription.tier.value
-
-        # 2. Vérifier trial actif
-        if user.trial_ends_at:
-            now = datetime.now(timezone.utc)
-            # S'assurer que trial_ends_at est timezone-aware (SQLite stocke sans TZ)
-            trial_ends = user.trial_ends_at
-            if trial_ends.tzinfo is None:
-                trial_ends = trial_ends.replace(tzinfo=timezone.utc)
-            if now < trial_ends:
-                return "premium"
-
-        # 3. Défaut: subscription_tier ou free
-        return user.subscription_tier or "free"
+        # Store in cache (5 minutes TTL)
+        await cache.set(cache_key, tier, ttl=300)
+        return tier
 
     async def is_trial_active(self, user_id: int) -> bool:
         """Vérifie si l'utilisateur est en période trial."""
@@ -376,6 +408,10 @@ class SubscriptionService:
 
         await self.db.flush()
         await self.db.refresh(subscription)
+
+        # Invalidate tier cache
+        await invalidate_user_tier_cache(user_id)
+
         return subscription
 
     async def cancel_subscription(self, user_id: int, at_period_end: bool = True) -> Subscription | None:
@@ -396,6 +432,10 @@ class SubscriptionService:
 
         await self.db.flush()
         await self.db.refresh(subscription)
+
+        # Invalidate tier cache
+        await invalidate_user_tier_cache(user_id)
+
         return subscription
 
     # ============== Lemon Squeezy Integration ==============

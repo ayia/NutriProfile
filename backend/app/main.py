@@ -10,6 +10,7 @@ import structlog
 
 from app.config import get_settings
 from app.api.v1 import api_router
+from app.core.rate_limiter import setup_rate_limiting
 
 # Forcer le rechargement des settings à chaque démarrage
 get_settings.cache_clear()
@@ -85,6 +86,9 @@ app.add_middleware(
 
 # Middleware de sécurité (ajouté après CORS)
 app.add_middleware(SecurityHeadersMiddleware)
+
+# Rate limiting
+setup_rate_limiting(app)
 
 # Routes
 app.include_router(api_router)

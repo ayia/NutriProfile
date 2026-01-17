@@ -3,8 +3,9 @@ from datetime import datetime, timedelta, timezone
 from app.services.subscription import TRIAL_DURATION_DAYS
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from app.core.rate_limiter import limiter, AUTH_LIMIT
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy import select
@@ -115,7 +116,10 @@ def create_tokens(email: str) -> Token:
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@limiter.limit(AUTH_LIMIT)
 async def register(
+    request: Request,
+    response: Response,
     user_data: UserCreate,
 ) -> UserResponse:
     """Créer un nouveau compte utilisateur."""
@@ -145,7 +149,10 @@ async def register(
 
 
 @router.post("/login", response_model=Token)
+@limiter.limit(AUTH_LIMIT)
 async def login(
+    request: Request,
+    response: Response,
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
     """Authentifier et obtenir les tokens JWT."""
