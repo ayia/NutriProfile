@@ -37,8 +37,14 @@ export function RecipesPage() {
   const favoritesQuery = useQuery({
     queryKey: ['recipes', 'favorites'],
     queryFn: () => recipeApi.getFavorites(),
-    enabled: activeTab === 'favorites',
+    // Always fetch favorites to know which recipes are favorited in history tab
+    enabled: activeTab === 'favorites' || activeTab === 'history',
   })
+
+  // Create a Set of favorite recipe IDs for quick lookup in History tab
+  const favoriteRecipeIds = new Set(
+    favoritesQuery.data?.map((fav) => fav.recipe_id) ?? []
+  )
 
   // Scroll reveal animation
   useEffect(() => {
@@ -285,7 +291,7 @@ export function RecipesPage() {
                         </div>
                       )}
                     </div>
-                    <RecipeCard recipe={item.recipe} />
+                    <RecipeCard recipe={item.recipe} initialFavorite={favoriteRecipeIds.has(item.recipe_id)} />
                   </div>
                 ))}
               </div>
