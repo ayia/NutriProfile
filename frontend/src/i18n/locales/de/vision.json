@@ -113,10 +113,13 @@
     "showDetails": "Anzeigen",
     "hideDetails": "Verbergen",
     "edit": "Bearbeiten",
+    "addFood": "Hinzufügen",
     "deleteConfirm": "Diese Mahlzeit löschen?",
     "deleteError": "Fehler beim Löschen. Bitte versuchen Sie es erneut.",
     "deleted": "Mahlzeit erfolgreich gelöscht"
   },
+  "itemAdded": "Lebensmittel erfolgreich hinzugefügt",
+  "addError": "Fehler beim Hinzufügen. Bitte versuchen Sie es erneut.",
   "editFood": "Lebensmittel bearbeiten",
   "foodName": "Lebensmittelname",
   "foodNamePlaceholder": "Z.B. Nudeln, Hähnchen, Brokkoli...",
@@ -187,7 +190,8 @@
     "scanning": "Scannen...",
     "notFound": "Produkt nicht gefunden",
     "found": "Produkt gefunden",
-    "permission": "Kameraberechtigung erforderlich"
+    "permission": "Produkt-Barcode eingeben",
+    "invalidCode": "Ungültiger Barcode (8-13 Ziffern erforderlich)"
   },
   "errors": {
     "uploadFailed": "Hochladen fehlgeschlagen",

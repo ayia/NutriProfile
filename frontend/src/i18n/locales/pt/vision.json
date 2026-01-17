@@ -113,10 +113,13 @@
     "showDetails": "Mostrar",
     "hideDetails": "Ocultar",
     "edit": "Editar",
+    "addFood": "Adicionar",
     "deleteConfirm": "Excluir esta refeição?",
     "deleteError": "Erro ao excluir. Por favor tente novamente.",
     "deleted": "Refeição excluída com sucesso"
   },
+  "itemAdded": "Alimento adicionado com sucesso",
+  "addError": "Erro ao adicionar. Por favor tente novamente.",
   "editFood": "Editar alimento",
   "foodName": "Nome do alimento",
   "foodNamePlaceholder": "Ex: Massa, Frango, Brócolis...",
@@ -187,7 +190,8 @@
     "scanning": "Escaneando...",
     "notFound": "Produto não encontrado",
     "found": "Produto encontrado",
-    "permission": "Permissão de câmera necessária"
+    "permission": "Digite o código de barras do produto",
+    "invalidCode": "Código de barras inválido (8-13 dígitos necessários)"
   },
   "errors": {
     "uploadFailed": "Falha ao enviar",

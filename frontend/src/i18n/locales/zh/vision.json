@@ -113,10 +113,13 @@
     "showDetails": "显示",
     "hideDetails": "隐藏",
     "edit": "编辑",
+    "addFood": "添加",
     "deleteConfirm": "删除这餐？",
     "deleteError": "删除失败。请重试。",
     "deleted": "餐食已成功删除"
   },
+  "itemAdded": "食物添加成功",
+  "addError": "添加失败。请重试。",
   "editFood": "编辑食物",
   "foodName": "食物名称",
   "foodNamePlaceholder": "例如：意大利面、鸡肉、西兰花...",
@@ -187,7 +190,8 @@
     "scanning": "扫描中...",
     "notFound": "未找到产品",
     "found": "找到产品",
-    "permission": "需要相机权限"
+    "permission": "请输入产品条形码",
+    "invalidCode": "条形码无效（需要8-13位数字）"
   },
   "errors": {
     "uploadFailed": "上传失败",

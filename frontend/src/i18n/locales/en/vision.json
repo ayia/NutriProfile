@@ -118,10 +118,13 @@
     "showDetails": "Show",
     "hideDetails": "Hide",
     "edit": "Edit",
+    "addFood": "Add",
     "deleteConfirm": "Delete this meal?",
     "deleteError": "Error deleting. Please try again.",
     "deleted": "Meal deleted successfully"
   },
+  "itemAdded": "Food added successfully",
+  "addError": "Error adding food. Please try again.",
   "editFood": "Edit food",
   "foodName": "Food name",
   "foodNamePlaceholder": "E.g. Pasta, Chicken, Broccoli...",
@@ -192,7 +195,8 @@
     "scanning": "Scanning...",
     "notFound": "Product not found",
     "found": "Product found",
-    "permission": "Camera permission required"
+    "permission": "Enter the product barcode",
+    "invalidCode": "Invalid barcode (8-13 digits required)"
   },
   "photoTips": {
     "title": "Photo Tips",

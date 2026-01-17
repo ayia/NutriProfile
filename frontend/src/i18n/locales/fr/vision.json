@@ -118,10 +118,13 @@
     "showDetails": "Voir",
     "hideDetails": "Masquer",
     "edit": "Modifier",
+    "addFood": "Ajouter",
     "deleteConfirm": "Supprimer ce repas ?",
     "deleteError": "Erreur lors de la suppression. Veuillez réessayer.",
     "deleted": "Repas supprimé avec succès"
   },
+  "itemAdded": "Aliment ajouté avec succès",
+  "addError": "Erreur lors de l'ajout. Veuillez réessayer.",
   "editFood": "Modifier l'aliment",
   "foodName": "Nom de l'aliment",
   "foodNamePlaceholder": "Ex : Pâtes, Poulet, Brocoli...",
@@ -192,7 +195,8 @@
     "scanning": "Scan en cours...",
     "notFound": "Produit non trouvé",
     "found": "Produit trouvé",
-    "permission": "Permission caméra requise"
+    "permission": "Entrez le code-barres du produit",
+    "invalidCode": "Code-barres invalide (8-13 chiffres requis)"
   },
   "photoTips": {
     "title": "Conseils Photo",

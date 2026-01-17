@@ -113,10 +113,13 @@
     "showDetails": "Mostrar",
     "hideDetails": "Ocultar",
     "edit": "Editar",
+    "addFood": "Añadir",
     "deleteConfirm": "¿Eliminar esta comida?",
     "deleteError": "Error al eliminar. Por favor intenta de nuevo.",
     "deleted": "Comida eliminada con éxito"
   },
+  "itemAdded": "Alimento añadido con éxito",
+  "addError": "Error al añadir. Por favor intenta de nuevo.",
   "editFood": "Editar alimento",
   "foodName": "Nombre del alimento",
   "foodNamePlaceholder": "Ej. Pasta, Pollo, Brócoli...",
@@ -187,7 +190,8 @@
     "scanning": "Escaneando...",
     "notFound": "Producto no encontrado",
     "found": "Producto encontrado",
-    "permission": "Permiso de cámara requerido"
+    "permission": "Ingrese el código de barras del producto",
+    "invalidCode": "Código de barras inválido (se requieren 8-13 dígitos)"
   },
   "errors": {
     "uploadFailed": "Error al subir",

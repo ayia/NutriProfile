@@ -5,9 +5,24 @@ import { toast } from 'sonner'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import { invalidationGroups } from '@/lib/queryKeys'
-import type { FoodLog } from '@/types/foodLog'
-import { getMealTypeIcon, MEAL_TYPE_COLORS, Trash2, Edit } from '@/lib/icons'
-import { EditFoodItemModalEnhanced, type FoodItem, type FoodItemUpdate } from './EditFoodItemModalEnhanced'
+import type { FoodLog, FoodItemCreate, FoodItemUpdate } from '@/types/foodLog'
+import { getMealTypeIcon, MEAL_TYPE_COLORS, Trash2, Edit, Plus } from '@/lib/icons'
+import { EditFoodItemModalV2 } from './EditFoodItemModalV2'
+
+// Type for modal item (can be existing item or new item template)
+interface ModalFoodItem {
+  id?: number
+  name: string
+  quantity: string
+  unit: string
+  calories?: number | null
+  protein?: number | null
+  carbs?: number | null
+  fat?: number | null
+  fiber?: number | null
+  source?: 'ai' | 'manual' | 'database'
+  confidence?: number | null
+}
 
 interface FoodLogCardProps {
   log: FoodLog
@@ -17,7 +32,8 @@ interface FoodLogCardProps {
 export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
   const { t } = useTranslation('vision')
   const [showDetails, setShowDetails] = useState(false)
-  const [editingItem, setEditingItem] = useState<FoodItem | null>(null)
+  const [editingItem, setEditingItem] = useState<ModalFoodItem | null>(null)
+  const [isAddingNew, setIsAddingNew] = useState(false) // Track if we're adding a new item
   const queryClient = useQueryClient()
 
   // Delete entire log
@@ -47,10 +63,30 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
         queryClient.invalidateQueries({ queryKey: key })
       })
       setEditingItem(null)
+      setIsAddingNew(false)
       toast.success(t('itemUpdated'))
     },
     onError: () => {
       toast.error(t('updateError'))
+    },
+  })
+
+  // Add new food item to existing log
+  const addItemMutation = useMutation({
+    mutationFn: async (data: FoodItemCreate) => {
+      return await visionApi.addItem(log.id, data)
+    },
+    onSuccess: () => {
+      // Invalidate all related queries to refresh data
+      invalidationGroups.mealAnalysis.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key })
+      })
+      setEditingItem(null)
+      setIsAddingNew(false)
+      toast.success(t('itemAdded'))
+    },
+    onError: () => {
+      toast.error(t('addError'))
     },
   })
 
@@ -71,8 +107,9 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
     },
   })
 
-  // Open edit modal for an item
+  // Open edit modal for an existing item
   const handleEditItem = (item: FoodLog['items'][0]) => {
+    setIsAddingNew(false)
     setEditingItem({
       id: item.id,
       name: item.name,
@@ -88,9 +125,47 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
     })
   }
 
-  // Save edited item
+  // Open modal for adding a new item
+  const handleAddItem = () => {
+    setIsAddingNew(true)
+    setEditingItem({
+      name: '',
+      quantity: '100',
+      unit: 'g',
+      calories: null,
+      protein: null,
+      carbs: null,
+      fat: null,
+      fiber: null,
+      source: 'manual',
+    })
+  }
+
+  // Save item (either edit or add new)
   const handleSaveEdit = async (update: FoodItemUpdate) => {
-    await updateItemMutation.mutateAsync(update)
+    if (isAddingNew) {
+      // Add new item
+      const createData: FoodItemCreate = {
+        name: update.name || '',
+        quantity: update.quantity || '100',
+        unit: update.unit || 'g',
+        calories: update.calories,
+        protein: update.protein,
+        carbs: update.carbs,
+        fat: update.fat,
+        fiber: update.fiber,
+      }
+      await addItemMutation.mutateAsync(createData)
+    } else {
+      // Update existing item
+      await updateItemMutation.mutateAsync(update)
+    }
+  }
+
+  // Close modal
+  const handleCloseModal = () => {
+    setEditingItem(null)
+    setIsAddingNew(false)
   }
 
   // Delete item with confirmation
@@ -179,9 +254,20 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       </div>
 
       {/* Details (collapsible) */}
-      {showDetails && log.items.length > 0 && (
+      {showDetails && (
         <div className="border-t p-4 space-y-2">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">{t('foodLog.foods')}</h4>
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-sm font-medium text-gray-700">{t('foodLog.foods')}</h4>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleAddItem}
+              className="h-7 px-2 text-primary-600 hover:text-primary-700 hover:bg-primary-50"
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              {t('foodLog.addFood')}
+            </Button>
+          </div>
           {log.items.map((item) => (
             <div
               key={item.id}
@@ -256,11 +342,11 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       </div>
 
       {/* Edit Food Item Modal */}
-      <EditFoodItemModalEnhanced
+      <EditFoodItemModalV2
         item={editingItem}
-        onClose={() => setEditingItem(null)}
+        onClose={handleCloseModal}
         onSave={handleSaveEdit}
-        isLoading={updateItemMutation.isPending}
+        isLoading={isAddingNew ? addItemMutation.isPending : updateItemMutation.isPending}
       />
     </div>
   )
