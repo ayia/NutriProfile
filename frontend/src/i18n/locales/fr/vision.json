@@ -245,6 +245,8 @@
     "carbs": "Glucides",
     "fat": "Lipides",
     "fiber": "Fibres",
-    "foodNotFound": "Aliment non trouvé dans la base de données. Entrez les valeurs manuellement."
+    "foodNotFound": "Aliment non trouvé dans la base de données. Entrez les valeurs manuellement.",
+    "decreaseQuantity": "Diminuer la quantité",
+    "increaseQuantity": "Augmenter la quantité"
   }
 }

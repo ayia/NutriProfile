@@ -253,6 +253,8 @@
     "carbs": "Carbohidratos",
     "fat": "Grasa",
     "fiber": "Fibra",
-    "foodNotFound": "Alimento no encontrado en la base de datos. Ingrese los valores manualmente."
+    "foodNotFound": "Alimento no encontrado en la base de datos. Ingrese los valores manualmente.",
+    "decreaseQuantity": "Disminuir cantidad",
+    "increaseQuantity": "Aumentar cantidad"
   }
 }

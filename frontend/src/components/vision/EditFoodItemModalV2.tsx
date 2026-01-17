@@ -418,7 +418,7 @@ export function EditFoodItemModalV2({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-[600px] max-h-[90vh] bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden animate-fade-in-up flex flex-col">
+      <div className="relative w-full max-w-[calc(100vw-24px)] sm:max-w-[600px] max-h-[90vh] bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 shrink-0">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -428,19 +428,20 @@ export function EditFoodItemModalV2({
             {formData.name && (
               <button
                 onClick={() => handleToggleFavorite(formData.name || '')}
-                className={`p-2 rounded-lg transition-colors ${
+                className={`p-2 rounded-xl transition-all ${
                   isFavorite
                     ? 'text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
                     : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
                 title={isFavorite ? t('favorites.remove') : t('favorites.add')}
+                aria-label={isFavorite ? t('favorites.remove') : t('favorites.add')}
               >
                 <Star className={`h-5 w-5 ${isFavorite ? 'fill-current' : ''}`} />
               </button>
             )}
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
               aria-label="Close"
             >
               <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -462,7 +463,7 @@ export function EditFoodItemModalV2({
                   <button
                     key={food}
                     onClick={() => selectFood(food)}
-                    className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-primary-100 dark:hover:bg-primary-900/30 text-gray-700 dark:text-gray-200 rounded-full transition-colors"
+                    className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-full transition-all hover:shadow-sm"
                   >
                     {food}
                   </button>
@@ -473,7 +474,7 @@ export function EditFoodItemModalV2({
 
           {/* Barcode Scanner Input */}
           {showBarcodeInput && (
-            <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg space-y-2">
+            <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 space-y-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                 {t('barcode.scan')}
               </label>
@@ -557,7 +558,7 @@ export function EditFoodItemModalV2({
 
             {/* Autocomplete Dropdown */}
             {showAutocomplete && autocompleteResults.length > 0 && (
-              <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+              <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl shadow-lg max-h-48 overflow-y-auto">
                 {autocompleteResults.map(food => {
                   const entry = EXTENDED_NUTRITION_REFERENCE[food]
                   return (
@@ -585,13 +586,16 @@ export function EditFoodItemModalV2({
 
             {/* Quick +/- Buttons and Input */}
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => adjustQuantity(-10)}
                 disabled={isLoading}
-                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 transition-colors"
+                className="p-2 h-10 w-10"
+                aria-label={t('edit.decreaseQuantity')}
               >
-                <Minus className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-              </button>
+                <Minus className="h-5 w-5" />
+              </Button>
 
               <Input
                 type="number"
@@ -603,19 +607,22 @@ export function EditFoodItemModalV2({
                 className="flex-1 text-center text-lg font-medium"
               />
 
-              <button
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => adjustQuantity(10)}
                 disabled={isLoading}
-                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 transition-colors"
+                className="p-2 h-10 w-10"
+                aria-label={t('edit.increaseQuantity')}
               >
-                <Plus className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-              </button>
+                <Plus className="h-5 w-5" />
+              </Button>
 
               <select
                 value={formData.unit}
                 onChange={e => setFormData(prev => ({ ...prev, unit: e.target.value }))}
                 disabled={isLoading}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-primary-500 focus:ring-primary-500 focus:outline-none focus:ring-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {UNITS.map(unit => (
                   <option key={unit.value} value={unit.value}>
@@ -632,7 +639,7 @@ export function EditFoodItemModalV2({
                   key={amount}
                   onClick={() => adjustQuantity(amount)}
                   disabled={isLoading}
-                  className="px-3 py-1.5 text-sm bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full hover:bg-primary-100 dark:hover:bg-primary-900/50 transition-colors disabled:opacity-50"
+                  className="px-3 py-1.5 text-sm bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full hover:bg-primary-100 dark:hover:bg-primary-900/50 transition-all hover:-translate-y-0.5 disabled:opacity-50"
                 >
                   +{amount}g
                 </button>
@@ -652,16 +659,16 @@ export function EditFoodItemModalV2({
               </button>
 
               {showPortionPresets && (
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {portionPresets.map(preset => (
                     <button
                       key={preset.size}
                       onClick={() => selectPortionPreset(preset)}
                       disabled={isLoading}
-                      className={`p-3 rounded-lg border text-left transition-all ${
+                      className={`p-3 rounded-xl border text-left transition-all ${
                         formData.quantity === preset.grams.toString() && formData.unit === 'g'
-                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30'
-                          : 'border-gray-200 dark:border-gray-600 hover:border-primary-300 dark:hover:border-primary-700'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 ring-2 ring-primary-200 dark:ring-primary-700'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md'
                       }`}
                     >
                       <div className="font-medium text-gray-900 dark:text-white capitalize">
@@ -682,8 +689,8 @@ export function EditFoodItemModalV2({
 
           {/* Visual Guide */}
           {visualGuide && (
-            <div className="flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
+              <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
               <p className="text-sm text-blue-800 dark:text-blue-200">
                 {visualGuide}
               </p>
@@ -702,17 +709,17 @@ export function EditFoodItemModalV2({
           {displayedNutrition && !manualMode && (
             <div className="flex items-center gap-2">
               {nutritionSource === 'local' ? (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-medium rounded-full">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-medium rounded-lg">
                   <Database className="h-3 w-3" />
                   {t('edit.source.local')}
                 </span>
               ) : nutritionSource === 'usda' ? (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium rounded-full">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium rounded-lg">
                   <Database className="h-3 w-3" />
                   USDA
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs font-medium rounded-full">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs font-medium rounded-lg">
                   <Sparkles className="h-3 w-3" />
                   {t('edit.source.ai')}
                 </span>
@@ -722,7 +729,7 @@ export function EditFoodItemModalV2({
 
           {/* Manual Mode Toggle */}
           {(displayedNutrition || searchResult) && (
-            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
               <div className="flex items-center gap-2">
                 <Edit3 className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                 <span className="text-sm text-gray-700 dark:text-gray-200">
@@ -759,7 +766,7 @@ export function EditFoodItemModalV2({
 
           {/* Nutrition Values */}
           {displayedNutrition && (
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 space-y-3">
+            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 space-y-3">
               <h4 className="font-medium text-sm text-gray-700 dark:text-gray-200 flex items-center gap-2">
                 {manualMode ? (
                   <>
@@ -910,7 +917,7 @@ export function EditFoodItemModalV2({
 
           {/* Not Found Message */}
           {!localNutrition && searchResult && !searchResult.found && !isSearching && !manualMode && (
-            <div className="p-3 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
+            <div className="p-3 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-xl">
               <p className="text-sm text-orange-800 dark:text-orange-200">
                 {t('edit.foodNotFound')}
               </p>

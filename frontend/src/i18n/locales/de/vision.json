@@ -253,6 +253,8 @@
     "carbs": "Kohlenhydrate",
     "fat": "Fett",
     "fiber": "Ballaststoffe",
-    "foodNotFound": "Lebensmittel nicht in der Datenbank gefunden. Bitte Werte manuell eingeben."
+    "foodNotFound": "Lebensmittel nicht in der Datenbank gefunden. Bitte Werte manuell eingeben.",
+    "decreaseQuantity": "Menge verringern",
+    "increaseQuantity": "Menge erhöhen"
   }
 }

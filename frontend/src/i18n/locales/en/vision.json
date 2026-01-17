@@ -245,6 +245,8 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "fiber": "Fiber",
-    "foodNotFound": "Food not found in database. Enter values manually."
+    "foodNotFound": "Food not found in database. Enter values manually.",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity"
   }
 }
