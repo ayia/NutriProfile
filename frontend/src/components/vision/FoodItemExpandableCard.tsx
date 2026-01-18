@@ -57,8 +57,8 @@ import {
 import { searchNutrition } from '@/services/nutritionApi'
 import type { DetectedItem, FoodItemUpdate } from '@/types/foodLog'
 
-// Constante pour le debounce (optimisé de 500ms à 300ms)
-const API_DEBOUNCE_MS = 300
+// REMOVED: Automatic debounce - Now using explicit search button
+// const API_DEBOUNCE_MS = 300
 
 interface FoodItemExpandableCardProps {
   item: DetectedItem
@@ -125,6 +125,8 @@ export function FoodItemExpandableCard({
   // API search state
   const [isSearching, setIsSearching] = useState(false)
   const [nutritionSource, setNutritionSource] = useState<'local' | 'usda' | 'llm' | 'manual'>('local')
+  const [hasSearched, setHasSearched] = useState(false)
+  const [searchResultFound, setSearchResultFound] = useState<boolean | null>(null)
 
   // Scroll to card when expanded
   useEffect(() => {
@@ -158,72 +160,87 @@ export function FoodItemExpandableCard({
     setNutritionSource('local')
   }, [item])
 
-  // Debounced API search when food name changes and not found locally
-  // Phase 1 Optimization: 300ms debounce + automatic not_found handling
-  useEffect(() => {
-    const timer = setTimeout(async () => {
-      // Skip if:
-      // - Name too short
-      // - Manual mode active
-      // - Already found in local database
-      if (
-        formData.name.length < 2 ||
-        manualMode ||
-        EXTENDED_NUTRITION_REFERENCE[formData.name.toLowerCase()]
-      ) {
-        return
-      }
+  // Manual search function - triggered by button click or Enter key
+  const handleSearchClick = async () => {
+    // Validation
+    if (!formData.name || formData.name.length < 2) {
+      toast.error(t('edit.enterFoodName'))
+      return
+    }
 
-      // Search API backend (uses LRU cache internally for 0ms repeated lookups)
-      setIsSearching(true)
-      try {
-        const result = await searchNutrition({
-          food_name: formData.name,
-          quantity_g: parseFloat(formData.quantity) || 100,
-          language: i18n.language,
-        })
+    // Check local database first
+    const localNutrition = getNutrition(formData.name, parseFloat(formData.quantity) || 100, formData.unit)
+    if (localNutrition) {
+      setFormData(prev => ({
+        ...prev,
+        calories: Math.round(localNutrition.calories),
+        protein: Math.round(localNutrition.protein * 10) / 10,
+        carbs: Math.round(localNutrition.carbs * 10) / 10,
+        fat: Math.round(localNutrition.fat * 10) / 10,
+        fiber: Math.round(localNutrition.fiber * 10) / 10,
+      }))
+      setNutritionSource('local')
+      setHasSearched(true)
+      setSearchResultFound(true)
+      return
+    }
 
-        if (result.found) {
-          // Success: update nutrition values
-          setFormData(prev => ({
-            ...prev,
-            calories: Math.round(result.calories),
-            protein: Math.round(result.protein * 10) / 10,
-            carbs: Math.round(result.carbs * 10) / 10,
-            fat: Math.round(result.fat * 10) / 10,
-            fiber: Math.round(result.fiber * 10) / 10,
-          }))
-          setNutritionSource(result.source === 'llm' ? 'llm' : 'usda')
-        } else {
-          // NOT FOUND: Auto-enable manual mode for better UX
-          // This prevents user frustration when food isn't recognized
-          setManualMode(true)
-          setManualNutrition({
-            calories: formData.calories || 100,
-            protein: formData.protein || 5,
-            carbs: formData.carbs || 15,
-            fat: formData.fat || 3,
-            fiber: formData.fiber || 2,
-          })
-          setNutritionSource('manual')
-          // Show helpful toast
-          toast.info(t('edit.foodNotFound'), {
-            duration: 4000,
-            icon: <Info className="w-4 h-4" />,
-          })
-        }
-      } catch (error) {
-        console.error('Nutrition search error:', error)
-        // On API error, don't block the user - enable manual mode
+    // Search API backend (uses LRU cache internally for 0ms repeated lookups)
+    setIsSearching(true)
+    setHasSearched(true)
+    try {
+      const result = await searchNutrition({
+        food_name: formData.name,
+        quantity_g: parseFloat(formData.quantity) || 100,
+        language: i18n.language,
+      })
+
+      if (result.found) {
+        // Success: update nutrition values
+        setFormData(prev => ({
+          ...prev,
+          calories: Math.round(result.calories),
+          protein: Math.round(result.protein * 10) / 10,
+          carbs: Math.round(result.carbs * 10) / 10,
+          fat: Math.round(result.fat * 10) / 10,
+          fiber: Math.round(result.fiber * 10) / 10,
+        }))
+        setNutritionSource(result.source === 'llm' ? 'llm' : 'usda')
+        setSearchResultFound(true)
+      } else {
+        // NOT FOUND: Auto-enable manual mode for better UX
         setManualMode(true)
+        setManualNutrition({
+          calories: formData.calories || 100,
+          protein: formData.protein || 5,
+          carbs: formData.carbs || 15,
+          fat: formData.fat || 3,
+          fiber: formData.fiber || 2,
+        })
         setNutritionSource('manual')
-      } finally {
-        setIsSearching(false)
+        setSearchResultFound(false)
+        // Show helpful toast
+        toast.info(t('edit.foodNotFound'), {
+          duration: 4000,
+          icon: <Info className="w-4 h-4" />,
+        })
       }
-    }, API_DEBOUNCE_MS) // Optimized: 300ms (was 500ms)
+    } catch (error) {
+      console.error('Nutrition search error:', error)
+      // On API error, don't block the user - enable manual mode
+      setManualMode(true)
+      setNutritionSource('manual')
+      setSearchResultFound(false)
+    } finally {
+      setIsSearching(false)
+    }
+  }
 
-    return () => clearTimeout(timer)
-  }, [formData.name, formData.quantity, manualMode, i18n.language, t])
+  // Reset search state when food name changes
+  useEffect(() => {
+    setHasSearched(false)
+    setSearchResultFound(null)
+  }, [formData.name])
 
   // Search foods for autocomplete
   const handleNameChange = (value: string) => {
@@ -475,60 +492,120 @@ export function FoodItemExpandableCard({
       {/* Expanded Edit Section */}
       {isExpanded && (
         <div className="px-4 sm:px-5 pb-5 border-t border-gray-100 space-y-5 bg-gradient-to-b from-gray-50/50 to-white">
-          {/* Food Name with Autocomplete */}
+          {/* Food Name with Autocomplete and Search Button */}
           <div className="pt-5">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2.5">
               <Search className="w-4 h-4 text-primary-500" />
               {t('foodName')}
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-gray-400" />
-              </div>
-              <Input
-                value={formData.name}
-                onChange={(e) => handleNameChange(e.target.value)}
-                onFocus={() => formData.name.length >= 2 && setShowAutocomplete(autocompleteResults.length > 0)}
-                onBlur={() => setTimeout(() => setShowAutocomplete(false), 200)}
-                placeholder={t('foodNamePlaceholder')}
-                className={cn(
-                  "pl-11 h-12 bg-white rounded-xl",
-                  "border-2 border-gray-200",
-                  "focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20",
-                  "transition-all duration-200"
-                )}
-              />
-
-              {/* Autocomplete dropdown */}
-              {showAutocomplete && (
-                <div className="absolute z-20 w-full mt-2 bg-white border-2 border-gray-200 rounded-2xl shadow-2xl max-h-48 overflow-y-auto">
-                  {autocompleteResults.map((food, idx) => {
-                    const entry = EXTENDED_NUTRITION_REFERENCE[food]
-                    return (
-                      <button
-                        key={food}
-                        type="button"
-                        onClick={() => selectFood(food)}
-                        className={cn(
-                          "w-full px-4 py-3.5 text-left flex items-center justify-between bg-white",
-                          "hover:bg-gradient-to-r hover:from-primary-50 hover:to-emerald-50",
-                          "transition-all duration-150",
-                          idx === 0 && "rounded-t-xl",
-                          idx === autocompleteResults.length - 1 && "rounded-b-xl"
-                        )}
-                      >
-                        <span className="font-medium capitalize text-gray-900">{food}</span>
-                        {entry && entry.nutrition && (
-                          <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                            {entry.nutrition.calories} kcal
-                          </span>
-                        )}
-                      </button>
-                    )
-                  })}
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-400" />
                 </div>
-              )}
+                <Input
+                  value={formData.name}
+                  onChange={(e) => handleNameChange(e.target.value)}
+                  onFocus={() => formData.name.length >= 2 && setShowAutocomplete(autocompleteResults.length > 0)}
+                  onBlur={() => setTimeout(() => setShowAutocomplete(false), 200)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      setShowAutocomplete(false)
+                      handleSearchClick()
+                    }
+                  }}
+                  placeholder={t('foodNamePlaceholder')}
+                  className={cn(
+                    "pl-11 h-12 bg-white rounded-xl",
+                    "border-2 border-gray-200",
+                    "focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20",
+                    "transition-all duration-200"
+                  )}
+                />
+
+                {/* Autocomplete dropdown */}
+                {showAutocomplete && (
+                  <div className="absolute z-20 w-full mt-2 bg-white border-2 border-gray-200 rounded-2xl shadow-2xl max-h-48 overflow-y-auto">
+                    {autocompleteResults.map((food, idx) => {
+                      const entry = EXTENDED_NUTRITION_REFERENCE[food]
+                      return (
+                        <button
+                          key={food}
+                          type="button"
+                          onClick={() => selectFood(food)}
+                          className={cn(
+                            "w-full px-4 py-3.5 text-left flex items-center justify-between bg-white",
+                            "hover:bg-gradient-to-r hover:from-primary-50 hover:to-emerald-50",
+                            "transition-all duration-150",
+                            idx === 0 && "rounded-t-xl",
+                            idx === autocompleteResults.length - 1 && "rounded-b-xl"
+                          )}
+                        >
+                          <span className="font-medium capitalize text-gray-900">{food}</span>
+                          {entry && entry.nutrition && (
+                            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                              {entry.nutrition.calories} kcal
+                            </span>
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Search Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAutocomplete(false)
+                  handleSearchClick()
+                }}
+                disabled={isSearching || !formData.name || formData.name.length < 2}
+                className={cn(
+                  "flex items-center justify-center h-12 px-4 rounded-xl font-medium transition-all",
+                  "bg-gradient-to-r from-primary-500 to-emerald-500 text-white",
+                  "hover:from-primary-600 hover:to-emerald-600 shadow-lg",
+                  "disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none",
+                  "active:scale-95"
+                )}
+                aria-label={t('edit.searchNutrition')}
+              >
+                {isSearching ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <Search className="w-5 h-5 sm:mr-2" />
+                    <span className="hidden sm:inline">{t('edit.search')}</span>
+                  </>
+                )}
+              </button>
             </div>
+
+            {/* Search Status Message */}
+            {hasSearched && !isSearching && searchResultFound !== null && (
+              <div className={cn(
+                "flex items-center gap-3 p-3 rounded-xl mt-3",
+                searchResultFound
+                  ? "bg-green-50 text-green-700"
+                  : "bg-orange-50 text-orange-700"
+              )}>
+                {searchResultFound ? (
+                  <>
+                    <CheckCircle className="w-4 h-4" />
+                    <span className="text-sm">
+                      {t('edit.foundFrom')} {nutritionSource === 'usda' ? 'USDA' : nutritionSource === 'local' ? t('edit.source.local') : t('edit.source.ai')}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Edit3 className="w-4 h-4" />
+                    <span className="text-sm">{t('edit.foodNotFound')}</span>
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Quantity Controls */}
