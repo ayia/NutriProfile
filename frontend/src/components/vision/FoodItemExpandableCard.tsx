@@ -1,5 +1,6 @@
 /**
  * FoodItemExpandableCard - Inline Expandable Card for Food Editing
+ * Build: 2026-01-18T16:00:00Z - Added explicit search button
  *
  * Pattern: Expandable Card (no modal/overlay)
  * - Expands inline to show edit fields
@@ -10,12 +11,13 @@
  * - Manual nutrition entry mode
  * - API backend integration for nutrition search with LRU cache
  * - Source badge (Local/USDA/AI)
+ * - EXPLICIT SEARCH BUTTON (January 2026)
  *
- * Phase 1 Optimizations:
- * - Debounce réduit à 300ms (était 500ms)
- * - Cache LRU via nutritionApi (0ms pour requêtes répétées)
- * - Gestion automatique not_found → mode manuel
- * - Affichage hybride local-first (résultats locaux instantanés)
+ * Phase 2 Update:
+ * - Removed automatic debounce search
+ * - Added explicit search button next to food name
+ * - User clicks button or presses Enter to search
+ * - Search status message shows found/not found
  *
  * NOTE: This component is LIGHT MODE ONLY.
  * All dark: classes have been removed to ensure consistent white/light backgrounds.
