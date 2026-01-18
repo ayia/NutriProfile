@@ -163,6 +163,7 @@ export function FoodItemExpandableCard({
   }, [item])
 
   // Manual search function - triggered by button click or Enter key
+  // ALWAYS calls API backend (USDA → LLM waterfall) - never checks local DB
   const handleSearchClick = async () => {
     // Validation
     if (!formData.name || formData.name.length < 2) {
@@ -170,24 +171,7 @@ export function FoodItemExpandableCard({
       return
     }
 
-    // Check local database first
-    const localNutrition = getNutrition(formData.name, parseFloat(formData.quantity) || 100, formData.unit)
-    if (localNutrition) {
-      setFormData(prev => ({
-        ...prev,
-        calories: Math.round(localNutrition.calories),
-        protein: Math.round(localNutrition.protein * 10) / 10,
-        carbs: Math.round(localNutrition.carbs * 10) / 10,
-        fat: Math.round(localNutrition.fat * 10) / 10,
-        fiber: Math.round(localNutrition.fiber * 10) / 10,
-      }))
-      setNutritionSource('local')
-      setHasSearched(true)
-      setSearchResultFound(true)
-      return
-    }
-
-    // Search API backend (uses LRU cache internally for 0ms repeated lookups)
+    // Search API backend directly (USDA → LLM waterfall)
     setIsSearching(true)
     setHasSearched(true)
     try {
