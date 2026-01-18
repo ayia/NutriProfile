@@ -1,6 +1,6 @@
 /**
  * FoodItemExpandableCard - Inline Expandable Card for Food Editing
- * Build: 2026-01-18T16:00:00Z - Added explicit search button
+ * Build: 2026-01-18T23:30:00Z - Fix: preserve USDA/AI source from SCAN (mapSourceToFrontend)
  *
  * Pattern: Expandable Card (no modal/overlay)
  * - Expands inline to show edit fields
@@ -81,6 +81,29 @@ const UNITS = [
 
 const QUICK_AMOUNTS = [10, 25, 50, 100]
 
+/**
+ * Map backend source to frontend nutritionSource format
+ * Backend returns: ai_estimated, usda_verified, usda_translation, local_database, manual
+ * Frontend expects: local, usda, llm, manual
+ */
+const mapSourceToFrontend = (source?: string): 'local' | 'usda' | 'llm' | 'manual' => {
+  if (!source) return 'local'
+  switch (source) {
+    case 'usda_verified':
+    case 'usda_translation':
+      return 'usda'
+    case 'ai_estimated':
+    case 'ai':
+      return 'llm'
+    case 'manual':
+      return 'manual'
+    case 'local_database':
+    case 'database':
+    default:
+      return 'local'
+  }
+}
+
 // Portion size icons (using simple visual representations)
 const PORTION_ICONS = {
   small: '1/4',
@@ -160,7 +183,8 @@ export function FoodItemExpandableCard({
       fiber: item.fiber || 0,
     })
     setManualMode(false)
-    setNutritionSource('local')
+    // Map backend source to frontend format (preserve USDA/AI source from SCAN)
+    setNutritionSource(mapSourceToFrontend(item.source))
   }, [item])
 
   // Manual search function - triggered by button click or Enter key
