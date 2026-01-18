@@ -34,7 +34,6 @@ import {
   Beef,
   Wheat,
   Droplets,
-  Scan,
 } from '@/lib/icons'
 import { toast } from 'sonner'
 import { searchNutrition, type NutritionSearchResponse } from '@/services/nutritionApi'
