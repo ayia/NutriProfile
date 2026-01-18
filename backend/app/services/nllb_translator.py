@@ -215,7 +215,7 @@ async def _call_nllb_api(
         logger.warning("nllb_no_token", message="HUGGINGFACE_TOKEN not configured")
         return None
 
-    url = f"https://api-inference.huggingface.co/models/{NLLB_MODEL_ID}"
+    url = f"https://router.huggingface.co/models/{NLLB_MODEL_ID}"
     headers = {
         "Authorization": f"Bearer {settings.HUGGINGFACE_TOKEN}",
         "Content-Type": "application/json"
