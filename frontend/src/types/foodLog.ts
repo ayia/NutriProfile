@@ -1,3 +1,13 @@
+// Source types for nutrition data origin
+export type NutritionSource =
+  | 'ai_estimated'      // VLM estimation
+  | 'usda_verified'     // Verified against USDA
+  | 'usda_translation'  // Found via translation to English
+  | 'local_database'    // Local nutrition database
+  | 'manual'            // User manual entry
+  | 'ai'                // Legacy: AI estimation (DB value)
+  | 'database'          // Legacy: Database (DB value)
+
 export interface FoodItem {
   id: number
   name: string
@@ -8,9 +18,13 @@ export interface FoodItem {
   carbs: number | null
   fat: number | null
   fiber: number | null
-  source: 'ai' | 'manual' | 'database'
+  source: NutritionSource
   confidence: number | null
   is_verified: boolean
+  // New fields for SCAN/EDIT harmonization
+  needs_verification?: boolean
+  usda_food_name?: string | null
+  original_name?: string | null
 }
 
 export interface FoodLog {
@@ -44,7 +58,11 @@ export interface DetectedItem {
   fat: number
   fiber?: number
   confidence: number
-  source?: 'ai' | 'manual' | 'database'
+  // Source tracking for SCAN/EDIT harmonization
+  source?: NutritionSource
+  needs_verification?: boolean
+  usda_food_name?: string | null
+  original_name?: string | null
 }
 
 export interface ImageAnalyzeRequest {

@@ -203,9 +203,12 @@ async def _call_nllb_api(
     """
     Appelle l'API HuggingFace Inference pour NLLB-200.
 
+    NOTE: NLLB-200 n'est plus disponible via HF Inference API (deprecie en 2025).
+    Cette fonction utilise maintenant un LLM comme fallback pour la traduction.
+
     Args:
         text: Texte à traduire
-        src_lang_code: Code NLLB source (ex: "zho_Hans")
+        src_lang_code: Code NLLB source (ex: "fra_Latn")
         tgt_lang_code: Code NLLB cible (ex: "eng_Latn")
 
     Returns:
@@ -215,80 +218,101 @@ async def _call_nllb_api(
         logger.warning("nllb_no_token", message="HUGGINGFACE_TOKEN not configured")
         return None
 
-    url = f"https://router.huggingface.co/models/{NLLB_MODEL_ID}"
-    headers = {
-        "Authorization": f"Bearer {settings.HUGGINGFACE_TOKEN}",
-        "Content-Type": "application/json"
+    # NLLB-200 n'est plus disponible - utiliser LLM comme fallback
+    logger.info("nllb_using_llm_fallback", text=text, src=src_lang_code, tgt=tgt_lang_code)
+    return await _translate_with_llm(text, src_lang_code, tgt_lang_code)
+
+
+async def _translate_with_llm(
+    text: str,
+    src_lang_code: str,
+    tgt_lang_code: str
+) -> Optional[str]:
+    """
+    Traduit un texte en utilisant un LLM (fallback quand NLLB-200 indisponible).
+
+    Args:
+        text: Texte à traduire (nom d'aliment)
+        src_lang_code: Code NLLB source
+        tgt_lang_code: Code NLLB cible
+
+    Returns:
+        Texte traduit ou None
+    """
+    # Mapping des codes NLLB vers noms de langues
+    lang_names = {
+        "eng_Latn": "English",
+        "fra_Latn": "French",
+        "deu_Latn": "German",
+        "spa_Latn": "Spanish",
+        "por_Latn": "Portuguese",
+        "zho_Hans": "Chinese",
+        "arb_Arab": "Arabic",
     }
 
-    # Payload pour le modèle NLLB-200
-    payload = {
-        "inputs": text,
-        "parameters": {
-            "src_lang": src_lang_code,
-            "tgt_lang": tgt_lang_code,
+    src_name = lang_names.get(src_lang_code, "unknown")
+    tgt_name = lang_names.get(tgt_lang_code, "English")
+
+    # Prompt simple et direct pour traduction de noms d'aliments
+    prompt = f"""Translate the following food name from {src_name} to {tgt_name}.
+Only respond with the translated food name, nothing else.
+
+Food name: {text}
+Translation:"""
+
+    try:
+        url = "https://router.huggingface.co/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {settings.HUGGINGFACE_TOKEN}",
+            "Content-Type": "application/json",
         }
-    }
 
-    async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
-        for attempt in range(MAX_RETRIES):
-            try:
-                response = await client.post(url, headers=headers, json=payload)
+        payload = {
+            "model": "Qwen/Qwen2.5-72B-Instruct",
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": 50,
+            "temperature": 0.1,  # Faible pour traduction déterministe
+        }
 
-                # Modèle en cours de chargement
-                if response.status_code == 503:
-                    data = response.json()
-                    wait_time = min(data.get("estimated_time", 20), 30)
+        async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
+            for attempt in range(2):  # 2 tentatives max
+                try:
+                    response = await client.post(url, headers=headers, json=payload)
+
+                    if response.status_code == 503:
+                        logger.info("llm_translation_model_loading", attempt=attempt + 1)
+                        await asyncio.sleep(5)
+                        continue
+
+                    response.raise_for_status()
+                    result = response.json()
+
+                    translation = result["choices"][0]["message"]["content"].strip()
+
+                    # Nettoyer la réponse (enlever guillemets, ponctuation finale)
+                    translation = translation.strip('"\'').strip('.')
+
                     logger.info(
-                        "nllb_model_loading",
-                        wait_time=wait_time,
+                        "llm_translation_success",
+                        original=text,
+                        translated=translation
+                    )
+                    return translation
+
+                except httpx.HTTPStatusError as e:
+                    logger.error(
+                        "llm_translation_http_error",
+                        status=e.response.status_code,
+                        detail=e.response.text[:200],
                         attempt=attempt + 1
                     )
-                    await asyncio.sleep(wait_time)
-                    continue
+                    if attempt == 1:
+                        raise
+                    await asyncio.sleep(2)
 
-                # Erreur d'authentification
-                if response.status_code in (401, 403):
-                    logger.error(
-                        "nllb_auth_error",
-                        status=response.status_code,
-                        detail="Invalid or missing HuggingFace token"
-                    )
-                    return None
-
-                response.raise_for_status()
-                result = response.json()
-
-                # Extraire la traduction
-                if isinstance(result, list) and len(result) > 0:
-                    return result[0].get("translation_text", "").strip()
-
-                if isinstance(result, dict):
-                    return result.get("translation_text", "").strip()
-
-                logger.warning("nllb_unexpected_response", response=result)
-                return None
-
-            except httpx.HTTPStatusError as e:
-                logger.error(
-                    "nllb_http_error",
-                    status=e.response.status_code,
-                    detail=e.response.text[:200],
-                    attempt=attempt + 1
-                )
-                if attempt == MAX_RETRIES - 1:
-                    raise
-                await asyncio.sleep(2 ** attempt)
-
-            except httpx.RequestError as e:
-                logger.error(
-                    "nllb_request_error",
-                    error=str(e),
-                    attempt=attempt + 1
-                )
-                if attempt == MAX_RETRIES - 1:
-                    raise
-                await asyncio.sleep(2 ** attempt)
+    except Exception as e:
+        logger.error("llm_translation_error", error=str(e))
+        return None
 
     return None
 

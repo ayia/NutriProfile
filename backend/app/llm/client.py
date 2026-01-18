@@ -13,7 +13,7 @@ logger = structlog.get_logger()
 class HuggingFaceClient:
     """Client pour l'API Hugging Face Inference."""
 
-    BASE_URL = "https://router.huggingface.co/models"
+    BASE_URL = "https://router.huggingface.co/hf-inference/models"
     TIMEOUT = 60.0
 
     def __init__(self, token: str | None = None):
@@ -81,23 +81,15 @@ class HuggingFaceClient:
         temperature: float = 0.7,
         top_p: float = 0.95,
     ) -> str:
-        """Génération de texte."""
-        payload = {
-            "inputs": prompt,
-            "parameters": {
-                "max_new_tokens": max_new_tokens,
-                "temperature": temperature,
-                "top_p": top_p,
-                "do_sample": True,
-                "return_full_text": False,
-            },
-        }
-
-        result = await self._request(model_id, payload)
-
-        if isinstance(result, list) and len(result) > 0:
-            return result[0].get("generated_text", "")
-        return ""
+        """Génération de texte via l'API Chat (compatible avec les gros modèles)."""
+        # Utiliser text_chat pour les modèles modernes (Qwen, Llama, etc.)
+        # L'ancienne API text_generation ne supporte que les petits modèles CPU
+        return await self.text_chat(
+            prompt=prompt,
+            model_id=model_id,
+            max_tokens=max_new_tokens,
+            temperature=temperature,
+        )
 
     async def image_to_text(
         self,
@@ -139,7 +131,7 @@ class HuggingFaceClient:
     ) -> str:
         """
         Génération de texte via l'API Chat Completions.
-        Utilise la nouvelle API HuggingFace router.
+        Utilise l'API HuggingFace Inference.
         """
         url = "https://router.huggingface.co/v1/chat/completions"
         headers = {
@@ -224,7 +216,7 @@ class HuggingFaceClient:
     ) -> str:
         """
         Analyse d'image avec un modèle VLM via l'API Chat Completions.
-        Utilise la nouvelle API HuggingFace router.
+        Utilise l'API HuggingFace Inference.
         """
         url = "https://router.huggingface.co/v1/chat/completions"
         headers = {

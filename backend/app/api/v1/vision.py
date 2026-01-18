@@ -35,6 +35,7 @@ from app.schemas.food_log import (
 )
 from app.agents.vision import get_vision_agent, VisionInput, validate_nutrition, calculate_health_report, FoodAnalysis
 from app.services.subscription import SubscriptionService, get_limit_value
+from app.services.nutrition_database import validate_detected_items_batch
 
 router = APIRouter()
 
@@ -92,8 +93,41 @@ async def analyze_image(
     confidence = result.confidence
     model_used = result.model_used
 
-    # Valider les valeurs nutritionnelles
+    # Valider les valeurs nutritionnelles (validation basique)
     validated_items = [validate_nutrition(item) for item in analysis.items]
+
+    # === PHASE 2.5: USDA VALIDATION POST-SCAN ===
+    # Valider chaque aliment contre USDA pour améliorer la précision
+    # et ajouter les informations de source (usda_verified, ai_estimated, etc.)
+    try:
+        items_as_dicts = [item.to_dict() for item in validated_items]
+        usda_validated_items = await validate_detected_items_batch(
+            items_as_dicts,
+            language=current_user.preferred_language or "en"
+        )
+
+        # Mettre à jour les items avec les données USDA validées
+        for i, usda_item in enumerate(usda_validated_items):
+            validated_items[i].calories = usda_item.get("calories", validated_items[i].calories)
+            validated_items[i].protein = usda_item.get("protein", validated_items[i].protein)
+            validated_items[i].carbs = usda_item.get("carbs", validated_items[i].carbs)
+            validated_items[i].fat = usda_item.get("fat", validated_items[i].fat)
+            validated_items[i].source = usda_item.get("source", "ai_estimated")
+            validated_items[i].needs_verification = usda_item.get("needs_verification", False)
+            validated_items[i].usda_food_name = usda_item.get("usda_food_name")
+            validated_items[i].original_name = usda_item.get("original_name")
+            # Update confidence based on USDA validation
+            if usda_item.get("source") in ("usda_verified", "usda_translation"):
+                validated_items[i].confidence = max(validated_items[i].confidence, 0.9)
+    except Exception as e:
+        # If USDA validation fails, continue with AI estimates
+        import structlog
+        logger = structlog.get_logger()
+        logger.warning("usda_validation_failed", error=str(e))
+        # Mark all items as needing verification since USDA couldn't validate
+        for item in validated_items:
+            item.source = "ai_estimated"
+            item.needs_verification = item.confidence < 0.7
 
     # Recalculer les totaux
     total_calories = sum(item.calories for item in validated_items)
@@ -302,8 +336,19 @@ async def analyze_image(
                 db.add(food_log)
                 await db.flush()
 
-                # Créer les items individuels
+                # Créer les items individuels avec source USDA/AI
                 for item in validated_items:
+                    # Mapper le source enum vers la valeur DB
+                    source_value = "ai"
+                    if hasattr(item, 'source') and item.source:
+                        source_str = item.source if isinstance(item.source, str) else item.source.value
+                        if source_str in ("usda_verified", "usda_translation"):
+                            source_value = "database"
+                        elif source_str == "manual":
+                            source_value = "manual"
+                        else:
+                            source_value = "ai"
+
                     food_item = FoodItemModel(
                         food_log_id=food_log.id,
                         name=item.name,
@@ -313,8 +358,9 @@ async def analyze_image(
                         protein=item.protein,
                         carbs=item.carbs,
                         fat=item.fat,
-                        source="ai",
+                        source=source_value,
                         confidence=item.confidence,
+                        is_verified=not getattr(item, 'needs_verification', True),
                     )
                     db.add(food_item)
 
@@ -346,7 +392,7 @@ async def analyze_image(
         language=current_user.preferred_language,
     )
 
-    # Préparer la réponse
+    # Préparer la réponse avec les nouveaux champs source
     detected_items = [
         DetectedItem(
             name=item.name,
@@ -357,6 +403,10 @@ async def analyze_image(
             carbs=item.carbs,
             fat=item.fat,
             confidence=item.confidence,
+            source=item.source,
+            needs_verification=item.needs_verification,
+            usda_food_name=item.usda_food_name,
+            original_name=item.original_name,
         )
         for item in validated_items
     ]

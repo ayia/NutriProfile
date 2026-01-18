@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from pydantic import BaseModel, Field, ConfigDict
 
 
@@ -22,9 +23,13 @@ class FoodItemCreate(FoodItemBase):
 class FoodItemResponse(FoodItemBase):
     """Réponse aliment."""
     id: int
-    source: str = "ai"
+    source: str = "ai"  # ai, database, manual (DB values)
     confidence: float | None = None
     is_verified: bool = False
+    # Champs additionnels pour frontend (non stockés en DB)
+    needs_verification: bool = False
+    usda_food_name: str | None = None
+    original_name: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -95,6 +100,15 @@ class ImageAnalyzeRequest(BaseModel):
     save_to_log: bool = Field(default=True, description="Sauvegarder dans le journal")
 
 
+class NutritionSource(str, Enum):
+    """Source des données nutritionnelles."""
+    AI_ESTIMATED = "ai_estimated"      # Estimation par VLM
+    USDA_VERIFIED = "usda_verified"    # Vérifié contre USDA
+    USDA_TRANSLATION = "usda_translation"  # Trouvé via traduction
+    LOCAL_DATABASE = "local_database"  # Base locale
+    MANUAL = "manual"                  # Saisie manuelle
+
+
 class DetectedItem(BaseModel):
     """Aliment détecté par l'IA."""
     name: str
@@ -105,6 +119,11 @@ class DetectedItem(BaseModel):
     carbs: float
     fat: float
     confidence: float
+    # Nouveaux champs pour harmonisation SCAN/EDIT
+    source: NutritionSource = NutritionSource.AI_ESTIMATED
+    needs_verification: bool = False  # True si confiance < 0.7 ou non vérifié USDA
+    usda_food_name: str | None = None  # Nom USDA si trouvé (ex: "salmon" pour "saumon")
+    original_name: str | None = None   # Nom original avant traduction
 
 
 class HealthReportResponse(BaseModel):

@@ -196,3 +196,405 @@ async def search_nutrition(food_name: str, quantity_g: float = 100.0) -> Optiona
 
     finally:
         await service.close()
+
+
+# =====================================================
+# FOOD TRANSLATION FOR USDA LOOKUP
+# =====================================================
+
+# Translation dictionary: language -> food name -> English equivalent
+FOOD_TRANSLATIONS: dict[str, dict[str, str]] = {
+    "fr": {
+        # Proteins
+        "poulet": "chicken",
+        "boeuf": "beef",
+        "porc": "pork",
+        "agneau": "lamb",
+        "saumon": "salmon",
+        "thon": "tuna",
+        "crevette": "shrimp",
+        "crevettes": "shrimp",
+        "oeuf": "egg",
+        "oeufs": "eggs",
+        "dinde": "turkey",
+        "canard": "duck",
+        "jambon": "ham",
+        "bacon": "bacon",
+        # Grains
+        "riz": "rice",
+        "pates": "pasta",
+        "pâtes": "pasta",
+        "pain": "bread",
+        "quinoa": "quinoa",
+        "avoine": "oats",
+        "couscous": "couscous",
+        # Vegetables
+        "tomate": "tomato",
+        "tomates": "tomatoes",
+        "carotte": "carrot",
+        "carottes": "carrots",
+        "brocoli": "broccoli",
+        "épinard": "spinach",
+        "épinards": "spinach",
+        "salade": "lettuce",
+        "laitue": "lettuce",
+        "courgette": "zucchini",
+        "aubergine": "eggplant",
+        "poivron": "bell pepper",
+        "oignon": "onion",
+        "ail": "garlic",
+        "champignon": "mushroom",
+        "champignons": "mushrooms",
+        "haricots verts": "green beans",
+        "pomme de terre": "potato",
+        "pommes de terre": "potatoes",
+        "patate douce": "sweet potato",
+        # Fruits
+        "pomme": "apple",
+        "banane": "banana",
+        "orange": "orange",
+        "fraise": "strawberry",
+        "fraises": "strawberries",
+        "raisin": "grape",
+        "raisins": "grapes",
+        "mangue": "mango",
+        "ananas": "pineapple",
+        "poire": "pear",
+        "pêche": "peach",
+        "abricot": "apricot",
+        "cerise": "cherry",
+        "cerises": "cherries",
+        "melon": "melon",
+        "pasteque": "watermelon",
+        "pastèque": "watermelon",
+        "citron": "lemon",
+        # Dairy
+        "lait": "milk",
+        "fromage": "cheese",
+        "yaourt": "yogurt",
+        "beurre": "butter",
+        "crème": "cream",
+        # Legumes
+        "lentilles": "lentils",
+        "pois chiches": "chickpeas",
+        "haricots": "beans",
+        "haricots rouges": "red beans",
+        "haricots blancs": "white beans",
+        # Nuts
+        "amande": "almond",
+        "amandes": "almonds",
+        "noix": "walnut",
+        "cacahuète": "peanut",
+        "cacahuètes": "peanuts",
+        "noisette": "hazelnut",
+        "noisettes": "hazelnuts",
+    },
+    "de": {
+        "huhn": "chicken",
+        "hähnchen": "chicken",
+        "rindfleisch": "beef",
+        "schweinefleisch": "pork",
+        "lachs": "salmon",
+        "reis": "rice",
+        "nudeln": "pasta",
+        "brot": "bread",
+        "tomate": "tomato",
+        "karotte": "carrot",
+        "brokkoli": "broccoli",
+        "spinat": "spinach",
+        "apfel": "apple",
+        "banane": "banana",
+        "milch": "milk",
+        "käse": "cheese",
+        "ei": "egg",
+        "eier": "eggs",
+    },
+    "es": {
+        "pollo": "chicken",
+        "carne de res": "beef",
+        "cerdo": "pork",
+        "salmon": "salmon",
+        "salmón": "salmon",
+        "arroz": "rice",
+        "pasta": "pasta",
+        "pan": "bread",
+        "tomate": "tomato",
+        "zanahoria": "carrot",
+        "brocoli": "broccoli",
+        "brócoli": "broccoli",
+        "espinaca": "spinach",
+        "manzana": "apple",
+        "platano": "banana",
+        "plátano": "banana",
+        "leche": "milk",
+        "queso": "cheese",
+        "huevo": "egg",
+        "huevos": "eggs",
+    },
+    "pt": {
+        "frango": "chicken",
+        "carne bovina": "beef",
+        "porco": "pork",
+        "salmao": "salmon",
+        "salmão": "salmon",
+        "arroz": "rice",
+        "massa": "pasta",
+        "pao": "bread",
+        "pão": "bread",
+        "tomate": "tomato",
+        "cenoura": "carrot",
+        "brocolis": "broccoli",
+        "brócolis": "broccoli",
+        "espinafre": "spinach",
+        "maca": "apple",
+        "maçã": "apple",
+        "banana": "banana",
+        "leite": "milk",
+        "queijo": "cheese",
+        "ovo": "egg",
+        "ovos": "eggs",
+    },
+    "zh": {
+        "鸡肉": "chicken",
+        "牛肉": "beef",
+        "猪肉": "pork",
+        "三文鱼": "salmon",
+        "米饭": "rice",
+        "面条": "noodles",
+        "面包": "bread",
+        "番茄": "tomato",
+        "西红柿": "tomato",
+        "胡萝卜": "carrot",
+        "西兰花": "broccoli",
+        "菠菜": "spinach",
+        "苹果": "apple",
+        "香蕉": "banana",
+        "牛奶": "milk",
+        "奶酪": "cheese",
+        "鸡蛋": "egg",
+    },
+    "ar": {
+        "دجاج": "chicken",
+        "لحم بقر": "beef",
+        "لحم خنزير": "pork",
+        "سلمون": "salmon",
+        "أرز": "rice",
+        "معكرونة": "pasta",
+        "خبز": "bread",
+        "طماطم": "tomato",
+        "جزر": "carrot",
+        "بروكلي": "broccoli",
+        "سبانخ": "spinach",
+        "تفاح": "apple",
+        "موز": "banana",
+        "حليب": "milk",
+        "جبن": "cheese",
+        "بيض": "egg",
+    },
+}
+
+
+def translate_food_to_english(food_name: str, language: str = "en") -> tuple[str, bool]:
+    """
+    Translate a food name to English for USDA lookup.
+
+    Args:
+        food_name: Food name in any supported language
+        language: Source language code (fr, de, es, pt, zh, ar)
+
+    Returns:
+        Tuple of (english_name, was_translated)
+    """
+    if language == "en":
+        return food_name, False
+
+    food_lower = food_name.lower().strip()
+    translations = FOOD_TRANSLATIONS.get(language, {})
+
+    if food_lower in translations:
+        return translations[food_lower], True
+
+    # Try partial match for compound foods
+    for source, english in translations.items():
+        if source in food_lower:
+            return english, True
+
+    # No translation found, return original
+    return food_name, False
+
+
+@dataclass
+class USDAValidationResult:
+    """Result of USDA validation for a detected food item."""
+    found: bool
+    original_name: str
+    usda_food_name: str | None = None
+    english_query: str | None = None
+    was_translated: bool = False
+    calories: float | None = None
+    protein: float | None = None
+    carbs: float | None = None
+    fat: float | None = None
+    fiber: float | None = None
+    confidence: float = 0.0
+
+
+async def validate_against_usda(
+    food_name: str,
+    quantity_g: float,
+    language: str = "en"
+) -> USDAValidationResult:
+    """
+    Validate a food item against USDA database with translation support.
+
+    Args:
+        food_name: Food name (in user's language)
+        quantity_g: Quantity in grams
+        language: User's language code
+
+    Returns:
+        USDAValidationResult with nutrition data if found
+    """
+    # Translate to English if needed
+    english_name, was_translated = translate_food_to_english(food_name, language)
+
+    service = USDANutritionService()
+    try:
+        # Search USDA with English name
+        results = await service.search_food(english_name, max_results=1)
+
+        if results:
+            nutrition = results[0]
+
+            # Adjust for quantity
+            factor = quantity_g / nutrition.portion_size_g
+
+            return USDAValidationResult(
+                found=True,
+                original_name=food_name,
+                usda_food_name=nutrition.food_name,
+                english_query=english_name if was_translated else None,
+                was_translated=was_translated,
+                calories=nutrition.calories * factor,
+                protein=nutrition.protein * factor,
+                carbs=nutrition.carbs * factor,
+                fat=nutrition.fat * factor,
+                fiber=nutrition.fiber * factor,
+                confidence=0.95,
+            )
+
+        # Not found - try original name if it was translated
+        if was_translated:
+            results = await service.search_food(food_name, max_results=1)
+            if results:
+                nutrition = results[0]
+                factor = quantity_g / nutrition.portion_size_g
+
+                return USDAValidationResult(
+                    found=True,
+                    original_name=food_name,
+                    usda_food_name=nutrition.food_name,
+                    english_query=None,
+                    was_translated=False,
+                    calories=nutrition.calories * factor,
+                    protein=nutrition.protein * factor,
+                    carbs=nutrition.carbs * factor,
+                    fat=nutrition.fat * factor,
+                    fiber=nutrition.fiber * factor,
+                    confidence=0.95,
+                )
+
+        return USDAValidationResult(
+            found=False,
+            original_name=food_name,
+            english_query=english_name if was_translated else None,
+            was_translated=was_translated,
+        )
+
+    except Exception as e:
+        logger.error("usda_validation_error", food=food_name, error=str(e))
+        return USDAValidationResult(found=False, original_name=food_name)
+
+    finally:
+        await service.close()
+
+
+async def validate_detected_items_batch(
+    items: list[dict],
+    language: str = "en"
+) -> list[dict]:
+    """
+    Validate a batch of detected food items against USDA.
+
+    This function is called after VLM analysis to verify/enhance nutrition values.
+
+    Args:
+        items: List of detected items from VLM (dicts with name, quantity, unit, etc.)
+        language: User's language code
+
+    Returns:
+        List of items with updated source and verification status
+    """
+    validated_items = []
+
+    for item in items:
+        name = item.get("name", "")
+        quantity_str = item.get("quantity", "100")
+        unit = item.get("unit", "g")
+
+        # Parse quantity
+        try:
+            quantity = float(quantity_str)
+        except (ValueError, TypeError):
+            quantity = 100.0
+
+        # Convert to grams if needed (rough estimation)
+        quantity_g = quantity
+        if unit == "ml":
+            quantity_g = quantity  # Approximate 1ml = 1g for liquids
+        elif unit in ("portion", "piece"):
+            quantity_g = quantity * 100  # Rough estimate
+
+        # Validate against USDA
+        result = await validate_against_usda(name, quantity_g, language)
+
+        # Create updated item
+        updated_item = item.copy()
+
+        if result.found:
+            # Update with USDA verified values
+            updated_item["calories"] = int(result.calories or 0)
+            updated_item["protein"] = round(result.protein or 0, 1)
+            updated_item["carbs"] = round(result.carbs or 0, 1)
+            updated_item["fat"] = round(result.fat or 0, 1)
+            updated_item["source"] = "usda_translation" if result.was_translated else "usda_verified"
+            updated_item["usda_food_name"] = result.usda_food_name
+            updated_item["original_name"] = result.original_name if result.was_translated else None
+            updated_item["needs_verification"] = False
+            # Boost confidence for USDA verified items
+            original_confidence = item.get("confidence", 0.7)
+            updated_item["confidence"] = max(original_confidence, 0.9)
+
+            logger.info(
+                "usda_item_validated",
+                original=name,
+                usda_name=result.usda_food_name,
+                translated=result.was_translated,
+                source=updated_item["source"],
+            )
+        else:
+            # Keep AI estimation but mark as needing verification
+            updated_item["source"] = "ai_estimated"
+            updated_item["needs_verification"] = item.get("confidence", 0.7) < 0.7
+            updated_item["usda_food_name"] = None
+            updated_item["original_name"] = None
+
+            logger.info(
+                "usda_item_not_found",
+                name=name,
+                needs_verification=updated_item["needs_verification"],
+            )
+
+        validated_items.append(updated_item)
+
+    return validated_items

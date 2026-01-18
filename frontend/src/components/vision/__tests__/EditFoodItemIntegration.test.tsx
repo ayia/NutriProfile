@@ -250,7 +250,7 @@ describe('EditFoodItemIntegration', () => {
     confirmSpy.mockRestore()
   })
 
-  it('affiche le badge "Corrigé par l\'utilisateur" pour les items manuels', async () => {
+  it('affiche le badge source pour les items manuels', async () => {
     const user = userEvent.setup()
 
     const logWithManualItem: FoodLog = {
@@ -269,9 +269,13 @@ describe('EditFoodItemIntegration', () => {
     const showButton = screen.getByText(/foodLog\.showDetails/)
     await user.click(showButton)
 
-    // Vérifier que le badge est affiché
+    // Vérifier que l'item est affiché avec le badge source
+    // Le badge est maintenant un icone avec title="source.manual"
     await waitFor(() => {
-      expect(screen.getByText('userCorrected')).toBeInTheDocument()
+      expect(screen.getByText('riz')).toBeInTheDocument()
+      // Le badge est un span avec title contenant la traduction
+      const badgeContainer = screen.getByTitle('source.manual')
+      expect(badgeContainer).toBeInTheDocument()
     })
   })
 

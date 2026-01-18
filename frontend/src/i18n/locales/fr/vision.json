@@ -258,6 +258,15 @@
     "enterFoodName": "Entrez le nom de l'aliment (min. 2 caractères)",
     "foundFrom": "Trouvé dans"
   },
+  "source": {
+    "usda": "USDA verifie",
+    "usdaTranslation": "USDA (traduit)",
+    "local": "Base locale",
+    "ai": "Estimation IA",
+    "manual": "Saisie manuelle",
+    "needsVerification": "A verifier",
+    "needsVerificationTooltip": "Confiance faible - veuillez verifier cet aliment"
+  },
   "bottomSheet": {
     "moreOptions": "Plus d'options"
   }

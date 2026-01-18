@@ -266,6 +266,15 @@
     "enterFoodName": "أدخل اسم الطعام (حرفان على الأقل)",
     "foundFrom": "تم العثور عليه في"
   },
+  "source": {
+    "usda": "تم التحقق من USDA",
+    "usdaTranslation": "USDA (مترجم)",
+    "local": "قاعدة بيانات محلية",
+    "ai": "تقدير الذكاء الاصطناعي",
+    "manual": "إدخال يدوي",
+    "needsVerification": "تحقق",
+    "needsVerificationTooltip": "ثقة منخفضة - يرجى التحقق من هذا العنصر"
+  },
   "bottomSheet": {
     "moreOptions": "خيارات إضافية"
   }

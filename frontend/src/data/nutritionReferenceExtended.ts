@@ -1390,10 +1390,29 @@ export function getFoodsByCategory(category: FoodCategory): string[] {
 }
 
 /**
+ * Normalise une chaîne pour la recherche (retire accents, œ → oe, etc.)
+ * Permet de trouver "boeuf" en tapant "bœuf" et vice versa
+ */
+function normalizeForSearch(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    // Gérer les ligatures spéciales AVANT la normalisation NFD
+    .replace(/œ/g, 'oe')
+    .replace(/æ/g, 'ae')
+    .replace(/Œ/g, 'oe')
+    .replace(/Æ/g, 'ae')
+    // Normaliser NFD puis retirer les accents (é → e, à → a, etc.)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
+
+/**
  * Search foods with fuzzy matching and alias support
+ * Supports accent-insensitive search (bœuf → boeuf, pâtes → pates)
  */
 export function searchFoodsExtended(query: string, maxResults: number = 15): string[] {
-  const normalizedQuery = query.toLowerCase().trim()
+  const normalizedQuery = normalizeForSearch(query)
 
   if (!normalizedQuery) {
     // Return popular foods when no query
@@ -1403,22 +1422,23 @@ export function searchFoodsExtended(query: string, maxResults: number = 15): str
   const results: { name: string; score: number }[] = []
 
   for (const [name, entry] of Object.entries(EXTENDED_NUTRITION_REFERENCE)) {
+    const normalizedName = normalizeForSearch(name)
     let score = 0
 
     // Exact match
-    if (name === normalizedQuery) {
+    if (normalizedName === normalizedQuery) {
       score = 100
     }
     // Starts with query
-    else if (name.startsWith(normalizedQuery)) {
+    else if (normalizedName.startsWith(normalizedQuery)) {
       score = 80
     }
     // Contains query
-    else if (name.includes(normalizedQuery)) {
+    else if (normalizedName.includes(normalizedQuery)) {
       score = 60
     }
     // Check aliases
-    else if (entry.aliases?.some(alias => alias.toLowerCase().includes(normalizedQuery))) {
+    else if (entry.aliases?.some(alias => normalizeForSearch(alias).includes(normalizedQuery))) {
       score = 50
     }
 
@@ -1434,6 +1454,26 @@ export function searchFoodsExtended(query: string, maxResults: number = 15): str
 }
 
 /**
+ * Find a food entry using normalized search (handles œ→oe, accents, etc.)
+ */
+function findFoodEntry(foodName: string): FoodEntry | null {
+  const normalizedQuery = normalizeForSearch(foodName)
+
+  // First try direct lookup (most common case)
+  const directEntry = EXTENDED_NUTRITION_REFERENCE[foodName.toLowerCase().trim()]
+  if (directEntry) return directEntry
+
+  // Then try normalized search
+  for (const [name, entry] of Object.entries(EXTENDED_NUTRITION_REFERENCE)) {
+    if (normalizeForSearch(name) === normalizedQuery) {
+      return entry
+    }
+  }
+
+  return null
+}
+
+/**
  * Get nutrition values for a food item with portion calculation
  */
 export function getNutrition(
@@ -1441,8 +1481,7 @@ export function getNutrition(
   quantity: number,
   unit: string = 'g'
 ): NutritionValues | null {
-  const normalizedName = foodName.toLowerCase().trim()
-  const entry = EXTENDED_NUTRITION_REFERENCE[normalizedName]
+  const entry = findFoodEntry(foodName)
 
   if (!entry) return null
 
@@ -1477,8 +1516,7 @@ export function getNutrition(
  * Get portion presets for a food
  */
 export function getPortionPresets(foodName: string): PortionPreset[] | null {
-  const normalizedName = foodName.toLowerCase().trim()
-  const entry = EXTENDED_NUTRITION_REFERENCE[normalizedName]
+  const entry = findFoodEntry(foodName)
   return entry?.portions || null
 }
 
@@ -1486,8 +1524,7 @@ export function getPortionPresets(foodName: string): PortionPreset[] | null {
  * Get visual guide for a food
  */
 export function getVisualGuide(foodName: string): string | null {
-  const normalizedName = foodName.toLowerCase().trim()
-  const entry = EXTENDED_NUTRITION_REFERENCE[normalizedName]
+  const entry = findFoodEntry(foodName)
   return entry?.visualGuide || null
 }
 

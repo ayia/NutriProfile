@@ -8,6 +8,7 @@ import {
   searchFoods,
   type NutritionValues,
 } from '@/data/nutritionReference'
+import type { NutritionSource } from '@/types/foodLog'
 
 export interface FoodItem {
   id?: number
@@ -19,8 +20,12 @@ export interface FoodItem {
   carbs?: number
   fat?: number
   fiber?: number
-  source?: 'ai' | 'manual' | 'database'
+  source?: NutritionSource
   confidence?: number
+  // New fields for SCAN/EDIT harmonization
+  needs_verification?: boolean
+  usda_food_name?: string | null
+  original_name?: string | null
 }
 
 export interface FoodItemUpdate {

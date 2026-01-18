@@ -266,6 +266,15 @@
     "enterFoodName": "输入食物名称（至少2个字符）",
     "foundFrom": "来源于"
   },
+  "source": {
+    "usda": "USDA已验证",
+    "usdaTranslation": "USDA（已翻译）",
+    "local": "本地数据库",
+    "ai": "AI估算",
+    "manual": "手动输入",
+    "needsVerification": "待验证",
+    "needsVerificationTooltip": "置信度低 - 请核实此项目"
+  },
   "bottomSheet": {
     "moreOptions": "更多选项"
   }

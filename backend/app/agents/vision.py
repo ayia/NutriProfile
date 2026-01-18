@@ -35,6 +35,11 @@ class FoodItem:
         carbs: float,
         fat: float,
         confidence: float = 0.8,
+        # Nouveaux champs pour harmonisation SCAN/EDIT
+        source: str = "ai_estimated",
+        needs_verification: bool = False,
+        usda_food_name: str | None = None,
+        original_name: str | None = None,
     ):
         self.name = name
         self.quantity = quantity
@@ -44,6 +49,11 @@ class FoodItem:
         self.carbs = carbs
         self.fat = fat
         self.confidence = confidence
+        # Source tracking
+        self.source = source  # ai_estimated, usda_verified, usda_translation, manual
+        self.needs_verification = needs_verification  # True si confiance < 0.7
+        self.usda_food_name = usda_food_name  # Nom USDA si trouvé
+        self.original_name = original_name  # Nom original avant traduction
 
     def to_dict(self) -> dict:
         return {
@@ -55,6 +65,10 @@ class FoodItem:
             "carbs": self.carbs,
             "fat": self.fat,
             "confidence": self.confidence,
+            "source": self.source,
+            "needs_verification": self.needs_verification,
+            "usda_food_name": self.usda_food_name,
+            "original_name": self.original_name,
         }
 
 

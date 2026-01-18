@@ -266,6 +266,15 @@
     "enterFoodName": "Lebensmittelnamen eingeben (mind. 2 Zeichen)",
     "foundFrom": "Gefunden in"
   },
+  "source": {
+    "usda": "USDA verifiziert",
+    "usdaTranslation": "USDA (ubersetzt)",
+    "local": "Lokale Datenbank",
+    "ai": "KI-Schatzung",
+    "manual": "Manuelle Eingabe",
+    "needsVerification": "Prufen",
+    "needsVerificationTooltip": "Geringe Konfidenz - bitte diesen Eintrag uberprufen"
+  },
   "bottomSheet": {
     "moreOptions": "Mehr Optionen"
   }

@@ -6,9 +6,10 @@ import { toast } from 'sonner'
 import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import { invalidationGroups } from '@/lib/queryKeys'
-import type { FoodLog, FoodItemCreate, FoodItemUpdate } from '@/types/foodLog'
+import type { FoodLog, FoodItemCreate, FoodItemUpdate, NutritionSource } from '@/types/foodLog'
 import { getMealTypeIcon, MEAL_TYPE_COLORS, Trash2, Edit, Plus } from '@/lib/icons'
 import { EditFoodItemModalV2 } from './EditFoodItemModalV2'
+import { NutritionSourceBadgeInline } from './NutritionSourceBadge'
 
 // Type for modal item (can be existing item or new item template)
 interface ModalFoodItem {
@@ -21,7 +22,7 @@ interface ModalFoodItem {
   carbs?: number
   fat?: number
   fiber?: number
-  source?: 'ai' | 'manual' | 'database'
+  source?: NutritionSource
   confidence?: number
 }
 
@@ -288,18 +289,18 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
               key={item.id}
               className="flex items-center justify-between text-sm py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors group"
             >
-              <div className="flex items-center gap-2 flex-1">
-                {item.source === 'manual' && (
-                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
-                    {t('userCorrected')}
-                  </span>
-                )}
-                <span className="font-medium capitalize">{item.name}</span>
-                <span className="text-gray-500">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                {/* Source badge with verification status */}
+                <NutritionSourceBadgeInline
+                  source={item.source}
+                  needsVerification={item.needs_verification}
+                />
+                <span className="font-medium capitalize truncate">{item.name}</span>
+                <span className="text-gray-500 shrink-0">
                   {item.quantity} {item.unit}
                 </span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 shrink-0">
                 <span className="text-gray-600">{item.calories} kcal</span>
                 <div className="flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                   <Button

@@ -85,9 +85,6 @@ const UNITS = [
 
 const QUICK_AMOUNTS = [10, 25, 50, 100]
 
-// Phase 1 Optimization: Debounce réduit de 400ms à 300ms
-const API_DEBOUNCE_MS = 300
-
 export function EditFoodItemModalV2({
   item,
   onClose,
@@ -247,18 +244,7 @@ export function EditFoodItemModalV2({
     }
   }, [formData.name, formData.quantity, formData.unit])
 
-  // Phase 1 Optimization: Debounced API search (300ms, uses LRU cache)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (formData.name && formData.name.length >= 2 && formData.quantity && !manualMode) {
-        if (!localNutrition) {
-          performSearch()
-        }
-      }
-    }, API_DEBOUNCE_MS)
-
-    return () => clearTimeout(timer)
-  }, [formData.name, formData.quantity, manualMode, localNutrition])
+  // NOTE: Removed auto-debounced API search - user must click "Rechercher" button explicitly
 
   // Phase 1: performSearch with LRU cache and auto-manual mode on not_found
   const performSearch = async () => {
@@ -686,6 +672,44 @@ export function EditFoodItemModalV2({
                     )
                   })}
                 </div>
+              )}
+
+              {/* API Search Button - Direct API call, bypasses local database */}
+              {formData.name && formData.name.length >= 2 && formData.quantity && !manualMode && (
+                <Button
+                  type="button"
+                  onClick={() => {
+                    setShowAutocomplete(false)
+                    performSearch()
+                  }}
+                  disabled={isSearching || isLoading}
+                  className={cn(
+                    "w-full h-11 mt-2 rounded-xl font-medium",
+                    "bg-gradient-to-r from-blue-500 to-primary-500",
+                    "hover:from-blue-600 hover:to-primary-600",
+                    "text-white shadow-md hover:shadow-lg",
+                    "transition-all duration-200"
+                  )}
+                >
+                  {isSearching ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      {t('edit.searchingNutrition')}
+                    </>
+                  ) : (
+                    <>
+                      <Search className="w-4 h-4 mr-2" />
+                      {t('edit.searchNutrition')}
+                    </>
+                  )}
+                </Button>
+              )}
+
+              {/* Hint text for search */}
+              {formData.name && formData.name.length < 2 && !manualMode && (
+                <p className="text-xs text-gray-500 mt-2">
+                  {t('edit.enterFoodName')}
+                </p>
               )}
             </section>
 

@@ -58,6 +58,7 @@ import {
 } from '@/data/nutritionReferenceExtended'
 import { searchNutrition } from '@/services/nutritionApi'
 import type { DetectedItem, FoodItemUpdate } from '@/types/foodLog'
+import { NutritionSourceBadgeInline } from './NutritionSourceBadge'
 
 // REMOVED: Automatic debounce - Now using explicit search button
 // const API_DEBOUNCE_MS = 300
@@ -407,6 +408,13 @@ export function FoodItemExpandableCard({
         <div className="flex-1 min-w-0">
           {/* Food name and badges */}
           <div className="flex items-center gap-2 flex-wrap mb-2">
+            {/* Source badge from SCAN/EDIT harmonization */}
+            {item.source && (
+              <NutritionSourceBadgeInline
+                source={item.source}
+                needsVerification={item.needs_verification}
+              />
+            )}
             <span className="font-semibold text-gray-900 capitalize text-base sm:text-lg">
               {item.name}
             </span>
@@ -416,15 +424,6 @@ export function FoodItemExpandableCard({
             )}>
               {item.quantity} {item.unit}
             </span>
-            {item.source === 'manual' && (
-              <span className={cn(
-                "text-xs font-medium px-2.5 py-1 rounded-full",
-                "bg-gradient-to-r from-blue-50 to-indigo-50",
-                "text-blue-700 border border-blue-200"
-              )}>
-                {t('userCorrected')}
-              </span>
-            )}
             {/* Confidence Badge */}
             <span className={cn(
               "inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full",
