@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate, MealType } from '@/types/foodLog'
 import { Star, Sparkles, AlertTriangle, HeartPulse, Utensils, Camera, Edit, Loader2, Check, Info, ChevronDown, ThumbsUp, Meh, BarChart3, Lightbulb, Save, ArrowRight } from '@/lib/icons'
-import { FoodEditBottomSheet } from './FoodEditBottomSheet'
-import type { FoodItem } from './EditFoodItemModal'
+import { FoodItemExpandableCard } from './FoodItemExpandableCard'
 
 interface AnalysisResultProps {
   result: ImageAnalyzeResponse
@@ -44,10 +43,9 @@ const VERDICT_STYLE = {
 
 export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProps) {
   const { t } = useTranslation('vision')
-  const [editingItem, setEditingItem] = useState<FoodItem | null>(null)
-  const [editingItemIndex, setEditingItemIndex] = useState<number | null>(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [expandedSection, setExpandedSection] = useState<'items' | 'health' | null>('health')
+  const [expandedItemIndex, setExpandedItemIndex] = useState<number | null>(null)
   const [isSaved, setIsSaved] = useState(!!result.food_log_id)
   const [localItems, setLocalItems] = useState<DetectedItem[]>(result.items)
   const queryClient = useQueryClient()
@@ -102,31 +100,17 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
     )
   }
 
-  // Open modal for editing an item
-  const startEditing = (item: DetectedItem, index: number) => {
-    setEditingItem({
-      name: item.name,
-      quantity: item.quantity,
-      unit: item.unit,
-      calories: item.calories,
-      protein: item.protein,
-      carbs: item.carbs,
-      fat: item.fat,
-      fiber: item.fiber,
-      source: item.source,
-      confidence: item.confidence,
-    })
-    setEditingItemIndex(index)
+  // Toggle expand for inline editing
+  const handleToggleExpand = (index: number | null) => {
+    setExpandedItemIndex(index)
   }
 
   // Save edited item (local state only, not API - this is pre-save)
-  const handleSaveEdit = async (update: FoodItemUpdate): Promise<void> => {
-    if (editingItemIndex === null) return
-
+  const handleSaveEdit = (index: number, update: FoodItemUpdate): void => {
     // Update the item in local state
     const updatedItems = [...localItems]
-    updatedItems[editingItemIndex] = {
-      ...updatedItems[editingItemIndex],
+    updatedItems[index] = {
+      ...updatedItems[index],
       ...update,
       source: 'manual', // Mark as manually corrected
     }
@@ -144,18 +128,11 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
     result.total_carbs = newTotals.total_carbs
     result.total_fat = newTotals.total_fat
 
-    // Close modal
-    setEditingItem(null)
-    setEditingItemIndex(null)
+    // Collapse the card
+    setExpandedItemIndex(null)
 
     // Show success message
     toast.success(t('itemUpdated'))
-  }
-
-  // Close modal without saving
-  const handleCloseEdit = () => {
-    setEditingItem(null)
-    setEditingItemIndex(null)
   }
 
   const getConfidenceLabel = (confidence: number) => {
@@ -472,51 +449,15 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
           {expandedSection === 'items' && (
             <div className="px-4 pb-4 space-y-3">
               {localItems.map((item, index) => (
-                <div
+                <FoodItemExpandableCard
                   key={index}
-                  className="border rounded-lg p-3 hover:border-primary-300 hover:shadow-sm transition-all"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium text-gray-900 capitalize">{item.name}</span>
-                        <span className="text-sm text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                          {item.quantity} {item.unit}
-                        </span>
-                        {item.source === 'manual' && (
-                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
-                            {t('userCorrected')}
-                          </span>
-                        )}
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            item.confidence >= 0.8
-                              ? 'bg-green-100 text-green-700'
-                              : item.confidence >= 0.6
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : 'bg-orange-100 text-orange-700'
-                          }`}
-                        >
-                          {getConfidenceLabel(item.confidence)}
-                        </span>
-                      </div>
-                      <div className="flex gap-3 mt-2 text-sm">
-                        <span className="text-gray-700 font-medium">{item.calories} kcal</span>
-                        <span className="text-blue-600">{item.protein}g P</span>
-                        <span className="text-yellow-600">{item.carbs}g G</span>
-                        <span className="text-orange-600">{item.fat}g L</span>
-                      </div>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => startEditing(item, index)}
-                      className="text-gray-400 hover:text-primary-600"
-                    >
-                      <Edit className="w-4 h-4 mr-1" /> {t('result.modify')}
-                    </Button>
-                  </div>
-                </div>
+                  item={item}
+                  index={index}
+                  isExpanded={expandedItemIndex === index}
+                  onToggleExpand={handleToggleExpand}
+                  onSave={handleSaveEdit}
+                  getConfidenceLabel={getConfidenceLabel}
+                />
               ))}
             </div>
           )}
@@ -604,13 +545,6 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
         )}
       </div>
 
-      {/* Edit Food Item - Bottom Sheet for better mobile UX */}
-      <FoodEditBottomSheet
-        item={editingItem}
-        onClose={handleCloseEdit}
-        onSave={handleSaveEdit}
-        isLoading={false}
-      />
     </div>
   )
 }
