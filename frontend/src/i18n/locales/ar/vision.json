@@ -255,7 +255,11 @@
     "fiber": "ألياف",
     "foodNotFound": "الطعام غير موجود في قاعدة البيانات. أدخل القيم يدويًا.",
     "decreaseQuantity": "تقليل الكمية",
-    "increaseQuantity": "زيادة الكمية"
+    "increaseQuantity": "زيادة الكمية",
+    "search": "بحث",
+    "searchNutrition": "البحث عن القيم الغذائية",
+    "enterFoodName": "أدخل اسم الطعام (حرفان على الأقل)",
+    "foundFrom": "تم العثور عليه في"
   },
   "bottomSheet": {
     "moreOptions": "خيارات إضافية"

@@ -255,7 +255,11 @@
     "fiber": "Fibra",
     "foodNotFound": "Alimento não encontrado no banco de dados. Insira os valores manualmente.",
     "decreaseQuantity": "Diminuir quantidade",
-    "increaseQuantity": "Aumentar quantidade"
+    "increaseQuantity": "Aumentar quantidade",
+    "search": "Pesquisar",
+    "searchNutrition": "Pesquisar valores nutricionais",
+    "enterFoodName": "Insira o nome do alimento (mín. 2 caracteres)",
+    "foundFrom": "Encontrado em"
   },
   "bottomSheet": {
     "moreOptions": "Mais opções"

@@ -255,7 +255,11 @@
     "fiber": "纤维",
     "foodNotFound": "数据库中未找到该食物。请手动输入数值。",
     "decreaseQuantity": "减少数量",
-    "increaseQuantity": "增加数量"
+    "increaseQuantity": "增加数量",
+    "search": "搜索",
+    "searchNutrition": "搜索营养信息",
+    "enterFoodName": "输入食物名称（至少2个字符）",
+    "foundFrom": "来源于"
   },
   "bottomSheet": {
     "moreOptions": "更多选项"

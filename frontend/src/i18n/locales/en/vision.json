@@ -247,7 +247,11 @@
     "fiber": "Fiber",
     "foodNotFound": "Food not found in database. Enter values manually.",
     "decreaseQuantity": "Decrease quantity",
-    "increaseQuantity": "Increase quantity"
+    "increaseQuantity": "Increase quantity",
+    "search": "Search",
+    "searchNutrition": "Search nutrition values",
+    "enterFoodName": "Enter food name (min. 2 characters)",
+    "foundFrom": "Found in"
   },
   "bottomSheet": {
     "moreOptions": "More options"

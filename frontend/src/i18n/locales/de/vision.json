@@ -255,7 +255,11 @@
     "fiber": "Ballaststoffe",
     "foodNotFound": "Lebensmittel nicht in der Datenbank gefunden. Bitte Werte manuell eingeben.",
     "decreaseQuantity": "Menge verringern",
-    "increaseQuantity": "Menge erhöhen"
+    "increaseQuantity": "Menge erhöhen",
+    "search": "Suchen",
+    "searchNutrition": "Nährwerte suchen",
+    "enterFoodName": "Lebensmittelnamen eingeben (mind. 2 Zeichen)",
+    "foundFrom": "Gefunden in"
   },
   "bottomSheet": {
     "moreOptions": "Mehr Optionen"

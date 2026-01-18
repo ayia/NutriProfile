@@ -44,7 +44,6 @@ import {
 import { toast } from 'sonner'
 import {
   searchNutritionHybrid,
-  getOptimalDebounce,
   initializeStaticDatabase,
   type NutritionResult,
 } from '@/services/nutritionSearch'
@@ -218,22 +217,24 @@ export function FoodEditBottomSheet({
     }
   }, [formData.name, formData.quantity, formData.unit])
 
-  // Debounced hybrid search - Adaptive debounce (150ms local, 800ms API)
+  // Track if user has manually triggered search
+  const [hasSearched, setHasSearched] = useState(false)
+
+  // Manual search trigger - Called when user clicks the search button
+  const handleSearchClick = useCallback(() => {
+    if (!formData.name || formData.name.length < 2) {
+      toast.error(t('edit.enterFoodName'))
+      return
+    }
+    setHasSearched(true)
+    performHybridSearch()
+  }, [formData.name, formData.quantity, i18n.language])
+
+  // Reset search state when food name changes significantly
   useEffect(() => {
-    // Skip if manual mode or no data
-    if (manualMode || !formData.name || formData.name.length < 2 || !formData.quantity) return
-    // Skip if local nutrition already found
-    if (localNutrition) return
-
-    // Get optimal debounce based on query (150ms for local, 800ms for API)
-    const debounceMs = getOptimalDebounce(formData.name, i18n.language)
-
-    const timer = setTimeout(() => {
-      performHybridSearch()
-    }, debounceMs)
-
-    return () => clearTimeout(timer)
-  }, [formData.name, formData.quantity, manualMode, localNutrition, i18n.language])
+    setHasSearched(false)
+    setSearchResult(null)
+  }, [formData.name])
 
   // Hybrid search: Static (0ms) → IndexedDB (0-5ms) → Cache (0ms) → API (async)
   const performHybridSearch = async () => {
@@ -525,30 +526,65 @@ export function FoodEditBottomSheet({
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 py-4 space-y-4">
-          {/* Food Name */}
+          {/* Food Name with Search Button */}
           <div className="space-y-2 relative">
             <label htmlFor="food-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               {t('foodName')}
             </label>
-            <div className="relative">
-              <Search className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none",
-                isRTL ? "right-3" : "left-3"
-              )} />
-              <Input
-                ref={firstFocusableRef}
-                id="food-name"
-                value={formData.name}
-                onChange={e => {
-                  setFormData(prev => ({ ...prev, name: e.target.value }))
-                  setShowAutocomplete(true)
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className={cn(
+                  "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none",
+                  isRTL ? "right-3" : "left-3"
+                )} />
+                <Input
+                  ref={firstFocusableRef}
+                  id="food-name"
+                  value={formData.name}
+                  onChange={e => {
+                    setFormData(prev => ({ ...prev, name: e.target.value }))
+                    setShowAutocomplete(true)
+                  }}
+                  onFocus={() => setShowAutocomplete(true)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      setShowAutocomplete(false)
+                      handleSearchClick()
+                    }
+                  }}
+                  placeholder={t('foodNamePlaceholder')}
+                  disabled={isLoading}
+                  className={cn("w-full h-12 rounded-xl", isRTL ? "pr-10 pl-3" : "pl-10 pr-3")}
+                  autoComplete="off"
+                />
+              </div>
+              {/* Search Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAutocomplete(false)
+                  handleSearchClick()
                 }}
-                onFocus={() => setShowAutocomplete(true)}
-                placeholder={t('foodNamePlaceholder')}
-                disabled={isLoading}
-                className={cn("w-full h-12 rounded-xl", isRTL ? "pr-10 pl-3" : "pl-10 pr-3")}
-                autoComplete="off"
-              />
+                disabled={isLoading || isSearching || !formData.name || formData.name.length < 2}
+                className={cn(
+                  "flex items-center justify-center h-12 px-4 rounded-xl font-medium transition-all",
+                  "bg-gradient-to-r from-primary-500 to-emerald-500 text-white",
+                  "hover:from-primary-600 hover:to-emerald-600 shadow-lg",
+                  "disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none",
+                  "active:scale-95"
+                )}
+                aria-label={t('edit.searchNutrition')}
+              >
+                {isSearching ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <Search className="w-5 h-5 sm:mr-2" />
+                    <span className="hidden sm:inline">{t('edit.search')}</span>
+                  </>
+                )}
+              </button>
             </div>
 
             {/* Autocomplete */}
@@ -688,11 +724,28 @@ export function FoodEditBottomSheet({
             </div>
           )}
 
-          {/* Loading */}
-          {isSearching && (
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
-              <Loader2 className="w-4 h-4 animate-spin text-primary-500" />
-              <span className="text-sm text-gray-600 dark:text-gray-400">{t('edit.searchingNutrition')}</span>
+          {/* Search Status Message - Show after search is triggered */}
+          {hasSearched && !isSearching && searchResult && (
+            <div className={cn(
+              "flex items-center gap-3 p-3 rounded-xl",
+              searchResult.found
+                ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
+                : "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300"
+            )}>
+              {searchResult.found ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  <span className="text-sm">
+                    {t('edit.foundFrom')} {searchResult.source === 'usda' ? 'USDA' : searchResult.source === 'static' ? t('edit.source.local') : t('edit.source.ai')}
+                    {searchResult.responseTime && ` (${searchResult.responseTime.toFixed(0)}ms)`}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Edit3 className="w-4 h-4" />
+                  <span className="text-sm">{t('edit.foodNotFound')}</span>
+                </>
+              )}
             </div>
           )}
 
