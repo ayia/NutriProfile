@@ -48,6 +48,13 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
   const [expandedItemIndex, setExpandedItemIndex] = useState<number | null>(null)
   const [isSaved, setIsSaved] = useState(!!result.food_log_id)
   const [localItems, setLocalItems] = useState<DetectedItem[]>(result.items)
+  // Local state for totals - ensures React re-renders when values change
+  const [localTotals, setLocalTotals] = useState({
+    total_calories: result.total_calories,
+    total_protein: result.total_protein,
+    total_carbs: result.total_carbs,
+    total_fat: result.total_fat,
+  })
   const queryClient = useQueryClient()
 
   // Mutation pour sauvegarder le repas (utilise le nouvel endpoint sans reconsommer de crédit)
@@ -56,10 +63,10 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
       meal_type: mealType,
       description: result.description,
       items: localItems, // Use local items (potentially edited)
-      total_calories: result.total_calories,
-      total_protein: result.total_protein,
-      total_carbs: result.total_carbs,
-      total_fat: result.total_fat,
+      total_calories: localTotals.total_calories,
+      total_protein: localTotals.total_protein,
+      total_carbs: localTotals.total_carbs,
+      total_fat: localTotals.total_fat,
       confidence: result.confidence,
       model_used: result.model_used,
     }),
@@ -107,7 +114,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
 
   // Save edited item (local state only, not API - this is pre-save)
   const handleSaveEdit = (index: number, update: FoodItemUpdate): void => {
-    // Update the item in local state
+    // Update the item in local state (immutable update)
     const updatedItems = [...localItems]
     updatedItems[index] = {
       ...updatedItems[index],
@@ -118,15 +125,11 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
     // Recalculate totals
     const newTotals = calculateTotals(updatedItems)
 
-    // Update local state
+    // Update local state for items
     setLocalItems(updatedItems)
 
-    // Update result object with new totals
-    result.items = updatedItems
-    result.total_calories = newTotals.total_calories
-    result.total_protein = newTotals.total_protein
-    result.total_carbs = newTotals.total_carbs
-    result.total_fat = newTotals.total_fat
+    // Update local state for totals (this triggers React re-render)
+    setLocalTotals(newTotals)
 
     // Collapse the card
     setExpandedItemIndex(null)
@@ -202,10 +205,10 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
         </div>
       )}
 
-      {/* Macros avec barres de progression circulaires */}
+      {/* Macros avec barres de progression circulaires - using localTotals for reactivity */}
       <div className="p-4 bg-gray-50 border-b">
         <div className="grid grid-cols-4 gap-4">
-          {/* Calories */}
+          {/* Calories - dynamic based on ~2000 kcal daily target */}
           <div className="text-center">
             <div className="relative inline-block w-16 h-16">
               <svg className="w-16 h-16 transform -rotate-90">
@@ -219,18 +222,18 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray="176"
-                  strokeDashoffset="44"
-                  className="transition-all duration-1000"
+                  strokeDashoffset={Math.max(0, 176 - (localTotals.total_calories / 800) * 176)}
+                  className="transition-all duration-500"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm font-bold text-gray-800">{result.total_calories}</span>
+                <span className="text-sm font-bold text-gray-800">{Math.round(localTotals.total_calories)}</span>
               </div>
             </div>
             <div className="text-xs text-gray-600 mt-1 font-medium">{t('result.macros.calories')}</div>
           </div>
 
-          {/* Protein */}
+          {/* Protein - dynamic based on ~50g per meal target */}
           <div className="text-center">
             <div className="relative inline-block w-16 h-16">
               <svg className="w-16 h-16 transform -rotate-90">
@@ -244,18 +247,18 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray="176"
-                  strokeDashoffset="88"
-                  className="transition-all duration-1000"
+                  strokeDashoffset={Math.max(0, 176 - (localTotals.total_protein / 50) * 176)}
+                  className="transition-all duration-500"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm font-bold text-blue-600">{result.total_protein}g</span>
+                <span className="text-sm font-bold text-blue-600">{Math.round(localTotals.total_protein)}g</span>
               </div>
             </div>
             <div className="text-xs text-gray-600 mt-1 font-medium">{t('result.macros.protein')}</div>
           </div>
 
-          {/* Carbs */}
+          {/* Carbs - dynamic based on ~80g per meal target */}
           <div className="text-center">
             <div className="relative inline-block w-16 h-16">
               <svg className="w-16 h-16 transform -rotate-90">
@@ -269,18 +272,18 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray="176"
-                  strokeDashoffset="66"
-                  className="transition-all duration-1000"
+                  strokeDashoffset={Math.max(0, 176 - (localTotals.total_carbs / 80) * 176)}
+                  className="transition-all duration-500"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm font-bold text-yellow-600">{result.total_carbs}g</span>
+                <span className="text-sm font-bold text-yellow-600">{Math.round(localTotals.total_carbs)}g</span>
               </div>
             </div>
             <div className="text-xs text-gray-600 mt-1 font-medium">{t('result.macros.carbs')}</div>
           </div>
 
-          {/* Fat */}
+          {/* Fat - dynamic based on ~30g per meal target */}
           <div className="text-center">
             <div className="relative inline-block w-16 h-16">
               <svg className="w-16 h-16 transform -rotate-90">
@@ -294,12 +297,12 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray="176"
-                  strokeDashoffset="110"
-                  className="transition-all duration-1000"
+                  strokeDashoffset={Math.max(0, 176 - (localTotals.total_fat / 30) * 176)}
+                  className="transition-all duration-500"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm font-bold text-orange-600">{result.total_fat}g</span>
+                <span className="text-sm font-bold text-orange-600">{Math.round(localTotals.total_fat)}g</span>
               </div>
             </div>
             <div className="text-xs text-gray-600 mt-1 font-medium">{t('result.macros.fat')}</div>
