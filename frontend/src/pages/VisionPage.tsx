@@ -46,12 +46,18 @@ export function VisionPage() {
     queryKey: ['dailyMeals', selectedDate],
     queryFn: () => visionApi.getDailyMeals(selectedDate),
     enabled: activeTab === 'today',
+    staleTime: 5 * 60 * 1000,      // 5 min before considered stale
+    gcTime: 30 * 60 * 1000,        // 30 min cache
+    refetchOnWindowFocus: false,
   })
 
   const historyQuery = useQuery({
     queryKey: ['foodLogs', 'history'],
     queryFn: () => visionApi.getLogs(undefined, undefined, 50),
     enabled: activeTab === 'history',
+    staleTime: 10 * 60 * 1000,     // 10 min (history changes rarely)
+    gcTime: 60 * 60 * 1000,        // 1h cache
+    refetchOnWindowFocus: false,
   })
 
   // Mutation for adding water with feedback
@@ -151,7 +157,7 @@ export function VisionPage() {
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
               <tab.IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 ${activeTab === tab.id ? 'animate-bounce-soft' : ''}`} />
-              <span className="hidden xs:inline sm:inline">{tab.label}</span>
+              <span className="text-[10px] xs:text-xs sm:text-sm">{tab.label}</span>
             </button>
           ))}
         </div>

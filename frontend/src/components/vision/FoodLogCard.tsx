@@ -243,7 +243,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       )}
 
       {/* Totaux */}
-      <div className="grid grid-cols-4 divide-x">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-0 sm:divide-x">
         <div className="p-3 text-center">
           <div className="text-lg font-semibold">{log.total_calories || 0}</div>
           <div className="text-xs text-gray-500">kcal</div>

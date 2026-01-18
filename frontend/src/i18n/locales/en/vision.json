@@ -49,8 +49,13 @@
     "tip3": "Avoid reflections and harsh shadows",
     "takePhoto": "Take a photo",
     "gallery": "Gallery",
-    "invalidFile": "Please select an image",
+    "invalidFile": "Invalid file type",
+    "invalidFileDescription": "Please select an image file (JPG, PNG, or WebP)",
     "error": "Error during analysis. Please try again.",
+    "limitReached": "Daily limit reached",
+    "limitReachedDescription": "You have reached your daily analysis limit. Upgrade to Premium for unlimited analyses.",
+    "serverError": "Server error. Please try again later.",
+    "compressionError": "Error compressing image. Please try another photo.",
     "aiWorking": "AI working... patience!"
   },
   "analysisSteps": {

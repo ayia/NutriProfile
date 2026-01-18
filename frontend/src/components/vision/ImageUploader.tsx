@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { visionApi, compressImage } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import type { MealType, ImageAnalyzeResponse } from '@/types/foodLog'
@@ -49,8 +50,18 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
         mealType: selectedMealType,
       }), 300) // Petit délai pour l'animation
     },
-    onError: () => {
+    onError: (error: Error & { response?: { status?: number } }) => {
       setCurrentStep(0)
+      // Differentiate error types for better UX
+      if (error?.response?.status === 429) {
+        toast.error(t('uploader.limitReached'), {
+          description: t('uploader.limitReachedDescription'),
+        })
+      } else if (error?.response?.status === 500) {
+        toast.error(t('uploader.serverError'))
+      } else {
+        toast.error(t('uploader.error'))
+      }
     },
   })
 
@@ -80,7 +91,9 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      alert(t('uploader.invalidFile'))
+      toast.error(t('uploader.invalidFile'), {
+        description: t('uploader.invalidFileDescription'),
+      })
       return
     }
 
@@ -99,7 +112,7 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
         save_to_log: false,
       })
     } catch {
-      // Image compression failed silently
+      toast.error(t('uploader.compressionError'))
     }
   }, [selectedMealType, analyzeMutation, t])
 
@@ -158,7 +171,7 @@ export function ImageUploader({ onAnalysisComplete }: ImageUploaderProps) {
         <label className="block text-sm font-medium text-gray-700 mb-2">
           {t('uploader.mealTypeLabel')}
         </label>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {MEAL_TYPES.map((type) => {
             const MealIcon = getMealTypeIcon(type)
             const colorClass = MEAL_TYPE_COLORS[type] || 'text-gray-500'

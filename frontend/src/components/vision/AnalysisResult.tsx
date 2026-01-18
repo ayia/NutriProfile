@@ -207,7 +207,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
 
       {/* Macros avec barres de progression circulaires - using localTotals for reactivity */}
       <div className="p-4 bg-gray-50 border-b">
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
           {/* Calories - dynamic based on ~2000 kcal daily target */}
           <div className="text-center">
             <div className="relative inline-block w-16 h-16">

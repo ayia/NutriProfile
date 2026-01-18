@@ -49,8 +49,13 @@
     "tip3": "Évitez les reflets et les ombres fortes",
     "takePhoto": "Prendre une photo",
     "gallery": "Galerie",
-    "invalidFile": "Veuillez sélectionner une image",
+    "invalidFile": "Type de fichier invalide",
+    "invalidFileDescription": "Veuillez sélectionner une image (JPG, PNG ou WebP)",
     "error": "Erreur lors de l'analyse. Veuillez réessayer.",
+    "limitReached": "Limite quotidienne atteinte",
+    "limitReachedDescription": "Vous avez atteint votre limite d'analyses quotidiennes. Passez à Premium pour des analyses illimitées.",
+    "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
+    "compressionError": "Erreur lors de la compression de l'image. Essayez une autre photo.",
     "aiWorking": "IA en action... patience !"
   },
   "analysisSteps": {
