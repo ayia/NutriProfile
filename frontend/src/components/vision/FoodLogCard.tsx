@@ -360,6 +360,7 @@ export function FoodLogCard({ log, onEdit }: FoodLogCardProps) {
       {/* Edit Food Item Modal */}
       <EditFoodItemModalV2
         item={editingItem}
+        isOpen={editingItem !== null}
         onClose={handleCloseModal}
         onSave={handleSaveEdit}
         isLoading={isAddingNew ? addItemMutation.isPending : updateItemMutation.isPending}

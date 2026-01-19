@@ -596,14 +596,13 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
       </div>
 
       {/* Add Food Modal */}
-      {showAddFoodModal && (
-        <EditFoodItemModalV2
-          item={null}
-          onClose={() => setShowAddFoodModal(false)}
-          onSave={handleAddItem}
-          isLoading={false}
-        />
-      )}
+      <EditFoodItemModalV2
+        item={null}
+        isOpen={showAddFoodModal}
+        onClose={() => setShowAddFoodModal(false)}
+        onSave={handleAddItem}
+        isLoading={false}
+      />
     </div>
   )
 }

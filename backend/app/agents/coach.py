@@ -23,7 +23,7 @@ COACH_MODELS = [
 ]
 
 # Modèle de validation (pour valider le consensus)
-VALIDATION_MODEL = "HuggingFaceH4/zephyr-7b-beta"
+VALIDATION_MODEL = "Qwen/Qwen2.5-7B-Instruct"
 
 
 class CoachInput:

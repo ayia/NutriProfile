@@ -29,7 +29,7 @@ MEAL_PLAN_MODELS = [
 ]
 
 # Modèle de validation nutritionnelle
-NUTRITION_VALIDATION_MODEL = "HuggingFaceH4/zephyr-7b-beta"
+NUTRITION_VALIDATION_MODEL = "Qwen/Qwen2.5-7B-Instruct"
 
 # Noms des jours
 DAY_NAMES = {

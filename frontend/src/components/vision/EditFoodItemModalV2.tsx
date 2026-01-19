@@ -65,6 +65,7 @@ import type { FoodItem, FoodItemUpdate } from './EditFoodItemModal'
 
 interface EditFoodItemModalV2Props {
   item: FoodItem | null
+  isOpen: boolean // Explicit open state to handle add mode (item=null, isOpen=true)
   onClose: () => void
   onSave: (updatedItem: FoodItemUpdate) => Promise<void>
   isLoading: boolean
@@ -83,6 +84,7 @@ const QUICK_AMOUNTS = [10, 25, 50, 100]
 
 export function EditFoodItemModalV2({
   item,
+  isOpen,
   onClose,
   onSave,
   isLoading,
@@ -98,7 +100,7 @@ export function EditFoodItemModalV2({
     queryKey: ['recentFoods'],
     queryFn: () => visionApi.getRecentFoods(10),
     staleTime: 5 * 60 * 1000,
-    enabled: !!item,
+    enabled: isOpen,
   })
   const recentFoods = recentFoodsData?.items?.map(f => f.name) ?? []
 
@@ -107,7 +109,7 @@ export function EditFoodItemModalV2({
     queryKey: ['favoriteFoods'],
     queryFn: () => visionApi.getFavorites(),
     staleTime: 5 * 60 * 1000,
-    enabled: !!item,
+    enabled: isOpen,
   })
   const favoriteFoods = favoritesData?.items?.map(f => f.name.toLowerCase()) ?? []
 
@@ -178,6 +180,15 @@ export function EditFoodItemModalV2({
     fiber: 0,
   })
 
+  // Original AI nutrition values (from item) - used for comparison
+  const [originalNutrition, setOriginalNutrition] = useState<{
+    calories: number
+    protein: number
+    carbs: number
+    fat: number
+    fiber: number
+  } | null>(null)
+
   // Autocomplete suggestions
   const autocompleteResults = useMemo(() => {
     if (!formData.name || formData.name.length < 1) return []
@@ -201,9 +212,15 @@ export function EditFoodItemModalV2({
     return favoriteFoods.includes((formData.name || '').toLowerCase())
   }, [favoriteFoods, formData.name])
 
-  // Initialize form when item changes
+  // Determine if we're in add mode (item is null but modal is open)
+  const isAddMode = isOpen && item === null
+
+  // Initialize form when modal opens or item changes
   useEffect(() => {
+    if (!isOpen) return
+
     if (item) {
+      // Edit mode: populate with existing item data
       setFormData({
         name: item.name,
         quantity: item.quantity,
@@ -211,20 +228,42 @@ export function EditFoodItemModalV2({
       })
 
       if (item.calories) {
-        setManualNutrition({
+        const originalValues = {
           calories: item.calories,
           protein: item.protein || 0,
           carbs: item.carbs || 0,
           fat: item.fat || 0,
           fiber: item.fiber || 0,
-        })
+        }
+        setManualNutrition(originalValues)
+        // Store original AI values for comparison with USDA
+        setOriginalNutrition(originalValues)
+      } else {
+        setOriginalNutrition(null)
       }
 
       // Reset search state
       setSearchResult(null)
       setManualMode(false)
+    } else {
+      // Add mode: initialize with empty values
+      setFormData({
+        name: '',
+        quantity: '100',
+        unit: 'g',
+      })
+      setManualNutrition({
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+        fiber: 0,
+      })
+      setOriginalNutrition(null)
+      setSearchResult(null)
+      setManualMode(false)
     }
-  }, [item])
+  }, [isOpen, item])
 
   // Auto-trigger USDA search when food name and quantity are valid
   // Debounced to avoid excessive API calls
@@ -398,7 +437,7 @@ export function EditFoodItemModalV2({
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
-    if (item) {
+    if (isOpen) {
       document.addEventListener('keydown', handleEscape)
       document.body.style.overflow = 'hidden'
       // Focus first input after animation
@@ -410,9 +449,10 @@ export function EditFoodItemModalV2({
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = ''
     }
-  }, [item, onClose])
+  }, [isOpen, onClose])
 
-  if (!item) return null
+  // Don't render if modal is not open
+  if (!isOpen) return null
 
   // Determine displayed nutrition - USDA only (no local database)
   const displayedNutrition = manualMode
@@ -457,13 +497,13 @@ export function EditFoodItemModalV2({
         <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 shrink-0 bg-white">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-emerald-500 text-white">
-              <Edit3 className="w-5 h-5" />
+              {isAddMode ? <Plus className="w-5 h-5" /> : <Edit3 className="w-5 h-5" />}
             </div>
             <h2
               id="modal-title"
               className="text-lg font-semibold text-gray-900"
             >
-              {t('editFood')}
+              {isAddMode ? t('addFood') : t('editFood')}
             </h2>
           </div>
 
@@ -868,18 +908,52 @@ export function EditFoodItemModalV2({
               </div>
             )}
 
-            {/* Source Badge - Always USDA (no local database) */}
+            {/* Source Badge with Original AI Values Comparison */}
             {displayedNutrition && !manualMode && (
-              <div className="flex items-center gap-2">
-                <span className={cn(
-                  "inline-flex items-center gap-1.5 px-3 py-1.5",
-                  "bg-blue-100",
-                  "text-blue-700",
-                  "text-xs font-medium rounded-full"
-                )}>
-                  <Database className="w-3.5 h-3.5" />
-                  USDA
-                </span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className={cn(
+                    "inline-flex items-center gap-1.5 px-3 py-1.5",
+                    "bg-blue-100",
+                    "text-blue-700",
+                    "text-xs font-medium rounded-full"
+                  )}>
+                    <Database className="w-3.5 h-3.5" />
+                    USDA
+                  </span>
+                </div>
+
+                {/* Show original AI values if they differ significantly from USDA */}
+                {originalNutrition && searchResult?.found && Math.abs(originalNutrition.calories - displayedNutrition.calories) >= 10 && (
+                  <div className={cn(
+                    "p-3 rounded-xl",
+                    "bg-amber-50",
+                    "border border-amber-200"
+                  )}>
+                    <div className="flex items-start gap-2">
+                      <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                      <div className="flex-1 space-y-2">
+                        <p className="text-xs text-amber-800">
+                          {t('edit.valuesUpdated', { original: Math.round(originalNutrition.calories), usda: Math.round(displayedNutrition.calories) })}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setManualNutrition(originalNutrition)
+                            setManualMode(true)
+                          }}
+                          className={cn(
+                            "text-xs font-medium px-2 py-1 rounded-lg",
+                            "text-amber-700 bg-amber-100 hover:bg-amber-200",
+                            "transition-colors duration-200"
+                          )}
+                        >
+                          {t('edit.keepOriginal')}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
