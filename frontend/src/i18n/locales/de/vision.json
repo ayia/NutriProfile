@@ -117,7 +117,9 @@
     "mealSaved": "Mahlzeit erfolgreich gespeichert",
     "saveError": "Fehler beim Speichern. Bitte versuchen Sie es erneut.",
     "modify": "Bearbeiten",
-    "corrected": "Korrigiert"
+    "corrected": "Korrigiert",
+    "addFood": "Lebensmittel hinzufügen",
+    "itemAdded": "Lebensmittel zur Mahlzeit hinzugefügt"
   },
   "foodLog": {
     "foods": "Lebensmittel",

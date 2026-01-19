@@ -117,7 +117,9 @@
     "mealSaved": "Repas enregistré avec succès",
     "saveError": "Erreur lors de l'enregistrement. Réessayez.",
     "modify": "Modifier",
-    "corrected": "Corrigé"
+    "corrected": "Corrigé",
+    "addFood": "Ajouter un aliment",
+    "itemAdded": "Aliment ajouté au repas"
   },
   "foodLog": {
     "foods": "Aliments",

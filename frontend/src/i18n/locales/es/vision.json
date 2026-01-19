@@ -117,7 +117,9 @@
     "mealSaved": "Comida guardada exitosamente",
     "saveError": "Error al guardar. Por favor intenta de nuevo.",
     "modify": "Editar",
-    "corrected": "Corregido"
+    "corrected": "Corregido",
+    "addFood": "Añadir alimento",
+    "itemAdded": "Alimento añadido a la comida"
   },
   "foodLog": {
     "foods": "Alimentos",

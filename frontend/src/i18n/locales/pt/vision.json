@@ -117,7 +117,9 @@
     "mealSaved": "Refeição salva com sucesso",
     "saveError": "Erro ao salvar. Por favor tente novamente.",
     "modify": "Editar",
-    "corrected": "Corrigido"
+    "corrected": "Corrigido",
+    "addFood": "Adicionar alimento",
+    "itemAdded": "Alimento adicionado à refeição"
   },
   "foodLog": {
     "foods": "Alimentos",

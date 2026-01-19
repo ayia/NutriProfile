@@ -117,7 +117,9 @@
     "mealSaved": "餐食保存成功",
     "saveError": "保存失败。请重试。",
     "modify": "编辑",
-    "corrected": "已修正"
+    "corrected": "已修正",
+    "addFood": "添加食物",
+    "itemAdded": "食物已添加到餐食"
   },
   "foodLog": {
     "foods": "食物",

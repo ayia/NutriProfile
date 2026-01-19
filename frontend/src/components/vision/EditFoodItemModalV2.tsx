@@ -9,17 +9,16 @@
  * - Glassmorphism and micro-interactions
  * - Full accessibility support (ARIA, focus management)
  * - RTL support for Arabic
- * - Extended nutrition database (200+ foods)
  * - Quick quantity adjustments
  * - Portion size presets
  * - Visual portion guides
  * - Full i18n support (7 languages)
  *
- * Phase 1 Optimizations (January 2026):
- * - Debounce optimisé à 300ms (était 400ms)
- * - Cache LRU via nutritionApi (0ms pour requêtes répétées)
- * - Gestion automatique not_found → mode manuel avec toast
- * - Affichage hybride local-first
+ * IMPORTANT (January 2026):
+ * - Nutrition values come EXCLUSIVELY from USDA API
+ * - Local database is ONLY used for autocomplete suggestions (UX)
+ * - Auto-search triggered when food name and quantity are filled
+ * - Cache LRU via nutritionApi for performance
  *
  * NOTE: This component is LIGHT MODE ONLY.
  * All dark: classes have been removed to ensure consistent white/light backgrounds.
@@ -35,7 +34,6 @@ import {
   Loader2,
   X,
   Database,
-  Sparkles,
   Edit3,
   Check,
   Plus,
@@ -56,13 +54,11 @@ import { toast } from 'sonner'
 import { searchNutrition, type NutritionSearchResponse } from '@/services/nutritionApi'
 import {
   searchFoodsExtended,
-  getNutrition,
   getPortionPresets,
   getVisualGuide,
   VISUAL_GUIDES,
   EXTENDED_NUTRITION_REFERENCE,
   type PortionPreset,
-  type NutritionValues,
 } from '@/data/nutritionReferenceExtended'
 import { visionApi } from '@/services/visionApi'
 import type { FoodItem, FoodItemUpdate } from './EditFoodItemModal'
@@ -168,11 +164,10 @@ export function EditFoodItemModalV2({
   const [barcodeValue, setBarcodeValue] = useState('')
   const [isScanningBarcode, setIsScanningBarcode] = useState(false)
 
-  // Search state
+  // Search state - USDA API ONLY (no local database for nutrition values)
   const [searchResult, setSearchResult] = useState<NutritionSearchResponse | null>(null)
   const [isSearching, setIsSearching] = useState(false)
   const [manualMode, setManualMode] = useState(false)
-  const [localNutrition, setLocalNutrition] = useState<NutritionValues | null>(null)
 
   // Manual nutrition values
   const [manualNutrition, setManualNutrition] = useState({
@@ -225,28 +220,33 @@ export function EditFoodItemModalV2({
         })
       }
 
-      // Try to get local nutrition immediately
-      const nutrition = getNutrition(item.name, parseFloat(item.quantity) || 100, item.unit)
-      if (nutrition) {
-        setLocalNutrition(nutrition)
-      }
+      // Reset search state
+      setSearchResult(null)
+      setManualMode(false)
     }
   }, [item])
 
-  // Local nutrition calculation (instant, no debounce)
+  // Auto-trigger USDA search when food name and quantity are valid
+  // Debounced to avoid excessive API calls
   useEffect(() => {
-    if (formData.name && formData.quantity) {
-      const quantity = parseFloat(formData.quantity)
-      if (!isNaN(quantity) && quantity > 0) {
-        const nutrition = getNutrition(formData.name, quantity, formData.unit)
-        setLocalNutrition(nutrition)
-      }
+    if (!formData.name || formData.name.length < 2 || !formData.quantity || manualMode) {
+      return
     }
-  }, [formData.name, formData.quantity, formData.unit])
 
-  // NOTE: Removed auto-debounced API search - user must click "Rechercher" button explicitly
+    const quantity = parseFloat(formData.quantity)
+    if (isNaN(quantity) || quantity <= 0) {
+      return
+    }
 
-  // Phase 1: performSearch with LRU cache and auto-manual mode on not_found
+    // Debounce USDA search
+    const timeoutId = setTimeout(() => {
+      performSearch()
+    }, 500) // 500ms debounce
+
+    return () => clearTimeout(timeoutId)
+  }, [formData.name, formData.quantity, formData.unit, manualMode]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // USDA API search - the ONLY source for nutrition values
   const performSearch = async () => {
     if (!formData.name || !formData.quantity) return
 
@@ -266,7 +266,7 @@ export function EditFoodItemModalV2({
       setSearchResult(result)
 
       if (!result.found) {
-        // NOT FOUND: Auto-enable manual mode for better UX
+        // NOT FOUND in USDA: Auto-enable manual mode for better UX
         setManualMode(true)
         // Copy current values or provide defaults
         setManualNutrition({
@@ -276,11 +276,11 @@ export function EditFoodItemModalV2({
           fat: manualNutrition.fat || 3,
           fiber: manualNutrition.fiber || 2,
         })
-        // Show helpful toast
+        // Show helpful toast only once
         toast.info(t('edit.foodNotFound'), { duration: 4000 })
       }
     } catch (error) {
-      console.error('Nutrition search error:', error)
+      console.error('USDA API search error:', error)
       // On API error, enable manual mode silently
       setManualMode(true)
     } finally {
@@ -356,7 +356,7 @@ export function EditFoodItemModalV2({
     }
   }
 
-  // Handle save
+  // Handle save - USDA values only (no local database)
   const handleSave = async () => {
     if (!formData.name || !formData.quantity) return
 
@@ -366,20 +366,15 @@ export function EditFoodItemModalV2({
       unit: formData.unit,
     }
 
-    // Priority: Manual > Local DB > API Search
+    // Priority: Manual mode > USDA API search result
     if (manualMode) {
       updateData.calories = manualNutrition.calories
       updateData.protein = manualNutrition.protein
       updateData.carbs = manualNutrition.carbs
       updateData.fat = manualNutrition.fat
       updateData.fiber = manualNutrition.fiber
-    } else if (localNutrition) {
-      updateData.calories = localNutrition.calories
-      updateData.protein = localNutrition.protein
-      updateData.carbs = localNutrition.carbs
-      updateData.fat = localNutrition.fat
-      updateData.fiber = localNutrition.fiber
     } else if (searchResult && searchResult.found) {
+      // USDA API result
       updateData.calories = searchResult.calories
       updateData.protein = searchResult.protein
       updateData.carbs = searchResult.carbs
@@ -390,13 +385,13 @@ export function EditFoodItemModalV2({
     await onSave(updateData)
   }
 
-  // Validation
+  // Validation - requires USDA result or manual mode
   const isValid =
     formData.name &&
     formData.quantity &&
     !isNaN(parseFloat(formData.quantity)) &&
     parseFloat(formData.quantity) > 0 &&
-    (manualMode ? manualNutrition.calories > 0 : localNutrition || searchResult?.found || false)
+    (manualMode ? manualNutrition.calories > 0 : (searchResult?.found ?? false))
 
   // Focus management and keyboard handling
   useEffect(() => {
@@ -419,22 +414,16 @@ export function EditFoodItemModalV2({
 
   if (!item) return null
 
-  // Determine displayed nutrition
+  // Determine displayed nutrition - USDA only (no local database)
   const displayedNutrition = manualMode
     ? manualNutrition
-    : localNutrition || (searchResult?.found ? {
+    : (searchResult?.found ? {
         calories: searchResult.calories,
         protein: searchResult.protein,
         carbs: searchResult.carbs,
         fat: searchResult.fat,
         fiber: searchResult.fiber,
       } : null)
-
-  const nutritionSource = manualMode
-    ? 'manual'
-    : localNutrition
-    ? 'local'
-    : searchResult?.source || 'unknown'
 
   return (
     <div
@@ -675,38 +664,15 @@ export function EditFoodItemModalV2({
                 </div>
               )}
 
-              {/* API Search Button - Direct API call, bypasses local database */}
-              {formData.name && formData.name.length >= 2 && formData.quantity && !manualMode && (
-                <Button
-                  type="button"
-                  onClick={() => {
-                    setShowAutocomplete(false)
-                    performSearch()
-                  }}
-                  disabled={isSearching || isLoading}
-                  className={cn(
-                    "w-full h-11 mt-2 rounded-xl font-medium",
-                    "bg-gradient-to-r from-blue-500 to-primary-500",
-                    "hover:from-blue-600 hover:to-primary-600",
-                    "text-white shadow-md hover:shadow-lg",
-                    "transition-all duration-200"
-                  )}
-                >
-                  {isSearching ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                      {t('edit.searchingNutrition')}
-                    </>
-                  ) : (
-                    <>
-                      <Search className="w-4 h-4 mr-2" />
-                      {t('edit.searchNutrition')}
-                    </>
-                  )}
-                </Button>
+              {/* Auto-search info - USDA search is triggered automatically */}
+              {formData.name && formData.name.length >= 2 && formData.quantity && !manualMode && !searchResult && !isSearching && (
+                <p className="text-xs text-gray-500 mt-2 flex items-center gap-1.5">
+                  <Search className="w-3.5 h-3.5" />
+                  {t('edit.searchingNutrition')}...
+                </p>
               )}
 
-              {/* Hint text for search */}
+              {/* Hint text for minimum characters */}
               {formData.name && formData.name.length < 2 && !manualMode && (
                 <p className="text-xs text-gray-500 mt-2">
                   {t('edit.enterFoodName')}
@@ -902,40 +868,18 @@ export function EditFoodItemModalV2({
               </div>
             )}
 
-            {/* Source Badge */}
+            {/* Source Badge - Always USDA (no local database) */}
             {displayedNutrition && !manualMode && (
               <div className="flex items-center gap-2">
-                {nutritionSource === 'local' ? (
-                  <span className={cn(
-                    "inline-flex items-center gap-1.5 px-3 py-1.5",
-                    "bg-green-100",
-                    "text-green-700",
-                    "text-xs font-medium rounded-full"
-                  )}>
-                    <Database className="w-3.5 h-3.5" />
-                    {t('edit.source.local')}
-                  </span>
-                ) : nutritionSource === 'usda' ? (
-                  <span className={cn(
-                    "inline-flex items-center gap-1.5 px-3 py-1.5",
-                    "bg-blue-100",
-                    "text-blue-700",
-                    "text-xs font-medium rounded-full"
-                  )}>
-                    <Database className="w-3.5 h-3.5" />
-                    USDA
-                  </span>
-                ) : (
-                  <span className={cn(
-                    "inline-flex items-center gap-1.5 px-3 py-1.5",
-                    "bg-orange-100",
-                    "text-orange-700",
-                    "text-xs font-medium rounded-full"
-                  )}>
-                    <Sparkles className="w-3.5 h-3.5" />
-                    {t('edit.source.ai')}
-                  </span>
-                )}
+                <span className={cn(
+                  "inline-flex items-center gap-1.5 px-3 py-1.5",
+                  "bg-blue-100",
+                  "text-blue-700",
+                  "text-xs font-medium rounded-full"
+                )}>
+                  <Database className="w-3.5 h-3.5" />
+                  USDA
+                </span>
               </div>
             )}
 
@@ -1190,8 +1134,8 @@ export function EditFoodItemModalV2({
               </section>
             )}
 
-            {/* Not Found Message */}
-            {!localNutrition && searchResult && !searchResult.found && !isSearching && !manualMode && (
+            {/* Not Found in USDA Message */}
+            {searchResult && !searchResult.found && !isSearching && !manualMode && (
               <div className={cn(
                 "flex items-start gap-3 p-4 rounded-2xl",
                 "bg-yellow-50",

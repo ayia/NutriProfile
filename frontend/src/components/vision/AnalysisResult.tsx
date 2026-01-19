@@ -7,8 +7,9 @@ import { visionApi } from '@/services/visionApi'
 import { Button } from '@/components/ui/Button'
 import { invalidationGroups } from '@/lib/queryKeys'
 import type { ImageAnalyzeResponse, DetectedItem, FoodItemUpdate, MealType } from '@/types/foodLog'
-import { Star, Sparkles, AlertTriangle, HeartPulse, Utensils, Camera, Edit, Loader2, Check, Info, ChevronDown, ThumbsUp, Meh, BarChart3, Lightbulb, Save, ArrowRight } from '@/lib/icons'
+import { Star, Sparkles, AlertTriangle, HeartPulse, Utensils, Camera, Edit, Loader2, Check, Info, ChevronDown, ThumbsUp, Meh, BarChart3, Lightbulb, Save, ArrowRight, Plus } from '@/lib/icons'
 import { FoodItemExpandableCard } from './FoodItemExpandableCard'
+import { EditFoodItemModalV2 } from './EditFoodItemModalV2'
 
 interface AnalysisResultProps {
   result: ImageAnalyzeResponse
@@ -48,6 +49,7 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
   const [expandedItemIndex, setExpandedItemIndex] = useState<number | null>(null)
   const [isSaved, setIsSaved] = useState(!!result.food_log_id)
   const [localItems, setLocalItems] = useState<DetectedItem[]>(result.items)
+  const [showAddFoodModal, setShowAddFoodModal] = useState(false)
   // Local state for totals - ensures React re-renders when values change
   const [localTotals, setLocalTotals] = useState({
     total_calories: result.total_calories,
@@ -136,6 +138,42 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
 
     // Show success message
     toast.success(t('itemUpdated'))
+  }
+
+  // Add new item to the meal
+  const handleAddItem = async (newItem: FoodItemUpdate): Promise<void> => {
+    // Create a new DetectedItem from the update
+    const itemToAdd: DetectedItem = {
+      name: newItem.name || 'Unknown',
+      quantity: newItem.quantity || '100',
+      unit: newItem.unit || 'g',
+      calories: newItem.calories || 0,
+      protein: newItem.protein || 0,
+      carbs: newItem.carbs || 0,
+      fat: newItem.fat || 0,
+      fiber: newItem.fiber,
+      confidence: 1.0, // Manual entry = 100% confidence
+      source: 'manual',
+    }
+
+    // Add to local items
+    const updatedItems = [...localItems, itemToAdd]
+
+    // Recalculate totals
+    const newTotals = calculateTotals(updatedItems)
+
+    // Update local state
+    setLocalItems(updatedItems)
+    setLocalTotals(newTotals)
+
+    // Close modal
+    setShowAddFoodModal(false)
+
+    // Expand items section to show the new item
+    setExpandedSection('items')
+
+    // Show success message
+    toast.success(t('result.itemAdded'))
   }
 
   const getConfidenceLabel = (confidence: number) => {
@@ -462,6 +500,15 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
                   getConfidenceLabel={getConfidenceLabel}
                 />
               ))}
+
+              {/* Add food button - MOST IMPORTANT FEATURE */}
+              <button
+                onClick={() => setShowAddFoodModal(true)}
+                className="w-full p-4 border-2 border-dashed border-primary-300 rounded-xl text-primary-600 hover:bg-primary-50 hover:border-primary-400 transition-all flex items-center justify-center gap-2 font-medium"
+              >
+                <Plus className="w-5 h-5" />
+                {t('result.addFood')}
+              </button>
             </div>
           )}
         </div>
@@ -548,6 +595,15 @@ export function AnalysisResult({ result, mealType, onClose }: AnalysisResultProp
         )}
       </div>
 
+      {/* Add Food Modal */}
+      {showAddFoodModal && (
+        <EditFoodItemModalV2
+          item={null}
+          onClose={() => setShowAddFoodModal(false)}
+          onSave={handleAddItem}
+          isLoading={false}
+        />
+      )}
     </div>
   )
 }

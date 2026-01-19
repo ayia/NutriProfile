@@ -117,7 +117,9 @@
     "mealSaved": "Meal saved successfully",
     "saveError": "Error saving. Please try again.",
     "modify": "Edit",
-    "corrected": "Corrected"
+    "corrected": "Corrected",
+    "addFood": "Add a food",
+    "itemAdded": "Food added to meal"
   },
   "foodLog": {
     "foods": "Foods",
