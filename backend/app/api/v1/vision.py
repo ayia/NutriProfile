@@ -10,7 +10,7 @@ from app.database import get_db, async_session_maker
 from app.api.deps import get_current_user
 from app.models.user import User
 from app.models.profile import Profile
-from app.models.food_log import FoodLog, FoodItem as FoodItemModel, DailyNutrition, FavoriteFood
+from app.models.food_log import FoodLog, FoodItem as FoodItemModel, DailyNutrition, FavoriteFood, FavoriteMeal
 from app.models.activity import ActivityLog, WeightLog
 from app.schemas.food_log import (
     ImageAnalyzeRequest,
@@ -32,6 +32,13 @@ from app.schemas.food_log import (
     FavoriteFoodsListResponse,
     RecentFoodItem,
     RecentFoodsResponse,
+    ManualLogCreate,
+    FavoriteMealCreate,
+    FavoriteMealResponse,
+    FavoriteMealsListResponse,
+    FavoriteMealLogRequest,
+    GalleryItem,
+    GalleryResponse,
 )
 from app.agents.vision import get_vision_agent, VisionInput, validate_nutrition, calculate_health_report, FoodAnalysis
 from app.services.subscription import SubscriptionService, get_limit_value
@@ -525,6 +532,84 @@ async def save_analysis(
         )
         result = await db.execute(query)
         return result.scalar_one()
+
+
+@router.post("/manual-log", response_model=FoodLogResponse)
+async def create_manual_log(
+    data: ManualLogCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Crée un repas manuel (sans analyse photo).
+
+    - Ne consomme PAS de crédit d'analyse
+    - Enregistre directement les aliments fournis
+    - Calcule les totaux nutritionnels
+    """
+    # Créer le food log avec image_analyzed=False
+    food_log = FoodLog(
+        user_id=current_user.id,
+        meal_type=data.meal_type,
+        meal_date=datetime.utcnow(),
+        image_analyzed=False,
+        model_used="manual",
+        description="Saisie manuelle",
+    )
+    db.add(food_log)
+    await db.flush()
+
+    total_calories = 0
+    total_protein = 0.0
+    total_carbs = 0.0
+    total_fat = 0.0
+    total_fiber = 0.0
+
+    # Créer les items individuels
+    for item_data in data.items:
+        food_item = FoodItemModel(
+            food_log_id=food_log.id,
+            name=item_data.name,
+            quantity=item_data.quantity,
+            unit=item_data.unit,
+            calories=item_data.calories or 0,
+            protein=item_data.protein or 0,
+            carbs=item_data.carbs or 0,
+            fat=item_data.fat or 0,
+            source="manual",
+            confidence=1.0,  # Confiance maximale pour saisie manuelle
+            is_verified=True,
+        )
+        db.add(food_item)
+
+        total_calories += item_data.calories or 0
+        total_protein += item_data.protein or 0
+        total_carbs += item_data.carbs or 0
+        total_fat += item_data.fat or 0
+        total_fiber += item_data.fiber or 0
+
+    # Mettre à jour les totaux du log
+    food_log.total_calories = total_calories
+    food_log.total_protein = total_protein
+    food_log.total_carbs = total_carbs
+    food_log.total_fat = total_fat
+    food_log.total_fiber = total_fiber
+    food_log.confidence_score = 1.0
+
+    await db.commit()
+    await db.refresh(food_log)
+
+    # Mettre à jour le résumé journalier
+    await update_daily_nutrition(db, current_user.id, datetime.utcnow().date())
+
+    # Recharger avec les items
+    query = (
+        select(FoodLog)
+        .where(FoodLog.id == food_log.id)
+        .options(selectinload(FoodLog.items))
+    )
+    result = await db.execute(query)
+    return result.scalar_one()
 
 
 @router.get("/logs", response_model=list[FoodLogResponse])
@@ -1276,3 +1361,249 @@ async def search_barcode(
             found=False,
             barcode=clean_barcode,
         )
+
+
+# =====================================================
+# FAVORITE MEALS ENDPOINTS (Quick Add)
+# =====================================================
+
+@router.get("/favorite-meals", response_model=FavoriteMealsListResponse)
+async def get_favorite_meals(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Récupère les repas favoris de l'utilisateur."""
+    query = (
+        select(FavoriteMeal)
+        .where(FavoriteMeal.user_id == current_user.id)
+        .order_by(FavoriteMeal.use_count.desc(), FavoriteMeal.created_at.desc())
+    )
+    result = await db.execute(query)
+    favorites = result.scalars().all()
+
+    return FavoriteMealsListResponse(
+        items=[FavoriteMealResponse.model_validate(f) for f in favorites],
+        total=len(favorites)
+    )
+
+
+@router.post("/favorite-meals", response_model=FavoriteMealResponse, status_code=status.HTTP_201_CREATED)
+async def add_favorite_meal(
+    data: FavoriteMealCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Ajoute un repas complet aux favoris."""
+    # Calculer les totaux nutritionnels
+    total_calories = sum(item.calories or 0 for item in data.items)
+    total_protein = sum(item.protein or 0 for item in data.items)
+    total_carbs = sum(item.carbs or 0 for item in data.items)
+    total_fat = sum(item.fat or 0 for item in data.items)
+
+    # Convertir les items en dictionnaires
+    items_json = [item.model_dump() for item in data.items]
+
+    # Créer le repas favori
+    favorite = FavoriteMeal(
+        user_id=current_user.id,
+        name=data.name,
+        items=items_json,
+        total_calories=total_calories,
+        total_protein=total_protein,
+        total_carbs=total_carbs,
+        total_fat=total_fat,
+        use_count=0,
+    )
+    db.add(favorite)
+    await db.commit()
+    await db.refresh(favorite)
+
+    return favorite
+
+
+@router.post("/favorite-meals/{meal_id}/log", response_model=FoodLogResponse)
+async def log_favorite_meal(
+    meal_id: int,
+    data: FavoriteMealLogRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Logger un repas favori (Quick Add).
+
+    - Crée un FoodLog avec tous les items du repas favori
+    - Incrémente le compteur use_count
+    - Met à jour le résumé nutritionnel journalier
+    """
+    # Récupérer le repas favori
+    query = select(FavoriteMeal).where(and_(
+        FavoriteMeal.id == meal_id,
+        FavoriteMeal.user_id == current_user.id,
+    ))
+    result = await db.execute(query)
+    favorite = result.scalar_one_or_none()
+
+    if not favorite:
+        raise HTTPException(status_code=404, detail="Repas favori non trouvé")
+
+    # Créer le FoodLog
+    food_log = FoodLog(
+        user_id=current_user.id,
+        meal_type=data.meal_type,
+        meal_date=datetime.utcnow(),
+        description=f"Quick add: {favorite.name}",
+        image_analyzed=False,
+        total_calories=int(favorite.total_calories or 0),
+        total_protein=favorite.total_protein,
+        total_carbs=favorite.total_carbs,
+        total_fat=favorite.total_fat,
+    )
+    db.add(food_log)
+    await db.flush()
+
+    # Créer les items individuels
+    for item_data in favorite.items:
+        food_item = FoodItemModel(
+            food_log_id=food_log.id,
+            name=item_data.get("name"),
+            quantity=item_data.get("quantity"),
+            unit=item_data.get("unit", "g"),
+            calories=item_data.get("calories", 0),
+            protein=item_data.get("protein", 0),
+            carbs=item_data.get("carbs", 0),
+            fat=item_data.get("fat", 0),
+            source="manual",  # Source = manual pour favoris
+        )
+        db.add(food_item)
+
+    # Incrémenter le compteur d'utilisation
+    favorite.use_count += 1
+    favorite.updated_at = datetime.utcnow()
+
+    await db.commit()
+    await db.refresh(food_log)
+
+    # Mettre à jour le résumé journalier
+    await update_daily_nutrition(db, current_user.id, datetime.utcnow().date())
+
+    # Recharger avec les items
+    query = (
+        select(FoodLog)
+        .where(FoodLog.id == food_log.id)
+        .options(selectinload(FoodLog.items))
+    )
+    result = await db.execute(query)
+    return result.scalar_one()
+
+
+@router.delete("/favorite-meals/{meal_id}")
+async def remove_favorite_meal(
+    meal_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Supprime un repas favori."""
+    query = select(FavoriteMeal).where(and_(
+        FavoriteMeal.id == meal_id,
+        FavoriteMeal.user_id == current_user.id,
+    ))
+    result = await db.execute(query)
+    favorite = result.scalar_one_or_none()
+
+    if not favorite:
+        raise HTTPException(status_code=404, detail="Repas favori non trouvé")
+
+    await db.delete(favorite)
+    await db.commit()
+
+    return {"message": "Repas favori supprimé", "id": meal_id}
+
+
+# =====================================================
+# GALLERY ENDPOINTS
+# =====================================================
+
+@router.get("/gallery", response_model=GalleryResponse)
+async def get_meal_gallery(
+    start_date: date | None = None,
+    end_date: date | None = None,
+    meal_type: str | None = None,
+    limit: int = 20,
+    offset: int = 0,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Récupère la galerie photos des repas.
+
+    - Filtres: date range, meal type
+    - Uniquement les repas avec image_url non null
+    - Triés par date décroissante
+    - Respect des limites d'historique du tier
+    """
+    # Appliquer le filtre d'historique basé sur le tier
+    sub_service = SubscriptionService(db)
+    tier = await sub_service.get_user_tier(current_user.id)
+    history_days = get_limit_value(tier, "history_days")
+
+    # Base query: uniquement les repas avec image
+    query = select(FoodLog).where(and_(
+        FoodLog.user_id == current_user.id,
+        FoodLog.image_url.isnot(None),
+        FoodLog.image_url != "",
+    ))
+
+    # Appliquer la limite d'historique si pas illimité
+    if history_days != -1:
+        min_date_allowed = datetime.combine(
+            date.today() - timedelta(days=history_days),
+            datetime.min.time()
+        )
+        query = query.where(FoodLog.meal_date >= min_date_allowed)
+
+    # Filtres utilisateur
+    if start_date:
+        start = datetime.combine(start_date, datetime.min.time())
+        query = query.where(FoodLog.meal_date >= start)
+
+    if end_date:
+        end = datetime.combine(end_date, datetime.max.time())
+        query = query.where(FoodLog.meal_date <= end)
+
+    if meal_type:
+        query = query.where(FoodLog.meal_type == meal_type)
+
+    # Ordre décroissant (plus récent en premier)
+    query = query.order_by(FoodLog.meal_date.desc())
+
+    # Compter le total
+    from sqlalchemy import func as sql_func
+    count_query = select(sql_func.count()).select_from(query.subquery())
+    total_result = await db.execute(count_query)
+    total = total_result.scalar() or 0
+
+    # Appliquer pagination
+    query = query.offset(offset).limit(limit)
+    query = query.options(selectinload(FoodLog.items))
+
+    result = await db.execute(query)
+    logs = result.scalars().all()
+
+    # Construire les items de la galerie
+    gallery_items = []
+    for log in logs:
+        gallery_items.append(GalleryItem(
+            id=log.id,
+            image_url=log.image_url,
+            meal_type=log.meal_type,
+            meal_date=log.meal_date,
+            total_calories=log.total_calories,
+            items_count=len(log.items),
+            health_score=None,  # Peut être calculé si disponible
+        ))
+
+    return GalleryResponse(
+        items=gallery_items,
+        total=total,
+        has_more=(offset + len(gallery_items)) < total,
+    )

@@ -277,3 +277,78 @@ class RecentFoodsResponse(BaseModel):
     """Liste des aliments récents."""
     items: list[RecentFoodItem]
     total: int
+
+
+# Manual Log Schemas
+
+class ManualLogCreate(BaseModel):
+    """Création d'un repas manuel (sans photo)."""
+    meal_type: str = Field(..., description="breakfast, lunch, dinner, snack")
+    items: list[FoodItemCreate] = Field(..., description="Liste des aliments du repas")
+
+
+# Favorite Meals Schemas
+
+class FavoriteMealItemCreate(BaseModel):
+    """Aliment dans un repas favori."""
+    name: str
+    quantity: str
+    unit: str
+    calories: int | None = None
+    protein: float | None = None
+    carbs: float | None = None
+    fat: float | None = None
+
+
+class FavoriteMealCreate(BaseModel):
+    """Création d'un repas favori."""
+    name: str = Field(..., min_length=1, max_length=100, description="Nom du repas (ex: 'Mon petit-déj')")
+    items: list[FavoriteMealItemCreate] = Field(..., min_length=1, description="Liste des aliments du repas")
+
+
+class FavoriteMealResponse(BaseModel):
+    """Réponse repas favori."""
+    id: int
+    name: str
+    items: list[dict]  # Liste d'aliments en JSON
+    total_calories: float | None = None
+    total_protein: float | None = None
+    total_carbs: float | None = None
+    total_fat: float | None = None
+    use_count: int = 0
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class FavoriteMealsListResponse(BaseModel):
+    """Liste des repas favoris."""
+    items: list[FavoriteMealResponse]
+    total: int
+
+
+class FavoriteMealLogRequest(BaseModel):
+    """Requête pour logger un repas favori."""
+    meal_type: str = Field(..., description="breakfast, lunch, dinner, snack")
+
+
+# Gallery Schemas
+
+class GalleryItem(BaseModel):
+    """Item de la galerie photos."""
+    id: int
+    image_url: str
+    meal_type: str
+    meal_date: datetime
+    total_calories: int | None = None
+    items_count: int = 0
+    health_score: int | None = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GalleryResponse(BaseModel):
+    """Réponse galerie photos."""
+    items: list[GalleryItem]
+    total: int
+    has_more: bool

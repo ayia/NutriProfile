@@ -55,6 +55,9 @@
     "title": "Menu",
     "navigation": "Navigation"
   },
+  "items": "item",
+  "items_plural": "items",
+  "more": "more",
   "units": {
     "kcal": "kcal",
     "g": "g",

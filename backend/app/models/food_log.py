@@ -121,6 +121,40 @@ class FavoriteFood(Base):
         return f"<FavoriteFood {self.name} - User {self.user_id}>"
 
 
+class FavoriteMeal(Base):
+    """Repas favori (ensemble d'aliments) pour quick add."""
+
+    __tablename__ = "favorite_meals"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+
+    # Identification du repas
+    name = Column(String(100), nullable=False)  # "Mon petit-déj habituel"
+
+    # Liste des aliments (stockée en JSON)
+    items = Column(JSON, nullable=False)  # [{"name": "café", "quantity": "200", "unit": "ml", ...}]
+
+    # Valeurs nutritionnelles totales (calculées)
+    total_calories = Column(Float, nullable=True)
+    total_protein = Column(Float, nullable=True)
+    total_carbs = Column(Float, nullable=True)
+    total_fat = Column(Float, nullable=True)
+
+    # Compteur d'utilisation pour tri
+    use_count = Column(Integer, default=0)
+
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relations
+    user = relationship("User", back_populates="favorite_meals")
+
+    def __repr__(self):
+        return f"<FavoriteMeal {self.name} - User {self.user_id}>"
+
+
 class DailyNutrition(Base):
     """Résumé nutritionnel journalier."""
 

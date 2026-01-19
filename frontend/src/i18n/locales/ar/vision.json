@@ -4,7 +4,8 @@
   "tabs": {
     "scan": "الماسح",
     "today": "اليوم",
-    "history": "السجل"
+    "history": "السجل",
+    "gallery": "المعرض"
   },
   "scan": {
     "title": "تحليل وجبة",
@@ -197,11 +198,13 @@
   },
   "barcode": {
     "scan": "مسح الباركود",
-    "scanning": "جاري المسح...",
-    "notFound": "المنتج غير موجود",
+    "scanning": "جاري البحث عن المنتج...",
+    "notFound": "المنتج غير موجود في قاعدة البيانات",
     "found": "تم العثور على المنتج",
     "permission": "أدخل الباركود للمنتج",
-    "invalidCode": "باركود غير صالح (مطلوب 8-13 رقم)"
+    "invalidCode": "باركود غير صالح (مطلوب 8-13 رقم)",
+    "addToMeal": "إضافة للوجبة",
+    "placeholder": "أدخل الباركود (8-13 رقم)"
   },
   "errors": {
     "uploadFailed": "فشل الرفع",
@@ -277,5 +280,77 @@
   },
   "bottomSheet": {
     "moreOptions": "خيارات إضافية"
+  },
+  "manualEntry": {
+    "title": "إدخال يدوي",
+    "button": "إدخال يدوي",
+    "selectMealType": "اختر نوع الوجبة",
+    "addFood": "إضافة طعام",
+    "foodsAdded": "تمت إضافة {{count}} طعام",
+    "foodsAdded_plural": "تمت إضافة {{count}} أطعمة",
+    "saveMeal": "حفظ الوجبة",
+    "mealSaved": "تم حفظ الوجبة بنجاح",
+    "emptyState": "أضف أطعمة للبدء",
+    "noPhoto": "لا حاجة لصورة"
+  },
+  "voice": {
+    "title": "الإدخال الصوتي",
+    "subtitle": "تحدث لتسجيل وجبتك",
+    "button": "تحدث",
+    "listening": "أستمع...",
+    "processing": "جار المعالجة...",
+    "tapToSpeak": "اضغط على الزر لبدء التحدث",
+    "speakNow": "تحدث الآن... أنا أستمع",
+    "stopListening": "توقف",
+    "example": "مثال",
+    "exampleText": "أكلت 200 جرام من الدجاج المشوي مع الأرز والبروكلي",
+    "detected": "تم اكتشاف {{count}} طعام",
+    "detected_plural": "تم اكتشاف {{count}} أطعمة",
+    "addAll": "إضافة الكل إلى الوجبة",
+    "clear": "مسح",
+    "noFoodsDetected": "لم يتم اكتشاف أي أطعمة. حاول مرة أخرى.",
+    "notSupported": "الإدخال الصوتي غير مدعوم",
+    "notSupportedDescription": "متصفحك لا يدعم التعرف على الصوت. جرب Chrome أو Edge أو Safari.",
+    "permissionDenied": "تم رفض الوصول إلى الميكروفون. يرجى تفعيله في إعدادات المتصفح.",
+    "noSpeechDetected": "لم يتم اكتشاف كلام. حاول مرة أخرى.",
+    "networkError": "خطأ في الشبكة. تحقق من اتصالك.",
+    "unknownError": "حدث خطأ. حاول مرة أخرى.",
+    "startError": "تعذر بدء التعرف على الصوت.",
+    "parsingError": "خطأ في تحليل الكلام. حاول مرة أخرى.",
+    "addedToMeal": "تمت إضافة {{count}} طعام إلى الوجبة",
+    "addedToMeal_plural": "تمت إضافة {{count}} أطعمة إلى الوجبة"
+  },
+  "quickAdd": {
+    "title": "إضافة طعام سريعة",
+    "selectMeal": "اختر الوجبة",
+    "searchFood": "ابحث عن طعام...",
+    "preview": "{{calories}} سعرة حرارية",
+    "add": "أضف إلى {{meal}}",
+    "added": "تمت إضافة {{food}} إلى {{meal}}",
+    "nameRequired": "الرجاء إدخال اسم الطعام"
+  },
+  "gallery": {
+    "title": "معرض الصور",
+    "tab": "المعرض",
+    "filters": {
+      "title": "الفلاتر",
+      "all": "الكل",
+      "thisWeek": "هذا الأسبوع",
+      "thisMonth": "هذا الشهر",
+      "custom": "مخصص",
+      "reset": "إعادة تعيين الفلاتر",
+      "period": "الفترة",
+      "mealType": "نوع الوجبة",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية"
+    },
+    "empty": "لا توجد صور بعد",
+    "emptyDescription": "امسح وجبتك الأولى لبدء يوميات الطعام المرئية",
+    "loading": "جاري تحميل الصور...",
+    "loadError": "تعذر تحميل الصور. يرجى المحاولة مرة أخرى.",
+    "viewDetails": "عرض التفاصيل",
+    "photosCount": "{{count}} صورة",
+    "photosCount_plural": "{{count}} صورة",
+    "loadMore": "تحميل المزيد"
   }
 }

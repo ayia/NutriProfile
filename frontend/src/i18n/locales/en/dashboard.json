@@ -83,6 +83,7 @@
     "stats": "Stats"
   },
   "fab": {
+    "quickAddFood": "Quick add food",
     "scanMeal": "Scan a meal",
     "addWater": "Add water",
     "newWeight": "New weight",

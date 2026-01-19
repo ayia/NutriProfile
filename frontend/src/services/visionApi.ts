@@ -14,7 +14,30 @@ import type {
   FavoriteFoodCreate,
   FavoriteFood,
   BarcodeSearchResponse,
+  ManualLogCreate,
+  FavoriteMealsResponse,
+  FavoriteMealCreate,
+  FavoriteMeal,
+  GalleryResponse,
 } from '@/types/foodLog'
+
+// Types pour Voice API
+export interface VoiceParseRequest {
+  transcription: string
+  language: string
+}
+
+export interface ParsedFoodItem {
+  name: string
+  quantity: string
+  unit: string
+}
+
+export interface VoiceParseResponse {
+  items: ParsedFoodItem[]
+  confidence: number
+  raw_text: string
+}
 
 export const visionApi = {
   // Analyse d'image
@@ -112,9 +135,60 @@ export const visionApi = {
     return response.data
   },
 
-  // Barcode Scanner (Open Food Facts)
+  // Barcode Scanner (OpenFoodFacts API)
   searchBarcode: async (barcode: string): Promise<BarcodeSearchResponse> => {
-    const response = await api.get(`/vision/barcode/${encodeURIComponent(barcode)}`)
+    const response = await api.get(`/barcode/${encodeURIComponent(barcode)}`)
+    return response.data
+  },
+
+  // Manual Log (no photo scan)
+  createManualLog: async (data: ManualLogCreate): Promise<FoodLog> => {
+    const response = await api.post('/vision/manual-log', data)
+    return response.data
+  },
+
+  // Voice Logging - Parse vocal transcription
+  parseVoice: async (data: VoiceParseRequest): Promise<VoiceParseResponse> => {
+    const response = await api.post('/voice/parse-voice', data)
+    return response.data
+  },
+
+  // Favorite Meals (Quick Add)
+  getFavoriteMeals: async (): Promise<FavoriteMealsResponse> => {
+    const response = await api.get('/vision/favorite-meals')
+    return response.data
+  },
+
+  addFavoriteMeal: async (data: FavoriteMealCreate): Promise<FavoriteMeal> => {
+    const response = await api.post('/vision/favorite-meals', data)
+    return response.data
+  },
+
+  logFavoriteMeal: async (mealId: number, mealType: string): Promise<FoodLog> => {
+    const response = await api.post(`/vision/favorite-meals/${mealId}/log`, { meal_type: mealType })
+    return response.data
+  },
+
+  removeFavoriteMeal: async (mealId: number): Promise<void> => {
+    await api.delete(`/vision/favorite-meals/${mealId}`)
+  },
+
+  // Gallery
+  getGallery: async (
+    startDate?: string,
+    endDate?: string,
+    mealType?: string,
+    limit = 20,
+    offset = 0
+  ): Promise<GalleryResponse> => {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    if (mealType) params.append('meal_type', mealType)
+    params.append('limit', limit.toString())
+    params.append('offset', offset.toString())
+
+    const response = await api.get(`/vision/gallery?${params.toString()}`)
     return response.data
   },
 }

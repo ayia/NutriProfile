@@ -4,7 +4,8 @@
   "tabs": {
     "scan": "Scanner",
     "today": "Today",
-    "history": "History"
+    "history": "History",
+    "gallery": "Gallery"
   },
   "scan": {
     "title": "Analyze a meal",
@@ -169,7 +170,21 @@
     "remove": "Remove from favorites",
     "added": "Added to favorites",
     "removed": "Removed from favorites",
-    "empty": "No favorites yet"
+    "empty": "No favorites yet",
+    "saveMeal": "Save meal as favorite",
+    "saveMealDescription": "Save these {{count}} foods for quick add later",
+    "nameLabel": "Favorite name",
+    "namePlaceholder": "My usual breakfast...",
+    "logFavorite": "Log this meal",
+    "logged": "Meal logged successfully",
+    "usedTimes": "Used {{count}} time",
+    "usedTimes_plural": "Used {{count}} times",
+    "addError": "Error adding favorite",
+    "logError": "Error logging meal",
+    "removeError": "Error removing favorite",
+    "confirmDelete": "Delete '{{name}}'?",
+    "emptyHint": "Tap the star icon after scanning to save your favorite meals",
+    "nameRequired": "Please enter a name for this meal"
   },
   "visualGuide": {
     "title": "Portion guide",
@@ -197,11 +212,13 @@
   },
   "barcode": {
     "scan": "Scan barcode",
-    "scanning": "Scanning...",
-    "notFound": "Product not found",
+    "scanning": "Searching product...",
+    "notFound": "Product not found in database",
     "found": "Product found",
     "permission": "Enter the product barcode",
-    "invalidCode": "Invalid barcode (8-13 digits required)"
+    "invalidCode": "Invalid barcode (8-13 digits required)",
+    "addToMeal": "Add to meal",
+    "placeholder": "Enter 8-13 digit barcode"
   },
   "photoTips": {
     "title": "Photo Tips",
@@ -269,5 +286,77 @@
   },
   "bottomSheet": {
     "moreOptions": "More options"
+  },
+  "manualEntry": {
+    "title": "Manual entry",
+    "button": "Manual entry",
+    "selectMealType": "Select meal type",
+    "addFood": "Add food",
+    "foodsAdded": "{{count}} food added",
+    "foodsAdded_plural": "{{count}} foods added",
+    "saveMeal": "Save meal",
+    "mealSaved": "Meal saved successfully",
+    "emptyState": "Add foods to start logging",
+    "noPhoto": "No photo required"
+  },
+  "voice": {
+    "title": "Voice logging",
+    "subtitle": "Speak to log your meal",
+    "button": "Speak",
+    "listening": "Listening...",
+    "processing": "Processing...",
+    "tapToSpeak": "Tap the button to start speaking",
+    "speakNow": "Speak now... I'm listening",
+    "stopListening": "Stop",
+    "example": "Example",
+    "exampleText": "I ate 200g of grilled chicken with rice and broccoli",
+    "detected": "{{count}} food detected",
+    "detected_plural": "{{count}} foods detected",
+    "addAll": "Add all to meal",
+    "clear": "Clear",
+    "noFoodsDetected": "No foods detected. Try again.",
+    "notSupported": "Voice input not supported",
+    "notSupportedDescription": "Your browser doesn't support voice recognition. Try Chrome, Edge, or Safari.",
+    "permissionDenied": "Microphone access denied. Please enable it in your browser settings.",
+    "noSpeechDetected": "No speech detected. Please try again.",
+    "networkError": "Network error. Check your connection.",
+    "unknownError": "An error occurred. Please try again.",
+    "startError": "Could not start voice recognition.",
+    "parsingError": "Error analyzing speech. Please try again.",
+    "addedToMeal": "{{count}} food added to meal",
+    "addedToMeal_plural": "{{count}} foods added to meal"
+  },
+  "quickAdd": {
+    "title": "Quick add food",
+    "selectMeal": "Select meal",
+    "searchFood": "Search food...",
+    "preview": "{{calories}} kcal",
+    "add": "Add to {{meal}}",
+    "added": "{{food}} added to {{meal}}",
+    "nameRequired": "Please enter a food name"
+  },
+  "gallery": {
+    "title": "Photo Gallery",
+    "tab": "Gallery",
+    "filters": {
+      "title": "Filters",
+      "all": "All",
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "custom": "Custom",
+      "reset": "Reset filters",
+      "period": "Period",
+      "mealType": "Meal type",
+      "startDate": "Start date",
+      "endDate": "End date"
+    },
+    "empty": "No photos yet",
+    "emptyDescription": "Scan your first meal to start your visual food diary",
+    "loading": "Loading photos...",
+    "loadError": "Could not load photos. Please try again.",
+    "viewDetails": "View details",
+    "photosCount": "{{count}} photo",
+    "photosCount_plural": "{{count}} photos",
+    "loadMore": "Load more"
   }
 }

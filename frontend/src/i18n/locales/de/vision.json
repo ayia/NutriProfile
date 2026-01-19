@@ -4,7 +4,8 @@
   "tabs": {
     "scan": "Scanner",
     "today": "Heute",
-    "history": "Verlauf"
+    "history": "Verlauf",
+    "gallery": "Galerie"
   },
   "scan": {
     "title": "Mahlzeit analysieren",
@@ -169,7 +170,21 @@
     "remove": "Aus Favoriten entfernen",
     "added": "Zu Favoriten hinzugefügt",
     "removed": "Aus Favoriten entfernt",
-    "empty": "Noch keine Favoriten"
+    "empty": "Noch keine Favoriten",
+    "saveMeal": "Mahlzeit als Favorit speichern",
+    "saveMealDescription": "Speichern Sie diese {{count}} Lebensmittel für schnelles Hinzufügen",
+    "nameLabel": "Favoritenname",
+    "namePlaceholder": "Mein übliches Frühstück...",
+    "logFavorite": "Diese Mahlzeit protokollieren",
+    "logged": "Mahlzeit erfolgreich protokolliert",
+    "usedTimes": "{{count}} Mal verwendet",
+    "usedTimes_plural": "{{count}} Mal verwendet",
+    "addError": "Fehler beim Hinzufügen",
+    "logError": "Fehler beim Protokollieren der Mahlzeit",
+    "removeError": "Fehler beim Entfernen",
+    "confirmDelete": "'{{name}}' löschen?",
+    "emptyHint": "Tippen Sie nach dem Scannen auf das Sternsymbol, um Ihre Lieblingsmahlzeiten zu speichern",
+    "nameRequired": "Bitte geben Sie einen Namen für diese Mahlzeit ein"
   },
   "visualGuide": {
     "title": "Portionsführer",
@@ -197,11 +212,13 @@
   },
   "barcode": {
     "scan": "Barcode scannen",
-    "scanning": "Scannen...",
-    "notFound": "Produkt nicht gefunden",
+    "scanning": "Produkt wird gesucht...",
+    "notFound": "Produkt in Datenbank nicht gefunden",
     "found": "Produkt gefunden",
     "permission": "Produkt-Barcode eingeben",
-    "invalidCode": "Ungültiger Barcode (8-13 Ziffern erforderlich)"
+    "invalidCode": "Ungültiger Barcode (8-13 Ziffern erforderlich)",
+    "addToMeal": "Zur Mahlzeit hinzufügen",
+    "placeholder": "Barcode eingeben (8-13 Ziffern)"
   },
   "errors": {
     "uploadFailed": "Hochladen fehlgeschlagen",
@@ -277,5 +294,77 @@
   },
   "bottomSheet": {
     "moreOptions": "Mehr Optionen"
+  },
+  "manualEntry": {
+    "title": "Manuelle Eingabe",
+    "button": "Manuelle Eingabe",
+    "selectMealType": "Mahlzeittyp auswählen",
+    "addFood": "Lebensmittel hinzufügen",
+    "foodsAdded": "{{count}} Lebensmittel hinzugefügt",
+    "foodsAdded_plural": "{{count}} Lebensmittel hinzugefügt",
+    "saveMeal": "Mahlzeit speichern",
+    "mealSaved": "Mahlzeit erfolgreich gespeichert",
+    "emptyState": "Fügen Sie Lebensmittel hinzu, um zu beginnen",
+    "noPhoto": "Kein Foto erforderlich"
+  },
+  "voice": {
+    "title": "Spracheingabe",
+    "subtitle": "Sprechen Sie, um Ihre Mahlzeit zu protokollieren",
+    "button": "Sprechen",
+    "listening": "Höre zu...",
+    "processing": "Verarbeitung...",
+    "tapToSpeak": "Tippen Sie auf die Schaltfläche, um zu sprechen",
+    "speakNow": "Sprechen Sie jetzt... Ich höre zu",
+    "stopListening": "Stoppen",
+    "example": "Beispiel",
+    "exampleText": "Ich habe 200g gegrilltes Hähnchen mit Reis und Brokkoli gegessen",
+    "detected": "{{count}} Lebensmittel erkannt",
+    "detected_plural": "{{count}} Lebensmittel erkannt",
+    "addAll": "Alle zur Mahlzeit hinzufügen",
+    "clear": "Löschen",
+    "noFoodsDetected": "Keine Lebensmittel erkannt. Versuchen Sie es erneut.",
+    "notSupported": "Spracheingabe nicht unterstützt",
+    "notSupportedDescription": "Ihr Browser unterstützt keine Spracherkennung. Versuchen Sie Chrome, Edge oder Safari.",
+    "permissionDenied": "Mikrofonzugriff verweigert. Bitte aktivieren Sie ihn in Ihren Browsereinstellungen.",
+    "noSpeechDetected": "Keine Sprache erkannt. Bitte versuchen Sie es erneut.",
+    "networkError": "Netzwerkfehler. Überprüfen Sie Ihre Verbindung.",
+    "unknownError": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    "startError": "Spracherkennung konnte nicht gestartet werden.",
+    "parsingError": "Fehler beim Analysieren der Sprache. Bitte versuchen Sie es erneut.",
+    "addedToMeal": "{{count}} Lebensmittel zur Mahlzeit hinzugefügt",
+    "addedToMeal_plural": "{{count}} Lebensmittel zur Mahlzeit hinzugefügt"
+  },
+  "quickAdd": {
+    "title": "Lebensmittel schnell hinzufügen",
+    "selectMeal": "Mahlzeit auswählen",
+    "searchFood": "Lebensmittel suchen...",
+    "preview": "{{calories}} kcal",
+    "add": "Zu {{meal}} hinzufügen",
+    "added": "{{food}} zu {{meal}} hinzugefügt",
+    "nameRequired": "Bitte geben Sie einen Lebensmittelnamen ein"
+  },
+  "gallery": {
+    "title": "Fotogalerie",
+    "tab": "Galerie",
+    "filters": {
+      "title": "Filter",
+      "all": "Alle",
+      "thisWeek": "Diese Woche",
+      "thisMonth": "Diesen Monat",
+      "custom": "Benutzerdefiniert",
+      "reset": "Filter zurücksetzen",
+      "period": "Zeitraum",
+      "mealType": "Mahlzeit",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum"
+    },
+    "empty": "Noch keine Fotos",
+    "emptyDescription": "Scannen Sie Ihre erste Mahlzeit, um Ihr visuelles Ernährungstagebuch zu starten",
+    "loading": "Fotos werden geladen...",
+    "loadError": "Fotos konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
+    "viewDetails": "Details anzeigen",
+    "photosCount": "{{count}} Foto",
+    "photosCount_plural": "{{count}} Fotos",
+    "loadMore": "Mehr laden"
   }
 }

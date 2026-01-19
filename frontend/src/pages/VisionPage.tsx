@@ -7,6 +7,9 @@ import { ImageUploader, type AnalysisData } from '@/components/vision/ImageUploa
 import { AnalysisResult } from '@/components/vision/AnalysisResult'
 import { FoodLogCard } from '@/components/vision/FoodLogCard'
 import { PhotoTips } from '@/components/vision/PhotoTips'
+import { ManualMealBuilder } from '@/components/vision/ManualMealBuilder'
+import { BarcodeScanner } from '@/components/vision/BarcodeScanner'
+import { PhotoGallery } from '@/components/vision/PhotoGallery'
 import { Button } from '@/components/ui/Button'
 import { UsageBanner } from '@/components/subscription/UsageBanner'
 import {
@@ -20,16 +23,22 @@ import {
   Droplets,
   Utensils,
   Calendar,
+  Edit3,
+  Barcode,
+  Image as ImageIcon,
   type LucideIcon,
 } from 'lucide-react'
+import type { BarcodeProduct } from '@/types/foodLog'
 
-type Tab = 'scan' | 'today' | 'history'
+type Tab = 'scan' | 'today' | 'history' | 'gallery'
 
 export function VisionPage() {
   const { t, i18n } = useTranslation('vision')
   const tCommon = useTranslation('common').t
   const [activeTab, setActiveTab] = useState<Tab>('scan')
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null)
+  const [showManualBuilder, setShowManualBuilder] = useState(false)
+  const [showBarcodeScanner, setShowBarcodeScanner] = useState(false)
   const queryClient = useQueryClient()
   // Helper to get UTC date string (YYYY-MM-DD)
   const getUTCDateString = (date: Date) => {
@@ -97,6 +106,7 @@ export function VisionPage() {
     { id: 'scan', label: t('tabs.scan'), IconComponent: Camera },
     { id: 'today', label: t('tabs.today'), IconComponent: BarChart3 },
     { id: 'history', label: t('tabs.history'), IconComponent: History },
+    { id: 'gallery', label: t('tabs.gallery'), IconComponent: ImageIcon },
   ]
 
   const handleAnalysisComplete = (data: AnalysisData) => {
@@ -105,6 +115,18 @@ export function VisionPage() {
 
   const resetAnalysis = () => {
     setAnalysisData(null)
+  }
+
+  const handleBarcodeProductFound = (product: BarcodeProduct) => {
+    // Ouvrir le ManualMealBuilder avec le produit pré-rempli
+    // Le produit OpenFoodFacts donne des valeurs par 100g
+    // On suggère 100g par défaut que l'utilisateur peut ajuster
+    setShowBarcodeScanner(false)
+    setShowManualBuilder(true)
+
+    // TODO: Passer le produit au ManualMealBuilder pour pré-remplir
+    // Pour l'instant, on affiche juste un toast
+    toast.success(t('barcode.found') + ': ' + product.name)
   }
 
   // Calcul des progressions pour aujourd'hui
@@ -172,15 +194,63 @@ export function VisionPage() {
             <PhotoTips compact />
 
             {!analysisData ? (
-              <div className="glass-card p-8 hover-lift">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <Camera className="w-6 h-6 text-white" />
+              <>
+                <div className="glass-card p-8 hover-lift">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <Camera className="w-6 h-6 text-white" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900">{t('scan.title')}</h2>
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">{t('scan.title')}</h2>
+                  <ImageUploader onAnalysisComplete={handleAnalysisComplete} />
                 </div>
-                <ImageUploader onAnalysisComplete={handleAnalysisComplete} />
-              </div>
+
+                {/* Manual Entry Option */}
+                <div className="glass-card p-6 hover-lift">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+                        <Edit3 className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-center sm:text-left">
+                        <h3 className="font-semibold text-gray-900">{t('manualEntry.title')}</h3>
+                        <p className="text-sm text-gray-600">{t('manualEntry.noPhoto')}</p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => setShowManualBuilder(true)}
+                      variant="outline"
+                      className="gap-2 w-full sm:w-auto"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                      {t('manualEntry.button')}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Barcode Scanner Option */}
+                <div className="glass-card p-6 hover-lift">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
+                        <Barcode className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-center sm:text-left">
+                        <h3 className="font-semibold text-gray-900">{t('barcode.scan')}</h3>
+                        <p className="text-sm text-gray-600">{t('barcode.permission')}</p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => setShowBarcodeScanner(true)}
+                      variant="outline"
+                      className="gap-2 w-full sm:w-auto"
+                    >
+                      <Barcode className="w-4 h-4" />
+                      {t('barcode.scan')}
+                    </Button>
+                  </div>
+                </div>
+              </>
             ) : (
               <AnalysisResult
                 result={analysisData.result}
@@ -407,7 +477,32 @@ export function VisionPage() {
             })}
           </div>
         )}
+
+        {activeTab === 'gallery' && (
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <PhotoGallery onScanClick={() => setActiveTab('scan')} />
+          </div>
+        )}
       </div>
+
+      {/* Manual Meal Builder Modal */}
+      {showManualBuilder && (
+        <ManualMealBuilder
+          onClose={() => setShowManualBuilder(false)}
+          onSuccess={() => {
+            // Rafraîchir les données et basculer sur l'onglet "Aujourd'hui"
+            setActiveTab('today')
+          }}
+        />
+      )}
+
+      {/* Barcode Scanner Modal */}
+      {showBarcodeScanner && (
+        <BarcodeScanner
+          onProductFound={handleBarcodeProductFound}
+          onClose={() => setShowBarcodeScanner(false)}
+        />
+      )}
     </div>
   )
 }

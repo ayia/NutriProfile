@@ -325,20 +325,21 @@ export function EditFoodItemModalV2({
     try {
       const result = await visionApi.searchBarcode(barcodeValue)
 
-      if (result.found && result.product_name) {
+      if (result.success && result.product) {
+        const product = result.product
         setFormData(prev => ({
           ...prev,
-          name: result.product_name || '',
-          quantity: result.serving_size ? result.serving_size.replace(/[^\d.]/g, '') || '100' : '100',
+          name: product.name || '',
+          quantity: product.quantity ? product.quantity.replace(/[^\d.]/g, '') || '100' : '100',
           unit: 'g',
         }))
 
         setManualNutrition({
-          calories: result.calories || 0,
-          protein: result.protein || 0,
-          carbs: result.carbs || 0,
-          fat: result.fat || 0,
-          fiber: result.fiber || 0,
+          calories: product.calories || 0,
+          protein: product.protein || 0,
+          carbs: product.carbs || 0,
+          fat: product.fat || 0,
+          fiber: product.fiber || 0,
         })
         setManualMode(true)
 

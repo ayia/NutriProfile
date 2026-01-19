@@ -4,7 +4,8 @@
   "tabs": {
     "scan": "Scanner",
     "today": "Aujourd'hui",
-    "history": "Historique"
+    "history": "Historique",
+    "gallery": "Galerie"
   },
   "scan": {
     "title": "Analyser un repas",
@@ -169,7 +170,21 @@
     "remove": "Retirer des favoris",
     "added": "Ajouté aux favoris",
     "removed": "Retiré des favoris",
-    "empty": "Aucun favori"
+    "empty": "Aucun favori",
+    "saveMeal": "Sauvegarder le repas en favori",
+    "saveMealDescription": "Sauvegarder ces {{count}} aliments pour ajout rapide",
+    "nameLabel": "Nom du favori",
+    "namePlaceholder": "Mon petit-déj habituel...",
+    "logFavorite": "Ajouter ce repas",
+    "logged": "Repas ajouté avec succès",
+    "usedTimes": "Utilisé {{count}} fois",
+    "usedTimes_plural": "Utilisé {{count}} fois",
+    "addError": "Erreur lors de l'ajout",
+    "logError": "Erreur lors de l'ajout du repas",
+    "removeError": "Erreur lors de la suppression",
+    "confirmDelete": "Supprimer '{{name}}' ?",
+    "emptyHint": "Appuyez sur l'étoile après avoir scanné pour sauvegarder vos repas favoris",
+    "nameRequired": "Veuillez entrer un nom pour ce repas"
   },
   "visualGuide": {
     "title": "Guide des portions",
@@ -197,11 +212,13 @@
   },
   "barcode": {
     "scan": "Scanner code-barres",
-    "scanning": "Scan en cours...",
-    "notFound": "Produit non trouvé",
+    "scanning": "Recherche du produit...",
+    "notFound": "Produit non trouvé dans la base de données",
     "found": "Produit trouvé",
     "permission": "Entrez le code-barres du produit",
-    "invalidCode": "Code-barres invalide (8-13 chiffres requis)"
+    "invalidCode": "Code-barres invalide (8-13 chiffres requis)",
+    "addToMeal": "Ajouter au repas",
+    "placeholder": "Saisir code-barres (8-13 chiffres)"
   },
   "photoTips": {
     "title": "Conseils Photo",
@@ -269,5 +286,77 @@
   },
   "bottomSheet": {
     "moreOptions": "Plus d'options"
+  },
+  "manualEntry": {
+    "title": "Saisie manuelle",
+    "button": "Saisie manuelle",
+    "selectMealType": "Sélectionnez le type de repas",
+    "addFood": "Ajouter un aliment",
+    "foodsAdded": "{{count}} aliment ajouté",
+    "foodsAdded_plural": "{{count}} aliments ajoutés",
+    "saveMeal": "Enregistrer le repas",
+    "mealSaved": "Repas enregistré avec succès",
+    "emptyState": "Ajoutez des aliments pour commencer",
+    "noPhoto": "Aucune photo requise"
+  },
+  "voice": {
+    "title": "Saisie vocale",
+    "subtitle": "Dictez votre repas",
+    "button": "Dicter",
+    "listening": "Écoute en cours...",
+    "processing": "Traitement...",
+    "tapToSpeak": "Appuyez pour commencer à parler",
+    "speakNow": "Parlez maintenant... Je vous écoute",
+    "stopListening": "Arrêter",
+    "example": "Exemple",
+    "exampleText": "J'ai mangé 200g de poulet grillé avec du riz et des brocolis",
+    "detected": "{{count}} aliment détecté",
+    "detected_plural": "{{count}} aliments détectés",
+    "addAll": "Tout ajouter au repas",
+    "clear": "Effacer",
+    "noFoodsDetected": "Aucun aliment détecté. Réessayez.",
+    "notSupported": "Saisie vocale non supportée",
+    "notSupportedDescription": "Votre navigateur ne supporte pas la reconnaissance vocale. Essayez Chrome, Edge ou Safari.",
+    "permissionDenied": "Accès au microphone refusé. Veuillez l'activer dans les paramètres de votre navigateur.",
+    "noSpeechDetected": "Aucune parole détectée. Veuillez réessayer.",
+    "networkError": "Erreur réseau. Vérifiez votre connexion.",
+    "unknownError": "Une erreur s'est produite. Veuillez réessayer.",
+    "startError": "Impossible de démarrer la reconnaissance vocale.",
+    "parsingError": "Erreur lors de l'analyse de la parole. Veuillez réessayer.",
+    "addedToMeal": "{{count}} aliment ajouté au repas",
+    "addedToMeal_plural": "{{count}} aliments ajoutés au repas"
+  },
+  "quickAdd": {
+    "title": "Ajout rapide d'aliment",
+    "selectMeal": "Sélectionner le repas",
+    "searchFood": "Rechercher un aliment...",
+    "preview": "{{calories}} kcal",
+    "add": "Ajouter au {{meal}}",
+    "added": "{{food}} ajouté au {{meal}}",
+    "nameRequired": "Veuillez entrer un nom d'aliment"
+  },
+  "gallery": {
+    "title": "Galerie photos",
+    "tab": "Galerie",
+    "filters": {
+      "title": "Filtres",
+      "all": "Tout",
+      "thisWeek": "Cette semaine",
+      "thisMonth": "Ce mois-ci",
+      "custom": "Personnalisé",
+      "reset": "Réinitialiser les filtres",
+      "period": "Période",
+      "mealType": "Type de repas",
+      "startDate": "Date de début",
+      "endDate": "Date de fin"
+    },
+    "empty": "Aucune photo pour le moment",
+    "emptyDescription": "Scannez votre premier repas pour démarrer votre journal visuel",
+    "loading": "Chargement des photos...",
+    "loadError": "Impossible de charger les photos. Veuillez réessayer.",
+    "viewDetails": "Voir les détails",
+    "photosCount": "{{count}} photo",
+    "photosCount_plural": "{{count}} photos",
+    "loadMore": "Charger plus"
   }
 }

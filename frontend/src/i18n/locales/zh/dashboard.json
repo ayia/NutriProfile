@@ -149,6 +149,7 @@
     "10": "健身之神"
   },
   "fab": {
+    "quickAddFood": "快速添加食物",
     "scanMeal": "扫描餐食",
     "addWater": "添加水",
     "newWeight": "新体重",

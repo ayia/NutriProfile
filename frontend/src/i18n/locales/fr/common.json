@@ -54,6 +54,9 @@
     "dinner": "Dîner",
     "snack": "Collation"
   },
+  "items": "élément",
+  "items_plural": "éléments",
+  "more": "plus",
   "time": {
     "today": "Aujourd'hui",
     "yesterday": "Hier",

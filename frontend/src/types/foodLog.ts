@@ -285,16 +285,81 @@ export type FoodCategory =
 
 // ========== Barcode Scanner ==========
 
-export interface BarcodeSearchResponse {
-  found: boolean
+export interface BarcodeProduct {
   barcode: string
-  product_name: string | null
+  name: string
   brand: string | null
-  serving_size: string | null
+  image_url: string | null
+  calories: number | null  // per 100g
+  protein: number | null   // per 100g
+  carbs: number | null     // per 100g
+  fat: number | null       // per 100g
+  fiber: number | null     // per 100g
+  quantity: string | null  // "400g", "1L", etc.
+  source: string
+}
+
+export interface BarcodeSearchResponse {
+  success: boolean
+  product: BarcodeProduct | null
+  error: string | null
+}
+
+// ========== Manual Log ==========
+
+export interface ManualLogCreate {
+  meal_type: MealType
+  items: FoodItemCreate[]
+}
+
+// ========== Favorite Meals (Quick Add) ==========
+
+export interface FavoriteMealItem {
+  name: string
+  quantity: string
+  unit: string
   calories: number | null
   protein: number | null
   carbs: number | null
   fat: number | null
-  fiber: number | null
-  image_url: string | null
+}
+
+export interface FavoriteMeal {
+  id: number
+  name: string
+  items: FavoriteMealItem[]
+  total_calories: number | null
+  total_protein: number | null
+  total_carbs: number | null
+  total_fat: number | null
+  use_count: number
+  created_at: string
+}
+
+export interface FavoriteMealCreate {
+  name: string
+  items: FavoriteMealItem[]
+}
+
+export interface FavoriteMealsResponse {
+  items: FavoriteMeal[]
+  total: number
+}
+
+// ========== Gallery ==========
+
+export interface GalleryItem {
+  id: number
+  image_url: string
+  meal_type: MealType
+  meal_date: string
+  total_calories: number | null
+  items_count: number
+  health_score: number | null
+}
+
+export interface GalleryResponse {
+  items: GalleryItem[]
+  total: number
+  has_more: boolean
 }

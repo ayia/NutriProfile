@@ -149,6 +149,7 @@
     "10": "Dios del fitness"
   },
   "fab": {
+    "quickAddFood": "Agregar comida rápidamente",
     "scanMeal": "Escanear comida",
     "addWater": "Agregar agua",
     "newWeight": "Nuevo peso",

@@ -15,6 +15,8 @@ from app.api.v1 import (
     export,
     meal_plans,
     nutrition,
+    barcode,
+    voice,
 )
 
 api_router = APIRouter(prefix="/api/v1")
@@ -33,3 +35,5 @@ api_router.include_router(subscriptions.router)
 api_router.include_router(webhooks.router)
 api_router.include_router(export.router, prefix="/export", tags=["export"])
 api_router.include_router(meal_plans.router, prefix="/meal-plans", tags=["meal-plans"])
+api_router.include_router(barcode.router, prefix="/barcode", tags=["barcode"])
+api_router.include_router(voice.router, prefix="/voice", tags=["voice"])

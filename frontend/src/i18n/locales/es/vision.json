@@ -4,7 +4,8 @@
   "tabs": {
     "scan": "Escáner",
     "today": "Hoy",
-    "history": "Historial"
+    "history": "Historial",
+    "gallery": "Galería"
   },
   "scan": {
     "title": "Analizar una comida",
@@ -197,11 +198,13 @@
   },
   "barcode": {
     "scan": "Escanear código de barras",
-    "scanning": "Escaneando...",
-    "notFound": "Producto no encontrado",
+    "scanning": "Buscando producto...",
+    "notFound": "Producto no encontrado en la base de datos",
     "found": "Producto encontrado",
     "permission": "Ingrese el código de barras del producto",
-    "invalidCode": "Código de barras inválido (se requieren 8-13 dígitos)"
+    "invalidCode": "Código de barras inválido (se requieren 8-13 dígitos)",
+    "addToMeal": "Agregar a la comida",
+    "placeholder": "Ingresar código de barras (8-13 dígitos)"
   },
   "errors": {
     "uploadFailed": "Error al subir",
@@ -277,5 +280,77 @@
   },
   "bottomSheet": {
     "moreOptions": "Más opciones"
+  },
+  "manualEntry": {
+    "title": "Entrada manual",
+    "button": "Entrada manual",
+    "selectMealType": "Seleccione tipo de comida",
+    "addFood": "Añadir alimento",
+    "foodsAdded": "{{count}} alimento añadido",
+    "foodsAdded_plural": "{{count}} alimentos añadidos",
+    "saveMeal": "Guardar comida",
+    "mealSaved": "Comida guardada con éxito",
+    "emptyState": "Añada alimentos para comenzar",
+    "noPhoto": "No se requiere foto"
+  },
+  "voice": {
+    "title": "Entrada por voz",
+    "subtitle": "Hable para registrar su comida",
+    "button": "Hablar",
+    "listening": "Escuchando...",
+    "processing": "Procesando...",
+    "tapToSpeak": "Toque el botón para empezar a hablar",
+    "speakNow": "Hable ahora... Te escucho",
+    "stopListening": "Detener",
+    "example": "Ejemplo",
+    "exampleText": "He comido 200g de pollo a la parrilla con arroz y brócoli",
+    "detected": "{{count}} alimento detectado",
+    "detected_plural": "{{count}} alimentos detectados",
+    "addAll": "Añadir todo a la comida",
+    "clear": "Borrar",
+    "noFoodsDetected": "No se detectaron alimentos. Inténtalo de nuevo.",
+    "notSupported": "Entrada de voz no soportada",
+    "notSupportedDescription": "Su navegador no admite reconocimiento de voz. Pruebe Chrome, Edge o Safari.",
+    "permissionDenied": "Acceso al micrófono denegado. Por favor, actívelo en la configuración de su navegador.",
+    "noSpeechDetected": "No se detectó habla. Inténtalo de nuevo.",
+    "networkError": "Error de red. Verifique su conexión.",
+    "unknownError": "Se produjo un error. Inténtalo de nuevo.",
+    "startError": "No se pudo iniciar el reconocimiento de voz.",
+    "parsingError": "Error al analizar el habla. Inténtalo de nuevo.",
+    "addedToMeal": "{{count}} alimento añadido a la comida",
+    "addedToMeal_plural": "{{count}} alimentos añadidos a la comida"
+  },
+  "quickAdd": {
+    "title": "Agregar comida rápidamente",
+    "selectMeal": "Seleccionar comida",
+    "searchFood": "Buscar alimento...",
+    "preview": "{{calories}} kcal",
+    "add": "Añadir a {{meal}}",
+    "added": "{{food}} añadido a {{meal}}",
+    "nameRequired": "Por favor, introduzca un nombre de alimento"
+  },
+  "gallery": {
+    "title": "Galería de fotos",
+    "tab": "Galería",
+    "filters": {
+      "title": "Filtros",
+      "all": "Todas",
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mes",
+      "custom": "Personalizado",
+      "reset": "Restablecer filtros",
+      "period": "Período",
+      "mealType": "Tipo de comida",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de fin"
+    },
+    "empty": "Aún no hay fotos",
+    "emptyDescription": "Escanea tu primera comida para comenzar tu diario visual de alimentos",
+    "loading": "Cargando fotos...",
+    "loadError": "No se pudieron cargar las fotos. Por favor, inténtalo de nuevo.",
+    "viewDetails": "Ver detalles",
+    "photosCount": "{{count}} foto",
+    "photosCount_plural": "{{count}} fotos",
+    "loadMore": "Cargar más"
   }
 }

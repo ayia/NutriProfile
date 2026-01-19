@@ -4,7 +4,8 @@
   "tabs": {
     "scan": "Scanner",
     "today": "Hoje",
-    "history": "Histórico"
+    "history": "Histórico",
+    "gallery": "Galeria"
   },
   "scan": {
     "title": "Analisar uma refeição",
@@ -197,11 +198,13 @@
   },
   "barcode": {
     "scan": "Escanear código de barras",
-    "scanning": "Escaneando...",
-    "notFound": "Produto não encontrado",
+    "scanning": "Procurando produto...",
+    "notFound": "Produto não encontrado no banco de dados",
     "found": "Produto encontrado",
     "permission": "Digite o código de barras do produto",
-    "invalidCode": "Código de barras inválido (8-13 dígitos necessários)"
+    "invalidCode": "Código de barras inválido (8-13 dígitos necessários)",
+    "addToMeal": "Adicionar à refeição",
+    "placeholder": "Digite o código de barras (8-13 dígitos)"
   },
   "errors": {
     "uploadFailed": "Falha ao enviar",
@@ -277,5 +280,77 @@
   },
   "bottomSheet": {
     "moreOptions": "Mais opções"
+  },
+  "manualEntry": {
+    "title": "Entrada manual",
+    "button": "Entrada manual",
+    "selectMealType": "Selecione o tipo de refeição",
+    "addFood": "Adicionar alimento",
+    "foodsAdded": "{{count}} alimento adicionado",
+    "foodsAdded_plural": "{{count}} alimentos adicionados",
+    "saveMeal": "Salvar refeição",
+    "mealSaved": "Refeição salva com sucesso",
+    "emptyState": "Adicione alimentos para começar",
+    "noPhoto": "Nenhuma foto necessária"
+  },
+  "voice": {
+    "title": "Entrada por voz",
+    "subtitle": "Fale para registrar sua refeição",
+    "button": "Falar",
+    "listening": "Ouvindo...",
+    "processing": "Processando...",
+    "tapToSpeak": "Toque no botão para começar a falar",
+    "speakNow": "Fale agora... Estou ouvindo",
+    "stopListening": "Parar",
+    "example": "Exemplo",
+    "exampleText": "Comi 200g de frango grelhado com arroz e brócolis",
+    "detected": "{{count}} alimento detectado",
+    "detected_plural": "{{count}} alimentos detectados",
+    "addAll": "Adicionar tudo à refeição",
+    "clear": "Limpar",
+    "noFoodsDetected": "Nenhum alimento detectado. Tente novamente.",
+    "notSupported": "Entrada de voz não suportada",
+    "notSupportedDescription": "Seu navegador não suporta reconhecimento de voz. Experimente Chrome, Edge ou Safari.",
+    "permissionDenied": "Acesso ao microfone negado. Por favor, ative-o nas configurações do navegador.",
+    "noSpeechDetected": "Nenhuma fala detectada. Tente novamente.",
+    "networkError": "Erro de rede. Verifique sua conexão.",
+    "unknownError": "Ocorreu um erro. Tente novamente.",
+    "startError": "Não foi possível iniciar o reconhecimento de voz.",
+    "parsingError": "Erro ao analisar a fala. Tente novamente.",
+    "addedToMeal": "{{count}} alimento adicionado à refeição",
+    "addedToMeal_plural": "{{count}} alimentos adicionados à refeição"
+  },
+  "quickAdd": {
+    "title": "Adicionar alimento rápido",
+    "selectMeal": "Selecionar refeição",
+    "searchFood": "Buscar alimento...",
+    "preview": "{{calories}} kcal",
+    "add": "Adicionar a {{meal}}",
+    "added": "{{food}} adicionado a {{meal}}",
+    "nameRequired": "Por favor, insira um nome de alimento"
+  },
+  "gallery": {
+    "title": "Galeria de fotos",
+    "tab": "Galeria",
+    "filters": {
+      "title": "Filtros",
+      "all": "Todas",
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mês",
+      "custom": "Personalizado",
+      "reset": "Redefinir filtros",
+      "period": "Período",
+      "mealType": "Tipo de refeição",
+      "startDate": "Data de início",
+      "endDate": "Data de término"
+    },
+    "empty": "Ainda não há fotos",
+    "emptyDescription": "Escaneie sua primeira refeição para começar seu diário visual de alimentos",
+    "loading": "Carregando fotos...",
+    "loadError": "Não foi possível carregar as fotos. Por favor, tente novamente.",
+    "viewDetails": "Ver detalhes",
+    "photosCount": "{{count}} foto",
+    "photosCount_plural": "{{count}} fotos",
+    "loadMore": "Carregar mais"
   }
 }

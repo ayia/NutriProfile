@@ -4,7 +4,8 @@
   "tabs": {
     "scan": "扫描",
     "today": "今天",
-    "history": "历史"
+    "history": "历史",
+    "gallery": "图库"
   },
   "scan": {
     "title": "分析餐食",
@@ -197,11 +198,13 @@
   },
   "barcode": {
     "scan": "扫描条形码",
-    "scanning": "扫描中...",
-    "notFound": "未找到产品",
+    "scanning": "正在搜索产品...",
+    "notFound": "数据库中未找到产品",
     "found": "找到产品",
     "permission": "请输入产品条形码",
-    "invalidCode": "条形码无效（需要8-13位数字）"
+    "invalidCode": "条形码无效（需要8-13位数字）",
+    "addToMeal": "添加到餐食",
+    "placeholder": "输入条形码（8-13位数字）"
   },
   "errors": {
     "uploadFailed": "上传失败",
@@ -277,5 +280,77 @@
   },
   "bottomSheet": {
     "moreOptions": "更多选项"
+  },
+  "manualEntry": {
+    "title": "手动输入",
+    "button": "手动输入",
+    "selectMealType": "选择餐点类型",
+    "addFood": "添加食物",
+    "foodsAdded": "已添加{{count}}种食物",
+    "foodsAdded_plural": "已添加{{count}}种食物",
+    "saveMeal": "保存餐点",
+    "mealSaved": "餐点保存成功",
+    "emptyState": "添加食物开始记录",
+    "noPhoto": "无需照片"
+  },
+  "voice": {
+    "title": "语音输入",
+    "subtitle": "说出您的餐食以记录",
+    "button": "说话",
+    "listening": "正在聆听...",
+    "processing": "处理中...",
+    "tapToSpeak": "点击按钮开始说话",
+    "speakNow": "现在开始说话...我在听",
+    "stopListening": "停止",
+    "example": "示例",
+    "exampleText": "我吃了200克烤鸡肉配米饭和西兰花",
+    "detected": "检测到{{count}}种食物",
+    "detected_plural": "检测到{{count}}种食物",
+    "addAll": "全部添加到餐食",
+    "clear": "清除",
+    "noFoodsDetected": "未检测到食物。请重试。",
+    "notSupported": "不支持语音输入",
+    "notSupportedDescription": "您的浏览器不支持语音识别。请尝试Chrome、Edge或Safari。",
+    "permissionDenied": "麦克风访问被拒绝。请在浏览器设置中启用。",
+    "noSpeechDetected": "未检测到语音。请重试。",
+    "networkError": "网络错误。请检查您的连接。",
+    "unknownError": "发生错误。请重试。",
+    "startError": "无法启动语音识别。",
+    "parsingError": "分析语音时出错。请重试。",
+    "addedToMeal": "已将{{count}}种食物添加到餐食",
+    "addedToMeal_plural": "已将{{count}}种食物添加到餐食"
+  },
+  "quickAdd": {
+    "title": "快速添加食物",
+    "selectMeal": "选择餐食",
+    "searchFood": "搜索食物...",
+    "preview": "{{calories}}千卡",
+    "add": "添加到{{meal}}",
+    "added": "{{food}}已添加到{{meal}}",
+    "nameRequired": "请输入食物名称"
+  },
+  "gallery": {
+    "title": "照片图库",
+    "tab": "图库",
+    "filters": {
+      "title": "筛选",
+      "all": "全部",
+      "thisWeek": "本周",
+      "thisMonth": "本月",
+      "custom": "自定义",
+      "reset": "重置筛选",
+      "period": "时间段",
+      "mealType": "餐食类型",
+      "startDate": "开始日期",
+      "endDate": "结束日期"
+    },
+    "empty": "还没有照片",
+    "emptyDescription": "扫描您的第一餐以开始您的视觉饮食日记",
+    "loading": "正在加载照片...",
+    "loadError": "无法加载照片。请重试。",
+    "viewDetails": "查看详情",
+    "photosCount": "{{count}}张照片",
+    "photosCount_plural": "{{count}}张照片",
+    "loadMore": "加载更多"
   }
 }

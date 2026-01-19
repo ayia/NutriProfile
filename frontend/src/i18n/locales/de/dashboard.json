@@ -149,6 +149,7 @@
     "10": "Fitness-Gott"
   },
   "fab": {
+    "quickAddFood": "Lebensmittel schnell hinzufügen",
     "scanMeal": "Mahlzeit scannen",
     "addWater": "Wasser hinzufügen",
     "newWeight": "Neues Gewicht",

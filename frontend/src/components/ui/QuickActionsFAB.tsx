@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/hooks/useAuth'
-import { Camera, Droplets, Scale, ChefHat, type LucideIcon } from '@/lib/icons'
+import { Camera, Droplets, Scale, ChefHat, Utensils, type LucideIcon } from '@/lib/icons'
+import { QuickAddModal } from '@/components/common/QuickAddModal'
 
 interface QuickAction {
   id: string
@@ -16,6 +17,7 @@ interface QuickAction {
 export function QuickActionsFAB() {
   const [isOpen, setIsOpen] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [showQuickAddModal, setShowQuickAddModal] = useState(false)
   const fabRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
   const location = useLocation()
@@ -46,6 +48,13 @@ export function QuickActionsFAB() {
   }
 
   const actions: QuickAction[] = [
+    {
+      id: 'quickAdd',
+      labelKey: 'fab.quickAddFood',
+      IconComponent: Utensils,
+      action: () => setShowQuickAddModal(true),
+      color: 'bg-primary-500',
+    },
     {
       id: 'scan',
       labelKey: 'fab.scanMeal',
@@ -92,11 +101,17 @@ export function QuickActionsFAB() {
   }
 
   return (
-    <div
-      ref={fabRef}
-      data-tour="quick-actions"
-      className="fixed bottom-20 right-4 md:bottom-6 z-40"
-    >
+    <>
+      <QuickAddModal
+        isOpen={showQuickAddModal}
+        onClose={() => setShowQuickAddModal(false)}
+      />
+
+      <div
+        ref={fabRef}
+        data-tour="quick-actions"
+        className="fixed bottom-20 right-4 md:bottom-6 z-40"
+      >
       {/* Menu d'actions */}
       <div
         className={`absolute bottom-16 right-0 flex flex-col-reverse gap-3 transition-all duration-300 ${
@@ -148,5 +163,6 @@ export function QuickActionsFAB() {
         />
       )}
     </div>
+    </>
   )
 }

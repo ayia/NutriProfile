@@ -71,3 +71,6 @@ class User(Base):
 
     # Favorite foods relation
     favorite_foods = relationship("FavoriteFood", back_populates="user", cascade="all, delete-orphan")
+
+    # Favorite meals relation
+    favorite_meals = relationship("FavoriteMeal", back_populates="user", cascade="all, delete-orphan")
