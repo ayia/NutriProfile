@@ -144,22 +144,36 @@ async def search_nutrition_multilingual(
 
     # === ÉTAPE 3: LLM NUTRITION ESTIMATION ===
     # Fallback final pour aliments composés/inconnus
+    # IMPORTANT: Always request values for 100g and scale afterwards
+    # because LLMs often ignore the quantity and return 100g values
     try:
         logger.info("trying_llm_estimation", food=food_name)
 
+        # Request values for 100g (standard reference)
         llm_result = await estimate_nutrition_llm(
             food_name=food_name,
-            quantity_g=quantity_g,
+            quantity_g=100.0,  # Always use 100g for LLM
             context=context
         )
 
         if llm_result and llm_result.confidence >= 0.6:
+            # Scale to requested quantity
+            ratio = quantity_g / 100.0
+            llm_result.calories *= ratio
+            llm_result.protein *= ratio
+            llm_result.carbs *= ratio
+            llm_result.fat *= ratio
+            llm_result.fiber *= ratio
+            llm_result.portion_size_g = quantity_g
+            llm_result.source = "llm"
+
             logger.info(
                 "llm_estimation_success",
                 food=food_name,
+                quantity_g=quantity_g,
+                calories_scaled=llm_result.calories,
                 confidence=llm_result.confidence
             )
-            llm_result.source = "llm"
             return llm_result
 
     except Exception as e:
