@@ -81,6 +81,31 @@ const UNITS = [
 
 const QUICK_AMOUNTS = [10, 25, 50, 100]
 
+/**
+ * Convert quantity from any unit to grams for USDA API search.
+ * USDA requires grams, so we need to convert portions/pieces/cups/tbsp.
+ *
+ * Default conversions (can be overridden by food-specific portion presets):
+ * - portion: 150g (average meal portion)
+ * - piece: 100g (average single item)
+ * - cup: 240g (standard US cup for dense foods)
+ * - tbsp: 15g (standard tablespoon)
+ * - ml: 1g (water density, approximate for liquids)
+ */
+function convertToGrams(quantity: number, unit: string | undefined): number {
+  const conversions: Record<string, number> = {
+    g: 1,
+    ml: 1,         // Approximate for water-based liquids
+    portion: 150,  // Average meal portion
+    piece: 100,    // Average single item (egg, fruit, etc.)
+    cup: 240,      // Standard US cup
+    tbsp: 15,      // Tablespoon
+  }
+
+  const multiplier = conversions[unit || 'g'] || 1
+  return quantity * multiplier
+}
+
 export function EditFoodItemModalV2({
   item,
   isOpen,
@@ -272,13 +297,16 @@ export function EditFoodItemModalV2({
     const quantity = parseFloat(formData.quantity)
     if (isNaN(quantity) || quantity <= 0) return
 
+    // Convert quantity to grams based on unit (USDA requires grams)
+    const quantityInGrams = convertToGrams(quantity, formData.unit)
+
     setIsSearching(true)
 
     try {
       // Uses LRU cache internally (0ms for repeated lookups)
       const result = await searchNutrition({
         food_name: formData.name,
-        quantity_g: quantity,
+        quantity_g: quantityInGrams,
         language: i18n.language,
       })
 
