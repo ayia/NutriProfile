@@ -278,7 +278,9 @@
     "search": "Search",
     "searchNutrition": "Search nutrition values",
     "enterFoodName": "Enter food name (min. 2 characters)",
-    "foundFrom": "Found in"
+    "foundFrom": "Found in",
+    "foundInUSDA": "Found in USDA",
+    "notFoundInUSDA": "Not found in USDA - manual entry required"
   },
   "source": {
     "usda": "USDA verified",

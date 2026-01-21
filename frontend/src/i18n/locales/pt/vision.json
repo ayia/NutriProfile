@@ -272,7 +272,9 @@
     "search": "Pesquisar",
     "searchNutrition": "Pesquisar valores nutricionais",
     "enterFoodName": "Insira o nome do alimento (mín. 2 caracteres)",
-    "foundFrom": "Encontrado em"
+    "foundFrom": "Encontrado em",
+    "foundInUSDA": "Encontrado no USDA",
+    "notFoundInUSDA": "Não encontrado no USDA - entrada manual necessária"
   },
   "source": {
     "usda": "USDA verificado",

@@ -286,7 +286,9 @@
     "search": "Suchen",
     "searchNutrition": "Nährwerte suchen",
     "enterFoodName": "Lebensmittelnamen eingeben (mind. 2 Zeichen)",
-    "foundFrom": "Gefunden in"
+    "foundFrom": "Gefunden in",
+    "foundInUSDA": "In USDA gefunden",
+    "notFoundInUSDA": "Nicht in USDA gefunden - manuelle Eingabe erforderlich"
   },
   "source": {
     "usda": "USDA verifiziert",

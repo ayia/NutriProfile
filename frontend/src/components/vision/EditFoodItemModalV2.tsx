@@ -265,25 +265,9 @@ export function EditFoodItemModalV2({
     }
   }, [isOpen, item])
 
-  // Auto-trigger USDA search when food name and quantity are valid
-  // Debounced to avoid excessive API calls
-  useEffect(() => {
-    if (!formData.name || formData.name.length < 2 || !formData.quantity || manualMode) {
-      return
-    }
-
-    const quantity = parseFloat(formData.quantity)
-    if (isNaN(quantity) || quantity <= 0) {
-      return
-    }
-
-    // Debounce USDA search
-    const timeoutId = setTimeout(() => {
-      performSearch()
-    }, 500) // 500ms debounce
-
-    return () => clearTimeout(timeoutId)
-  }, [formData.name, formData.quantity, formData.unit, manualMode]) // eslint-disable-line react-hooks/exhaustive-deps
+  // NOTE: Auto-search removed in favor of manual "Rechercher" button
+  // The user now clicks the search button to trigger USDA API search
+  // This matches the UX of FoodItemExpandableCard for consistency
 
   // USDA API search - the ONLY source for nutrition values
   const performSearch = async () => {
@@ -610,7 +594,7 @@ export function EditFoodItemModalV2({
               </section>
             )}
 
-            {/* Food Name with Autocomplete */}
+            {/* Food Name with Autocomplete and Search Button */}
             <section className="space-y-2 relative">
               <div className="flex items-center justify-between">
                 <label
@@ -635,31 +619,64 @@ export function EditFoodItemModalV2({
                   </button>
                 )}
               </div>
-              <div className="relative">
-                <Search className={cn(
-                  "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none",
-                  isRTL ? "right-3" : "left-3"
-                )} />
-                <Input
-                  ref={firstFocusableRef}
-                  id="food-name"
-                  value={formData.name}
-                  onChange={e => {
-                    setFormData(prev => ({ ...prev, name: e.target.value }))
-                    setShowAutocomplete(true)
+
+              {/* Food Name Input + Search Button (same layout as FoodItemExpandableCard) */}
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Search className={cn(
+                    "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none",
+                    isRTL ? "right-3" : "left-3"
+                  )} />
+                  <Input
+                    ref={firstFocusableRef}
+                    id="food-name"
+                    value={formData.name}
+                    onChange={e => {
+                      setFormData(prev => ({ ...prev, name: e.target.value }))
+                      setShowAutocomplete(true)
+                      // Reset search when name changes
+                      setSearchResult(null)
+                    }}
+                    onFocus={() => setShowAutocomplete(true)}
+                    placeholder={t('foodNamePlaceholder')}
+                    disabled={isLoading}
+                    className={cn(
+                      "w-full h-12 rounded-xl bg-white",
+                      isRTL ? "pr-10 pl-3" : "pl-10 pr-3"
+                    )}
+                    autoComplete="off"
+                    aria-autocomplete="list"
+                    aria-controls="food-autocomplete"
+                    aria-expanded={showAutocomplete && autocompleteResults.length > 0}
+                  />
+                </div>
+
+                {/* Search Button - Same design as FoodItemExpandableCard */}
+                <button
+                  onClick={() => {
+                    setShowAutocomplete(false)
+                    performSearch()
                   }}
-                  onFocus={() => setShowAutocomplete(true)}
-                  placeholder={t('foodNamePlaceholder')}
-                  disabled={isLoading}
+                  disabled={isSearching || !formData.name || formData.name.length < 2 || !formData.quantity}
                   className={cn(
-                    "w-full h-12 rounded-xl bg-white",
-                    isRTL ? "pr-10 pl-3" : "pl-10 pr-3"
+                    "flex items-center justify-center h-12 px-4 rounded-xl font-medium transition-all",
+                    "bg-gradient-to-r from-primary-500 to-emerald-500 text-white",
+                    "hover:from-primary-600 hover:to-emerald-600",
+                    "shadow-lg hover:shadow-xl",
+                    "active:scale-95",
+                    "disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                   )}
-                  autoComplete="off"
-                  aria-autocomplete="list"
-                  aria-controls="food-autocomplete"
-                  aria-expanded={showAutocomplete && autocompleteResults.length > 0}
-                />
+                  aria-label={t('edit.searchNutrition')}
+                >
+                  {isSearching ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      <Search className="w-5 h-5 sm:mr-2" />
+                      <span className="hidden sm:inline">{t('edit.search')}</span>
+                    </>
+                  )}
+                </button>
               </div>
 
               {/* Autocomplete Dropdown */}
@@ -704,12 +721,20 @@ export function EditFoodItemModalV2({
                 </div>
               )}
 
-              {/* Auto-search info - USDA search is triggered automatically */}
-              {formData.name && formData.name.length >= 2 && formData.quantity && !manualMode && !searchResult && !isSearching && (
-                <p className="text-xs text-gray-500 mt-2 flex items-center gap-1.5">
-                  <Search className="w-3.5 h-3.5" />
-                  {t('edit.searchingNutrition')}...
-                </p>
+              {/* Search Result Status - Found */}
+              {searchResult?.found && !isSearching && (
+                <div className="flex items-center gap-2 mt-2 text-sm text-green-600">
+                  <Check className="w-4 h-4" />
+                  <span>{t('edit.foundInUSDA')}</span>
+                </div>
+              )}
+
+              {/* Search Result Status - Not Found */}
+              {searchResult && !searchResult.found && !isSearching && !manualMode && (
+                <div className="flex items-center gap-2 mt-2 text-sm text-amber-600">
+                  <Info className="w-4 h-4" />
+                  <span>{t('edit.notFoundInUSDA')}</span>
+                </div>
               )}
 
               {/* Hint text for minimum characters */}

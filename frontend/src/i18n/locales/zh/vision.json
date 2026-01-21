@@ -272,7 +272,9 @@
     "search": "搜索",
     "searchNutrition": "搜索营养信息",
     "enterFoodName": "输入食物名称（至少2个字符）",
-    "foundFrom": "来源于"
+    "foundFrom": "来源于",
+    "foundInUSDA": "在USDA中找到",
+    "notFoundInUSDA": "在USDA中未找到 - 需要手动输入"
   },
   "source": {
     "usda": "USDA已验证",

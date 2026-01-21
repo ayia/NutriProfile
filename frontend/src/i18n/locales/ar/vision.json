@@ -272,7 +272,9 @@
     "search": "بحث",
     "searchNutrition": "البحث عن القيم الغذائية",
     "enterFoodName": "أدخل اسم الطعام (حرفان على الأقل)",
-    "foundFrom": "تم العثور عليه في"
+    "foundFrom": "تم العثور عليه في",
+    "foundInUSDA": "موجود في USDA",
+    "notFoundInUSDA": "غير موجود في USDA - الإدخال اليدوي مطلوب"
   },
   "source": {
     "usda": "تم التحقق من USDA",
