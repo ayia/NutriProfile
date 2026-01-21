@@ -1,0 +1,291 @@
+{
+  "$schema": "https://nutriprofile.dev/schemas/workflow-v1.json",
+  "name": "feature-workflow",
+  "version": "1.0.0",
+  "description": "Standard workflow for implementing new features in NutriProfile",
+
+  "metadata": {
+    "author": "NutriProfile Team",
+    "created": "2026-01-21",
+    "tags": ["feature", "development", "standard"]
+  },
+
+  "variables": {
+    "feature_name": { "type": "string", "required": true },
+    "feature_type": { "type": "enum", "values": ["frontend", "backend", "fullstack"], "default": "fullstack" },
+    "complexity": { "type": "enum", "values": ["simple", "medium", "complex"], "default": "medium" },
+    "requires_db": { "type": "boolean", "default": false },
+    "requires_i18n": { "type": "boolean", "default": true }
+  },
+
+  "phases": [
+    {
+      "id": "phase-1-analysis",
+      "name": "Analysis & Planning",
+      "description": "Understand requirements and plan implementation",
+      "agents": ["orchestrator"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-1.1",
+          "name": "Analyze Requirements",
+          "agent": "orchestrator",
+          "action": "analyze",
+          "inputs": {
+            "feature": "{{feature_name}}",
+            "context": "Read CLAUDE.md and relevant documentation"
+          },
+          "outputs": ["requirements.md", "affected_files.json"]
+        },
+        {
+          "id": "task-1.2",
+          "name": "Create Implementation Plan",
+          "agent": "orchestrator",
+          "action": "plan",
+          "depends_on": ["task-1.1"],
+          "inputs": {
+            "requirements": "{{task-1.1.outputs.requirements}}"
+          },
+          "outputs": ["implementation_plan.json"]
+        }
+      ]
+    },
+    {
+      "id": "phase-2-backend",
+      "name": "Backend Implementation",
+      "description": "Create API endpoints, models, and services",
+      "condition": "{{feature_type}} in ['backend', 'fullstack']",
+      "agents": ["backend-expert", "database-architect", "api-designer"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-2.1",
+          "name": "Create Pydantic Schemas",
+          "agent": "api-designer",
+          "action": "create",
+          "inputs": {
+            "target": "backend/app/schemas/{{feature_name}}.py"
+          },
+          "validation": {
+            "command": "python -m py_compile backend/app/schemas/{{feature_name}}.py",
+            "success_message": "Schema validated successfully"
+          }
+        },
+        {
+          "id": "task-2.2",
+          "name": "Create/Modify SQLAlchemy Models",
+          "agent": "database-architect",
+          "condition": "{{requires_db}}",
+          "depends_on": ["task-2.1"],
+          "action": "create",
+          "inputs": {
+            "target": "backend/app/models/"
+          }
+        },
+        {
+          "id": "task-2.3",
+          "name": "Create Alembic Migration",
+          "agent": "database-architect",
+          "condition": "{{requires_db}}",
+          "depends_on": ["task-2.2"],
+          "action": "execute",
+          "inputs": {
+            "command": "cd backend && alembic revision --autogenerate -m 'add_{{feature_name}}'"
+          }
+        },
+        {
+          "id": "task-2.4",
+          "name": "Implement Service Layer",
+          "agent": "backend-expert",
+          "depends_on": ["task-2.1", "task-2.2"],
+          "action": "create",
+          "inputs": {
+            "target": "backend/app/services/{{feature_name}}.py"
+          }
+        },
+        {
+          "id": "task-2.5",
+          "name": "Create API Endpoints",
+          "agent": "api-designer",
+          "depends_on": ["task-2.4"],
+          "action": "create",
+          "inputs": {
+            "target": "backend/app/api/v1/{{feature_name}}.py"
+          }
+        },
+        {
+          "id": "task-2.6",
+          "name": "Write Backend Tests",
+          "agent": "test-writer",
+          "depends_on": ["task-2.5"],
+          "action": "create",
+          "inputs": {
+            "target": "backend/tests/test_{{feature_name}}.py"
+          },
+          "validation": {
+            "command": "cd backend && pytest tests/test_{{feature_name}}.py -v",
+            "success_criteria": "all tests pass"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-3-frontend",
+      "name": "Frontend Implementation",
+      "description": "Create React components and integrate with API",
+      "condition": "{{feature_type}} in ['frontend', 'fullstack']",
+      "agents": ["frontend-expert", "i18n-manager", "responsive-auditor"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-3.1",
+          "name": "Create React Components",
+          "agent": "frontend-expert",
+          "action": "create",
+          "inputs": {
+            "target": "frontend/src/components/{{feature_name}}/"
+          }
+        },
+        {
+          "id": "task-3.2",
+          "name": "Add API Service",
+          "agent": "frontend-expert",
+          "depends_on": ["task-3.1"],
+          "action": "modify",
+          "inputs": {
+            "target": "frontend/src/services/"
+          }
+        },
+        {
+          "id": "task-3.3",
+          "name": "Add Translations (7 languages)",
+          "agent": "i18n-manager",
+          "condition": "{{requires_i18n}}",
+          "depends_on": ["task-3.1"],
+          "parallel": true,
+          "action": "create",
+          "inputs": {
+            "targets": [
+              "frontend/src/i18n/locales/en/{{feature_name}}.json",
+              "frontend/src/i18n/locales/fr/{{feature_name}}.json",
+              "frontend/src/i18n/locales/de/{{feature_name}}.json",
+              "frontend/src/i18n/locales/es/{{feature_name}}.json",
+              "frontend/src/i18n/locales/pt/{{feature_name}}.json",
+              "frontend/src/i18n/locales/zh/{{feature_name}}.json",
+              "frontend/src/i18n/locales/ar/{{feature_name}}.json"
+            ]
+          }
+        },
+        {
+          "id": "task-3.4",
+          "name": "Verify Responsive Design",
+          "agent": "responsive-auditor",
+          "depends_on": ["task-3.1"],
+          "action": "audit",
+          "inputs": {
+            "breakpoints": ["375px", "768px", "1024px", "1280px"]
+          }
+        },
+        {
+          "id": "task-3.5",
+          "name": "Write Frontend Tests",
+          "agent": "test-writer",
+          "depends_on": ["task-3.1", "task-3.2"],
+          "action": "create",
+          "inputs": {
+            "target": "frontend/src/components/{{feature_name}}/__tests__/"
+          },
+          "validation": {
+            "command": "cd frontend && npm test -- --run",
+            "success_criteria": "coverage >= 80%"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-4-quality",
+      "name": "Quality Assurance",
+      "description": "Review, test, and validate the implementation",
+      "agents": ["code-reviewer", "security-auditor", "test-writer"],
+      "parallel": true,
+      "tasks": [
+        {
+          "id": "task-4.1",
+          "name": "Code Review",
+          "agent": "code-reviewer",
+          "action": "review",
+          "inputs": {
+            "files": "{{phase-2.outputs.files}} + {{phase-3.outputs.files}}"
+          }
+        },
+        {
+          "id": "task-4.2",
+          "name": "Security Audit",
+          "agent": "security-auditor",
+          "action": "audit",
+          "inputs": {
+            "focus": ["authentication", "input_validation", "data_exposure"]
+          }
+        },
+        {
+          "id": "task-4.3",
+          "name": "Run Full Test Suite",
+          "agent": "test-writer",
+          "action": "execute",
+          "inputs": {
+            "commands": [
+              "cd backend && pytest",
+              "cd frontend && npm test -- --run"
+            ]
+          },
+          "validation": {
+            "success_criteria": "all tests pass, coverage >= 80%"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-5-documentation",
+      "name": "Documentation",
+      "description": "Update documentation and prepare for deployment",
+      "agents": ["documentation-writer"],
+      "tasks": [
+        {
+          "id": "task-5.1",
+          "name": "Update CLAUDE.md",
+          "agent": "documentation-writer",
+          "action": "modify",
+          "inputs": {
+            "target": "CLAUDE.md",
+            "section": "Fonctionnalités Implémentées"
+          }
+        },
+        {
+          "id": "task-5.2",
+          "name": "Update API Documentation",
+          "agent": "documentation-writer",
+          "condition": "{{feature_type}} in ['backend', 'fullstack']",
+          "action": "modify",
+          "inputs": {
+            "target": "docs/API.md"
+          }
+        }
+      ]
+    }
+  ],
+
+  "success_criteria": {
+    "all_tests_pass": true,
+    "coverage_threshold": 80,
+    "no_typescript_errors": true,
+    "translations_complete": true,
+    "responsive_verified": true,
+    "security_audit_passed": true
+  },
+
+  "rollback": {
+    "enabled": true,
+    "strategy": "git_revert",
+    "checkpoint_after": ["phase-2-backend", "phase-3-frontend"]
+  }
+}

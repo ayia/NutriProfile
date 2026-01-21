@@ -1,0 +1,175 @@
+{
+  "$schema": "https://nutriprofile.dev/schemas/workflow-v1.json",
+  "name": "bugfix-workflow",
+  "version": "1.0.0",
+  "description": "Standard workflow for fixing bugs in NutriProfile",
+
+  "metadata": {
+    "author": "NutriProfile Team",
+    "created": "2026-01-21",
+    "tags": ["bugfix", "debugging", "maintenance"]
+  },
+
+  "variables": {
+    "bug_description": { "type": "string", "required": true },
+    "severity": { "type": "enum", "values": ["critical", "high", "medium", "low"], "default": "medium" },
+    "affected_area": { "type": "enum", "values": ["frontend", "backend", "database", "api", "auth", "unknown"], "default": "unknown" },
+    "error_message": { "type": "string", "required": false }
+  },
+
+  "phases": [
+    {
+      "id": "phase-1-investigation",
+      "name": "Bug Investigation",
+      "description": "Identify root cause and affected components",
+      "agents": ["debugger", "error-fixer"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-1.1",
+          "name": "Reproduce Bug",
+          "agent": "debugger",
+          "action": "investigate",
+          "inputs": {
+            "description": "{{bug_description}}",
+            "error": "{{error_message}}"
+          },
+          "outputs": ["reproduction_steps.md"]
+        },
+        {
+          "id": "task-1.2",
+          "name": "Identify Root Cause",
+          "agent": "debugger",
+          "depends_on": ["task-1.1"],
+          "action": "analyze",
+          "inputs": {
+            "logs": "Check application logs",
+            "stack_trace": "{{error_message}}"
+          },
+          "outputs": ["root_cause.md", "affected_files.json"]
+        },
+        {
+          "id": "task-1.3",
+          "name": "Plan Fix Strategy",
+          "agent": "error-fixer",
+          "depends_on": ["task-1.2"],
+          "action": "plan",
+          "inputs": {
+            "root_cause": "{{task-1.2.outputs.root_cause}}",
+            "affected_files": "{{task-1.2.outputs.affected_files}}"
+          },
+          "outputs": ["fix_plan.md"]
+        }
+      ]
+    },
+    {
+      "id": "phase-2-fix",
+      "name": "Implement Fix",
+      "description": "Apply the bug fix",
+      "agents": ["frontend-expert", "backend-expert", "database-architect"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-2.1",
+          "name": "Apply Fix",
+          "agent": "{{affected_area}}-expert",
+          "action": "modify",
+          "inputs": {
+            "files": "{{task-1.2.outputs.affected_files}}",
+            "strategy": "{{task-1.3.outputs.fix_plan}}"
+          }
+        },
+        {
+          "id": "task-2.2",
+          "name": "Add Regression Test",
+          "agent": "test-writer",
+          "depends_on": ["task-2.1"],
+          "action": "create",
+          "inputs": {
+            "test_case": "Reproduce original bug scenario",
+            "expected": "Bug should not occur"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-3-verification",
+      "name": "Verify Fix",
+      "description": "Ensure bug is fixed and no regressions",
+      "agents": ["test-writer", "code-reviewer"],
+      "parallel": true,
+      "tasks": [
+        {
+          "id": "task-3.1",
+          "name": "Run Regression Test",
+          "agent": "test-writer",
+          "action": "execute",
+          "inputs": {
+            "command": "Run test that reproduces the bug"
+          },
+          "validation": {
+            "success_criteria": "Test passes (bug no longer occurs)"
+          }
+        },
+        {
+          "id": "task-3.2",
+          "name": "Run Full Test Suite",
+          "agent": "test-writer",
+          "action": "execute",
+          "inputs": {
+            "commands": [
+              "cd backend && pytest",
+              "cd frontend && npm test -- --run"
+            ]
+          },
+          "validation": {
+            "success_criteria": "No test regressions"
+          }
+        },
+        {
+          "id": "task-3.3",
+          "name": "Code Review",
+          "agent": "code-reviewer",
+          "action": "review",
+          "inputs": {
+            "focus": ["fix_correctness", "no_side_effects", "code_quality"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-4-documentation",
+      "name": "Document Fix",
+      "description": "Document the bug and fix for future reference",
+      "agents": ["documentation-writer"],
+      "tasks": [
+        {
+          "id": "task-4.1",
+          "name": "Add to Known Issues",
+          "agent": "documentation-writer",
+          "condition": "{{severity}} in ['critical', 'high']",
+          "action": "modify",
+          "inputs": {
+            "target": "docs/KNOWN_ISSUES.md",
+            "content": "Bug description, root cause, and fix"
+          }
+        }
+      ]
+    }
+  ],
+
+  "success_criteria": {
+    "bug_reproduced": true,
+    "root_cause_identified": true,
+    "fix_applied": true,
+    "regression_test_added": true,
+    "all_tests_pass": true,
+    "no_new_bugs": true
+  },
+
+  "escalation": {
+    "trigger": "severity == 'critical' && phase-1 > 30min",
+    "action": "notify_team",
+    "agents": ["incident-responder"]
+  }
+}

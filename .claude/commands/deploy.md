@@ -1,105 +1,175 @@
-# Déploiement
+# Déploiement CI/CD
 
-Déployer NutriProfile sur Fly.io.
+Pipeline de déploiement complet NutriProfile avec tests automatisés, déploiement et Git automation.
 
-## Prérequis
-
-- [ ] Fly CLI installé (`flyctl`)
-- [ ] Authentifié sur Fly.io (`fly auth login`)
-- [ ] Tous les tests passent
-- [ ] Variables d'environnement configurées
-
-## Déploiement Backend
+## Usage
 
 ```bash
-cd backend
+/deploy                    # Déploiement fullstack (frontend + backend)
+/deploy frontend           # Frontend uniquement (Cloudflare Pages)
+/deploy backend            # Backend uniquement (Fly.io)
+/deploy --skip-tests       # Sauter les tests (urgence)
+/deploy --dry              # Simulation sans déploiement réel
+```
 
-# Vérifier la configuration
-fly status
+## Pipeline CI/CD Complet
 
-# Déployer
-fly deploy
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    CI/CD PIPELINE                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  PHASE 1: VALIDATION (parallèle)                             │
+│  ├─ [test-runner] Frontend tests (npm test)                  │
+│  ├─ [test-runner] Backend tests (pytest)                     │
+│  └─ [security-auditor] Security scan                         │
+│                                                              │
+│  PHASE 2: BUILD (parallèle)                                  │
+│  ├─ [deploy-frontend] npm run build                          │
+│  └─ [deploy-backend] Verify Dockerfile & fly.toml            │
+│                                                              │
+│  PHASE 3: DEPLOY BACKEND                                     │
+│  ├─ [deploy-backend] Migrations (alembic upgrade head)       │
+│  ├─ [deploy-backend] flyctl deploy                           │
+│  └─ [deploy-backend] Health check                            │
+│                                                              │
+│  PHASE 4: DEPLOY FRONTEND                                    │
+│  ├─ [deploy-frontend] wrangler pages deploy                  │
+│  └─ [deploy-frontend] Health check                           │
+│                                                              │
+│  PHASE 5: POST-DEPLOY                                        │
+│  ├─ [git-automation] Create git tag                          │
+│  ├─ [git-automation] Commit + Push                           │
+│  └─ [git-automation] Create PR (optionnel)                   │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
 
-# Vérifier les logs
-fly logs
+## Agents Impliqués
 
-# Vérifier le health check
+| Agent | Rôle |
+|-------|------|
+| `test-runner` | Exécute tests frontend (Vitest) et backend (pytest) |
+| `security-auditor` | Vérifie vulnérabilités et secrets exposés |
+| `deploy-backend` | Déploie sur Fly.io avec migrations |
+| `deploy-frontend` | Déploie sur Cloudflare Pages |
+| `git-automation` | Commit, push, tags, PR |
+
+## Commandes par Cible
+
+### Frontend (Cloudflare Pages)
+
+```bash
+# Tests
+cd frontend && npm test -- --run
+
+# Build
+cd frontend && npm run build
+
+# Deploy
+npx wrangler pages deploy dist --project-name=nutriprofile
+
+# Verify
+curl -I https://nutriprofile.pages.dev
+```
+
+### Backend (Fly.io)
+
+```bash
+# Tests
+cd backend && pytest --cov=app
+
+# Migrations
+cd backend && alembic upgrade head
+
+# Deploy
+"C:\Users\badre zouiri\.fly\bin\flyctl.exe" deploy -c backend/fly.toml --strategy immediate
+
+# Verify
 curl https://nutriprofile-api.fly.dev/health
 ```
 
-## Déploiement Frontend
+## Prérequis
 
+### Outils Installés
+- [ ] Node.js 18+
+- [ ] Python 3.11+
+- [ ] Fly CLI (`flyctl`)
+- [ ] Wrangler CLI (`npx wrangler`)
+- [ ] Git
+
+### Authentification
+- [ ] `fly auth login`
+- [ ] `wrangler login`
+- [ ] `gh auth login` (pour PR)
+
+### Secrets Configurés
+
+**Fly.io:**
 ```bash
-cd frontend
-
-# Build de production
-npm run build
-
-# Déployer
-fly deploy
-
-# Vérifier
-curl https://nutriprofile.fly.dev
+flyctl secrets list -a nutriprofile-api
+# DATABASE_URL, JWT_SECRET, HUGGINGFACE_TOKEN
+# LEMONSQUEEZY_API_KEY, LEMONSQUEEZY_WEBHOOK_SECRET
 ```
 
-## Base de Données
-
+**Cloudflare:**
 ```bash
-# Migrations
-fly ssh console -C "cd /app && alembic upgrade head"
-
-# Backup
-fly postgres backup create
-
-# Connexion
-fly postgres connect -a nutriprofile-db
+# Variables d'environnement dans le dashboard ou wrangler.toml
 ```
 
-## Variables d'Environnement
+## Checklist Pré-Déploiement
 
-```bash
-# Lister
-fly secrets list
+### Tests
+- [ ] `npm test` passe (frontend)
+- [ ] `pytest` passe (backend)
+- [ ] Coverage >= 80%
 
-# Ajouter
-fly secrets set KEY=value
+### Code Quality
+- [ ] Pas d'erreurs TypeScript
+- [ ] Pas de console.log/debugger
+- [ ] i18n complet (7 langues)
+- [ ] Responsive vérifié
 
-# Supprimer
-fly secrets unset KEY
-```
-
-## Secrets Monétisation (Lemon Squeezy)
-
-```bash
-# Configuration paiement
-fly secrets set LEMONSQUEEZY_API_KEY=xxx
-fly secrets set LEMONSQUEEZY_WEBHOOK_SECRET=xxx
-fly secrets set LEMONSQUEEZY_STORE_ID=xxx
-
-# Variant IDs produits
-fly secrets set LEMONSQUEEZY_PREMIUM_MONTHLY_VARIANT_ID=xxx
-fly secrets set LEMONSQUEEZY_PREMIUM_YEARLY_VARIANT_ID=xxx
-fly secrets set LEMONSQUEEZY_PRO_MONTHLY_VARIANT_ID=xxx
-fly secrets set LEMONSQUEEZY_PRO_YEARLY_VARIANT_ID=xxx
-```
+### Sécurité
+- [ ] Pas de secrets dans le code
+- [ ] Pas de vulnérabilités critiques
+- [ ] CORS configuré correctement
 
 ## Rollback
 
-```bash
-# Voir les versions
-fly releases
+### Backend (Fly.io)
 
-# Rollback
-fly deploy --image registry.fly.io/nutriprofile:v{N}
+```bash
+# Lister les versions
+flyctl releases list -a nutriprofile-api
+
+# Rollback vers version précédente
+flyctl deploy --image <previous-image>
+
+# Rollback migration
+cd backend && alembic downgrade -1
 ```
 
-## Checklist Déploiement
+### Frontend (Cloudflare)
 
-- [ ] Tests passent en local
-- [ ] Build réussi
-- [ ] Migrations appliquées
-- [ ] Health check OK
-- [ ] Monitoring configuré
-- [ ] SSL/TLS actif
-- [ ] Secrets Lemon Squeezy configurés (si monétisation)
-- [ ] Webhook URL configuré dans dashboard Lemon Squeezy
+```bash
+# Via le dashboard Cloudflare Pages
+# Deployments > Select previous > Rollback
+```
+
+## Monitoring Post-Déploiement
+
+```bash
+# Logs backend
+flyctl logs -a nutriprofile-api
+
+# Status
+flyctl status -a nutriprofile-api
+
+# Métriques
+# Dashboard Fly.io et Cloudflare
+```
+
+## Cible de ce Déploiement
+
+$ARGUMENTS

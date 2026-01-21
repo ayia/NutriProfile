@@ -320,9 +320,45 @@ nutriprofile/
 └── docs/                    # Documentation
 ```
 
+## Claude Agent Skills
+
+NutriProfile utilise des **Claude Agent Skills** personnalisés basés sur le [standard ouvert d'Anthropic](https://github.com/anthropics/skills). Ces skills étendent les capacités de Claude pour des tâches spécialisées.
+
+### Skills Disponibles
+
+| Catégorie | Skill | Description |
+|-----------|-------|-------------|
+| **Domaine** | `nutrition-analyzer` | Analyse aliments, calculs nutrition, page Vision |
+| | `recipe-generator` | Génération recettes IA, ingrédients |
+| | `ai-coach` | Coaching IA, gamification, achievements |
+| **Dev** | `test-writer` | Tests Vitest/pytest, coverage 80%+ |
+| | `i18n-manager` | Traductions 7 langues |
+| | `responsive-design` | Design mobile-first Tailwind |
+| **Infra** | `api-designer` | Design API REST FastAPI |
+| | `database-manager` | PostgreSQL, SQLAlchemy, Alembic |
+| | `deployment-manager` | Déploiement Fly.io, Cloudflare |
+| **Sécurité** | `security-auditor` | Audit OWASP, RGPD |
+| **Meta** | `skill-creator` | Créer de nouveaux skills |
+
+### Utilisation
+
+Claude active automatiquement les skills pertinents. Exemple:
+```
+Vous: "Ajoute une nouvelle traduction pour la page settings"
+Claude: [Active i18n-manager] Je vais ajouter les traductions pour les 7 langues...
+```
+
+### Créer un Nouveau Skill
+
+1. Créer dossier: `.claude/skills/mon-skill/`
+2. Créer `SKILL.md` avec frontmatter YAML
+3. Utiliser le skill `skill-creator` pour de l'aide guidée
+
+Voir `.claude/skills/README.md` pour la documentation complète.
+
 ## Documentation
 
-- @docs/DEVELOPMENT_GUIDE.md - **Guide de développement complet** (nouveau)
+- @docs/DEVELOPMENT_GUIDE.md - **Guide de développement complet**
   - Méthodologie décomposition features complexes
   - Standards code, tests, i18n, responsive
   - Exemples pratiques avec Vision Food Editing
@@ -332,6 +368,7 @@ nutriprofile/
 - @docs/API.md - Documentation API
 - @docs/MONETIZATION_REPORT.md - Stratégie monétisation (Maroc)
 - @docs/MONETIZATION_IMPLEMENTATION.md - Plan technique paiements
+- @.claude/skills/README.md - **Claude Agent Skills** (nouveau)
 
 ## Contexte Business (Maroc)
 

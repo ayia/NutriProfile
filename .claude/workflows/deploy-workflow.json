@@ -1,0 +1,259 @@
+{
+  "$schema": "https://nutriprofile.dev/schemas/workflow-v1.json",
+  "name": "deploy-workflow",
+  "version": "1.0.0",
+  "description": "Production deployment workflow for NutriProfile",
+
+  "metadata": {
+    "author": "NutriProfile Team",
+    "created": "2026-01-21",
+    "tags": ["deployment", "production", "fly.io", "cloudflare"]
+  },
+
+  "variables": {
+    "deploy_target": { "type": "enum", "values": ["backend", "frontend", "both"], "default": "both" },
+    "environment": { "type": "enum", "values": ["staging", "production"], "default": "production" },
+    "run_migrations": { "type": "boolean", "default": false },
+    "skip_tests": { "type": "boolean", "default": false }
+  },
+
+  "phases": [
+    {
+      "id": "phase-1-pre-deploy",
+      "name": "Pre-Deployment Checks",
+      "description": "Verify everything is ready for deployment",
+      "agents": ["deployment-manager", "test-writer", "security-auditor"],
+      "parallel": true,
+      "tasks": [
+        {
+          "id": "task-1.1",
+          "name": "Run Test Suite",
+          "agent": "test-writer",
+          "condition": "!{{skip_tests}}",
+          "action": "execute",
+          "inputs": {
+            "commands": [
+              "cd backend && pytest",
+              "cd frontend && npm test -- --run"
+            ]
+          },
+          "validation": {
+            "success_criteria": "All tests pass"
+          }
+        },
+        {
+          "id": "task-1.2",
+          "name": "Security Audit",
+          "agent": "security-auditor",
+          "action": "audit",
+          "inputs": {
+            "checks": ["secrets_in_code", "dependency_vulnerabilities", "auth_endpoints"]
+          }
+        },
+        {
+          "id": "task-1.3",
+          "name": "Build Verification",
+          "agent": "deployment-manager",
+          "action": "execute",
+          "inputs": {
+            "commands": [
+              "cd frontend && npm run build",
+              "cd backend && python -m py_compile app/main.py"
+            ]
+          },
+          "validation": {
+            "success_criteria": "Build succeeds without errors"
+          }
+        },
+        {
+          "id": "task-1.4",
+          "name": "Check Environment Variables",
+          "agent": "deployment-manager",
+          "action": "verify",
+          "inputs": {
+            "required_secrets": [
+              "SECRET_KEY",
+              "DATABASE_URL",
+              "HUGGINGFACE_TOKEN",
+              "LEMONSQUEEZY_API_KEY",
+              "LEMONSQUEEZY_WEBHOOK_SECRET"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-2-backend-deploy",
+      "name": "Backend Deployment",
+      "description": "Deploy backend to Fly.io",
+      "condition": "{{deploy_target}} in ['backend', 'both']",
+      "agents": ["deployment-manager", "database-architect"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-2.1",
+          "name": "Create Database Backup",
+          "agent": "database-architect",
+          "condition": "{{run_migrations}}",
+          "action": "execute",
+          "inputs": {
+            "command": "fly postgres backup create -a nutriprofile-db"
+          }
+        },
+        {
+          "id": "task-2.2",
+          "name": "Deploy Backend",
+          "agent": "deployment-manager",
+          "depends_on": ["task-2.1"],
+          "action": "execute",
+          "inputs": {
+            "command": "fly deploy -c backend/fly.toml --strategy immediate"
+          },
+          "timeout": "10m"
+        },
+        {
+          "id": "task-2.3",
+          "name": "Run Migrations",
+          "agent": "database-architect",
+          "condition": "{{run_migrations}}",
+          "depends_on": ["task-2.2"],
+          "action": "execute",
+          "inputs": {
+            "command": "fly ssh console -a nutriprofile-api -C 'cd /app && alembic upgrade head'"
+          }
+        },
+        {
+          "id": "task-2.4",
+          "name": "Verify Backend Health",
+          "agent": "deployment-manager",
+          "depends_on": ["task-2.2", "task-2.3"],
+          "action": "execute",
+          "inputs": {
+            "command": "curl -f https://nutriprofile-api.fly.dev/health"
+          },
+          "retry": {
+            "attempts": 3,
+            "delay": "10s"
+          },
+          "validation": {
+            "success_criteria": "Health check returns 200 OK"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-3-frontend-deploy",
+      "name": "Frontend Deployment",
+      "description": "Deploy frontend to Cloudflare Pages",
+      "condition": "{{deploy_target}} in ['frontend', 'both']",
+      "agents": ["deployment-manager"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-3.1",
+          "name": "Build Frontend",
+          "agent": "deployment-manager",
+          "action": "execute",
+          "inputs": {
+            "command": "cd frontend && npm run build"
+          }
+        },
+        {
+          "id": "task-3.2",
+          "name": "Deploy to Cloudflare",
+          "agent": "deployment-manager",
+          "depends_on": ["task-3.1"],
+          "action": "execute",
+          "inputs": {
+            "command": "cd frontend && npx wrangler pages deploy dist --project-name=nutriprofile"
+          }
+        },
+        {
+          "id": "task-3.3",
+          "name": "Verify Frontend",
+          "agent": "deployment-manager",
+          "depends_on": ["task-3.2"],
+          "action": "execute",
+          "inputs": {
+            "command": "curl -f https://nutriprofile.pages.dev"
+          },
+          "retry": {
+            "attempts": 3,
+            "delay": "10s"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-4-post-deploy",
+      "name": "Post-Deployment Verification",
+      "description": "Verify deployment and update documentation",
+      "agents": ["deployment-manager", "documentation-writer"],
+      "parallel": true,
+      "tasks": [
+        {
+          "id": "task-4.1",
+          "name": "Smoke Tests",
+          "agent": "deployment-manager",
+          "action": "execute",
+          "inputs": {
+            "tests": [
+              "API health check",
+              "Login flow",
+              "Vision page loads",
+              "Recipes page loads"
+            ]
+          }
+        },
+        {
+          "id": "task-4.2",
+          "name": "Check Logs for Errors",
+          "agent": "deployment-manager",
+          "action": "execute",
+          "inputs": {
+            "command": "fly logs -a nutriprofile-api --no-tail | tail -50"
+          }
+        },
+        {
+          "id": "task-4.3",
+          "name": "Update Deployment Log",
+          "agent": "documentation-writer",
+          "action": "modify",
+          "inputs": {
+            "target": "docs/CHANGELOG.md",
+            "content": "Add deployment entry with date and changes"
+          }
+        }
+      ]
+    }
+  ],
+
+  "success_criteria": {
+    "all_tests_pass": true,
+    "security_audit_passed": true,
+    "build_succeeds": true,
+    "backend_healthy": true,
+    "frontend_accessible": true,
+    "no_errors_in_logs": true
+  },
+
+  "rollback": {
+    "enabled": true,
+    "trigger": "health_check_failed || error_rate > 5%",
+    "strategy": "fly_rollback",
+    "commands": [
+      "fly releases -a nutriprofile-api",
+      "fly deploy --image registry.fly.io/nutriprofile-api:previous"
+    ]
+  },
+
+  "notifications": {
+    "on_success": {
+      "message": "Deployment to {{environment}} completed successfully"
+    },
+    "on_failure": {
+      "message": "Deployment to {{environment}} FAILED - initiating rollback",
+      "escalate": true
+    }
+  }
+}

@@ -1,0 +1,366 @@
+{
+  "$schema": "https://nutriprofile.dev/schemas/workflow-v1.json",
+  "name": "cicd-workflow",
+  "version": "1.0.0",
+  "description": "Complete CI/CD pipeline: test, build, deploy, commit",
+
+  "metadata": {
+    "author": "NutriProfile Team",
+    "created": "2026-01-21",
+    "tags": ["ci/cd", "deployment", "automation", "testing"]
+  },
+
+  "variables": {
+    "target": {
+      "type": "enum",
+      "values": ["frontend", "backend", "fullstack"],
+      "default": "fullstack"
+    },
+    "environment": {
+      "type": "enum",
+      "values": ["staging", "production"],
+      "default": "production"
+    },
+    "skip_tests": {
+      "type": "boolean",
+      "default": false
+    },
+    "auto_commit": {
+      "type": "boolean",
+      "default": true
+    },
+    "create_pr": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+
+  "phases": [
+    {
+      "id": "phase-1-validation",
+      "name": "Code Validation",
+      "description": "Validate code quality before deployment",
+      "agents": ["test-runner", "security-auditor"],
+      "parallel": true,
+      "skip_condition": "{{skip_tests}}",
+      "tasks": [
+        {
+          "id": "task-1.1",
+          "name": "Run Frontend Tests",
+          "agent": "test-runner",
+          "condition": "{{target}} in ['frontend', 'fullstack']",
+          "action": "execute",
+          "inputs": {
+            "commands": [
+              "cd frontend && npm ci",
+              "cd frontend && npm test -- --run",
+              "cd frontend && npm run test:coverage"
+            ]
+          },
+          "outputs": ["frontend_test_results", "frontend_coverage"],
+          "validation": {
+            "success_criteria": "All tests pass, coverage >= 80%",
+            "fail_action": "abort_pipeline"
+          }
+        },
+        {
+          "id": "task-1.2",
+          "name": "Run Backend Tests",
+          "agent": "test-runner",
+          "condition": "{{target}} in ['backend', 'fullstack']",
+          "action": "execute",
+          "inputs": {
+            "commands": [
+              "cd backend && pip install -r requirements.txt",
+              "cd backend && pytest --cov=app"
+            ]
+          },
+          "outputs": ["backend_test_results", "backend_coverage"],
+          "validation": {
+            "success_criteria": "All tests pass, coverage >= 75%",
+            "fail_action": "abort_pipeline"
+          }
+        },
+        {
+          "id": "task-1.3",
+          "name": "Security Audit",
+          "agent": "security-auditor",
+          "action": "audit",
+          "inputs": {
+            "checks": ["secrets_exposure", "dependencies", "owasp_top10"]
+          },
+          "outputs": ["security_report"],
+          "validation": {
+            "success_criteria": "No critical vulnerabilities",
+            "fail_action": "warn_and_continue"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-2-build",
+      "name": "Build",
+      "description": "Build applications for deployment",
+      "depends_on": ["phase-1-validation"],
+      "agents": ["deploy-frontend", "deploy-backend"],
+      "parallel": true,
+      "tasks": [
+        {
+          "id": "task-2.1",
+          "name": "Build Frontend",
+          "agent": "deploy-frontend",
+          "condition": "{{target}} in ['frontend', 'fullstack']",
+          "action": "build",
+          "inputs": {
+            "commands": [
+              "cd frontend && npm ci",
+              "cd frontend && npm run build"
+            ]
+          },
+          "outputs": ["frontend_build_artifacts"],
+          "validation": {
+            "success_criteria": "Build succeeds, bundle size < 500KB",
+            "fail_action": "abort_pipeline"
+          }
+        },
+        {
+          "id": "task-2.2",
+          "name": "Verify Backend Docker",
+          "agent": "deploy-backend",
+          "condition": "{{target}} in ['backend', 'fullstack']",
+          "action": "verify",
+          "inputs": {
+            "checks": [
+              "Dockerfile syntax valid",
+              "fly.toml configuration valid",
+              "Required secrets configured"
+            ]
+          },
+          "outputs": ["backend_build_ready"],
+          "validation": {
+            "success_criteria": "All pre-deploy checks pass",
+            "fail_action": "abort_pipeline"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-3-deploy-backend",
+      "name": "Deploy Backend",
+      "description": "Deploy backend to Fly.io",
+      "depends_on": ["phase-2-build"],
+      "condition": "{{target}} in ['backend', 'fullstack']",
+      "agents": ["deploy-backend"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-3.1",
+          "name": "Run Database Migrations",
+          "agent": "deploy-backend",
+          "action": "migrate",
+          "inputs": {
+            "commands": [
+              "cd backend && alembic upgrade head"
+            ]
+          },
+          "outputs": ["migration_status"],
+          "validation": {
+            "success_criteria": "Migrations applied successfully",
+            "fail_action": "abort_with_rollback"
+          }
+        },
+        {
+          "id": "task-3.2",
+          "name": "Deploy to Fly.io",
+          "agent": "deploy-backend",
+          "depends_on": ["task-3.1"],
+          "action": "deploy",
+          "inputs": {
+            "command": "flyctl deploy -c backend/fly.toml --strategy immediate"
+          },
+          "outputs": ["backend_deploy_url", "backend_version"],
+          "validation": {
+            "success_criteria": "Deployment succeeds",
+            "fail_action": "abort_with_rollback"
+          }
+        },
+        {
+          "id": "task-3.3",
+          "name": "Verify Backend Health",
+          "agent": "deploy-backend",
+          "depends_on": ["task-3.2"],
+          "action": "health_check",
+          "inputs": {
+            "endpoints": [
+              "https://nutriprofile-api.fly.dev/health",
+              "https://nutriprofile-api.fly.dev/api/v1/health"
+            ],
+            "timeout": 30,
+            "retries": 3
+          },
+          "outputs": ["backend_health_status"],
+          "validation": {
+            "success_criteria": "All health checks return 200",
+            "fail_action": "rollback_backend"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-4-deploy-frontend",
+      "name": "Deploy Frontend",
+      "description": "Deploy frontend to Cloudflare Pages",
+      "depends_on": ["phase-3-deploy-backend"],
+      "condition": "{{target}} in ['frontend', 'fullstack']",
+      "agents": ["deploy-frontend"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-4.1",
+          "name": "Deploy to Cloudflare Pages",
+          "agent": "deploy-frontend",
+          "action": "deploy",
+          "inputs": {
+            "command": "npx wrangler pages deploy frontend/dist --project-name=nutriprofile"
+          },
+          "outputs": ["frontend_deploy_url", "frontend_version"],
+          "validation": {
+            "success_criteria": "Deployment succeeds",
+            "fail_action": "abort_pipeline"
+          }
+        },
+        {
+          "id": "task-4.2",
+          "name": "Verify Frontend Health",
+          "agent": "deploy-frontend",
+          "depends_on": ["task-4.1"],
+          "action": "health_check",
+          "inputs": {
+            "urls": [
+              "https://nutriprofile.pages.dev",
+              "https://nutriprofile.pages.dev/login",
+              "https://nutriprofile.pages.dev/dashboard"
+            ],
+            "timeout": 30
+          },
+          "outputs": ["frontend_health_status"],
+          "validation": {
+            "success_criteria": "All pages return 200",
+            "fail_action": "warn_and_continue"
+          }
+        }
+      ]
+    },
+    {
+      "id": "phase-5-post-deploy",
+      "name": "Post-Deployment",
+      "description": "Git operations and notifications after successful deployment",
+      "depends_on": ["phase-4-deploy-frontend"],
+      "agents": ["git-automation"],
+      "parallel": false,
+      "tasks": [
+        {
+          "id": "task-5.1",
+          "name": "Create Git Tag",
+          "agent": "git-automation",
+          "action": "tag",
+          "inputs": {
+            "tag_pattern": "v{{date}}-{{short_sha}}",
+            "message": "Deployment to {{environment}}"
+          },
+          "outputs": ["git_tag"]
+        },
+        {
+          "id": "task-5.2",
+          "name": "Commit Deployment Info",
+          "agent": "git-automation",
+          "condition": "{{auto_commit}}",
+          "depends_on": ["task-5.1"],
+          "action": "commit",
+          "inputs": {
+            "message": "chore(deploy): deployed to {{environment}}",
+            "files": ["CHANGELOG.md", "package.json"]
+          },
+          "outputs": ["commit_sha"]
+        },
+        {
+          "id": "task-5.3",
+          "name": "Push to Remote",
+          "agent": "git-automation",
+          "condition": "{{auto_commit}}",
+          "depends_on": ["task-5.2"],
+          "action": "push",
+          "inputs": {
+            "branch": "main",
+            "tags": true
+          },
+          "outputs": ["push_status"]
+        },
+        {
+          "id": "task-5.4",
+          "name": "Create Pull Request",
+          "agent": "git-automation",
+          "condition": "{{create_pr}}",
+          "action": "create_pr",
+          "inputs": {
+            "title": "chore(deploy): {{environment}} deployment",
+            "body": "Automated deployment PR",
+            "labels": ["deployment", "automated"]
+          },
+          "outputs": ["pr_url"]
+        }
+      ]
+    }
+  ],
+
+  "rollback": {
+    "backend": {
+      "trigger": "phase-3 fails or health check fails",
+      "actions": [
+        {
+          "name": "Rollback Fly.io",
+          "command": "flyctl releases list -a nutriprofile-api && flyctl deploy --image <previous>"
+        },
+        {
+          "name": "Rollback Migrations",
+          "command": "cd backend && alembic downgrade -1"
+        }
+      ]
+    },
+    "frontend": {
+      "trigger": "phase-4 fails",
+      "actions": [
+        {
+          "name": "Rollback via Cloudflare Dashboard",
+          "manual": true,
+          "instructions": "Go to Cloudflare Pages > Deployments > Rollback"
+        }
+      ]
+    }
+  },
+
+  "notifications": {
+    "on_success": {
+      "message": "✅ Deployment successful to {{environment}}",
+      "include": ["deploy_url", "version", "commit_sha"]
+    },
+    "on_failure": {
+      "message": "❌ Deployment failed at {{failed_phase}}",
+      "include": ["error_message", "logs_url"]
+    }
+  },
+
+  "success_criteria": {
+    "all_tests_pass": true,
+    "no_critical_vulnerabilities": true,
+    "build_succeeds": true,
+    "deployment_succeeds": true,
+    "health_checks_pass": true
+  },
+
+  "estimated_duration": {
+    "frontend_only": "5-8 minutes",
+    "backend_only": "8-12 minutes",
+    "fullstack": "12-18 minutes"
+  }
+}
