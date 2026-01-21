@@ -43,7 +43,6 @@ import {
   ChevronDown,
   ChevronUp,
   Info,
-  Scan,
   Search,
   Flame,
   Beef,
@@ -162,9 +161,6 @@ export function EditFoodItemModalV2({
   // UI state
   const [showAutocomplete, setShowAutocomplete] = useState(false)
   const [showPortionPresets, setShowPortionPresets] = useState(true)
-  const [showBarcodeInput, setShowBarcodeInput] = useState(false)
-  const [barcodeValue, setBarcodeValue] = useState('')
-  const [isScanningBarcode, setIsScanningBarcode] = useState(false)
 
   // Search state - USDA API ONLY (no local database for nutrition values)
   const [searchResult, setSearchResult] = useState<NutritionSearchResponse | null>(null)
@@ -337,48 +333,6 @@ export function EditFoodItemModalV2({
     setSearchResult(null)
   }, [])
 
-  // Handle barcode search
-  const handleBarcodeSearch = async () => {
-    if (!barcodeValue || barcodeValue.length < 8) {
-      toast.error(t('barcode.invalidCode'))
-      return
-    }
-
-    setIsScanningBarcode(true)
-    try {
-      const result = await visionApi.searchBarcode(barcodeValue)
-
-      if (result.success && result.product) {
-        const product = result.product
-        setFormData(prev => ({
-          ...prev,
-          name: product.name || '',
-          quantity: product.quantity ? product.quantity.replace(/[^\d.]/g, '') || '100' : '100',
-          unit: 'g',
-        }))
-
-        setManualNutrition({
-          calories: product.calories || 0,
-          protein: product.protein || 0,
-          carbs: product.carbs || 0,
-          fat: product.fat || 0,
-          fiber: product.fiber || 0,
-        })
-        setManualMode(true)
-
-        toast.success(t('barcode.found'))
-        setShowBarcodeInput(false)
-        setBarcodeValue('')
-      } else {
-        toast.error(t('barcode.notFound'))
-      }
-    } catch {
-      toast.error(t('barcode.notFound'))
-    } finally {
-      setIsScanningBarcode(false)
-    }
-  }
-
   // Handle save - USDA values only (no local database)
   const handleSave = async () => {
     if (!formData.name || !formData.quantity) return
@@ -542,83 +496,14 @@ export function EditFoodItemModalV2({
               </section>
             )}
 
-            {/* Barcode Scanner Input */}
-            {showBarcodeInput && (
-              <section className="p-4 rounded-xl space-y-3 bg-gray-50 border border-gray-200">
-                <label className="block text-sm font-medium text-gray-700">
-                  <Scan className="inline w-4 h-4 mr-2" />
-                  {t('barcode.scan')}
-                </label>
-                <div className="flex gap-2">
-                  <Input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={barcodeValue}
-                    onChange={e => setBarcodeValue(e.target.value.replace(/\D/g, ''))}
-                    placeholder="3017620422003"
-                    disabled={isScanningBarcode}
-                    className="flex-1 bg-white"
-                    autoFocus
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') handleBarcodeSearch()
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    onClick={handleBarcodeSearch}
-                    disabled={isScanningBarcode || barcodeValue.length < 8}
-                    className="shrink-0"
-                  >
-                    {isScanningBarcode ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Search className="w-4 h-4" />
-                    )}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => {
-                      setShowBarcodeInput(false)
-                      setBarcodeValue('')
-                    }}
-                    className="shrink-0 px-2"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-                <p className="text-xs text-gray-500">
-                  {t('barcode.permission')}
-                </p>
-              </section>
-            )}
-
             {/* Food Name with Autocomplete and Search Button */}
             <section className="space-y-2 relative">
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="food-name"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  {t('foodName')}
-                </label>
-                {!showBarcodeInput && (
-                  <button
-                    type="button"
-                    onClick={() => setShowBarcodeInput(true)}
-                    className={cn(
-                      "flex items-center gap-1.5 px-2 py-1 text-xs font-medium rounded-lg",
-                      "text-primary-600",
-                      "hover:bg-primary-50",
-                      "transition-colors duration-200"
-                    )}
-                  >
-                    <Scan className="w-3.5 h-3.5" />
-                    {t('barcode.scan')}
-                  </button>
-                )}
-              </div>
+              <label
+                htmlFor="food-name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {t('foodName')}
+              </label>
 
               {/* Food Name Input + Search Button (same layout as FoodItemExpandableCard) */}
               <div className="flex gap-2">

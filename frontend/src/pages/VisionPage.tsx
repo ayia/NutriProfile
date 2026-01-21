@@ -8,7 +8,6 @@ import { AnalysisResult } from '@/components/vision/AnalysisResult'
 import { FoodLogCard } from '@/components/vision/FoodLogCard'
 import { PhotoTips } from '@/components/vision/PhotoTips'
 import { ManualMealBuilder } from '@/components/vision/ManualMealBuilder'
-import { BarcodeScanner } from '@/components/vision/BarcodeScanner'
 import { PhotoGallery } from '@/components/vision/PhotoGallery'
 import { Button } from '@/components/ui/Button'
 import { UsageBanner } from '@/components/subscription/UsageBanner'
@@ -24,11 +23,9 @@ import {
   Utensils,
   Calendar,
   Edit3,
-  Barcode,
   Image as ImageIcon,
   type LucideIcon,
 } from 'lucide-react'
-import type { BarcodeProduct } from '@/types/foodLog'
 
 type Tab = 'scan' | 'today' | 'history' | 'gallery'
 
@@ -38,7 +35,6 @@ export function VisionPage() {
   const [activeTab, setActiveTab] = useState<Tab>('scan')
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null)
   const [showManualBuilder, setShowManualBuilder] = useState(false)
-  const [showBarcodeScanner, setShowBarcodeScanner] = useState(false)
   const queryClient = useQueryClient()
   // Helper to get UTC date string (YYYY-MM-DD)
   const getUTCDateString = (date: Date) => {
@@ -117,17 +113,6 @@ export function VisionPage() {
     setAnalysisData(null)
   }
 
-  const handleBarcodeProductFound = (product: BarcodeProduct) => {
-    // Ouvrir le ManualMealBuilder avec le produit pré-rempli
-    // Le produit OpenFoodFacts donne des valeurs par 100g
-    // On suggère 100g par défaut que l'utilisateur peut ajuster
-    setShowBarcodeScanner(false)
-    setShowManualBuilder(true)
-
-    // TODO: Passer le produit au ManualMealBuilder pour pré-remplir
-    // Pour l'instant, on affiche juste un toast
-    toast.success(t('barcode.found') + ': ' + product.name)
-  }
 
   // Calcul des progressions pour aujourd'hui
   const nutrition = todayQuery.data?.nutrition
@@ -228,28 +213,6 @@ export function VisionPage() {
                   </div>
                 </div>
 
-                {/* Barcode Scanner Option */}
-                <div className="glass-card p-6 hover-lift">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
-                        <Barcode className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="text-center sm:text-left">
-                        <h3 className="font-semibold text-gray-900">{t('barcode.scan')}</h3>
-                        <p className="text-sm text-gray-600">{t('barcode.permission')}</p>
-                      </div>
-                    </div>
-                    <Button
-                      onClick={() => setShowBarcodeScanner(true)}
-                      variant="outline"
-                      className="gap-2 w-full sm:w-auto"
-                    >
-                      <Barcode className="w-4 h-4" />
-                      {t('barcode.scan')}
-                    </Button>
-                  </div>
-                </div>
               </>
             ) : (
               <AnalysisResult
@@ -496,13 +459,6 @@ export function VisionPage() {
         />
       )}
 
-      {/* Barcode Scanner Modal */}
-      {showBarcodeScanner && (
-        <BarcodeScanner
-          onProductFound={handleBarcodeProductFound}
-          onClose={() => setShowBarcodeScanner(false)}
-        />
-      )}
     </div>
   )
 }
