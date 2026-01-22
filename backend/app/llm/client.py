@@ -224,6 +224,19 @@ class HuggingFaceClient:
             "Content-Type": "application/json",
         }
 
+        # Validate base64 image data
+        if not image_base64:
+            logger.error("vlm_empty_image", message="Empty base64 image provided")
+            raise ValueError("Empty image data provided")
+
+        # Log image size for debugging
+        image_size_kb = len(image_base64) * 3 / 4 / 1024  # Approximate decoded size
+        logger.info(
+            "vlm_request_start",
+            model=model_id,
+            image_size_kb=round(image_size_kb, 1),
+        )
+
         payload = {
             "model": model_id,
             "messages": [
@@ -244,6 +257,7 @@ class HuggingFaceClient:
         async with httpx.AsyncClient(timeout=90.0) as client:
             for attempt in range(3):
                 try:
+                    logger.info("vlm_attempt", attempt=attempt + 1, model=model_id)
                     response = await client.post(url, headers=headers, json=payload)
 
                     if response.status_code == 503:
@@ -257,27 +271,78 @@ class HuggingFaceClient:
                         await asyncio.sleep(wait_time)
                         continue
 
+                    # Check for other error codes before raising
+                    if response.status_code != 200:
+                        error_text = response.text[:500]
+                        logger.error(
+                            "vlm_api_error",
+                            model=model_id,
+                            status=response.status_code,
+                            detail=error_text,
+                            attempt=attempt + 1,
+                        )
+                        # Don't retry on auth errors
+                        if response.status_code in (401, 403):
+                            raise httpx.HTTPStatusError(
+                                f"Authentication error: {error_text}",
+                                request=response.request,
+                                response=response
+                            )
+
                     response.raise_for_status()
                     result = response.json()
-                    return result["choices"][0]["message"]["content"]
+
+                    content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
+                    if not content:
+                        logger.warning(
+                            "vlm_empty_response",
+                            model=model_id,
+                            raw_result=str(result)[:500],
+                        )
+
+                    logger.info(
+                        "vlm_success",
+                        model=model_id,
+                        response_length=len(content),
+                    )
+                    return content
 
                 except httpx.HTTPStatusError as e:
                     logger.error(
-                        "vlm_error",
+                        "vlm_http_error",
                         model=model_id,
                         status=e.response.status_code,
                         detail=e.response.text[:500],
+                        attempt=attempt + 1,
+                    )
+                    if attempt == 2:
+                        raise
+                    await asyncio.sleep(2**attempt)
+
+                except httpx.TimeoutException as e:
+                    logger.error(
+                        "vlm_timeout",
+                        model=model_id,
+                        error=str(e),
+                        attempt=attempt + 1,
                     )
                     if attempt == 2:
                         raise
                     await asyncio.sleep(2**attempt)
 
                 except httpx.RequestError as e:
-                    logger.error("vlm_request_error", model=model_id, error=str(e))
+                    logger.error(
+                        "vlm_request_error",
+                        model=model_id,
+                        error=str(e),
+                        error_type=type(e).__name__,
+                        attempt=attempt + 1,
+                    )
                     if attempt == 2:
                         raise
                     await asyncio.sleep(2**attempt)
 
+        logger.error("vlm_all_retries_failed", model=model_id)
         return ""
 
 
