@@ -40,9 +40,10 @@ from app.schemas.food_log import (
     GalleryItem,
     GalleryResponse,
 )
-from app.agents.vision import get_vision_agent, VisionInput, validate_nutrition, calculate_health_report, FoodAnalysis
+from app.agents.vision import get_vision_agent, VisionInput, calculate_health_report, FoodAnalysis
 from app.services.subscription import SubscriptionService, get_limit_value
 from app.services.nutrition_database import validate_detected_items_batch
+from app.services.feedback_learning import apply_feedback_learning_to_analysis
 
 router = APIRouter()
 
@@ -81,6 +82,26 @@ async def analyze_image(
             )
 
     # Phase 2: Analyse IA (peut prendre du temps - pas de DB ici)
+    import structlog
+    logger = structlog.get_logger()
+
+    # Valider l'image avant l'analyse
+    if not body.image_base64 or len(body.image_base64) < 100:
+        logger.error("vision_invalid_image", image_size=len(body.image_base64) if body.image_base64 else 0)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Image invalide ou trop petite"
+        )
+
+    image_size_kb = len(body.image_base64) * 3 / 4 / 1024
+    logger.info(
+        "vision_analysis_start",
+        user_id=current_user.id,
+        meal_type=body.meal_type,
+        image_size_kb=round(image_size_kb, 1),
+        language=current_user.preferred_language,
+    )
+
     agent = get_vision_agent(language=current_user.preferred_language)
 
     vision_input = VisionInput(
@@ -90,22 +111,77 @@ async def analyze_image(
 
     try:
         result = await agent.process(vision_input)
+
+        # Vérifier que le résultat est valide
+        if not result or not result.result:
+            logger.error("vision_empty_result", user_id=current_user.id)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="L'analyse n'a retourné aucun résultat. Veuillez réessayer."
+            )
+
+        # Log le succès ou l'utilisation du fallback
+        if result.used_fallback:
+            logger.warning(
+                "vision_used_fallback",
+                user_id=current_user.id,
+                confidence=result.confidence,
+                reason=result.reasoning,
+            )
+        else:
+            logger.info(
+                "vision_analysis_success",
+                user_id=current_user.id,
+                items_count=len(result.result.items) if result.result.items else 0,
+                confidence=result.confidence,
+                model=result.model_used,
+            )
+
+    except HTTPException:
+        # Relancer les HTTPException sans les transformer
+        raise
     except Exception as e:
+        error_type = type(e).__name__
+        error_msg = str(e)
+
+        logger.error(
+            "vision_analysis_error",
+            user_id=current_user.id,
+            error_type=error_type,
+            error_msg=error_msg[:500],
+        )
+
+        # Messages d'erreur plus spécifiques selon le type d'erreur
+        if "timeout" in error_msg.lower() or "timed out" in error_msg.lower():
+            detail = "L'analyse a pris trop de temps. Veuillez réessayer avec une image plus petite."
+        elif "401" in error_msg or "403" in error_msg or "authentication" in error_msg.lower():
+            detail = "Erreur d'authentification avec le service IA. Veuillez réessayer plus tard."
+        elif "connection" in error_msg.lower() or "network" in error_msg.lower():
+            detail = "Erreur de connexion au service IA. Veuillez vérifier votre connexion."
+        elif "rate limit" in error_msg.lower() or "429" in error_msg:
+            detail = "Service temporairement surchargé. Veuillez réessayer dans quelques minutes."
+        else:
+            detail = f"Erreur lors de l'analyse: {error_type}"
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erreur lors de l'analyse: {str(e)}"
+            detail=detail
         )
 
     analysis = result.result
     confidence = result.confidence
     model_used = result.model_used
 
-    # Valider les valeurs nutritionnelles (validation basique)
-    validated_items = [validate_nutrition(item) for item in analysis.items]
+    # === APPROCHE HYBRIDE: VLM détecte, USDA vérifie/corrige ===
+    # Le VLM est bon pour la détection, mais USDA est plus précis pour la nutrition
+    validated_items = list(analysis.items)
 
-    # === PHASE 2.5: USDA VALIDATION POST-SCAN ===
-    # Valider chaque aliment contre USDA pour améliorer la précision
-    # et ajouter les informations de source (usda_verified, ai_estimated, etc.)
+    # === PHASE 1: USDA LOOKUP PRIORITAIRE ===
+    # Si USDA trouve l'aliment, utiliser ses valeurs (95% précision)
+    # Sinon garder l'estimation VLM (déjà corrigée pour les lipides)
+    usda_found_count = 0
+    ai_fallback_count = 0
+
     try:
         items_as_dicts = [item.to_dict() for item in validated_items]
         usda_validated_items = await validate_detected_items_batch(
@@ -113,28 +189,109 @@ async def analyze_image(
             language=current_user.preferred_language or "en"
         )
 
-        # Mettre à jour les items avec les données USDA validées
+        # Mettre à jour les items avec les données USDA (PRIORITAIRE)
         for i, usda_item in enumerate(usda_validated_items):
-            validated_items[i].calories = usda_item.get("calories", validated_items[i].calories)
-            validated_items[i].protein = usda_item.get("protein", validated_items[i].protein)
-            validated_items[i].carbs = usda_item.get("carbs", validated_items[i].carbs)
-            validated_items[i].fat = usda_item.get("fat", validated_items[i].fat)
-            validated_items[i].source = usda_item.get("source", "ai_estimated")
-            validated_items[i].needs_verification = usda_item.get("needs_verification", False)
-            validated_items[i].usda_food_name = usda_item.get("usda_food_name")
-            validated_items[i].original_name = usda_item.get("original_name")
-            # Update confidence based on USDA validation
-            if usda_item.get("source") in ("usda_verified", "usda_translation"):
-                validated_items[i].confidence = max(validated_items[i].confidence, 0.9)
+            usda_source = usda_item.get("source", "ai_estimated")
+
+            if usda_source in ("usda_verified", "usda_translation"):
+                # USDA trouvé - utiliser ses valeurs (haute confiance)
+                usda_found_count += 1
+
+                # Log la différence entre VLM et USDA pour analyse
+                ai_calories = validated_items[i].calories
+                usda_calories = usda_item.get("calories", 0)
+                diff_percent = abs(ai_calories - usda_calories) / max(usda_calories, 1) * 100
+
+                logger.info(
+                    "usda_override_applied",
+                    food=validated_items[i].name,
+                    ai_calories=ai_calories,
+                    usda_calories=int(usda_calories),
+                    diff_percent=round(diff_percent, 1),
+                    usda_name=usda_item.get("usda_food_name"),
+                )
+
+                # Appliquer les valeurs USDA
+                validated_items[i].calories = int(usda_item.get("calories", validated_items[i].calories))
+                validated_items[i].protein = round(usda_item.get("protein", validated_items[i].protein), 1)
+                validated_items[i].carbs = round(usda_item.get("carbs", validated_items[i].carbs), 1)
+                validated_items[i].fat = round(usda_item.get("fat", validated_items[i].fat), 1)
+                validated_items[i].source = usda_source
+                validated_items[i].needs_verification = False
+                validated_items[i].usda_food_name = usda_item.get("usda_food_name")
+                validated_items[i].original_name = usda_item.get("original_name")
+                validated_items[i].confidence = 0.95  # Haute confiance pour USDA
+            else:
+                # USDA pas trouvé - garder estimation VLM (déjà corrigée)
+                ai_fallback_count += 1
+                validated_items[i].source = "ai_estimated"
+                validated_items[i].needs_verification = validated_items[i].confidence < 0.7
+                validated_items[i].usda_food_name = None
+                validated_items[i].original_name = None
+
+                logger.info(
+                    "ai_estimation_used",
+                    food=validated_items[i].name,
+                    calories=validated_items[i].calories,
+                    confidence=validated_items[i].confidence,
+                    reason="usda_not_found",
+                )
+
+        logger.info(
+            "nutrition_validation_summary",
+            total_items=len(validated_items),
+            usda_found=usda_found_count,
+            ai_fallback=ai_fallback_count,
+            usda_coverage_percent=round(usda_found_count / max(len(validated_items), 1) * 100, 1),
+        )
+
     except Exception as e:
-        # If USDA validation fails, continue with AI estimates
-        import structlog
-        logger = structlog.get_logger()
         logger.warning("usda_validation_failed", error=str(e))
-        # Mark all items as needing verification since USDA couldn't validate
+        # En cas d'erreur USDA, garder les estimations VLM (déjà corrigées)
         for item in validated_items:
             item.source = "ai_estimated"
             item.needs_verification = item.confidence < 0.7
+
+    # === PHASE 3: FEEDBACK LEARNING ===
+    # Appliquer les corrections apprises des utilisateurs précédents
+    try:
+        async with async_session_maker() as feedback_db:
+            # Convertir items en dicts pour le feedback learning
+            items_for_learning = [item.to_dict() for item in validated_items]
+
+            # Appliquer les corrections apprises
+            corrected_items = await apply_feedback_learning_to_analysis(
+                db=feedback_db,
+                items=items_for_learning,
+                user_id=current_user.id,
+            )
+
+            # Mettre à jour les items avec les corrections apprises
+            learning_applied_count = 0
+            for i, corrected in enumerate(corrected_items):
+                if corrected.get("learning_applied", False):
+                    learning_applied_count += 1
+                    validated_items[i].calories = int(corrected.get("calories", validated_items[i].calories))
+                    validated_items[i].protein = round(corrected.get("protein", validated_items[i].protein), 1)
+                    validated_items[i].carbs = round(corrected.get("carbs", validated_items[i].carbs), 1)
+                    validated_items[i].fat = round(corrected.get("fat", validated_items[i].fat), 1)
+
+                    logger.info(
+                        "feedback_learning_applied",
+                        food=validated_items[i].name,
+                        confidence=corrected.get("learning_confidence"),
+                        samples=corrected.get("learning_samples"),
+                    )
+
+            if learning_applied_count > 0:
+                logger.info(
+                    "feedback_learning_summary",
+                    total_items=len(validated_items),
+                    learning_applied=learning_applied_count,
+                )
+    except Exception as e:
+        logger.warning("feedback_learning_failed", error=str(e))
+        # En cas d'erreur, continuer sans feedback learning
 
     # Recalculer les totaux
     total_calories = sum(item.calories for item in validated_items)
