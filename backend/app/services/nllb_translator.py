@@ -246,19 +246,53 @@ async def _translate_with_llm(
         "deu_Latn": "German",
         "spa_Latn": "Spanish",
         "por_Latn": "Portuguese",
-        "zho_Hans": "Chinese",
+        "zho_Hans": "Simplified Chinese",
         "arb_Arab": "Arabic",
     }
 
     src_name = lang_names.get(src_lang_code, "unknown")
     tgt_name = lang_names.get(tgt_lang_code, "English")
 
-    # Prompt simple et direct pour traduction de noms d'aliments
-    prompt = f"""Translate the following food name from {src_name} to {tgt_name}.
+    # Prompt amélioré avec exemples pour arabe et chinois
+    if src_lang_code == "arb_Arab":
+        prompt = f"""You are a food translation expert. Translate this Arabic food name to English.
+
+Examples:
+- خبز → bread
+- أرز → rice
+- دجاج → chicken
+- تفاحة → apple
+- حليب → milk
+- لحم → meat
+- سمك → fish
+- طماطم → tomato
+- بيض → eggs
+- جبن → cheese
+
+Now translate this Arabic food name to English. Only output the English word, nothing else:
+{text}"""
+    elif src_lang_code == "zho_Hans":
+        prompt = f"""You are a food translation expert. Translate this Chinese food name to English.
+
+Examples:
+- 米饭 → rice
+- 鸡肉 → chicken
+- 苹果 → apple
+- 面条 → noodles
+- 牛奶 → milk
+- 牛肉 → beef
+- 猪肉 → pork
+- 鱼 → fish
+- 蔬菜 → vegetables
+- 豆腐 → tofu
+
+Now translate this Chinese food name to English. Only output the English word, nothing else:
+{text}"""
+    else:
+        prompt = f"""Translate this food name from {src_name} to {tgt_name}.
 Only respond with the translated food name, nothing else.
 
-Food name: {text}
-Translation:"""
+Food name: {text}"""
 
     try:
         url = "https://router.huggingface.co/v1/chat/completions"
@@ -275,7 +309,7 @@ Translation:"""
         }
 
         async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
-            for attempt in range(2):  # 2 tentatives max
+            for attempt in range(MAX_RETRIES):
                 try:
                     response = await client.post(url, headers=headers, json=payload)
 
@@ -290,12 +324,22 @@ Translation:"""
                     translation = result["choices"][0]["message"]["content"].strip()
 
                     # Nettoyer la réponse (enlever guillemets, ponctuation finale)
-                    translation = translation.strip('"\'').strip('.')
+                    translation = translation.strip('"\'').strip('.').strip()
+
+                    # Vérifier que la traduction est valide (pas vide, pas le texte original)
+                    if not translation or translation == text:
+                        logger.warning(
+                            "llm_translation_invalid",
+                            original=text,
+                            result=translation
+                        )
+                        return None
 
                     logger.info(
                         "llm_translation_success",
                         original=text,
-                        translated=translation
+                        translated=translation,
+                        source_lang=src_lang_code
                     )
                     return translation
 
@@ -306,12 +350,12 @@ Translation:"""
                         detail=e.response.text[:200],
                         attempt=attempt + 1
                     )
-                    if attempt == 1:
+                    if attempt == MAX_RETRIES - 1:
                         raise
                     await asyncio.sleep(2)
 
     except Exception as e:
-        logger.error("llm_translation_error", error=str(e))
+        logger.error("llm_translation_error", error=str(e), text=text)
         return None
 
     return None
