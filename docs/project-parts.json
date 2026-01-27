@@ -1,0 +1,93 @@
+{
+  "repository_type": "multi-part",
+  "project_name": "NutriProfile",
+  "parts_count": 2,
+  "parts": [
+    {
+      "part_id": "frontend",
+      "display_name": "Frontend (Web Application)",
+      "project_type_id": "web",
+      "root_path": "C:\\Users\\BadreZOUIRI\\Desktop\\bz\\NutriProfile\\frontend",
+      "relative_path": "frontend/",
+      "primary_language": "TypeScript",
+      "framework": "React",
+      "framework_version": "18.2.0",
+      "build_tool": "Vite",
+      "key_technologies": [
+        "React 18.2.0",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS",
+        "React Query",
+        "React Router",
+        "i18next",
+        "Axios",
+        "Vitest"
+      ],
+      "architecture_pattern": "Component-Based Architecture",
+      "entry_points": [
+        "src/main.tsx",
+        "index.html"
+      ],
+      "config_files": [
+        "package.json",
+        "vite.config.ts",
+        "tsconfig.json",
+        "tailwind.config.js"
+      ]
+    },
+    {
+      "part_id": "backend",
+      "display_name": "Backend (REST API)",
+      "project_type_id": "backend",
+      "root_path": "C:\\Users\\BadreZOUIRI\\Desktop\\bz\\NutriProfile\\backend",
+      "relative_path": "backend/",
+      "primary_language": "Python",
+      "framework": "FastAPI",
+      "framework_version": "0.109.0",
+      "build_tool": null,
+      "key_technologies": [
+        "FastAPI 0.109.0",
+        "Python 3.11+",
+        "SQLAlchemy 2.0 (async)",
+        "PostgreSQL (asyncpg)",
+        "Alembic",
+        "Pydantic",
+        "JWT (python-jose)",
+        "Redis",
+        "Hugging Face",
+        "pytest"
+      ],
+      "architecture_pattern": "Layered Architecture (API-centric)",
+      "entry_points": [
+        "app/main.py"
+      ],
+      "config_files": [
+        "requirements.txt",
+        "alembic.ini",
+        "fly.toml"
+      ]
+    }
+  ],
+  "integration_points": [
+    {
+      "from": "frontend",
+      "to": "backend",
+      "type": "REST API",
+      "protocol": "HTTP/HTTPS",
+      "client": "Axios",
+      "details": "Frontend React app consumes REST API endpoints exposed by FastAPI backend"
+    }
+  ],
+  "shared_resources": {
+    "database": "PostgreSQL (shared by backend)",
+    "cache": "Redis (shared by backend)",
+    "authentication": "JWT tokens (issued by backend, validated by frontend)"
+  },
+  "deployment": {
+    "platform": "Fly.io",
+    "backend_config": "backend/fly.toml",
+    "frontend_config": "frontend/fly.toml",
+    "docker_compose": "docker-compose.yml (local dev)"
+  }
+}
