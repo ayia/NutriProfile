@@ -1,8 +1,8 @@
 ---
-stepsCompleted: [1, 2]
+stepsCompleted: [1, 2, 3, 4]
 inputDocuments: []
 workflowType: 'research'
-lastStep: 2
+lastStep: 4
 research_type: 'technical'
 research_topic: 'Solutions techniques pour les prochaines fonctionnalités de NutriProfile'
 research_goals: 'Évaluation approfondie des technologies pour: Export PDF (ReportLab, WeasyPrint, Playwright), Plans alimentaires IA (approches et algorithmes), Intégrations wearables (APIs Fitbit, Apple Health, Google Fit), et Derniers modèles IA nutrition 2026'
@@ -603,5 +603,597 @@ _Not Currently Implemented:_
 mTLS nécessite certificats côté client et serveur pour authentication mutuelle. Overkill pour NutriProfile actuel mais pourrait être utile pour:
 - Intégrations B2B professionnels santé
 - White-label partnerships
+
+---
+
+## Architectural Patterns Analysis
+
+### System Architecture Patterns
+
+**Architecture Monolithique : Choix Actuel de NutriProfile**
+
+NutriProfile utilise une **architecture monolithique** avec FastAPI, qui reste le choix optimal pour son échelle actuelle en 2026.
+
+_Monolithic Advantages for NutriProfile:_
+
+**Simplicité et Cohésion:**
+- Application construite comme une **unité unifiée unique** vs collection de services indépendants
+- Monolithic emphasizes **simplicity and cohesion**, idéal pour équipes small-to-medium
+- Fonctionne bien pour applications simples développées par petite équipe
+- Tout le monde comprend comment chaque partie fonctionne, et avec peu de dépendances, l'équipe peut **tester et déployer changements rapidement**
+
+**Développement Rapide:**
+- Pour startups essayant d'amener nouveau produit au marché rapidement, approche monolithique offre **low overheads and short development cycles**
+- Pas de complexité microservices (service discovery, distributed tracing, inter-service communication)
+
+**Performance:**
+- Pas de latence réseau entre composants
+- Appels de fonctions directs vs HTTP requests
+
+_When to Consider Microservices:_
+
+**Signaux d'Alerte:**
+- Quand nouvelles features sont ajoutées au monolithe, il peut devenir **lourd avec plusieurs développeurs** travaillant sur codebase singulier
+- **Code conflicts** deviennent plus fréquents
+- Risque de updates à une feature introduisant bugs dans feature non-reliée augmente
+- "When these undesirable patterns arise, it may be time to consider a migration to microservices"
+
+**Decision Framework 2026:**
+- The key is honestly **assessing your team's capabilities, your product's maturity, and your scaling requirements**
+- Choisir architecture qui supporte immediate needs tout en permettant future growth
+- What we recommend: begin with **clear domain boundaries within a single deployable unit** - chemin low-risk vers microservices si besoin
+
+**NutriProfile Context:**
+- **Échelle actuelle:** Appropriée pour monolithe
+- **Équipe:** Small team → monolithe optimal
+- **Future:** Domain boundaries clairs (vision, recipes, tracking) permettent décomposition graduelle si nécessaire
+
+_Source: [Monolithic vs Microservices 2026](https://www.superblocks.com/blog/monolithic-vs-microservices)_
+_Source: [When to Choose Each Approach](https://getdx.com/blog/monolithic-vs-microservices/)_
+_Source: [Business Architecture Choice 2026](https://uniridge.co/monolith-vs-microservices-which-architecture-is-right-for-your-business-in-2026/)_
+
+**Cloud-Native Considerations 2026**
+
+_Modern Context:_
+- The rise of cloud-native development has made microservices even more attractive
+- Cloud platforms offer services that align well with microservices: **containerization (Docker), orchestration (Kubernetes), and serverless computing**
+- Ces technologies rendent plus facile deploy, manage, et scale microservices
+
+_NutriProfile Deployment:_
+- Fly.io fournit containerization (Docker) + orchestration automatique
+- Permet scale monolithic app facilement (horizontal scaling via instances multiples)
+
+**Gradual Migration Path**
+
+_Recommended Approach:_
+- For many organizations, journey to microservices est **gradual**
+- Commencer avec **well-structured monolith** et graduellement décomposer en microservices as needed
+- Permet teams to **learn and adapt as they go**, plutôt que prendre toutes les complexités d'un distributed system d'un coup
+
+_NutriProfile Future Path:_
+Si besoin émerge pour microservices, décomposition logique possible:
+1. **Vision Service:** Analyse photos + models IA
+2. **Recipe Service:** Génération recettes + database recettes
+3. **Tracking Service:** Food logs + stats + gamification
+4. **Wearables Service:** Intégrations APIs externes
+5. **PDF Export Service:** Génération rapports
+
+_Source: [IBM Monolithic vs Microservices](https://www.ibm.com/think/topics/monolithic-vs-microservices)_
+_Source: [AWS Architecture Comparison](https://aws.amazon.com/compare/the-difference-between-monolithic-and-microservices-architecture/)_
+
+### Design Principles and Best Practices
+
+**SOLID Principles : Foundation pour Code Maintenable**
+
+Les 5 principes SOLID sont guidelines essentiels pour design software maintenable et scalable, particulièrement pertinents pour FastAPI applications.
+
+_SOLID Principles Overview:_
+
+**1. Single Responsibility Principle (SRP)**
+- Chaque classe/module a **une seule raison de changer**
+- Séparer logique métier, data access, et présentation
+
+_Application à NutriProfile:_
+```python
+# ✅ BON - Responsabilités séparées
+class VisionAgent:  # Responsabilité: Analyse images
+    async def analyze_image(self, image): ...
+
+class NutritionCalculator:  # Responsabilité: Calculs nutrition
+    def calculate_macros(self, food_items): ...
+
+class FoodLogService:  # Responsabilité: Business logic logs
+    async def create_log(self, user_id, items): ...
+```
+
+**2. Open/Closed Principle**
+- Classes ouvertes pour extension, fermées pour modification
+
+_Application:_
+```python
+# Agent base extensible sans modification
+class BaseAgent:
+    async def execute(self, prompt): ...
+
+# Nouveaux agents étendent sans modifier base
+class RecipeAgent(BaseAgent):
+    async def generate_recipe(self, ingredients): ...
+```
+
+**3. Liskov Substitution Principle**
+- Subclasses doivent être substituables par leurs base classes
+
+**4. Interface Segregation Principle**
+- Interfaces spécifiques vs interfaces générales lourdes
+
+**5. Dependency Inversion Principle**
+- Dépendre d'abstractions, pas de concrétions
+
+_FastAPI Implementation:_
+```python
+# Dependency Injection avec FastAPI
+async def get_db() -> AsyncSession:
+    async with AsyncSessionLocal() as session:
+        yield session
+
+@router.post("/vision/analyze")
+async def analyze_meal(
+    file: UploadFile,
+    db: AsyncSession = Depends(get_db),  # DI pattern
+    current_user: User = Depends(get_current_user)
+):
+    # Logic uses injected dependencies
+```
+
+_Source: [SOLID Principles FastAPI](https://medium.com/@lautisuarez081/solid-principles-fastapi-python-d39ab6f498e4)_
+_Source: [Applying SOLID in FastAPI](https://medium.com/@annavaws/applying-solid-principles-in-fastapi-a-practical-guide-cf0b109c803c)_
+_Source: [Real Python SOLID Principles](https://realpython.com/solid-principles-python/)_
+
+**Design Patterns pour FastAPI Applications**
+
+_Key Patterns for NutriProfile:_
+
+**1. Repository Pattern**
+- Abstraction pour data access
+- Sépare logique métier de database operations
+
+```python
+class FoodLogRepository:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def create(self, log: FoodLog):
+        self.db.add(log)
+        await self.db.commit()
+
+    async def get_by_user(self, user_id: int):
+        result = await self.db.execute(
+            select(FoodLog).filter_by(user_id=user_id)
+        )
+        return result.scalars().all()
+```
+
+**2. Service Layer Pattern**
+- Business logic séparée de controllers
+- Controllers minces, services riches
+
+**3. Factory Pattern**
+- Création objets complexes (ex: agents IA)
+
+**4. Strategy Pattern**
+- Algorithms interchangeables (ex: consensus validators différents)
+
+_Additional Principles:_
+
+**DRY (Don't Repeat Yourself)**
+- FastAPI aligns with DRY via dependency injection et reusable components
+
+**KISS (Keep It Simple, Stupid)**
+- Éviter over-engineering
+- Solutions simples > complexes prématurées
+
+**YAGNI (You Aren't Gonna Need It)**
+- Ne pas implémenter features "au cas où"
+- Attendre besoin réel avant complexifier
+
+_Source: [FastAPI Best Practices and Design Patterns](https://medium.com/@lautisuarez081/fastapi-best-practices-and-design-patterns-building-quality-python-apis-31774ff3c28a)_
+_Source: [SOLID Principles in FastAPI](https://medium.com/@yoenycaballerogonzalez/solid-software-development-principles-in-fastapi-cbdcacc73d6d)_
+
+**Clean Architecture Principles**
+
+_Domain Entities and Use Cases:_
+- Domain entities, use cases, et business rules should work **regardless of whether you're using PostgreSQL or MongoDB, FastAPI or Flask, AWS or Azure**
+- Core business logic indépendante de frameworks et databases
+
+_Source: [Python Design Patterns Clean Architecture](https://www.glukhov.org/post/2025/11/python-design-patterns-for-clean-architecture/)_
+
+### Scalability and Performance Patterns
+
+**Horizontal vs Vertical Scaling**
+
+_Two Fundamental Approaches:_
+
+**Horizontal Scaling (Scale-Out):**
+- Scaling by **adding more machines** to your pool of resources
+- Ajouter serveurs supplémentaires pour distribuer charge
+- "Scaling out"
+
+**Vertical Scaling (Scale-Up):**
+- Scaling by **adding more power (CPU, RAM)** to existing machine
+- Upgrading CPU, RAM, et storage resources tout en maintenant architecture actuelle
+- "Scaling up"
+
+_Key Differences:_
+
+**Complexité:**
+- Horizontal scaling requires **breaking sequential logic into smaller pieces** so they can be executed **in parallel across multiple machines**
+- Vertical scaling plus simple - upgrade hardware d'un seul serveur
+
+**Application Design:**
+- Horizontal scaling nécessite considerations design plus complexes: **load balancing, data synchronization, stateless application patterns**
+- Vertical scaling peut fonctionner avec application state-aware
+
+**Performance Characteristics:**
+- Horizontal scaling maintains **consistent per-node performance** as you add machines
+- Vertical scaling shows **diminishing returns** as hardware components reach their physical limits
+
+_Source: [Horizontal vs Vertical Scaling](https://medium.com/design-microservices-architecture-with-patterns/scalability-vertical-scaling-horizontal-scaling-adb52ff679f)_
+_Source: [GeeksforGeeks System Design Scaling](https://www.geeksforgeeks.org/system-design/system-design-horizontal-and-vertical-scaling/)_
+_Source: [DigitalOcean Scaling Strategy](https://www.digitalocean.com/resources/articles/horizontal-scaling-vs-vertical-scaling)_
+
+**Async Architecture for Performance**
+
+_FastAPI Async Benefits:_
+
+**300% Performance Improvement:**
+- FastAPI async architecture achieves **300% better performance** than synchronous frameworks for I/O-bound operations
+- Single async worker peut gérer **thousands of concurrent connections efficiently**
+
+**Stateless APIs Favor Horizontal Scaling:**
+- The **stateless nature of APIs**, coupled with relative ease of horizontal autoscaling, favors **horizontal scaling as the right approach** to scaling APIs
+- Dans distributed system avec microservices architecture, horizontal scaling particularly advantageous
+
+_NutriProfile Application:_
+- FastAPI async déjà implémenté
+- Fly.io permet facilement horizontal scaling (add instances)
+- Database pooling avec SQLAlchemy async engine
+- Appels IA multi-agents en parallèle (non-blocking)
+
+_Source: [Horizontal Scaling for APIs](https://www.baeldung.com/cs/scaling-horizontally-vertically)_
+_Source: [DataCamp Scaling Guide](https://www.datacamp.com/blog/horizontal-vs-vertical-scaling)_
+
+**Cloud-Native Scaling Patterns**
+
+_Modern Best Practices:_
+
+**Auto-Scaling:**
+- Cloud platforms permettent auto-scaling based on metrics (CPU, requests/sec)
+- Horizontal scaling est **more cloud-native approach**
+
+**Trade-offs:**
+- **Horizontal scaling:** More complex, but can offer scales that **far exceed** those possible with vertical scaling
+- **Vertical scaling:** Simpler initially but hits physical hardware limits
+
+_Fly.io Context for NutriProfile:_
+- Fly.io supporte horizontal scaling via machine count
+- Auto-scaling possible based on load metrics
+- Geographic distribution (multi-region) possible
+
+_Source: [nOps HPA, VPA & Beyond](https://www.nops.io/blog/horizontal-vs-vertical-scaling/)_
+_Source: [Akamai Scaling Glossary](https://www.akamai.com/glossary/what-is-horizontal-scaling-vs-vertical-scaling)_
+
+### Data Architecture Patterns
+
+**SQLAlchemy 2.0 Async Patterns**
+
+_Modern Async Database Architecture:_
+
+**Core Principles:**
+
+**1. Single Async Engine per Service**
+- Create a **single async engine** per service et single **async_sessionmaker**
+- Hand sessions to request scopes (ex: FastAPI dependency) so they're **short-lived and explicit**
+
+**2. Async Driver Selection**
+- Pour PostgreSQL async SQLAlchemy, use **asyncpg** driver
+- Configuration: `postgresql+asyncpg://user:pass@host/db`
+
+**3. Architectural Consistency**
+- **Choose your architecture (sync or async) and stick with it**
+- Avoid mixing paradigms dans same codebase
+- Modern async patterns suivent SQLAlchemy 2.0 best practices incluant **better concurrency for database operations**
+
+_Source: [SQLAlchemy 2.0 Patterns Clean Async Postgres](https://medium.com/@ThinkingLoop/10-sqlalchemy-2-0-patterns-for-clean-async-postgres-af8c4bcd86fe)_
+_Source: [PostgreSQL Async Architectural Consistency](https://oppkey.github.io/fastopp/2025/10/07/postgresql-async/)_
+
+**FastAPI Integration with Async Database**
+
+_Performance Benefits:_
+
+**Async Database Sessions:**
+- Having async database session means **you no longer have to worry about database operations blocking async path operations**
+- Offers **big speed-up** over synchronous database setup
+
+_Implementation Pattern:_
+```python
+# Async engine configuration
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
+
+engine = create_async_engine(
+    "postgresql+asyncpg://user:pass@host/db",
+    echo=True,
+    future=True
+)
+
+AsyncSessionLocal = sessionmaker(
+    engine, class_=AsyncSession, expire_on_commit=False
+)
+
+# Dependency injection
+async def get_db() -> AsyncSession:
+    async with AsyncSessionLocal() as session:
+        yield session
+        await session.close()
+
+# Usage in endpoint
+@router.post("/vision/analyze")
+async def analyze(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(FoodLog))
+    logs = result.scalars().all()
+```
+
+_Source: [Efficient FastAPI CRUD with Async SQLAlchemy](https://medium.com/@navinsharma9376319931/mastering-fastapi-crud-operations-with-async-sqlalchemy-and-postgresql-3189a28d06a2)_
+_Source: [Setting up FastAPI with Async SQLAlchemy 2.0](https://medium.com/@tclaitken/setting-up-a-fastapi-app-with-async-sqlalchemy-2-0-pydantic-v2-e6c540be4308)_
+
+**SQLAlchemy Architecture and Asyncio**
+
+_How It Works:_
+
+**Asyncio Extension Architecture:**
+- Architecture takes place on **exterior of SQLAlchemy's usual flow** from end-user API to DBAPI function
+- API calls **start as asyncio**, flow through the **synchronous API**, and **end as asyncio**
+- Internal SQLAlchemy operations remain synchronous, mais wrapped avec async interface
+
+_Official Documentation:_
+- SQLAlchemy 2.0 fournit asyncio extension comprehensive
+- PostgreSQL dialect fully supported avec asyncpg driver
+
+_Source: [SQLAlchemy 2.0 Asyncio Documentation](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html)_
+_Source: [SQLAlchemy PostgreSQL Dialect](https://docs.sqlalchemy.org/en/20/dialects/postgresql.html)_
+
+**Connection Management Patterns**
+
+_Best Practices:_
+
+**1. Connection Pooling**
+- Use connection pools pour réutiliser connections
+- Configure pool size based on workload (default: 5-20 connections)
+
+**2. Idle Session Management**
+- Focus on how to **handle idle sessions and max_connections** in PostgreSQL
+- Use timeouts pour fermer idle connections
+
+**3. Singleton Pattern for Engine**
+- **Efficient PostgreSQL connection management** avec singleton pattern
+- Handle both **sync and async engines** in application si nécessaire
+
+_Implementation Considerations:_
+```python
+# Engine configuration avec pooling
+engine = create_async_engine(
+    DATABASE_URL,
+    pool_size=10,           # Max connections dans pool
+    max_overflow=20,        # Additional connections si pool full
+    pool_timeout=30,        # Wait time for connection
+    pool_recycle=3600,      # Recycle connections après 1h
+    echo=False,             # Disable SQL logging en production
+)
+```
+
+_Source: [Efficient PostgreSQL Connection Management](https://medium.com/@ashkangoleh/efficient-postgresql-connection-management-with-singleton-pattern-and-async-sync-engines-in-71b349e4c61d)_
+_Source: [SQLAlchemy Development Guide](https://www.tacnode.io/docs/guides/ecosystem/client/sqlalchemy)_
+
+**Repository and Factory Patterns**
+
+_Data Access Abstraction:_
+
+**Repository Pattern Benefits:**
+- Abstracts data access logic from business logic
+- Testable (can mock repository facilement)
+- Swappable data sources
+
+**Factory Pattern for Database Objects:**
+- Create complex objects (ex: models with relationships)
+- Useful pour testing avec fixtures
+
+_Source: [Factory and Repository Pattern with SQLAlchemy](https://medium.com/@lawsontaylor/the-factory-and-repository-pattern-with-sqlalchemy-and-pydantic-33cea9ae14e0)_
+_Source: [Mastering SQLAlchemy Guide](https://medium.com/@ramanbazhanau/mastering-sqlalchemy-a-comprehensive-guide-for-python-developers-ddb3d9f2e829)_
+
+### Security Architecture Patterns
+
+**Multi-Layered Healthcare Security**
+
+_Healthcare-Specific Architecture Requirements:_
+
+**Recommended Multi-Layered Approach:**
+Pour healthcare APIs, architecture de sécurité multi-couches combine:
+
+1. **OAuth 2.0 with Granular Scopes** pour delegated authorization
+2. **Mutual TLS (mTLS)** pour two-way authentication assurant que only trusted systems communicate
+3. **Rate Limiting** pour protecting against denial-of-service attacks
+
+_Regulatory Compliance:_
+- Combination of **OAuth scopes and mTLS** provides both **regulatory compliance (HIPAA, GDPR)** et practical protection against modern threats
+
+_Source: [Securing HealthTech APIs](https://www.wellally.tech/blog/healthtech-api-security-oauth-mtls)_
+_Source: [Enterprise API Security Architecture](https://www.informatica.com/resources/articles/enterprise-api-security-architecture.html)_
+
+**2026 Security Trends and Patterns**
+
+_Critical Industry Statistics:_
+
+**API Security Crisis:**
+- APIs sont désormais le **vecteur d'attaque #1** (Gartner)
+- **99% des organisations** ont eu un incident sécurité API l'année passée
+- AI-driven cyberattacks nécessitent protections plus intelligentes
+
+_Modern Security Patterns 2026:_
+
+**1. Phantom Token Pattern**
+- To **minimize token leakage**, phantom or **split token pattern** is preferred
+- Clients hold **opaque token** et gateway exchanges ou reconstructs **JWT for downstream APIs**
+- Keeps **JWTs out of browsers and logs** while aligning with zero-trust boundaries
+- Recommended so that access tokens received by internet clients are **only opaque strings and can never expose any PII data**
+
+**2. FAPI-Aligned APIs**
+- Financial institutions now adopting **FAPI-aligned APIs** avec:
+  - **mTLS** authentication
+  - **Short-lived JWTs**
+  - **Super-specific OAuth scopes**
+- Due to **regulatory demands and token theft concerns**
+
+_Source: [API Security Best Practices 2026](https://qodex.ai/blog/15-api-security-best-practices-to-secure-your-apis-in-2026)_
+_Source: [API Security Trends 2026](https://www.getastra.com/blog/api-security/api-security-trends/)_
+_Source: [Building Secure APIs 2026](https://acmeminds.com/building-secure-apis-in-2026-best-practices-for-authentication-and-authorization/)_
+
+**OAuth and JWT Integration Architecture**
+
+_Complementary Technologies:_
+
+**JWT Focus:**
+- **Stateless authentication model** où every token carries signed claims server can validate **without storing session data**
+- Makes JWT popular dans **microservices, cloud native workloads, et event driven architectures**
+
+**OAuth Framework:**
+- Provides broader **authorization framework**
+- JWT focuses on **stateless authentication** while OAuth provides **authorization**, making them **complementary for enterprise environments**
+
+_Implementation for NutriProfile:_
+- Current: JWT tokens (access + refresh)
+- Future consideration: OAuth 2.0 si third-party integrations (ex: allow health professionals to access data)
+
+_Source: [JWT vs OAuth 2.0 Architecture](https://medium.com/design-microservices-architecture-with-patterns/architecture-patterns-in-microservices-security-with-jwt-2098493b34fd)_
+_Source: [API Authentication Methods 2026](https://securityboulevard.com/2026/01/api-authentication-methods-explained-api-keys-oauth-jwt-hmac-compared/)_
+
+**GDPR Compliance Architecture**
+
+_Privacy by Design:_
+
+**Consent Management:**
+- Compliance requirements like **GDPR demand automated consent tracking** and governance over how personal data is processed
+- Enterprises using **API-driven consent management platforms** to ensure every customer interaction is logged and auditable
+
+**Data Minimization:**
+- OAuth 2.0 permet définir **explicitly what data is being accessed**, aligné avec **GDPR principles of data minimization**
+- **Remove PII from JWT ID tokens** que UI clients ne nécessitent pas
+
+**Audit Logging:**
+- Pour healthcare données sensibles, OAuth 2.0 et OIDC garantissent **access by authorized parties only**
+- All data access must be logged for compliance audits
+
+_NutriProfile Application:_
+- Données nutrition = données santé (catégorie spéciale GDPR)
+- JWT tokens ne contiennent pas PII (seulement user_id)
+- Audit logging de tous accès données sensibles
+- Privacy policy transparente
+- User consent management for data processing
+
+_Source: [Privacy and GDPR Using OAuth](https://curity.io/resources/learn/privacy-and-gdpr/)_
+
+### Deployment and Operations Architecture
+
+**Containerization with Docker**
+
+_Current NutriProfile Architecture:_
+
+**Docker Benefits:**
+- Consistent environments (dev, staging, prod)
+- Dependency isolation
+- Easy deployment et rollback
+- Portable across cloud providers
+
+**Fly.io Integration:**
+- Fly.io uses Docker containers natively
+- Dockerfile defines application environment
+- Automatic container orchestration
+
+_Best Practices:_
+- Multi-stage builds pour optimiser image size
+- Health checks defined dans Dockerfile
+- Environment variables pour configuration
+- .dockerignore pour excluder fichiers inutiles
+
+**CI/CD Pipeline Architecture**
+
+_Deployment Flow for NutriProfile:_
+
+**Backend (Fly.io):**
+1. Git push to main branch
+2. GitHub Actions trigger (optionnel)
+3. `fly deploy` builds Docker image
+4. Deploy to Fly.io avec zero-downtime
+5. Health check verification
+6. Rollback automatique si health check fails
+
+**Frontend (Cloudflare Pages):**
+1. Git push to main
+2. Cloudflare auto-detect changes
+3. Build Vite production bundle
+4. Deploy to global CDN
+5. Instant propagation
+
+**Database Migrations:**
+- Alembic migrations applied before app deployment
+- Backward-compatible migrations preferred
+- Manual review pour migrations breaking changes
+
+**Monitoring and Observability**
+
+_Architecture Requirements:_
+
+**Logging:**
+- Structured logging (JSON format)
+- Centralized log aggregation
+- Different log levels (DEBUG, INFO, WARNING, ERROR)
+
+**Metrics:**
+- Request latency
+- Error rates
+- Database query performance
+- API response times
+
+**Health Checks:**
+- `/health` endpoint pour infrastructure monitoring
+- Database connection verification
+- External API availability checks
+
+**Alerting:**
+- Threshold-based alerts (error rate spike, latency increase)
+- On-call rotation pour incidents
+
+_Tools for NutriProfile:_
+- Fly.io metrics dashboard
+- Fly.io logs (`fly logs`)
+- PostHog for product analytics (gratuit <1M events)
+- Sentry for error tracking (optionnel)
+
+**Infrastructure as Code**
+
+_Fly.io Configuration:_
+- `fly.toml` defines infrastructure
+- Version controlled avec application code
+- Easy replication pour staging environments
+
+**Database Backups:**
+- Fly Postgres automatic daily backups
+- Point-in-time recovery possible
+- Manual backup before risky migrations
+
+**Security Operations:**
+- Secrets management via Fly.io secrets
+- Never commit secrets to Git
+- Rotate secrets regularly
+- Different secrets per environment
 
 <!-- Content will be appended sequentially through research workflow steps -->
